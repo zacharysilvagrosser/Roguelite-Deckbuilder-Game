@@ -587,16 +587,16 @@
     display: none;
 }
 .fire {
-    background-image: linear-gradient(#ff0000, #ff9a00);
+    background-image: linear-gradient(#b23d1a, #ba760f);
 }
 .lightning {
-    background-image: linear-gradient(#fafba5, #f0fb3e, #221d54);
+    background-image: linear-gradient(#221d54,#fafba5, #f0fb3e);
 }
 .ice {
-    background-image: linear-gradient(#3fd0d4, #b9e8ea);
+    background-image: linear-gradient(#2f989c, #b9e8ea);
 }
 .air {
-    background-image: linear-gradient(white, #99d9ff);
+    background-image: linear-gradient(#86bfdf, white);
 }
 .water {
     background-image: linear-gradient(#0f5e9c, #74ccf4);
@@ -607,22 +607,78 @@
 .gold {
     background-image: linear-gradient(gold, black);
 }
-.fire .card-text, .fire .card-name {
-    background-color: #3a0000;
+
+.lightning-air {
+    background-image: linear-gradient(#221d54, white);
 }
-.lightning .card-text, .lightning .card-name {
-    background-color: #9898b6;
-}
-.ice .card-text, .ice .card-name {
-    background-color: rgb(26, 111, 150)
-}
-.air .card-text, .air .card-name {
+.lightning-air .card-text {
     background-color: rgb(139, 165, 173)
 }
-.water .card-text, .water .card-name {
+.lightning-water {
+    background-image: linear-gradient(#0f5e9c, #fafba5, #f0fb3e);
+}
+.lightning-water .card-text {
     background-color: rgb(7, 40, 58);
 }
-.earth .card-text, .earth .card-name {
+.lightning-earth {
+    background-image: linear-gradient(#81b14f, #fafba5);
+}
+.lightning-earth .card-text {
+    background-color: #1f0c02
+}
+.ice-air {
+    background-image: linear-gradient(#3fd0d4,white);
+}
+.ice-air .card-text {
+    background-color: #629193
+}
+.ice-water {
+    background-image: linear-gradient(#0f5e9c,#b9e8ea);
+}
+.ice-water .card-text {
+    background-color: rgb(7, 40, 58)
+}
+.ice-earth {
+    background-image: linear-gradient(#451b04, #b9e8ea);
+}
+.ice-earth .card-text {
+    background-color: rgb(26, 111, 150)
+}
+.air-water {
+    background-image: linear-gradient(#0f5e9c, white);
+}
+.air-water .card-text {
+    background-color: rgb(139, 165, 173)
+}
+.air-earth {
+    background-image: linear-gradient(#451b04, white);
+}
+.air-earth .card-text {
+    background-color: rgb(139, 165, 173)
+}
+.water-earth {
+    background-image: linear-gradient(#451b04, #74ccf4);
+}
+.water-earth .card-text {
+    background-color: #1f0c02;
+}
+
+.fire .card-text {
+    background-color: #3a0000;
+}
+.lightning .card-text {
+    background-color: #9898b6;
+}
+.ice .card-text {
+    background-color: rgb(26, 111, 150)
+}
+.air .card-text {
+    background-color: rgb(139, 165, 173)
+}
+.water .card-text {
+    background-color: rgb(7, 40, 58);
+}
+.earth .card-text {
     background-color: #1f0c02
 }
 .card, .card-reference, .new-card {
@@ -655,8 +711,8 @@
     border: 1px solid black;
 }
 .card-mana-number {
-    top: 2.5px;
-    left: 4px;
+    top: -2.2px;
+    left: 3px;
     font-size: 18px;
     position: absolute;
     z-index: 1;
@@ -665,7 +721,8 @@
 }
 .card-mana-img {
     position: absolute;
-    left: -4.5px;
+    top: -5px;
+    left: -5.5px;
     width: 26px;
     height: 26px;
 }

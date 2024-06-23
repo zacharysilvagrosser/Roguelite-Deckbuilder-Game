@@ -5,8 +5,6 @@ SET UP EXCLAMATION AREAS WITH FUNCTIONALITY
 TREASURE: Empower an element
 MAKE DIFFERENT ENCOUNTERS
 
-NOT GETTING 5 CARDS IN HAND AFTER TWO ENCOUNTERS
-WHEN MAKING MULTIPLE NEW CARDS ITS ADDING EVENTLISTENERS OF ALL CARD ACTIONS YOUVE CHOSEN PREVIOUSLY
 */
 /*
 GENERAL FUNCTIONS
@@ -313,6 +311,7 @@ function resetArena() {
         currentMana.innerText = 4;
         playerThornsNumber.innerText = 0;
         playerBlockNumber.innerText = 0;
+        playerRegenNumber.innerText = 0;
         frostbitten = false;
         essenceOfEmber = false;
         liquidLightning = false;
@@ -705,7 +704,7 @@ const cardsInformation = [
         {
                 manaCost: 2,
                 name: "Lightning Bolt",
-                cardImg: "imgs/lightning.jpg",
+                cardImg: "imgs/lightning2.jpg",
                 cardText: "Deal 26 damage to an enemy",                
                 chooseEnemyCard: true,
                 element: "lightning",
@@ -717,7 +716,7 @@ const cardsInformation = [
         {
                 manaCost: 3,
                 name: "Chain Lightning",
-                cardImg: "imgs/Chain-lightning.jpg",
+                cardImg: "imgs/chain-lightning2.jpg",
                 cardText: "Deal 20 damage to all enemies",                
                 chooseEnemyCard: false,
                 element: "lightning",
@@ -787,7 +786,7 @@ const cardsInformation = [
         {
                 manaCost: 1,
                 name: "Fountain of Youth",
-                cardImg: "imgs/fountain-of-youth.jpg",
+                cardImg: "imgs/fountain.jpg",
                 cardText: "Heal for 8 health",                
                 chooseEnemyCard: false,
                 element: "water",
@@ -916,7 +915,7 @@ const cardsInformation = [
         {
                 manaCost: 2,
                 name: "Ball Lightning",
-                cardImg: "imgs/ball-lightning.jpg",
+                cardImg: "imgs/ball-of-lightning.jpg",
                 cardText: "Deal 10 damage to a random enemy three times",
                 chooseEnemyCard: false,
                 element: "lightning",
@@ -924,7 +923,7 @@ const cardsInformation = [
                         spendMana(17);
                         for (let i = 0; i < 3; i++) {
                                 let randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
-                                damageEnemy(28, randomEnemy);        
+                                damageEnemy(10, randomEnemy);        
                         }  
                 }
         },
@@ -1212,7 +1211,7 @@ const cardsInformation = [
                 action: function() {
                         spendMana(38);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                if (enemyTotalBurn[i] > 0) {
+                                if (enemyBurnNumber[i].innerText > 0) {
                                         inflictWindswept(i);
                                         burnEnemy(6, i);
                                 }
@@ -1272,9 +1271,10 @@ const cardsInformation = [
         {
                 manaCost: 2,
                 name: "Static Electricity",
-                cardImg: "imgs/magma.jpg",
+                cardImg: "imgs/static-electricity.jpg",
                 cardText: "Deal 12 damage to all enemies. If they are windswept deal 30 instead.",
                 chooseEnemyCard: false,
+                element: "lightning-air",
                 action: function() {
                         spendMana(42);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1289,9 +1289,10 @@ const cardsInformation = [
         {
                 manaCost: 3,
                 name: "Electric Current",
-                cardImg: "imgs/magma.jpg",
+                cardImg: "imgs/electric-current.jpg",
                 cardText: "Deal 26 damage to an enemy and heal for 50% of the damage",
                 chooseEnemyCard: true,
+                element: "lightning-water",
                 action: function() {
                         spendMana(43);
                         damageEnemy(26, chosenEnemy);
@@ -1305,9 +1306,10 @@ const cardsInformation = [
         {
                 manaCost: 2,
                 name: "Quaking Thunder",
-                cardImg: "imgs/magma.jpg",
+                cardImg: "imgs/quaking-thunder3.jpg",
                 cardText: "Deal 10 damage to all enemies and gain 1 thorn per enemy hit",
                 chooseEnemyCard: false,
+                element: "lightning-earth",
                 action: function() {
                         spendMana(44);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1322,6 +1324,7 @@ const cardsInformation = [
                 cardImg: "imgs/flurry.jpg",
                 cardText: "Inflict windswept and frostbite to all enemies",              
                 chooseEnemyCard: false,
+                element: "ice-air",
                 action: function() {
                         spendMana(45);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1333,15 +1336,14 @@ const cardsInformation = [
         },
         {
                 manaCost: 0,
-                name: "Hail Liquify",
-                cardImg: "imgs/magma.jpg",
+                name: "Liquify",
+                cardImg: "imgs/liquify.jpg",
                 cardText: "Gain 2 regen and 1 blood siphon per enemy afflicted with frostbite",
                 chooseEnemyCard: false,
+                element: "ice-water",
                 action: function() {
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                console.log("yes")
                                 if (enemyLowerBlock[i]) {
-                                        console.log("oh yeah")
                                         gainRegen(2);
                                         gainBloodSiphon(1);     
                                 }      
@@ -1351,9 +1353,10 @@ const cardsInformation = [
         {
                 manaCost: 2,
                 name: "Frozen Tundra",
-                cardImg: "imgs/magma.jpg",
+                cardImg: "imgs/frozen-tundra3.jpg",
                 cardText: "Inflict everyone with frostbite and gain 5 armor for everyone inflicted",
                 chooseEnemyCard: false,
+                element: "ice-earth",
                 action: function() {
                         spendMana(47);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1376,6 +1379,7 @@ const cardsInformation = [
                 cardImg: "imgs/hurricane.jpg",
                 cardText: "Inflict windswept and deal 50 damage to all enemies. Heal 10 health, draw a card, and gain 2 mana.",
                 chooseEnemyCard: false,
+                element: "air-water",
                 action: function() {
                         spendMana(48);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1389,10 +1393,11 @@ const cardsInformation = [
         },
         {
                 manaCost: 0,
-                name: "Circle of Rocks",
-                cardImg: "imgs/magma.jpg",
+                name: "Rock Orbit",
+                cardImg: "imgs/rock-orbit.jpg",
                 cardText: "Gain 5 block and draw a card",
                 chooseEnemyCard: false,
+                element: "air-earth",
                 action: function() {
                         spendMana(49);
                         gainBlock(5);
@@ -1405,6 +1410,7 @@ const cardsInformation = [
                 cardImg: "imgs/gaia's-embrace.jpg",
                 cardText: "Gain 4 block and healing at the end of each turn",
                 chooseEnemyCard: false,
+                element: "water-earth",
                 action: function() {
                         spendMana(50);
                         gaiasEmbrace = true;
@@ -1462,12 +1468,99 @@ let handArray = shuffledCards.slice(0, 5);
 let drawPileArray = shuffledCards.slice(5);
 let discardPileArray = [];
 let maxHandLength = 5;
+
+// REMOVE OPENING HAND CARDS FROM DRAW PILE AND ADD THEM TO HAND
+function getOpeningHand() {
+        for (let i = 0; i < 12; i++) {
+                handContainer.appendChild(shuffledCards[i]);
+                
+        }
+        for (let i = 0; i < maxHandLength; i++) {
+                displayFlex(handArray[i]);        
+        }    
+}
+function drawCards(numberOfCards) {
+        // IF DRAW PILE CANT FILL HAND
+        if (drawPileArray.length < numberOfCards) {
+                // RESHUFFLE CARDS IN DISCARD PILE
+                discardPileArray = discardPileArray.toSorted(() => 0.5 - Math.random());
+                // STORE DISCARD PILE LENGTH THEN SHIFT CARDS FROM DISCARD PILE TO DRAW PILE
+                let cardsInDiscardPile = discardPileArray.length;
+                for (let i = 0; i < cardsInDiscardPile; i++) {
+                        let reshuffle = discardPileArray.shift();
+                        drawPileArray.push(reshuffle);
+                }     
+                //console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+ 
+        }
+        // SHIFT CARDS FROM DRAW PILE TO HAND
+        for (let i = 0; i < numberOfCards; i++) {
+                let drawNewCard = drawPileArray.shift();
+                handArray.unshift(drawNewCard);
+        }
+        //console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+
+        // DISPLAY CARDS IN HAND
+        for (let i = 0; i < numberOfCards; i++) {
+                displayFlex(handArray[i]);
+        }
+        //console.log("HAND ARRAY CARDS: " + handArray);
+}
+// GET NEW SET OF 5 CARDS AT THE END OF EACH TURN
+function addCardsToHand() {
+        // MOVE HAND CONTAINERS TO DISCARD CONTAINERS
+        //console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        let cardsInHand = handArray.length;
+        for (let i = 0; i < cardsInHand; i++) {
+                let discarded = handArray.shift();
+                discardPileArray.unshift(discarded);
+        }
+        //console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        for (let i = 0; i < cardsInHand; i++) {
+               displayNone(discardPileArray[i]);
+        }
+        drawCards(maxHandLength);      
+}
+function reshuffleCards() {
+        //console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        let cardsInHand = handArray.length;
+        for (let i = 0; i < cardsInHand; i++) {
+                let discarded = handArray.shift();
+                drawPileArray.unshift(discarded);
+        }
+        //console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        let cardsInDiscardPile = discardPileArray.length;
+        for (let i = 0; i < cardsInDiscardPile; i++) {
+                let reshuffle = discardPileArray.shift();
+                drawPileArray.push(reshuffle);
+        }
+        //console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+         // RESHUFFLE CARDS IN DRAW PILE
+        drawPileArray = drawPileArray.toSorted(() => 0.5 - Math.random());
+         // SHIFT CARDS FROM DRAW PILE TO HAND
+        for (let i = 0; i < maxHandLength; i++) {
+                let drawNewCard = drawPileArray.shift();
+                handArray.unshift(drawNewCard);
+        }
+        //console.log(`RESHUFFLE CARDS\nDRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        for (let i = 0; i < maxHandLength; i++) {
+                displayFlex(handArray[i]);
+        }
+        for (let i = 0; i < drawPileArray.length; i++) {
+                displayNone(drawPileArray[i]);
+        }    
+}
+const allCardsReferenceContainer = document.querySelector("#all-cards-reference-container");
+for (let i = 0; i < cardsInformation.length; i++) {
+        createCard(i, allCardsReferenceContainer, "card-reference", "card-text");
+}
 // TRIGGER SO YOU CANT CLICK CARD MULTIPLE TIMES TO APPLY CARD EFFECT MULTIPLE TIMES ON ENEMY
 let cardClicked = false;
 // ADD EVENTLISTENERS TO ALL CARDS, STORE CHOSEN CARD IN VARIABLE, PICK ENEMY WHO WILL RECIEVE CARD ACTION
 function addCardListeners(cardType, index, CIindex) {
+        console.log(cardType[index]);
         // IF CARD REQUIRES YOU TO CLICK ON AN ENEMY
-        if (cardsInformation[CIindex].chooseEnemyCard === true) {
+        if (cardsInformation[CIindex].chooseEnemyCard) {
                 cardType[index].addEventListener("click", () => {
                         chosenCard = CIindex;
                         if (cardClicked === false) {
@@ -1479,6 +1572,7 @@ function addCardListeners(cardType, index, CIindex) {
                 cardType[index].addEventListener("click", () => {
                         if (currentMana.innerText >= cardsInformation[CIindex].manaCost) {
                                 cardsInformation[CIindex].action();
+                                console.log(cardType[index]);
                                 displayNone(cardType[index]);
                         }
                 });
@@ -1508,112 +1602,23 @@ function addCardListeners(cardType, index, CIindex) {
                 }
         }
 }        
-// REMOVE OPENING HAND CARDS FROM DRAW PILE AND ADD THEM TO HAND
-function getOpeningHand() {
-        for (let i = 0; i < 12; i++) {
-                handContainer.appendChild(shuffledCards[i]);
-                
-        }
-        for (let i = 0; i < maxHandLength; i++) {
-                displayFlex(handArray[i]);        
-        }    
-}
-function drawCards(numberOfCards) {
-        // IF DRAW PILE CANT FILL HAND
-        if (drawPileArray.length < numberOfCards) {
-                // RESHUFFLE CARDS IN DISCARD PILE
-                discardPileArray = discardPileArray.toSorted(() => 0.5 - Math.random());
-                // STORE DISCARD PILE LENGTH THEN SHIFT CARDS FROM DISCARD PILE TO DRAW PILE
-                let cardsInDiscardPile = discardPileArray.length;
-                for (let i = 0; i < cardsInDiscardPile; i++) {
-                        let reshuffle = discardPileArray.shift();
-                        drawPileArray.push(reshuffle);
-                }     
-                console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
- 
-        }
-        // SHIFT CARDS FROM DRAW PILE TO HAND
-        for (let i = 0; i < numberOfCards; i++) {
-                let drawNewCard = drawPileArray.shift();
-                handArray.unshift(drawNewCard);
-        }
-        console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
-
-        // DISPLAY CARDS IN HAND
-        for (let i = 0; i < numberOfCards; i++) {
-                displayFlex(handArray[i]);
-        }
-}
-// GET NEW SET OF 5 CARDS AT THE END OF EACH TURN
-function addCardsToHand() {
-        // MOVE HAND CONTAINERS TO DISCARD CONTAINERS
-        console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
-        let cardsInHand = handArray.length;
-        for (let i = 0; i < cardsInHand; i++) {
-                let discarded = handArray.shift();
-                discardPileArray.unshift(discarded);
-        }
-        console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
-        for (let i = 0; i < cardsInHand; i++) {
-               displayNone(discardPileArray[i]);
-        }
-        drawCards(maxHandLength);      
-}
-function reshuffleCards() {
-        console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
-        let cardsInHand = handArray.length;
-        for (let i = 0; i < cardsInHand; i++) {
-                let discarded = handArray.shift();
-                drawPileArray.unshift(discarded);
-        }
-        console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
-        let cardsInDiscardPile = discardPileArray.length;
-        for (let i = 0; i < cardsInDiscardPile; i++) {
-                let reshuffle = discardPileArray.shift();
-                drawPileArray.push(reshuffle);
-        }
-        console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
-         // RESHUFFLE CARDS IN DRAW PILE
-        drawPileArray = drawPileArray.toSorted(() => 0.5 - Math.random());
-         // SHIFT CARDS FROM DRAW PILE TO HAND
-        for (let i = 0; i < maxHandLength; i++) {
-                let drawNewCard = drawPileArray.shift();
-                handArray.unshift(drawNewCard);
-        }
-        console.log(`RESHUFFLE CARDS\nDRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
-        for (let i = 0; i < maxHandLength; i++) {
-                displayFlex(handArray[i]);
-        }
-        for (let i = 0; i < drawPileArray.length; i++) {
-                displayNone(drawPileArray[i]);
-        }    
-}
-const allCardsReferenceContainer = document.querySelector("#all-cards-reference-container");
-
-for (let i = 0; i < cardsInformation.length; i++) {
-        createCard(i, allCardsReferenceContainer, "card-reference", "card-text");
-}
 const allCardsReference = document.querySelectorAll(".card-reference");
 const newCardsContainer = document.querySelector("#new-cards-container");
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
         function addNewCardInformation(newRandomCard) {
-                createCard(newRandomCard, newCardsContainer, "new-card", "new-card-text");
+                createCard(newRandomCard, newCardsContainer, "card", "card-text");
                 // GET NEW CARD AND INDEX IT BASED ON THE LENGTH OF THE NEW CARDS ARRAY
-                let newCardsArray = document.getElementsByClassName("new-card");
-                let newCardsLength = newCardsArray.length - 1;
+                let newCardsArray = document.querySelectorAll(".card");
                 // ADD CLASS TO DYNAMICALLY UPDATE TEXT WHEN PLAYED
                 if (newRandomCard == 24) {
-                        let newCardText = document.querySelectorAll(".new-card-text");
-                        let newCardsTextLength = newCardText.length - 1;
-                        newCardText[newCardsTextLength].classList.add("winds-of-change");
+                        let newCardText = document.querySelectorAll(".card-text");
+                        newCardText[0].classList.add("winds-of-change");
                 }
-                addCardListeners(newCardsArray, newCardsLength, newRandomCard);
-                // ADD THE NEW CARD TO THE DRAW PILE
-                console.log("NEW CARD 0: " + newCardsArray[0].classList, "NEW CARD 1: " + newCardsArray[1]);
-                console.log(newCardsLength);
-                handContainer.appendChild(newCardsArray[0]);
+                addCardListeners(newCardsArray, 0, newRandomCard);
                 drawPileArray.push(newCardsArray[0]);
+                // ADD THE NEW CARD TO THE DRAW PILE
+                handContainer.appendChild(newCardsArray[0]);
                 displayNone(arena, chooseNewCardDiv);
                 displayBlock(map);
                 allCardsReferenceContainer.appendChild(allCardsReference[newRandomCard0]);
@@ -1622,10 +1627,10 @@ function getRandomNewCards () {
                 allCardsReferenceContainer.appendChild(allCardsReference[newRandomCard3]);
         }
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard1 = createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard2 = createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard3 = createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard0 = 42;//createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard1 = 43;//createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard2 = 44;//createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard3 = 50;//createRandomNumber(0, cardsInformation.length - 1);
         // CHANGE CARDS IF THEY ARE THE SAME
         if (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3) {
                 newRandomCard0 += 1;
