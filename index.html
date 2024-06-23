@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kill the Tower</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body onload='location.href="#bottom-anchor"'>
+    <header>
+        <div id="board-header">
+            <p id="top-bar-health">Health: <span id="top-bar-health-number">100</span></p>
+            <p id="top-bar-gold">Gold: <span id="top-bar-gold-number">0</span></p>           
+        </div>
+    </header>
+    <main>        
+        <div id="arena">            
+            <div id="player-div">
+                <img id="block-img" src="imgs/icons8-shield-100.png">
+                <div id="block-img-number">0</div>
+                <img id="player-img" src="imgs/character.png"> 
+                <p id="health"><span id="player-health">100</span>/<span id="player-max-health">100</span></p>
+                <div id="debuffs">
+                    <img id="player-lower-attack-img" src="imgs/lower-attack.png">
+                    <img id="player-lower-block-img" src="imgs/lower-block.png">
+                    <div>
+                        <p id="player-thorns-number">0</p>
+                        <img id="player-thorns-img" src="imgs/thorn-icon2.png">
+                    </div>
+                    <div>
+                        <p id="player-regen-number">0</p>
+                        <img id="player-regen-img" src="imgs/icons8-heart-96.png">
+                    </div> 
+                    <div>
+                        <p id="player-blood-number">0</p>
+                        <img id="player-blood-img" src="imgs/blood-icon.png">
+                    </div> 
+                </div>
+            </div>
+               
+        <!--    <div id="enemy-div">
+                <div class="enemy-action-div">
+                    <div class="enemy-attack-div">
+                        <p class="enemy-attack-number"></p>
+                        <img class="enemy-attack-img enemy-action-img" src="imgs/icons8-sword-96.png">                   
+                    </div>
+                    <div class="enemy-block-div">
+                        <p class="enemy-block-number"></p>
+                        <img class = "enemy-block-img enemy-action-img" src="imgs/icons8-shield-100.png">
+                    </div>
+                    <div class="enemy-heal-div">
+                        <p class="enemy-heal-number"></p>
+                        <img class="enemy-heal-img enemy-action-img" src="imgs/icons8-heart-96.png">
+                    </div>
+                    <img class="enemy-lower-attack-img enemy-action-img" src="imgs/icons8-swirl-80.png">
+                    <img class="enemy-lower-block-img enemy-action-img" src="imgs/icons8-swirl-96.png">
+                </div>                
+                <img class="enemy-img" src="imgs/goblin.png">
+                <div class="enemy-health-div">
+                    <p class="enemy-health"><span class="current-enemy-health">50</span>/50</p>
+                </div>
+                <div class="enemy-has-block-div">
+                    <p class="enemy-has-block-number">0</p>
+                    <img class="enemy-has-block-img" src="imgs/icons8-shield-100.png">
+                </div>
+                <div class="enemy-poison-div">
+                    <img class="enemy-poison-img" src="imgs/icons8-poison-96.png">
+                    <p class="enemy-poison-number"></p>
+                </div>
+            </div>
+            <div class="enemy-div">
+                <div class="enemy-action-div">
+                    <div class="enemy-attack-div">
+                        <p class="enemy-attack-number"></p>
+                        <img class = "enemy-attack-img enemy-action-img" src="imgs/icons8-sword-96.png">                   
+                    </div>
+                    <div class="enemy-block-div">
+                        <p class="enemy-block-number"></p>
+                        <img class = "enemy-block-img enemy-action-img" src="imgs/icons8-shield-100.png">
+                    </div>
+                    <div class="enemy-heal-div">
+                        <p class="enemy-heal-number"></p>
+                        <img class = "enemy-heal-img enemy-action-img" src="imgs/icons8-heart-96.png">
+                    </div>
+                    <img class = "enemy-lower-attack-img enemy-action-img" src="imgs/icons8-swirl-80.png">
+                    <img class = "enemy-lower-block-img enemy-action-img" src="imgs/icons8-swirl-96.png">
+                </div>                
+                <img class="enemy-img" src="imgs/goblin.png">
+                <div class="enemy-health-div">
+                    <p class="enemy-health"><span class="current-enemy-health">50</span>/50</p>
+                </div>
+                <div class="enemy-has-block-div">
+                    <p class="enemy-has-block-number">0</p>
+                    <img class="enemy-has-block-img" src="imgs/icons8-shield-100.png">
+                </div>
+                <div class="enemy-poison-div">
+                    <img class="enemy-poison-img" src="imgs/icons8-poison-96.png">
+                    <p class="enemy-poison-number">0</p>
+                </div>
+            </div>
+            <div class="enemy-div">
+                <div class="enemy-action-div">
+                    <div class="enemy-attack-div">
+                        <p class="enemy-attack-number"></p>
+                        <img class = "enemy-attack-img enemy-action-img" src="imgs/icons8-sword-96.png">                   
+                    </div>
+                    <div class="enemy-block-div">
+                        <p class="enemy-block-number"></p>
+                        <img class = "enemy-block-img enemy-action-img" src="imgs/icons8-shield-100.png">
+                    </div>
+                    <div class="enemy-heal-div">
+                        <p class="enemy-heal-number"></p>
+                        <img class = "enemy-heal-img enemy-action-img" src="imgs/icons8-heart-96.png">
+                    </div>
+                    <img class = "enemy-lower-attack-img enemy-action-img" src="imgs/icons8-swirl-80.png">
+                    <img class = "enemy-lower-block-img enemy-action-img" src="imgs/icons8-swirl-96.png">
+                </div>                
+                <img class="enemy-img" src="imgs/goblin.png">
+                <div class="enemy-health-div">
+                    <p class="enemy-health"><span class="current-enemy-health">50</span>/50</p>
+                </div>
+                <div class="enemy-has-block-div">
+                    <p class="enemy-has-block-number">0</p>
+                    <img class="enemy-has-block-img" src="imgs/icons8-shield-100.png">
+                </div>
+                <div class="enemy-poison-div">
+                    <img class="enemy-poison-img" src="imgs/icons8-poison-96.png">
+                    <p class="enemy-poison-number">0</p>
+                </div>
+            </div>-->
+            <div id="choose-new-card-div"></div>
+            <div id="opening-cards-container"></div>
+            <div id="all-cards-reference-container"></div>
+            <div id="new-cards-container"></div>
+            <div id="draw-pile-container"></div>
+            <div id="discard-pile-container"></div>
+            <div id="draw-pile-show-cards">
+                <button id="exit-draw-pile-show-cards">X</button>
+            </div>
+            <div id="discard-pile-show-cards">
+                <button id="exit-discard-pile-show-cards">X</button>
+            </div>
+            <div id="mana-bar-div">
+                <img id="mana-bar-img" src="imgs/mana-container.png">
+                <p id="current-mana">4</p>          
+            </div>
+            <div id="enemy-container"></div> 
+            <button id="end-turn-button">End Turn</button>
+            <div id="hand-container"></div>
+        </div>
+        <div class="exclamation-div">
+            <div class="exclamation-information-container">
+                <h1 class="exclamation-title">King Spookly</h1>
+                <div class="exclamation-event-img"></div>
+                <div class="exclamation-text-div">
+                    <p class="exclamation-text">A ghost peaks out from a tree up ahead.<br><br>
+                        He beckons you closer with his translucent appendage. You approach. <br><br>
+                        "I was once a king in this land long ago." His soft whisper echos. "I had all the gold in my possession burried with me. I now realize the arrogance of my actions and would like to make amends for my past mistakes."
+                    </p>
+                </div>
+                <div class="exclamation-button-div">
+                    <button class="exclamation-button1"><span>Accept:</span> Gain 200 Gold, but add <span>[Avarice]</span> to your deck</button> 
+                </div>
+            </div>
+        </div>
+        <div class="exclamation-div">
+            <div class="exclamation-information-container">
+                <h1 class="exclamation-title">The Friendly Ghost</h1>
+                <div class="exclamation-event-img"></div>
+                <div class="exclamation-text-div">
+                    <p class="exclamation-text">A friendly ghost peaks out of a golden bush.<br><br>
+                        He beckons you closer with his shadowy appendage. You approach. <br><br>
+                        "I was once a king in this land long ago." He softly whispers. "I had all the gold in my possession burried with me. I now realize my arrogance and would like to amend my past mistakes."
+                    </p>
+                </div>
+                <div class="exclamation-button-div">
+                    <button class="exclamation-button1"><span>Accept:</span> Gain 200 Gold</button>
+                    <button class="exclamation-button2"><span>Refuse Temptation:</span> Heal for 20 health</button>
+                </div>
+            </div>
+        </div>
+        <div id="map">
+            <div class="locations" id="location11">
+                <div class="location-tiles" id="location11-tiles1">
+                    <img class="boss-monster-img" src="imgs/icons8-monster-50.png" alt="Boss Monster">
+                </div>
+            </div>
+            <div class="locations" id="location10">
+                <div class="location-tiles" id="location10-tiles1">
+                    <img class="oasis-img" src="imgs/icons8-oasis-60.png" alt="Oasis"> 
+                </div>
+                <div class="location-tiles" id="location10-tiles2">
+                    <img class="blacksmith-img" src="imgs/icons8-blacksmith-50.png" alt="Blacksmith"> 
+                </div>
+            </div>
+            <div class="locations" id="location9">
+                <div class="location-tiles" id="location9-tiles1">
+                    <img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">
+                </div>
+                <div class="location-tiles" id="location9-tiles2">
+                    <img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
+                </div>
+                <div class="location-tiles" id="location9-tiles3">
+                    <img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt = "Hard Monster">
+                </div>
+                <div class="location-tiles" id="location9-tiles4">
+                    <img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">
+                </div>
+            </div>
+            <div class="locations" id="location8">
+                <div class="location-tiles" id="location8-tiles1">
+                    <img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">
+                </div>
+                <div class="location-tiles" id="location8-tiles2">
+                    <img class="blacksmith-img" src="imgs/icons8-blacksmith-50.png" alt="Blacksmith"> 
+                </div>
+                <div class="location-tiles" id="location8-tiles3">
+                    <img class="merchant-img" src="imgs/icons8-stand-50.png" alt="Merchant">
+                </div>
+            </div>
+            <div class="locations" id="location7">
+                <div class="location-tiles" id="location7-tiles1">
+                    <img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
+                </div>
+                <div class="location-tiles" id="location7-tiles2">
+                    <img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">
+                </div>
+                <div class="location-tiles" id="location7-tiles3">
+                    <img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
+                </div>
+            </div>
+            <div class="locations" id="location6">
+                <div class="location-tiles" id="location6-tiles1">
+                    <img class="treasure-img" src="imgs/icons8-treasure-chest-50.png" alt="Treasure">    
+                </div>
+            </div>
+            <div class="locations" id="location5">
+                <div class="location-tiles" id="location5-tiles1">
+                    <img class="merchant-img" src="imgs/icons8-stand-50.png" alt="Merchant"> 
+                </div>
+                <div class="location-tiles" id="location5-tiles2">
+                    <img class="oasis-img" src="imgs/icons8-oasis-60.png" alt="Oasis">                    
+                </div>
+                <div class="location-tiles" id="location5-tiles3">
+                    <img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt = "Hard Monster">
+                </div>
+            </div>
+            <div class="locations" id="location4">
+                <div class="location-tiles" id="location4-tiles1">
+                    <img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt = "Hard Monster">
+                </div>
+                <div class="location-tiles" id="location4-tiles2">
+                    <img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
+                </div>
+                <div class="location-tiles" id="location4-tiles3">
+                    <img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">
+                </div>
+                <div class="location-tiles" id="location4-tiles4">
+                    <img class="merchant-img" src="imgs/icons8-stand-50.png" alt="Merchant">       
+                </div>
+            </div>
+            <div class="locations" id="location3">
+                <div class="location-tiles" id="location3-tiles1">
+                    <img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">
+                </div>
+                <div class="location-tiles" id="location3-tiles2">
+                    <img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">
+                </div>
+                <div class="location-tiles" id="location3-tiles3">
+                    <img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
+                </div>
+            </div>
+            <div class="locations" id="location2">
+                <div class="location-tiles" id="location2-tiles1">
+                    <img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
+                </div>
+                <div class="location-tiles" id="location2-tiles2">
+                    <img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">
+                </div>
+                <div class="location-tiles" id="location2-tiles3">
+                    <img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
+                </div>
+                <div class="location-tiles" id="location2-tiles4">
+                    <img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">
+                </div>
+            </div>
+            <div class="locations" id="location1">
+                <div class="location-tiles glow" id="location1-tiles1">
+                    <img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
+                </div>
+                <div class="location-tiles glow" id="location1-tiles2">
+                    <img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
+                </div>
+                <div class="location-tiles glow" id="location1-tiles3">
+                    <img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
+                </div>
+            </div>
+        </div>
+    </main>
+    <a id="bottom-anchor" href="#"></a>
+	<script src="functions.js"></script>
+  </body>
+</html>

@@ -1,0 +1,679 @@
+* {
+    box-sizing: border-box;
+    margin: 0%;
+    padding: 0%;
+
+}
+/* HEADER */
+#board-header {
+    position: fixed;
+    width: 100%;
+    height: 5vh;
+    background-color: aliceblue;
+    display: flex;
+}
+#board-header p {
+    font-size: 20px;
+    margin: auto;
+}
+
+/* MAP */
+#map {
+    width: 100%;
+    height: 200vh;
+    background-image: url("imgs/map-background3.jpg");
+    background-size: cover;
+}
+.locations {
+    display: flex;
+    width: 100%;
+    height: 17vh;
+}
+.location-tiles {
+    border: 3px solid black;
+    width: 3rem;
+    height: 3rem;
+    margin: auto;
+    background-color:antiquewhite;
+}
+#location1-tiles1 {
+    margin-left: 18%;
+}
+#location1-tiles2 {
+    margin-left: 35%;
+}
+#location2-tiles2 {
+    margin-right: 30%;
+}
+#location2-tiles3 {
+    margin-right: 10%;
+}
+#location3-tiles1 {
+    margin-left: 9rem;
+}
+#location3-tiles2 {
+    margin-left: 9rem;
+}
+#location4-tiles3 {
+    margin-left: 30%;
+}
+#location5-tiles1 {
+    margin-left: 20%;
+}
+#location5-tiles2 {
+    margin-right: 20%;
+}
+#location4 {
+    width: 90%;
+    margin: auto;
+}
+#location7 {
+    width: 60%;
+    margin: auto;
+}
+#location11 {
+    height: 26vh
+}
+/* INDICATE WHERE YOU CAN GO NEXT */
+@keyframes glow {
+    from {
+      box-shadow: 0 0 10px -10px red;
+    }
+    to {
+      box-shadow: 0 0 10px 10px red;
+    }
+  }
+.glow {
+    animation: glow 1s infinite alternate;
+}
+
+/* IMG PLACEMENT images by icons8.com*/
+.normal-monster-img {
+    margin-left: -3px;
+    margin-top: -3px;
+}
+.hard-monster-img {
+    width: 48px;
+    margin-left: -3px;
+    margin-top: -3px;
+}
+.oasis-img {
+    width: 45px;
+    margin-left: -3px;
+    margin-top: -3px;
+}
+.blacksmith-img {
+    width: 43px;
+    margin-left: -1px;
+    margin-top: -1px;
+}
+.gold-img {
+    width: 40px;
+    margin-left: 1px;
+    margin-top: 1px;
+}
+.merchant-img {
+    width: 45px;
+    margin-left: -.093rem;
+}
+.treasure-img {
+    width: 42px;
+}
+.exclamation-img {
+    width: 40px;
+    margin-top: .2px;
+    margin-left: 1.2px;
+}
+.boss-monster-img {
+    width: 48px;
+    margin-left: -3px;
+    margin-top: -3px;
+}
+
+/* GAME ARENA */
+#arena {
+    width: 100%;
+    height: 100vh;
+    background-image: url(imgs/forest.jpg);
+    background-size: 100%;
+    overflow: hidden;
+    display: none;
+}
+#player-div {
+    position: absolute;
+    margin-top: 585px;
+    margin-left: 300px;
+    transition: .3s;
+}
+#block-img {
+    position: absolute;
+    width: 50px;
+    margin-left: -10px;
+    margin-top: 252px;
+    text-align: center;
+    display: none;
+}
+#block-img-number {
+    position: absolute;
+    font-size: 23px;
+    margin-left: -35px;
+    margin-top: 262px;
+    text-align: center;
+    width: 100px;
+    display: none;
+    color: white;
+}
+#player-img { /*Image by freepik*/
+    width: 250px;
+    position: absolute;
+}
+#health { 
+    margin-top: 260px;
+    margin-left: 40px;
+    position: absolute;
+    font-weight: bold;
+    font-size: 25px;
+    color: rgb(111, 253, 107);
+}
+#debuffs {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    margin-top: 282px;
+    margin-left: -20px;
+}
+#player-lower-attack-img, #player-lower-block-img, .enemy-lower-attack-img, .enemy-lower-block-img {
+    width: 50px;
+    display: none;
+}
+#player-thorns-img, .enemy-thorns-img, #player-regen-img, #player-blood-img {
+    width: 60px;
+    text-align: center;
+    display: none;
+}
+#player-thorns-number, .enemy-thorns-number, #player-regen-number, #player-blood-number {
+    position: absolute;
+    font-weight: bolder;
+    margin-top: 13px;
+    margin-left: 6px;
+    color:rgb(100, 54, 1);
+    font-size: 26px;
+    text-align: center;
+    width: 50px;
+    display: none;
+}
+#player-regen-number {
+    color: rgb(96, 177, 253);
+}
+#player-blood-number {
+    color: white;
+    margin-top: 17px;
+}
+#choose-new-card-div {
+    position: absolute;
+    width: 90%;
+    height: 60vh;
+    margin: 6rem;
+    display: none;
+}
+#enemy-container {
+    position: absolute;
+    margin-top: -150px;
+}
+.enemy-div {
+    position: absolute;
+    transition: 1s;
+    display: none;
+}
+.enemy-debuffs {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    margin-top: 232px;
+    margin-left: 20px;
+}
+.enemy1 .enemy-debuffs {
+    margin-top: 287px;
+    margin-left: 35px;
+}
+.enemy-has-lower-attack-img {
+    width: 40px;
+    display: none;
+}
+.enemy-has-lower-block-img {
+    width: 45px;
+    display: none;
+}
+.enemy-burn-img {
+    width: 30px;
+    position: absolute;
+    margin-left: 149px;
+    margin-top: 209px;
+    display: none;
+}
+.enemy1 .enemy-burn-img {
+    margin-left: 159px;
+    margin-top: 261px;
+}
+.enemy-burn-number {
+    position: absolute;
+    width: 50px;
+    margin-top: 219px;
+    margin-left: 139px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(46, 19, 10); 
+    display: none;   
+}
+.enemy1 .enemy-burn-number {
+    margin-top: 271px;
+    margin-left: 149px;   
+}
+.position-left {
+    margin-left: 1320px;
+    margin-top: -40px;
+}
+.position-middle {
+    margin-left: 1500px;
+}
+.position-right {
+    margin-left: 1680px;
+}
+.enemy-img { /*Image by freepik*/
+    width: 250px;
+    position: absolute;
+}
+.enemy-health-div {
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    margin-left: 74px;
+    margin-top: 210px;
+    text-align: center;
+}
+.enemy1 .enemy-health-div {
+    margin-top: 262px;
+    margin-left: 84px;
+}
+.enemy-health-divider {
+    margin-top: 12px;
+    font-weight: bold;
+    font-size: 25px;
+    color: red;
+}
+.enemy-health {
+    margin-top: 12px;
+    font-weight: bold;
+    font-size: 25px;
+    color: red;
+    display: inline;
+}
+.current-enemy-health {
+    margin-top: 12px;
+    font-weight: bold;
+    font-size: 25px;
+    color: red;
+}
+.enemy-action-div {
+    position: absolute;
+    margin-left: 84px;
+    margin-top: -50px;
+}
+.enemy1 .enemy-action-div {
+    position: absolute;
+    margin-left: 94px;
+    margin-top: -30px;
+}
+.enemy-action-img {
+    width: 80px;
+    display: none;
+}
+.enemy-attack-number {
+    position: absolute;
+    font-size: 30px;
+    font-weight: bold;
+    margin-left: 25px;
+    margin-top: -23px;
+    display: none;
+}
+.enemy-block-number {
+    position: absolute;
+    width: 50px;
+    font-size: 30px;
+    margin-left: 15px;
+    margin-top: 20px;
+    text-align: center;
+    display: none;
+    color: white;
+}
+.enemy-heal-number, .player-heal-number {
+    position: absolute;
+    width: 50px;
+    font-size: 30px;
+    margin-left: 15px;
+    margin-top: 20px;
+    text-align: center;
+}
+.enemy-has-block-img {
+    position: absolute;
+    width: 50px;
+    margin-top: 203px;
+    margin-left: 48px; 
+    display: none;
+}
+
+.enemy1 .enemy-has-block-img {
+    margin-top: 254px;
+    margin-left: 59px;
+}
+.enemy-has-block-number {
+    position: absolute;
+    font-size: 23px;
+    margin-left: 48px;
+    margin-top: 214px;
+    width: 50px;
+    z-index: 1;
+    text-align: center;
+    color: white;
+    display: none;
+}
+.enemy1 .enemy-has-block-number {
+    margin-top: 265px;
+    margin-left: 59px;
+}
+
+.fade-out {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s .6s, opacity .6s linear;
+}
+
+#mana-bar-img {
+    width: 100px;
+    margin-top: 700px;
+    margin-left: 85px;
+}
+#current-mana {
+    position: absolute;
+    margin-top: -65px;
+    margin-left: 123px;
+    font-weight: bold;
+    font-size: 35px;
+    color: black;
+    z-index: 1;
+}
+#end-turn-button {
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    margin-left: 80px;
+    margin-top: 50px;
+    border-radius: 10%;
+    border: 5px double rgb(127, 128, 131);
+    background-color:rgb(11, 28, 83);
+    color: white;
+    font-weight: bold;
+    transition-duration: .1s;
+}
+#end-turn-button:active {
+    padding-top: 3px;
+}
+#end-turn-button:hover {
+    background-color: rgb(21, 42, 121);
+}
+/* EXCLAMATION */
+.exclamation-div {
+    width: 100%;
+    height: 100vh;
+    background-image: url("imgs/pixel-forest.jpg");
+    background-size: cover;
+    background-position: 10%;
+    display: none;
+}
+.exclamation-div:nth-of-type(3) {
+    display: none;
+}
+.exclamation-information-container {
+    width: 80%;
+    height: 60vh;
+    background-color: black;
+    margin: auto;
+    margin-top: 210px;
+}
+.exclamation-title {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 36px;
+    color: white;
+}
+.exclamation-event-img {
+    width: 30rem;
+    height: 30rem;
+    background-image: url("imgs/ghost.jpg");
+    background-size: cover;
+    margin-top: -13px;
+    margin-left: 38px;
+}
+.exclamation-text-div {
+    width: 60%;
+    height: 70%;
+    margin-left: 35rem;
+    margin-top: -30.5rem;
+    padding: 2rem;
+    font-size: 30px;
+    color: white;
+}
+.exclamation-button-div {
+    width: 56%;
+    height: 30%;
+    margin-left: 37rem;
+    margin-top: -66px;
+    display: flex;
+    flex-direction: column;
+}
+.exclamation-button-div button {
+    height: 45%;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: left;
+    padding-left: 20px;
+    background-color:rgb(65, 74, 104);
+    color: white;
+    transition-duration: .1s;
+}
+.exclamation-button-div button:hover {
+    background-color:rgb(95, 119, 150);
+}
+.exclamation-button-div button:active {
+    padding-top: 6px;
+}
+.exclamation-button1:hover + #avarice-card {
+    display: flex;
+}
+.exclamation-button1 span {
+    color: lightgreen;
+    font-weight: bold;
+}
+.exclamation-button1 span:nth-last-child(1) {
+    color: gold;
+    font-weight: bold;
+}
+.exclamation-button2 {
+    margin-top: 15px;
+}
+.exclamation-button2 span {
+    color: rgb(216, 69, 69);
+    font-weight: bold;
+}
+#avarice-card {
+    position: absolute;
+    margin-left: 18.5rem;
+    margin-top: -16rem;
+}
+
+/* CARDS */
+#draw-pile-container {
+    position: absolute;
+    width: 80px;
+    height: 90px;
+    background-image: url("imgs/icons8-cards-64.png");
+    background-size: cover;
+    margin-top: 46px;
+}
+#draw-pile-show-cards {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 15%;
+    background-color: red;
+    width: 70%;
+    height: 60%;
+    margin: auto;
+    align-items: flex-end;
+    flex-direction: column;
+    display: none;
+}
+.draw-pile-clone {
+    width: 180px;
+    height: 250px;
+    background-color:rgb(223, 218, 207);
+    margin: auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid black;
+    transition: .5s;
+    display: none;
+    margin-top: -300px;
+    z-index: 1;
+}
+#exit-draw-pile-show-cards {
+    padding: 5px 10px;
+}
+#discard-pile-show-cards {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 15%;
+    background-color: purple;
+    width: 70%;
+    height: 60%;
+    margin: auto;
+    align-items: flex-end;
+    flex-direction: column;
+    display: none;
+}
+#exit-discard-pile-show-cards {
+    padding: 5px 10px;
+}
+#discard-pile-container {
+    position: absolute;
+    width: 80px;
+    height: 90px;
+    background-image: url("imgs/icons8-cards-96.png");
+    background-size: cover;
+    margin-top: 46px;
+    margin-left: 1820px;
+}
+#hand-container {
+    display: flex;
+    width: 40%;
+    margin: /*-40px*/-300px auto 0px auto;
+}
+#opening-cards-container, #all-cards-reference-container, #new-cards-container {
+    display: none;
+}
+.fire {
+    background-image: linear-gradient(#ff0000, #ff9a00);
+}
+.lightning {
+    background-image: linear-gradient(#fafba5, #f0fb3e, #221d54);
+}
+.ice {
+    background-image: linear-gradient(#3fd0d4, #b9e8ea);
+}
+.air {
+    background-image: linear-gradient(white, #99d9ff);
+}
+.water {
+    background-image: linear-gradient(#0f5e9c, #74ccf4);
+}
+.earth {
+    background-image: linear-gradient(#451b04, #81b14f);
+}
+.gold {
+    background-image: linear-gradient(gold, black);
+}
+.fire .card-text, .fire .card-name {
+    background-color: #3a0000;
+}
+.lightning .card-text, .lightning .card-name {
+    background-color: #9898b6;
+}
+.ice .card-text, .ice .card-name {
+    background-color: rgb(26, 111, 150)
+}
+.air .card-text, .air .card-name {
+    background-color: rgb(139, 165, 173)
+}
+.water .card-text, .water .card-name {
+    background-color: rgb(7, 40, 58);
+}
+.earth .card-text, .earth .card-name {
+    background-color: #1f0c02
+}
+.card, .card-reference, .new-card {
+    width: 180px;
+    height: 250px;
+    margin: auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid black;
+    transition: .5s;
+    display: none;
+    /*background-image: linear-gradient(darkred, black);*/
+    position: relative;
+}
+.card:hover, .new-card:hover {
+    transform: translateY(-50px);
+    transition-duration: .5s;
+}
+.card-name {
+    width: 100%;
+    color: white;
+    font-size: 14px;
+    margin: 5px 0px;
+}
+.card-img {
+    width: 90%;
+    height: 42%;
+    border: 1px solid black;
+}
+.card-mana-number {
+    top: 2.5px;
+    left: 4px;
+    font-size: 18px;
+    position: absolute;
+    z-index: 1;
+    color: white;
+    font-weight: bold;
+}
+.card-mana-img {
+    position: absolute;
+    left: -4.5px;
+    width: 26px;
+    height: 26px;
+}
+.card-text, .new-card-text {
+    color: white;
+    width: 90%;
+    height: 42%;
+    font-size: 14px;
+    padding: 10px 8px;
+    border: 1px solid black;
+}
