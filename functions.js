@@ -2,9 +2,10 @@
 51 FUNCTIONAL CARDS LETS GOOOOOO!!!!!!!!!!!!!!!
 SET UP IMAGES TO SCALE WITH SCREEN SIZE
 SET UP EXCLAMATION AREAS WITH FUNCTIONALITY
-TREASURE: Empower an element
+TREASURE: Empower an element and more likely to draw that element type
 MAKE DIFFERENT ENCOUNTERS
 
+GUST WORKS ON A DRAW OR A DISCARD BUT NOT BOTH, ITS ADDING TWO NEW CARDS TO THE ARRAYS. THE BEFORE CONSOLE.LOG SHOWS ALL WINDS OF CHANGE CARDS IN HAND ARRAY BEFORE THEYRE ADDED THROUGH GUST
 */
 /*
 GENERAL FUNCTIONS
@@ -320,7 +321,7 @@ function resetArena() {
         terrasBlessing = false;
         gaiasEmbrace = false;
         maxHandLength = 5;
-        let windsCards = document.querySelectorAll(".winds-of-change");
+        let windsCards = document.querySelectorAll(".winds-card-text");
         for (let i = 0; i < windsCards.length; i++) {
                 windsCards[i].innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +3 damage.`;  
         }
@@ -757,18 +758,22 @@ const cardsInformation = [
                 }
         },
         {
-                manaCost: 0,
-                name: "Gust",
-                cardImg: "imgs/gust.jpg",
-                cardText: "Deal 5 damage to all enemies",
+                manaCost: 1,
+                name: "Tornado",
+                cardImg: "imgs/tornado.jpg",
+                cardText: "Enemies with windswept take 12 damage. Enemies without gain windswept",
                 chooseEnemyCard: false,
                 element: "air",
                 action: function() {
-                        spendMana(6);
+                        spendMana(26);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                damageEnemy(5, i);    
+                                if (enemyLowerAttack[i] === true) {
+                                        damageEnemy(12, i);
+                                } else {
+                                        inflictWindswept(i);
+                                }
                         }
-                },
+                }
         },
         {
                 manaCost: 1,
@@ -796,16 +801,16 @@ const cardsInformation = [
                 }
         },
         {
-                manaCost: 0,
-                name: "Rejuvenate",
-                cardImg: "imgs/liquid-regeneration.jpg",
-                cardText: "Instantly gain 2 mana",
+                manaCost: 2,
+                name: "Downpour",
+                cardImg: "imgs/downpour2.jpg",
+                cardText: "Gain 5 regeneration",
                 chooseEnemyCard: false,
                 element: "water",
                 action: function() {
                         spendMana(9);
-                        currentMana.innerText = parseFloat(currentMana.innerText) + 2;
-                }      
+                        gainRegen(5);
+                }
         },
         {
                 manaCost: 1,
@@ -915,7 +920,7 @@ const cardsInformation = [
         {
                 manaCost: 2,
                 name: "Ball Lightning",
-                cardImg: "imgs/ball-of-lightning.jpg",
+                cardImg: "imgs/static-electricity.jpg",
                 cardText: "Deal 10 damage to a random enemy three times",
                 chooseEnemyCard: false,
                 element: "lightning",
@@ -930,7 +935,7 @@ const cardsInformation = [
         {
                 manaCost: 1,
                 name: "Conduit",
-                cardImg: "imgs/conduit.jpg",
+                cardImg: "imgs/conduit2.jpg",
                 cardText: "Deal 4 damage for each mana you have remaining",
                 chooseEnemyCard: true,
                 element: "lightning",
@@ -956,7 +961,7 @@ const cardsInformation = [
         {
                 manaCost: 2,
                 name: "Ice Nova",
-                cardImg: "imgs/frost-nova.jpg",
+                cardImg: "imgs/ice-nova-12.jpg",
                 cardText: "Deal 14 damage to all enemies and inflict frostbite on everyone including yourself",
                 chooseEnemyCard: false,
                 element: "ice",
@@ -973,7 +978,7 @@ const cardsInformation = [
         {
                 manaCost: 1,
                 name: "Frostbitten",
-                cardImg: "imgs/frostbitten.jpg",
+                cardImg: "imgs/frostbitten2.jpg",
                 cardText: "When you have frostbite, gain double armor. Inflict frostbite on yourself",
                 chooseEnemyCard: false,
                 element: "ice",
@@ -1012,23 +1017,23 @@ const cardsInformation = [
         {
                 manaCost: 0,
                 name: "Winds of Change",
-                cardImg: "imgs/winds-of-change.jpg",
+                cardImg: "imgs/winds-of-change2.jpg",
                 cardText: "Deal 5 damage. All Winds of Change gain +3 damage.",
                 chooseEnemyCard: true,
                 element: "air",
                 action: function() {
                         damageEnemy(windsOfChange, chosenEnemy);
                         windsOfChange += 3;
-                        let windsCards = document.querySelectorAll(".winds-of-change");
-                        for (let i = 0; i < windsCards.length; i++) {
-                                windsCards[i].innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +3 damage.`;  
+                        let windCardsText = document.querySelectorAll(".winds-card-text");
+                        for (let i = 0; i < windCardsText.length; i++) {
+                                windCardsText[i].innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +3 damage.`;  
                         }
                 }
         },
         {
                 manaCost: 1,
-                name: "Wind Wall",
-                cardImg: "imgs/wall-of-wind.jpg",
+                name: "Windwalk",
+                cardImg: "imgs/windwalk3.jpg",
                 cardText: "Draw two cards",
                 chooseEnemyCard: false,
                 element: "air",
@@ -1038,22 +1043,45 @@ const cardsInformation = [
                 }
         },
         {
-                manaCost: 1,
-                name: "Tornado",
-                cardImg: "imgs/tornado.jpg",
-                cardText: "Enemies with windswept take 12 damage. Enemies without gain windswept",
+                manaCost: 2,
+                name: "Gust",
+                cardImg: "imgs/gust.jpg",
+                cardText: "Draw one Winds of Change from your draw pile and one from your discard pile",
                 chooseEnemyCard: false,
                 element: "air",
                 action: function() {
                         spendMana(26);
-                        for (let i = 0; i < numberOfEnemies; i++) {
-                                if (enemyLowerAttack[i] === true) {
-                                        damageEnemy(12, i);
-                                } else {
-                                        inflictWindswept(i);
+                        let drawCard = false;
+                        let discardCard = false;
+                        let windCards = document.querySelectorAll(".winds-of-change");
+                        console.log("BEFORE\nDRAW: ", drawPileArray);
+                        console.log("BEFORE\nHAND: ", handArray);
+                        console.log("BEFORE\nDISCARD: ", discardPileArray);
+                        for (let i = 0; i < windCards.length; i++) {
+                                if (drawPileArray.includes(windCards[i]) && drawCard === false) {
+                                        let drawIndex = drawPileArray.indexOf(windCards[i]);
+                                        let newDraw = drawPileArray.splice(drawIndex, 1);
+                                        let newNewDraw = newDraw.pop();
+                                        handArray.push(newNewDraw);
+                                        displayFlex(windCards[i]);
+                                        drawCard = true;
+                                        console.log("DRAW\nDRAW: ", drawPileArray);
+                                        console.log("DRAW\nHAND: ", handArray);
+                                        console.log("DRAW\nDISCARD: ", discardPileArray);
+                                }
+                                if (discardPileArray.includes(windCards[i]) && discardCard === false) {
+                                        let drawIndex = discardPileArray.indexOf(windCards[i]);
+                                        let newDraw = discardPileArray.splice(drawIndex, 1);
+                                        let newNewDraw = newDraw.pop();
+                                        handArray.push(newNewDraw);
+                                        displayFlex(windCards[i]);
+                                        discardCard = true;
+                                        console.log("DISCARD\nDRAW: ", drawPileArray);
+                                        console.log("DISCARD\nHAND: ", handArray);
+                                        console.log("DISCARD\nDISCARD: ", discardPileArray);
                                 }
                         }
-                }
+                },
         },
         {
                 manaCost: 3,
@@ -1068,21 +1096,20 @@ const cardsInformation = [
                 }
         },
         {
-                manaCost: 2,
-                name: "Rainfall",
-                cardImg: "imgs/rainfall.jpg",
-                cardText: "Gain 5 regeneration",
+                manaCost: 0,
+                name: "Rejuvenate",
+                cardImg: "imgs/liquid-regeneration.jpg",
+                cardText: "Instantly gain 2 mana",
                 chooseEnemyCard: false,
                 element: "water",
                 action: function() {
-                        spendMana(28);
-                        gainRegen(5);
-                }
+                        currentMana.innerText = parseFloat(currentMana.innerText) + 2;
+                }      
         },
         {
                 manaCost: 1,
-                name: "Cleansing Spring",
-                cardImg: "imgs/cleansing-spring.jpg",
+                name: "Sanguine Spring",
+                cardImg: "imgs/sanguine-spring4.jpg",
                 cardText: "Cleanse all debuffs and gain blood siphon for two turns",
                 chooseEnemyCard: false,
                 element: "water",
@@ -1138,8 +1165,8 @@ const cardsInformation = [
         },
         {
                 manaCost: 2,
-                name: "Thorn Armor",
-                cardImg: "imgs/thorn-armor.jpg",
+                name: "Weave of Vines",
+                cardImg: "imgs/vine-armor2.jpg",
                 cardText: "Gain 4 thorns",
                 chooseEnemyCard: false,
                 element: "earth",
@@ -1175,10 +1202,10 @@ const cardsInformation = [
         {
                 manaCost: 3,
                 name: "Forest Fire",
-                cardImg: "imgs/terra-infusion.jpg",
+                cardImg: "imgs/forest-fire.jpg",
                 cardText: "Inflict 5 burn to all enemies. Deal damage equal to their burn",
                 chooseEnemyCard: false,
-                element: "earth",
+                element: "fire-lightning",
                 action: function() {
                         spendMana(36);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1190,10 +1217,10 @@ const cardsInformation = [
         {
                 manaCost: 1,
                 name: "Frostfire Fusion",
-                cardImg: "imgs/terra-infusion.jpg",
+                cardImg: "imgs/frostfire-fusion.jpg",
                 cardText: "If the enemy is either burning or inflicted with frostbite they are inflicted with 6 burn and frostbite.",
                 chooseEnemyCard: true,
-                element: "earth",
+                element: "fire-ice",
                 action: function() {
                         spendMana(37);
                         if (parseFloat(enemyBurnNumber[chosenEnemy].innerText) > 0 || enemyLowerBlock[chosenEnemy]) {
@@ -1208,6 +1235,7 @@ const cardsInformation = [
                 cardImg: "imgs/fan-the-flames.jpg",
                 cardText: "Inflict windswept on all enemies and increase burn count by 6 if they're already burning",
                 chooseEnemyCard: false,
+                element: "fire-air",
                 action: function() {
                         spendMana(38);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1221,9 +1249,10 @@ const cardsInformation = [
         {
                 manaCost: 1,
                 name: "Cauterize",
-                cardImg: "imgs/magma.jpg",
+                cardImg: "imgs/cauterize2.jpg",
                 cardText: "Damage yourself 10. Gain 2 blood siphon and 4 regen",
                 chooseEnemyCard: false,
+                element: "fire-water",
                 action: function() {
                         spendMana(39);
                         if (playerBlockNumber.innerText <= 0) {
@@ -1247,6 +1276,7 @@ const cardsInformation = [
                 cardImg: "imgs/magma.jpg",
                 cardText: "Inflict 10 burn on an enemy and gain block equal to their burn",
                 chooseEnemyCard: true,
+                element: "fire-earth",
                 action: function() {
                         spendMana(40);
                         burnEnemy(10, chosenEnemy);
@@ -1255,10 +1285,11 @@ const cardsInformation = [
         },
         {
                 manaCost: 1,
-                name: "Snowstorm",
-                cardImg: "imgs/magma.jpg",
+                name: "Deep Freeze",
+                cardImg: "imgs/deep-freeze.jpg",
                 cardText: "Electrucute enemies with frostbite dealing 20 damage",
                 chooseEnemyCard: false,
+                element: "lightning-ice",
                 action: function() {
                         spendMana(41);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1270,8 +1301,8 @@ const cardsInformation = [
         },
         {
                 manaCost: 2,
-                name: "Static Electricity",
-                cardImg: "imgs/static-electricity.jpg",
+                name: "Stormblessed",
+                cardImg: "imgs/stormblessed4.jpg",
                 cardText: "Deal 12 damage to all enemies. If they are windswept deal 30 instead.",
                 chooseEnemyCard: false,
                 element: "lightning-air",
@@ -1490,7 +1521,7 @@ function drawCards(numberOfCards) {
                         let reshuffle = discardPileArray.shift();
                         drawPileArray.push(reshuffle);
                 }     
-                //console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+                console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
  
         }
         // SHIFT CARDS FROM DRAW PILE TO HAND
@@ -1498,43 +1529,43 @@ function drawCards(numberOfCards) {
                 let drawNewCard = drawPileArray.shift();
                 handArray.unshift(drawNewCard);
         }
-        //console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
 
         // DISPLAY CARDS IN HAND
         for (let i = 0; i < numberOfCards; i++) {
                 displayFlex(handArray[i]);
         }
-        //console.log("HAND ARRAY CARDS: " + handArray);
+        console.log(handArray);
 }
 // GET NEW SET OF 5 CARDS AT THE END OF EACH TURN
 function addCardsToHand() {
         // MOVE HAND CONTAINERS TO DISCARD CONTAINERS
-        //console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 let discarded = handArray.shift();
                 discardPileArray.unshift(discarded);
         }
-        //console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         for (let i = 0; i < cardsInHand; i++) {
                displayNone(discardPileArray[i]);
         }
         drawCards(maxHandLength);      
 }
 function reshuffleCards() {
-        //console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 let discarded = handArray.shift();
                 drawPileArray.unshift(discarded);
         }
-        //console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInDiscardPile = discardPileArray.length;
         for (let i = 0; i < cardsInDiscardPile; i++) {
                 let reshuffle = discardPileArray.shift();
                 drawPileArray.push(reshuffle);
         }
-        //console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
          // RESHUFFLE CARDS IN DRAW PILE
         drawPileArray = drawPileArray.toSorted(() => 0.5 - Math.random());
          // SHIFT CARDS FROM DRAW PILE TO HAND
@@ -1542,7 +1573,7 @@ function reshuffleCards() {
                 let drawNewCard = drawPileArray.shift();
                 handArray.unshift(drawNewCard);
         }
-        //console.log(`RESHUFFLE CARDS\nDRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`RESHUFFLE CARDS\nDRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         for (let i = 0; i < maxHandLength; i++) {
                 displayFlex(handArray[i]);
         }
@@ -1558,7 +1589,6 @@ for (let i = 0; i < cardsInformation.length; i++) {
 let cardClicked = false;
 // ADD EVENTLISTENERS TO ALL CARDS, STORE CHOSEN CARD IN VARIABLE, PICK ENEMY WHO WILL RECIEVE CARD ACTION
 function addCardListeners(cardType, index, CIindex) {
-        console.log(cardType[index]);
         // IF CARD REQUIRES YOU TO CLICK ON AN ENEMY
         if (cardsInformation[CIindex].chooseEnemyCard) {
                 cardType[index].addEventListener("click", () => {
@@ -1572,7 +1602,6 @@ function addCardListeners(cardType, index, CIindex) {
                 cardType[index].addEventListener("click", () => {
                         if (currentMana.innerText >= cardsInformation[CIindex].manaCost) {
                                 cardsInformation[CIindex].action();
-                                console.log(cardType[index]);
                                 displayNone(cardType[index]);
                         }
                 });
@@ -1593,6 +1622,7 @@ function addCardListeners(cardType, index, CIindex) {
         function clickEnemy() {
                 if (currentMana.innerText >= cardsInformation[chosenCard].manaCost && chosenCard === chosenCard) {
                         cardsInformation[CIindex].action();
+                        discardPileArray.push(cardType[index]);
                         displayNone(cardType[index]);
                         cardClicked = false;
                         checkHealthIsOverMax();
@@ -1604,18 +1634,20 @@ function addCardListeners(cardType, index, CIindex) {
 }        
 const allCardsReference = document.querySelectorAll(".card-reference");
 const newCardsContainer = document.querySelector("#new-cards-container");
+
+let newCard0, newCard1, newCard2, newCard3;
+
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
         function addNewCardInformation(newRandomCard) {
-                createCard(newRandomCard, newCardsContainer, "card", "card-text");
-                // GET NEW CARD AND INDEX IT BASED ON THE LENGTH OF THE NEW CARDS ARRAY
-                let newCardsArray = document.querySelectorAll(".card");
-                // ADD CLASS TO DYNAMICALLY UPDATE TEXT WHEN PLAYED
                 if (newRandomCard == 24) {
-                        let newCardText = document.querySelectorAll(".card-text");
-                        newCardText[0].classList.add("winds-of-change");
+                        createCard(newRandomCard, newCardsContainer, "card winds-of-change", "card-text winds-card-text");
+                } else {
+                        createCard(newRandomCard, newCardsContainer, "card", "card-text");
                 }
+                let newCardsArray = document.querySelectorAll(".card");
                 addCardListeners(newCardsArray, 0, newRandomCard);
+                // ADD CLASS TO DYNAMICALLY UPDATE TEXT TO WINDS OF CHANGE WHEN PLAYED
                 drawPileArray.push(newCardsArray[0]);
                 // ADD THE NEW CARD TO THE DRAW PILE
                 handContainer.appendChild(newCardsArray[0]);
@@ -1625,12 +1657,16 @@ function getRandomNewCards () {
                 allCardsReferenceContainer.appendChild(allCardsReference[newRandomCard1]);
                 allCardsReferenceContainer.appendChild(allCardsReference[newRandomCard2]);
                 allCardsReferenceContainer.appendChild(allCardsReference[newRandomCard3]);
+                allCardsReference[newRandomCard0].removeEventListener("click", newCard0);  
+                allCardsReference[newRandomCard1].removeEventListener("click", newCard1);  
+                allCardsReference[newRandomCard2].removeEventListener("click", newCard2);  
+                allCardsReference[newRandomCard3].removeEventListener("click", newCard3);  
         }
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = 42;//createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard1 = 43;//createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard2 = 44;//createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard3 = 50;//createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard0 = 24;//createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard1 = 25;//createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard2 = 26;//createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard3 = 27;//createRandomNumber(0, cardsInformation.length - 1);
         // CHANGE CARDS IF THEY ARE THE SAME
         if (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3) {
                 newRandomCard0 += 1;
@@ -1662,18 +1698,14 @@ function getRandomNewCards () {
         chooseNewCardDiv.appendChild(allCardsReference[newRandomCard2]);
         chooseNewCardDiv.appendChild(allCardsReference[newRandomCard3]);
         displayFlex(chooseNewCardDiv, allCardsReference[newRandomCard0], allCardsReference[newRandomCard1], allCardsReference[newRandomCard2], allCardsReference[newRandomCard3]);
-        allCardsReference[newRandomCard0].addEventListener("click", () => {
-                addNewCardInformation(newRandomCard0);
-        }, { once: true });
-        allCardsReference[newRandomCard1].addEventListener("click", () => {
-                addNewCardInformation(newRandomCard1);
-        }, { once: true });
-        allCardsReference[newRandomCard2].addEventListener("click", () => {
-                addNewCardInformation(newRandomCard2);
-        }, { once: true });
-        allCardsReference[newRandomCard3].addEventListener("click", () => {
-                addNewCardInformation(newRandomCard3);
-        }, { once: true });  
+        newCard0 = () => {addNewCardInformation(newRandomCard0)}
+        newCard1 = () => {addNewCardInformation(newRandomCard1)}
+        newCard2 = () => {addNewCardInformation(newRandomCard2)}
+        newCard3 = () => {addNewCardInformation(newRandomCard3)}
+        allCardsReference[newRandomCard0].addEventListener("click", newCard0);
+        allCardsReference[newRandomCard1].addEventListener("click", newCard1);
+        allCardsReference[newRandomCard2].addEventListener("click", newCard2);
+        allCardsReference[newRandomCard3].addEventListener("click", newCard3);
 }
 
 /*
