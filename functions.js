@@ -1060,9 +1060,9 @@ const cardsInformation = [
                         for (let i = 0; i < windCards.length; i++) {
                                 if (drawPileArray.includes(windCards[i]) && drawCard === false) {
                                         let drawIndex = drawPileArray.indexOf(windCards[i]);
-                                        let newDraw = drawPileArray.splice(drawIndex, 1);
-                                        let newNewDraw = newDraw.pop();
-                                        handArray.push(newNewDraw);
+                                        let getWindCard = drawPileArray.splice(drawIndex, 1);
+                                        let holdWindCard = getWindCard.pop();
+                                        handArray.push(holdWindCard);
                                         displayFlex(windCards[i]);
                                         drawCard = true;
                                         console.log("DRAW\nDRAW: ", drawPileArray);
@@ -1544,6 +1544,7 @@ function addCardsToHand() {
         let cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 let discarded = handArray.shift();
+                console.log(discarded);
                 discardPileArray.unshift(discarded);
         }
         console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
@@ -1589,6 +1590,13 @@ for (let i = 0; i < cardsInformation.length; i++) {
 let cardClicked = false;
 // ADD EVENTLISTENERS TO ALL CARDS, STORE CHOSEN CARD IN VARIABLE, PICK ENEMY WHO WILL RECIEVE CARD ACTION
 function addCardListeners(cardType, index, CIindex) {
+        function addToDiscard() {
+                let handIndex = handArray.indexOf(cardType[index]);
+                let getCard = handArray.splice(handIndex, 1);
+                let holdCard = getCard.pop();
+                discardPileArray.push(holdCard);
+                displayNone(cardType[index]);
+        }
         // IF CARD REQUIRES YOU TO CLICK ON AN ENEMY
         if (cardsInformation[CIindex].chooseEnemyCard) {
                 cardType[index].addEventListener("click", () => {
@@ -1602,7 +1610,7 @@ function addCardListeners(cardType, index, CIindex) {
                 cardType[index].addEventListener("click", () => {
                         if (currentMana.innerText >= cardsInformation[CIindex].manaCost) {
                                 cardsInformation[CIindex].action();
-                                displayNone(cardType[index]);
+                                addToDiscard();
                         }
                 });
         }
@@ -1622,8 +1630,7 @@ function addCardListeners(cardType, index, CIindex) {
         function clickEnemy() {
                 if (currentMana.innerText >= cardsInformation[chosenCard].manaCost && chosenCard === chosenCard) {
                         cardsInformation[CIindex].action();
-                        discardPileArray.push(cardType[index]);
-                        displayNone(cardType[index]);
+                        addToDiscard();
                         cardClicked = false;
                         checkHealthIsOverMax();
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1664,9 +1671,9 @@ function getRandomNewCards () {
         }
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
         let newRandomCard0 = 24;//createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard1 = 25;//createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard1 = 15;//createRandomNumber(0, cardsInformation.length - 1);
         let newRandomCard2 = 26;//createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard3 = 27;//createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard3 = 16;//createRandomNumber(0, cardsInformation.length - 1);
         // CHANGE CARDS IF THEY ARE THE SAME
         if (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3) {
                 newRandomCard0 += 1;
