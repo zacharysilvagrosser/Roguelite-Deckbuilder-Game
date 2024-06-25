@@ -134,7 +134,7 @@
 #arena {
     width: 100%;
     height: 100vh;
-    background-image: url(imgs/forest.jpg);
+    background-image: url(imgs/meadow-battleground.jpg);
     background-size: 100%;
     overflow: hidden;
     display: none;
@@ -144,6 +144,9 @@
     margin-top: 585px;
     margin-left: 300px;
     transition: .3s;
+}
+#player-img-div {
+    margin-top: -30px;
 }
 #block-img {
     position: absolute;
@@ -163,17 +166,56 @@
     display: none;
     color: white;
 }
-#player-img { /*Image by freepik*/
-    width: 250px;
+#player-img {
+    width: 350px;
     position: absolute;
+    margin-left: -140px;
+    margin-top: -200px;
+    transform: scaleX(-1);
+}
+#fire-orb-img {
+    width: 75px;
+    position: absolute;
+    margin-left: -125px;
+    margin-top: -200px;
+}
+#lightning-orb-img {
+    width: 80px;
+    position: absolute;
+    margin-left: -95px;
+    margin-top: -260px;
+}
+#ice-orb-img {
+    width: 70px;
+    position: absolute;
+    margin-left: -40px;
+    margin-top: -300px;
+}
+#air-orb-img {
+    width: 70px;
+    position: absolute;
+    margin-left: 40px;
+    margin-top: -300px;
+}
+#water-orb-img {
+    width: 72px;
+    position: absolute;
+    margin-left: 95px;
+    margin-top: -260px;
+}
+#earth-orb-img {
+    width: 72px;
+    position: absolute;
+    margin-left: 125px;
+    margin-top: -194px;
 }
 #health { 
-    margin-top: 260px;
-    margin-left: 40px;
+    margin-top: 150px;
+    margin-left: -20px;
     position: absolute;
     font-weight: bold;
-    font-size: 25px;
-    color: rgb(111, 253, 107);
+    font-size: 30px;
+    color: rgb(130, 1, 1);
 }
 #debuffs {
     width: 200px;
@@ -186,12 +228,12 @@
     width: 50px;
     display: none;
 }
-#player-thorns-img, .enemy-thorns-img, #player-regen-img, #player-blood-img {
+#player-thorns-img, #player-regen-img, #player-blood-img, #player-burn-img {
     width: 60px;
     text-align: center;
     display: none;
 }
-#player-thorns-number, .enemy-thorns-number, #player-regen-number, #player-blood-number {
+#player-thorns-number, #player-regen-number, #player-blood-number, #player-burn-number {
     position: absolute;
     font-weight: bolder;
     margin-top: 13px;
@@ -244,6 +286,35 @@
     width: 45px;
     display: none;
 }
+.enemy-thorns-img {
+    width: 45px;
+    display: none;
+}
+.enemy-thorns-number {
+    position: absolute;
+    width: 50px;
+    margin-top: 22px;
+    margin-left: 15px;
+    font-size: 34px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(46, 19, 10); 
+    display: none;   
+}
+.enemy-has-thorns-div {
+    margin-top: -50px;
+}
+.enemy-has-thorns-number {
+    position: absolute;
+    width: 50px;
+    margin-top: 219px;
+    margin-left: 139px;
+    font-size: 38px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(46, 19, 10); 
+    display: none;   
+}
 .enemy-burn-img {
     width: 30px;
     position: absolute;
@@ -280,10 +351,13 @@
 .position-right {
     margin-left: 1680px;
 }
-.enemy-img { /*Image by freepik*/
-    width: 250px;
+.enemy-img {
+    width: 300px;
+    margin-top: -250px;
+    margin-left: 100px;
     position: absolute;
 }
+
 .enemy-health-div {
     position: absolute;
     width: 100px;
@@ -362,6 +436,14 @@
     margin-left: 48px; 
     display: none;
 }
+.enemy-has-thorns-img {
+    position: absolute;
+    width: 50px;
+    margin-top: 203px;
+    margin-left: 48px; 
+    display: none;
+}
+
 
 .enemy1 .enemy-has-block-img {
     margin-top: 254px;
@@ -581,7 +663,7 @@
 #hand-container {
     display: flex;
     width: 40%;
-    margin: /*-40px*/-300px auto 0px auto;
+    margin: -40px auto 0px auto;
 }
 #opening-cards-container, #all-cards-reference-container, #new-cards-container {
     display: none;
@@ -608,6 +690,42 @@
     background-image: linear-gradient(gold, black);
 }
 
+.fire-lightning {
+    background-image: linear-gradient(#b23d1a, #fafba5);
+}
+.fire-lightning .card-text {
+    background-color: #3a0000;
+}
+.fire-ice {
+    background-image: linear-gradient(#2f989c, #ba760f);
+}
+.fire-ice .card-text {
+    background-color: #3a0000;
+}
+.fire-air {
+    background-image: linear-gradient(#86bfdf, #ba760f);
+}
+.fire-air .card-text {
+    background-color: #3a0000
+}
+.fire-water {
+    background-image: linear-gradient(#0f5e9c, #ba760f);
+}
+.fire-water .card-text {
+    background-color: rgb(7, 40, 58);
+}
+.fire-earth {
+    background-image: linear-gradient(#451b04, #ba760f);
+}
+.fire-earth .card-text {
+    background-color: #3a0000;
+}
+.lightning-ice {
+    background-image: linear-gradient(#221d54, #b9e8ea);
+}
+.lightning-ice .card-text {
+    background-color: #3d3d58
+}
 .lightning-air {
     background-image: linear-gradient(#221d54, white);
 }
@@ -621,7 +739,7 @@
     background-color: rgb(7, 40, 58);
 }
 .lightning-earth {
-    background-image: linear-gradient(#81b14f, #fafba5);
+    background-image: linear-gradient(#451b04, #fafba5, #f0fb3e);
 }
 .lightning-earth .card-text {
     background-color: #1f0c02
@@ -667,7 +785,7 @@
     background-color: #3a0000;
 }
 .lightning .card-text {
-    background-color: #9898b6;
+    background-color: #3d3d58;
 }
 .ice .card-text {
     background-color: rgb(26, 111, 150)
