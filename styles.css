@@ -23,7 +23,6 @@
     height: 200vh;
     background-image: url("imgs/map-background3.jpg");
     background-size: cover;
-    display: none;
 }
 .locations {
     display: flex;
@@ -138,7 +137,7 @@
     background-image: url(imgs/meadow-battleground.jpg);
     background-size: 100%;
     overflow: hidden;
-    
+    display: none;
 }
 #player-div {
     position: absolute;
@@ -228,12 +227,12 @@
 }
 #player-lower-attack-img, #player-lower-block-img {
     width: 60px;
-    display: ;
+    display: none;
 }
 #player-thorns-img, #player-regen-img, #player-blood-img, #player-burn-img {
     width: 60px;
     text-align: center;
-    display: ;
+    display: none;
 }
 #player-thorns-number, #player-regen-number, #player-blood-number, #player-burn-number {
     position: absolute;
@@ -244,7 +243,7 @@
     color: black;
     text-align: center;
     width: 50px;
-    display: ;
+    display: none;
 }
 #player-burn-number {
     margin-top: 26px;
@@ -264,7 +263,6 @@
 .enemy-div {
     position: absolute;
     transition: 1s;
-    display: none;
 }
 .enemy-health {
     position: absolute;
@@ -385,14 +383,16 @@
     margin-top: -36px;
 }
 .position-left {
-    margin-left: 1320px;
-    margin-top: -40px;
+    margin-left: 1020px;
+    margin-top: 60px;
 }
 .position-middle {
-    margin-left: 1500px;
+    margin-left: 1280px;
+    margin-top: 40px;
 }
 .position-right {
-    margin-left: 1680px;
+    margin-left: 1500px;
+    margin-top: 40px;
 }
 .enemy-img {
     width: 300px;
@@ -607,8 +607,8 @@
 }
 #hand-container {
     display: flex;
-    width: 40%;
-    margin: -40px auto 0px auto;
+    width: 45%;
+    margin: -40px 0px 0px 380px;
 }
 #opening-cards-container, #all-cards-reference-container, #new-cards-container {
     display: none;
@@ -755,8 +755,8 @@
     border: 2px solid black;
     transition: .5s;
     display: none;
-    /*background-image: linear-gradient(darkred, black);*/
     position: relative;
+    z-index: 3;
 }
 .card:hover, .new-card:hover {
     transform: translateY(-50px);
