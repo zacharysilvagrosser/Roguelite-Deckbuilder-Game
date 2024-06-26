@@ -23,6 +23,7 @@
     height: 200vh;
     background-image: url("imgs/map-background3.jpg");
     background-size: cover;
+    display: none;
 }
 .locations {
     display: flex;
@@ -137,7 +138,7 @@
     background-image: url(imgs/meadow-battleground.jpg);
     background-size: 100%;
     overflow: hidden;
-    display: none;
+    
 }
 #player-div {
     position: absolute;
@@ -146,110 +147,107 @@
     transition: .3s;
 }
 #player-img-div {
-    margin-top: -30px;
+    margin-top: -140px;
+    margin-left: -30px;
+}
+#player-img {
+    width: 300px;
+    position: absolute;
+    margin-left: -115px;
+    margin-top: -100px;
+    z-index: 1;
+    transform: scaleX(-1);
+}
+#fire-orb-img {
+    width: 75px;
+    margin-left: -125px;
+    position: absolute;
+}
+#lightning-orb-img {
+    width: 80px;
+    margin-left: -75px;
+    position: absolute;
+}
+#ice-orb-img {
+    width: 70px;
+    margin-top: 8px;
+    margin-left: 70px;
+    position: absolute;
+}
+#air-orb-img {
+    width: 70px;
+    margin-top: 8px;
+    margin-left: 120px;
+    position: absolute;
+    z-index: 2;
+}
+#water-orb-img {
+    width: 72px;
+    margin-top: 4px;
+    margin-left: 35px;
+    position: absolute;
+    z-index: 2;
+}
+#earth-orb-img {
+    width: 72px;
+    margin-left: -45px;
+    margin-top: 8px;
+    position: absolute;
+    z-index: 2;
 }
 #block-img {
     position: absolute;
     width: 50px;
-    margin-left: -10px;
-    margin-top: 252px;
+    margin-left: -100px;
+    margin-top: 56px;
     text-align: center;
     display: none;
 }
 #block-img-number {
     position: absolute;
     font-size: 23px;
-    margin-left: -35px;
-    margin-top: 262px;
+    margin-left: -125px;
+    margin-top: 68px;
     text-align: center;
     width: 100px;
     display: none;
     color: white;
 }
-#player-img {
-    width: 350px;
-    position: absolute;
-    margin-left: -140px;
-    margin-top: -200px;
-    transform: scaleX(-1);
-}
-#fire-orb-img {
-    width: 75px;
-    position: absolute;
-    margin-left: -125px;
-    margin-top: -200px;
-}
-#lightning-orb-img {
-    width: 80px;
-    position: absolute;
-    margin-left: -95px;
-    margin-top: -260px;
-}
-#ice-orb-img {
-    width: 70px;
-    position: absolute;
-    margin-left: -40px;
-    margin-top: -300px;
-}
-#air-orb-img {
-    width: 70px;
-    position: absolute;
-    margin-left: 40px;
-    margin-top: -300px;
-}
-#water-orb-img {
-    width: 72px;
-    position: absolute;
-    margin-left: 95px;
-    margin-top: -260px;
-}
-#earth-orb-img {
-    width: 72px;
-    position: absolute;
-    margin-left: 125px;
-    margin-top: -194px;
-}
-#health { 
-    margin-top: 150px;
-    margin-left: -20px;
-    position: absolute;
+#player-health-bar { 
+    margin-top: 200px;
+    margin-left: -55px;
     font-weight: bold;
-    font-size: 30px;
+    font-size: 32px;
     color: rgb(130, 1, 1);
 }
-#debuffs {
+#buffs, #debuffs {
     width: 200px;
     display: flex;
     justify-content: center;
-    margin-top: 282px;
-    margin-left: -20px;
+    margin-left: -100px;
 }
-#player-lower-attack-img, #player-lower-block-img, .enemy-lower-attack-img, .enemy-lower-block-img {
-    width: 50px;
-    display: none;
+#player-lower-attack-img, #player-lower-block-img {
+    width: 60px;
+    display: ;
 }
 #player-thorns-img, #player-regen-img, #player-blood-img, #player-burn-img {
     width: 60px;
     text-align: center;
-    display: none;
+    display: ;
 }
 #player-thorns-number, #player-regen-number, #player-blood-number, #player-burn-number {
     position: absolute;
     font-weight: bolder;
-    margin-top: 13px;
-    margin-left: 6px;
-    color:rgb(100, 54, 1);
+    margin-top: 15px;
+    margin-left: 5px;
     font-size: 26px;
+    color: black;
     text-align: center;
     width: 50px;
-    display: none;
+    display: ;
 }
-#player-regen-number {
-    color: rgb(96, 177, 253);
-}
-#player-blood-number {
-    color: white;
-    margin-top: 17px;
+#player-burn-number {
+    margin-top: 26px;
 }
 #choose-new-card-div {
     position: absolute;
@@ -258,39 +256,71 @@
     margin: 6rem;
     display: none;
 }
+/* ENEMY */
 #enemy-container {
     position: absolute;
-    margin-top: -150px;
+    margin-top: -190px;
 }
 .enemy-div {
     position: absolute;
     transition: 1s;
     display: none;
 }
-.enemy-debuffs {
-    width: 200px;
-    display: flex;
-    justify-content: center;
-    margin-top: 232px;
-    margin-left: 20px;
+.enemy-health {
+    position: absolute;
+    margin-top: -162px;
+    margin-left: 144px;
+    font-weight: bold;
+    font-size: 32px;
+    color: rgb(255, 3, 3);
 }
-.enemy1 .enemy-debuffs {
-    margin-top: 287px;
-    margin-left: 35px;
+.enemy-action-div {
+    position: absolute;
+    margin-left: 214px;
+    margin-top: -330px;
 }
-.enemy-has-lower-attack-img {
-    width: 40px;
+.enemy-action-img {
+    width: 80px;
     display: none;
 }
-.enemy-has-lower-block-img {
-    width: 45px;
+.enemy-burn-action-img {
+    margin-top: -15px;
+}
+.enemy-attack-action-number, .enemy-block-action-number, .enemy-heal-action-number, .enemy-burn-action-number, .enemy-regen-action-number, .enemy-blood-action-number  {
+    position: absolute;
+    width: 50px;
+    font-size: 30px;
+    font-weight: bold;
+    margin-left: 25px;
+    margin-top: -23px;
+    text-align: center;
+    z-index: 1;
     display: none;
 }
-.enemy-thorns-img {
-    width: 45px;
-    display: none;
+.enemy-block-action-number {
+    margin-left: 15px;
+    margin-top: 20px;
+    color: white;
 }
-.enemy-thorns-number {
+.enemy-heal-action-number {
+    margin-left: 15px;
+    margin-top: 20px;
+}
+.enemy-burn-action-number {
+    margin-top: 37px;
+    margin-left: 15px;
+    font-weight: bold;
+    text-align: center;  
+}
+.enemy-regen-action-number {
+    margin-top: 30px;
+    margin-left: 14px;
+}
+.enemy-blood-action-number {
+    margin-top: 30px;
+    margin-left: 14px;
+}
+.enemy-thorns-action-number {
     position: absolute;
     width: 50px;
     margin-top: 22px;
@@ -301,45 +331,58 @@
     color: rgb(46, 19, 10); 
     display: none;   
 }
-.enemy-has-thorns-div {
-    margin-top: -50px;
-}
-.enemy-has-thorns-number {
+.enemy-block-img {
     position: absolute;
     width: 50px;
-    margin-top: 219px;
-    margin-left: 139px;
-    font-size: 38px;
-    font-weight: bold;
-    text-align: center;
-    color: rgb(46, 19, 10); 
-    display: none;   
-}
-.enemy-burn-img {
-    width: 30px;
-    position: absolute;
-    margin-left: 149px;
-    margin-top: 209px;
+    margin-top: 44px;
+    margin-left: 170px; 
     display: none;
 }
-.enemy1 .enemy-burn-img {
-    margin-left: 159px;
-    margin-top: 261px;
+.enemy-block-number {
+    position: absolute;
+    font-size: 23px;
+    margin-top: 56px;
+    margin-left: 170px;
+    width: 50px;
+    z-index: 1;
+    text-align: center;
+    color: white;
+    display: none;
+}
+.enemy-buffs, .enemy-debuffs {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    margin-left: 160px;
+}
+.enemy-buffs {
+    margin-top: 85px;
+}
+.enemy-windswept-img, .enemy-frostbite-img {
+    width: 60px;
+    display: none;
+}
+.enemy-thorns-img, .enemy-burn-img, .enemy-regen-img, .enemy-blood-img {
+    width: 60px;
+    text-align: center;
+    display: none;
+}
+.enemy-thorns-number, .enemy-burn-number, .enemy-regen-number, .enemy-blood-number {
+    position: absolute;
+    font-weight: bolder;
+    margin-top: 18px;
+    margin-left: 5px;
+    font-size: 26px;
+    color: black;
+    text-align: center;
+    width: 50px;
+    display: none;
+}
+.enemy-thorns-number {
+    margin-top: 14px;
 }
 .enemy-burn-number {
-    position: absolute;
-    width: 50px;
-    margin-top: 219px;
-    margin-left: 139px;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    color: rgb(46, 19, 10); 
-    display: none;   
-}
-.enemy1 .enemy-burn-number {
-    margin-top: 271px;
-    margin-left: 149px;   
+    margin-top: -36px;
 }
 .position-left {
     margin-left: 1320px;
@@ -357,7 +400,6 @@
     margin-left: 100px;
     position: absolute;
 }
-
 .enemy-health-div {
     position: absolute;
     width: 100px;
@@ -366,111 +408,14 @@
     margin-top: 210px;
     text-align: center;
 }
-.enemy1 .enemy-health-div {
-    margin-top: 262px;
-    margin-left: 84px;
-}
-.enemy-health-divider {
-    margin-top: 12px;
-    font-weight: bold;
-    font-size: 25px;
-    color: red;
-}
-.enemy-health {
-    margin-top: 12px;
-    font-weight: bold;
-    font-size: 25px;
-    color: red;
-    display: inline;
-}
-.current-enemy-health {
-    margin-top: 12px;
-    font-weight: bold;
-    font-size: 25px;
-    color: red;
-}
-.enemy-action-div {
-    position: absolute;
-    margin-left: 84px;
-    margin-top: -50px;
-}
-.enemy1 .enemy-action-div {
-    position: absolute;
-    margin-left: 94px;
-    margin-top: -30px;
-}
-.enemy-action-img {
-    width: 80px;
-    display: none;
-}
-.enemy-attack-number {
-    position: absolute;
-    font-size: 30px;
-    font-weight: bold;
-    margin-left: 25px;
-    margin-top: -23px;
-    display: none;
-}
-.enemy-block-number {
-    position: absolute;
-    width: 50px;
-    font-size: 30px;
-    margin-left: 15px;
-    margin-top: 20px;
-    text-align: center;
-    display: none;
-    color: white;
-}
-.enemy-heal-number, .player-heal-number {
-    position: absolute;
-    width: 50px;
-    font-size: 30px;
-    margin-left: 15px;
-    margin-top: 20px;
-    text-align: center;
-}
-.enemy-has-block-img {
-    position: absolute;
-    width: 50px;
-    margin-top: 203px;
-    margin-left: 48px; 
-    display: none;
-}
-.enemy-has-thorns-img {
-    position: absolute;
-    width: 50px;
-    margin-top: 203px;
-    margin-left: 48px; 
-    display: none;
-}
 
-
-.enemy1 .enemy-has-block-img {
-    margin-top: 254px;
-    margin-left: 59px;
-}
-.enemy-has-block-number {
-    position: absolute;
-    font-size: 23px;
-    margin-left: 48px;
-    margin-top: 214px;
-    width: 50px;
-    z-index: 1;
-    text-align: center;
-    color: white;
-    display: none;
-}
-.enemy1 .enemy-has-block-number {
-    margin-top: 265px;
-    margin-left: 59px;
-}
 
 .fade-out {
   visibility: hidden;
   opacity: 0;
   transition: visibility 0s .6s, opacity .6s linear;
 }
-
+/* UI */
 #mana-bar-img {
     width: 100px;
     margin-top: 700px;
