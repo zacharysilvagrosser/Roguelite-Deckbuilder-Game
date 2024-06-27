@@ -327,6 +327,7 @@ function getRandomEncounter() {
                         //enemy[0].classList.remove("fade-out");
                         //enemy[1].classList.remove("fade-out");
                         //enemy[2].classList.remove("fade-out");
+                        enemyLevelUp();
                         enemyAction(0, 1, 2);
                         break;
                 case 2:
@@ -341,6 +342,7 @@ function getRandomEncounter() {
                         //enemy[0].classList.remove("fade-out");
                         //enemy[1].classList.remove("fade-out");
                         //enemy[2].classList.remove("fade-out");
+                        enemyLevelUp();
                         enemyAction(3, 4, 5);
                         break;
         }
@@ -1042,9 +1044,9 @@ const cardsInformation = [
                         let drawCard = false;
                         let discardCard = false;
                         let windCards = document.querySelectorAll(".winds-of-change");
-                        console.log("BEFORE\nDRAW: ", drawPileArray);
-                        console.log("BEFORE\nHAND: ", handArray);
-                        console.log("BEFORE\nDISCARD: ", discardPileArray);
+                        //console.log("BEFORE\nDRAW: ", drawPileArray);
+                        //console.log("BEFORE\nHAND: ", handArray);
+                        //console.log("BEFORE\nDISCARD: ", discardPileArray);
                         for (let i = 0; i < windCards.length; i++) {
                                 if (drawPileArray.includes(windCards[i]) && drawCard === false) {
                                         let drawIndex = drawPileArray.indexOf(windCards[i]);
@@ -1053,9 +1055,9 @@ const cardsInformation = [
                                         handArray.push(holdWindCard);
                                         displayFlex(windCards[i]);
                                         drawCard = true;
-                                        console.log("DRAW\nDRAW: ", drawPileArray);
-                                        console.log("DRAW\nHAND: ", handArray);
-                                        console.log("DRAW\nDISCARD: ", discardPileArray);
+                                        //console.log("DRAW\nDRAW: ", drawPileArray);
+                                        //console.log("DRAW\nHAND: ", handArray);
+                                        //console.log("DRAW\nDISCARD: ", discardPileArray);
                                 }
                                 if (discardPileArray.includes(windCards[i]) && discardCard === false) {
                                         let drawIndex = discardPileArray.indexOf(windCards[i]);
@@ -1064,9 +1066,9 @@ const cardsInformation = [
                                         handArray.push(newNewDraw);
                                         displayFlex(windCards[i]);
                                         discardCard = true;
-                                        console.log("DISCARD\nDRAW: ", drawPileArray);
-                                        console.log("DISCARD\nHAND: ", handArray);
-                                        console.log("DISCARD\nDISCARD: ", discardPileArray);
+                                        //console.log("DISCARD\nDRAW: ", drawPileArray);
+                                        //console.log("DISCARD\nHAND: ", handArray);
+                                        //console.log("DISCARD\nDISCARD: ", discardPileArray);
                                 }
                         }
                 },
@@ -1509,7 +1511,7 @@ function drawCards(numberOfCards) {
                         let reshuffle = discardPileArray.shift();
                         drawPileArray.push(reshuffle);
                 }     
-                console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+                //console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
  
         }
         // SHIFT CARDS FROM DRAW PILE TO HAND
@@ -1517,44 +1519,44 @@ function drawCards(numberOfCards) {
                 let drawNewCard = drawPileArray.shift();
                 handArray.unshift(drawNewCard);
         }
-        console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
 
         // DISPLAY CARDS IN HAND
         for (let i = 0; i < numberOfCards; i++) {
                 displayFlex(handArray[i]);
         }
-        console.log(handArray);
+        //console.log(handArray);
 }
 // GET NEW SET OF 5 CARDS AT THE END OF EACH TURN
 function addCardsToHand() {
         // MOVE HAND CONTAINERS TO DISCARD CONTAINERS
-        console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 let discarded = handArray.shift();
-                console.log(discarded);
+                //console.log(discarded);
                 discardPileArray.unshift(discarded);
         }
-        console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         for (let i = 0; i < cardsInHand; i++) {
                displayNone(discardPileArray[i]);
         }
         drawCards(maxHandLength);      
 }
 function reshuffleCards() {
-        console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 let discarded = handArray.shift();
                 drawPileArray.unshift(discarded);
         }
-        console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInDiscardPile = discardPileArray.length;
         for (let i = 0; i < cardsInDiscardPile; i++) {
                 let reshuffle = discardPileArray.shift();
                 drawPileArray.push(reshuffle);
         }
-        console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
          // RESHUFFLE CARDS IN DRAW PILE
         drawPileArray = drawPileArray.toSorted(() => 0.5 - Math.random());
          // SHIFT CARDS FROM DRAW PILE TO HAND
@@ -1562,7 +1564,7 @@ function reshuffleCards() {
                 let drawNewCard = drawPileArray.shift();
                 handArray.unshift(drawNewCard);
         }
-        console.log(`RESHUFFLE CARDS\nDRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`RESHUFFLE CARDS\nDRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         for (let i = 0; i < maxHandLength; i++) {
                 displayFlex(handArray[i]);
         }
@@ -1763,7 +1765,8 @@ function damageEnemy(damage, enemy) {
                                 enemyBlockNumber[enemy].innerText = 0;
                                 displayNone(enemyBlockNumber[enemy], enemyBlockImg[enemy]);
                         } else {
-                                enemyBlockNumber[enemy].innerText -= damage;    
+                                enemyBlockNumber[enemy].innerText -= damage;
+                                displayNone(enemyBlockNumber[enemy], enemyBlockImg[enemy]);  
                         }
                         playerCurrentHealth.innerText -= enemyThornsNumber[enemy].innerText; 
                 }
@@ -1777,7 +1780,8 @@ function damageEnemy(damage, enemy) {
                         enemyBlockNumber[enemy].innerText = 0;
                         displayNone(enemyBlockNumber[enemy], enemyBlockImg[enemy]);
                 } else {
-                        enemyBlockNumber[enemy].innerText -= damage;    
+                        enemyBlockNumber[enemy].innerText -= damage;
+                        displayNone(enemyBlockNumber[enemy], enemyBlockImg[enemy]);
                 }
                 playerCurrentHealth.innerText -= enemyThornsNumber[enemy].innerText;             
         }
@@ -1883,7 +1887,7 @@ let enemyLevel = 0;
 const enemiesInformation = [
         {
                 name: "Fire Fae",
-                baseHealth: 75 + Math.ceil(enemyLevel * 3.5),
+                baseHealth: 75,
                 img: "imgs/enemy-fire-fae.png",
                 attackChance: 2,
                 blockHealChance: 4,
@@ -2037,12 +2041,14 @@ function createEnemy(baseHealth, img) {
                 </div>  
             </div>`
 }
-// ADD CLASSES TO ENEMIES TO REFERENCE THEM LATER
-//for (let i = 0; i < enemiesInformation.length; i++) {
-//        createEnemy(enemiesInformation[i].baseHealth, enemiesInformation[i].img);
-//        const enemy = document.querySelectorAll(".enemy-div");
- //       enemy[i].classList += (" enemy" + [i]);
-//}
+function enemyLevelUp() {
+        let enemyCurrentHealth = document.querySelectorAll(".enemy-current-health");
+        let enemyMaxHealth = document.querySelectorAll(".enemy-max-health");
+        for (let i = 0; i < numberOfEnemies; i++) {
+                enemyCurrentHealth[i].innerText = parseFloat(enemyCurrentHealth[i].innerText) + Math.ceil(enemyLevel * 1.6);
+                enemyMaxHealth[i].innerText = parseFloat(enemyMaxHealth[i].innerText) + Math.ceil(enemyLevel * 1.6);
+        }
+}
 function initializeEnemyVariables() {
         enemy = document.querySelectorAll(".enemy-div");
         enemyHealth = document.querySelectorAll(".enemy-health");
@@ -2135,8 +2141,6 @@ let enemyFrostbiteImg = document.querySelectorAll(".enemy-frostbite-img");
 let enemyBurnImg = document.querySelectorAll(".enemy-burn-img");
 let enemyBurnNumber = document.querySelectorAll(".enemy-burn-number");        
 
-
-
 // FUNCTION ENEMIES TO ATTACK PLAYER
 function damagePlayer(damage, index) {
         if (enemyLowerAttack[index]) {
@@ -2157,7 +2161,8 @@ function damagePlayer(damage, index) {
                 playerBlockNumber.innerText -= Math.floor(damage);        
         }
         // LOWER HEALTH FROM PLAYER THORNS
-        enemyCurrentHealth[index].innerText -= playerThornsNumber.innerText;    
+        enemyCurrentHealth[index].innerText -= playerThornsNumber.innerText;
+        displayNone(enemyAttackActionDiv[index]);
 }
 function enemyGainBlock(blockAmount, index) {
         // REDUCE BLOCK BY HALF WHEN ENEMY IS DEBUFFED
@@ -2177,17 +2182,22 @@ function enemyHeal(healAmount, index) {
 function enemyBurnPlayer(amount, index) {
         playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + amount;
         displayBlock(playerBurnImg, playerBurnNumber);
-        displayNone(enemyBurnActionNumber[index], enemyBurnActionImg[index]);
+        displayNone(enemyBurnActionDiv[index]);
 }
 function enemyGainRegeneration(amount, index) {
         enemyRegenNumber[index].innerText = parseFloat(enemyRegenNumber[index].innerText) + amount;
         displayBlock(enemyRegenImg[index], enemyRegenNumber[index]);
-        displayNone(enemyRegenActionNumber[index], enemyRegenActionImg[index]);
+        displayNone(enemyRegenActionDiv[index]);
 }
 function enemyGainBloodSiphon(amount, index) {
         enemyBloodNumber[index].innerText = parseFloat(enemyBloodNumber[index].innerText) + amount;
         displayBlock(enemyBloodImg[index], enemyBloodNumber[index]);
-        displayNone(enemyBloodActionNumber[index], enemyBloodActionImg[index]);
+        displayNone(enemyBloodActionDiv[index]);
+}
+function enemyGainThorns(amount, index) {
+        enemyThornsNumber[index].innerText = parseFloat(enemyThornsNumber[index].innerText) + amount;
+        displayBlock(enemyThornsNumber[index], enemyThornsImg[index]);
+        displayNone(enemyThornsActionDiv[index]);
 }
 function checkEnemyBurn(index) {
         if (enemyBurnNumber[index].innerText >= 1) {
@@ -2212,7 +2222,6 @@ function checkEnemyRegenHeal(index) {
                 enemyCurrentHealth[index].innerText = enemyMaxHealth[index].innerText;
         }
 }
-
 function checkEnemyBloodSiphon(index) {
         if (enemyBloodNumber[index].innerText >= 1) {
                 enemyBloodNumber[index].innerText--;    
@@ -2221,11 +2230,7 @@ function checkEnemyBloodSiphon(index) {
                 displayNone(enemyBloodImg[index], enemyBloodNumber[index]);
         }
 }
-function enemyThorns(amount, index) {
-        enemyThornsNumber[index].innerText = parseFloat(enemyThornsNumber[index].innerText) + amount;
-        displayBlock(enemyThornsNumber[index], enemyThornsImg[index]);
-        displayNone(enemyThornsActionImg[index], enemyThornsActionNumber[index]);
-}
+
 let enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
 function checkIfEnemyDead() {
         // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET GOLD
@@ -2253,7 +2258,7 @@ function checkIfEnemyDead() {
 let chosenEnemy;
 let chosenCard;
 // RANDOM NUMBERS GENERATED FOR ENEMY ACTIONS, DAMAGE, BLOCK, AND HEAL
-let actionChoice;
+let actionChoice = [];
 let enemyRandomDamage;
 let enemyRandomBlock;
 let enemyRandomHeal;
@@ -2274,19 +2279,14 @@ function enemyAction(enemy0, enemy1, enemy2) {
         enemyActionIndex = 0;
         trackEnemies = [enemy0, enemy1, enemy2];
         trackEnemies.forEach((i) => {
-
-
-                
-                console.log(enemyActionIndex);
-                console.log(enemyBurnActionNumber[enemyActionIndex])
                 // RESET ALL ACTIONS
-                actionChoice = createRandomNumber(1, 10);
-                if (actionChoice <= enemiesInformation[i].attackChance) {          
+                actionChoice[i] = createRandomNumber(1, 10);
+                if (actionChoice[i] <= enemiesInformation[i].attackChance) {          
                         //ATTACK
                         enemyRandomDamage = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
                         enemyAttackActionNumber[enemyActionIndex].innerText = enemyRandomDamage;
                         displayBlock(enemyAttackActionDiv[enemyActionIndex], enemyAttackActionImg[enemyActionIndex], enemyAttackActionNumber[enemyActionIndex]);
-                } else if (actionChoice <= enemiesInformation[i].blockHealChance) {  
+                } else if (actionChoice[i] <= enemiesInformation[i].blockHealChance) {  
                         if (enemyCurrentHealth[enemyActionIndex].innerText < enemyMaxHealth[enemyActionIndex].innerText - enemyRandomHeal) {
                                 // HEAL
                                 enemyRandomHeal = createRandomNumber(enemiesInformation[i].healAmountLow, enemiesInformation[i].healAmountHigh);
@@ -2298,31 +2298,36 @@ function enemyAction(enemy0, enemy1, enemy2) {
                                 enemyBlockActionNumber[enemyActionIndex].innerText = enemyRandomBlock;
                                 displayBlock(enemyBlockActionDiv[enemyActionIndex], enemyBlockActionImg[enemyActionIndex], enemyBlockActionNumber[enemyActionIndex]);
                         }
-                
-                } else if (actionChoice <= enemiesInformation[i].burnChance) {
+                } else if (actionChoice[i] <= enemiesInformation[i].burnChance) {
                         // BURN
                         enemyRandomBurn = createRandomNumber(enemiesInformation[i].burnAmountLow, enemiesInformation[i].burnAmountHigh);
                         enemyBurnActionNumber[enemyActionIndex].innerText = enemyRandomBurn;
-                        displayBlock(enemyBurnActionImg[enemyActionIndex], enemyBurnActionNumber[enemyActionIndex]);
-                } else if (actionChoice <= enemiesInformation[i].regenChance) {
+                        displayBlock(enemyBurnActionImg[enemyActionIndex], enemyBurnActionNumber[enemyActionIndex], enemyBurnActionDiv[enemyActionIndex]);
+                } else if (actionChoice[i] <= enemiesInformation[i].regenChance) {
                         // REGEN
+                        console.log("BEFORE/nAction Choice: ", actionChoice[i]);
+                        console.log("BEFORE/nRegen Chance: ", enemiesInformation[i].regenChance);
+                        console.log("BEFORE/nregen");
                         enemyRandomRegen = createRandomNumber(enemiesInformation[i].regenAmountLow, enemiesInformation[i].regenAmountHigh);
                         enemyRegenActionNumber[enemyActionIndex].innerText = enemyRandomRegen;
-                        displayBlock(enemyRegenActionImg[enemyActionIndex], enemyRegenActionNumber[enemyActionIndex]);
-                } else if (actionChoice <= enemiesInformation[i].bloodChance) {
+                        displayBlock(enemyRegenActionImg[enemyActionIndex], enemyRegenActionNumber[enemyActionIndex], enemyRegenActionDiv[enemyActionIndex]);
+                } else if (actionChoice[i] <= enemiesInformation[i].bloodChance) {
                         // BLOOD
+                        console.log("BEFORE/nAction Choice: ", actionChoice[i]);
+                        console.log("BEFORE/nBlood Chance: ", enemiesInformation[i].bloodChance);
+                        console.log("BEFORE/nblood");
                         enemyRandomBlood = createRandomNumber(enemiesInformation[i].bloodAmountLow, enemiesInformation[i].bloodAmountHigh);
                         enemyBloodActionNumber[enemyActionIndex].innerText = enemyRandomBlood;
-                        displayBlock(enemyBloodActionImg[enemyActionIndex], enemyBloodActionNumber[enemyActionIndex]);
-                } else if (actionChoice <= enemiesInformation[i].thornsChance) {
+                        displayBlock(enemyBloodActionImg[enemyActionIndex], enemyBloodActionNumber[enemyActionIndex], enemyBloodActionDiv[enemyActionIndex]);
+                } else if (actionChoice[i] <= enemiesInformation[i].thornsChance) {
                         // THORNS
                         enemyRandomThorns = createRandomNumber(enemiesInformation[i].thornsAmountLow, enemiesInformation[i].thornsAmountHigh);   
                         enemyThornsActionNumber[enemyActionIndex].innerText = enemyRandomThorns;
-                        displayBlock(enemyThornsActionImg[enemyActionIndex], enemyThornsActionNumber[enemyActionIndex]);
-                } else if (actionChoice <= enemiesInformation[i].lowerAttackChance) {  
+                        displayBlock(enemyThornsActionImg[enemyActionIndex], enemyThornsActionNumber[enemyActionIndex], enemyThornsActionDiv[enemyActionIndex]);
+                } else if (actionChoice[i] <= enemiesInformation[i].lowerAttackChance) {  
                         //LOWER ATTACK
                         displayBlock(enemyWindsweptActionImg[enemyActionIndex]);
-                } else if (actionChoice <= enemiesInformation[i].lowerBlockChance) {                        
+                } else if (actionChoice[i] <= enemiesInformation[i].lowerBlockChance) {                        
                         //LOWER BLOCK
                         displayBlock(enemyFrostbiteActionImg[enemyActionIndex]);
                 }
@@ -2345,10 +2350,10 @@ function endTurn() {
                         checkEnemyRegenHeal([enemyActionIndex]);
                         checkEnemyBloodSiphon([enemyActionIndex]);
                         checkEnemyBurn([enemyActionIndex]);
-                        if (actionChoice <= enemiesInformation[i].attackChance) {
+                        if (actionChoice[i] <= enemiesInformation[i].attackChance) {
                                 //ATTACK
                                 damagePlayer(enemyRandomDamage, enemyActionIndex);
-                        } else if (actionChoice <= enemiesInformation[i].blockHealChance) {
+                        } else if (actionChoice[i] <= enemiesInformation[i].blockHealChance) {
                                 // HEAL
                                 if (enemyCurrentHealth[enemyActionIndex].innerText < enemyMaxHealth[enemyActionIndex].innerText - enemyRandomHeal) {
                                         enemyHeal(enemyRandomHeal, enemyActionIndex);
@@ -2356,20 +2361,25 @@ function endTurn() {
                                         //BLOCK
                                         enemyGainBlock(enemyRandomBlock, enemyActionIndex);
                                 }
-                        } else if (actionChoice <= enemiesInformation[i].burnChance) {
-                                console.log("index: ", enemyActionIndex);
+                        } else if (actionChoice[i] <= enemiesInformation[i].burnChance) {
                                 enemyBurnPlayer(enemyRandomBurn, enemyActionIndex);
-                        } else if (actionChoice <= enemiesInformation[i].regenChance) {
+                        } else if (actionChoice[i] <= enemiesInformation[i].regenChance) {
                                 enemyGainRegeneration(enemyRandomRegen, enemyActionIndex);
-                        } else if (actionChoice <= enemiesInformation[i].bloodChance) {
+                                console.log("Action Choice: ", actionChoice[i]);
+                                console.log("Regen Chance: ", enemiesInformation[i].regenChance);
+                                console.log("regen");
+                        } else if (actionChoice[i] <= enemiesInformation[i].bloodChance) {
                                 enemyGainBloodSiphon(enemyRandomBlood, enemyActionIndex);
-                        } else if (actionChoice <= enemiesInformation[i].thornsChance) {
-                                enemyThorns(enemyRandomThorns, enemyActionIndex);
-                        } else if (actionChoice <= enemiesInformation[i].lowerAttackChance) {
+                                console.log("Action Choice: ", actionChoice[i]);
+                                console.log("Blood Chance: ", enemiesInformation[i].bloodChance);
+                                console.log("blood");
+                        } else if (actionChoice[i] <= enemiesInformation[i].thornsChance) {
+                                enemyGainThorns(enemyRandomThorns, enemyActionIndex);
+                        } else if (actionChoice[i] <= enemiesInformation[i].lowerAttackChance) {
                                 //LOWER ATTACK
                                 playerLowerAttack = true;
                                 displayBlock(playerWindsweptImg);
-                        } else if (actionChoice <= enemiesInformation[i].lowerBlockChance) {                        
+                        } else if (actionChoice[i] <= enemiesInformation[i].lowerBlockChance) {                        
                                 //LOWER BLOCK
                                 playerLowerBlock = true;
                                 displayBlock(playerFrostbiteImg);
