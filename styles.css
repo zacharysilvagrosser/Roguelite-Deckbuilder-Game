@@ -136,6 +136,7 @@
     height: 100vh;
     background-image: url(imgs/meadow-battleground.jpg);
     background-size: 100%;
+    position: relative;
     overflow: hidden;
     display: none;
 }
@@ -277,7 +278,7 @@
     width: 100px;
     height: 100px;
     margin-left: 214px;
-    margin-top: -330px;
+    margin-top: -320px;
 }
 .enemy-action-img {
     width: 80px;
@@ -390,7 +391,7 @@
 }
 .position-middle {
     margin-left: 1280px;
-    margin-top: 40px;
+    margin-top: 60px;
 }
 .position-right {
     margin-left: 1500px;
@@ -401,6 +402,12 @@
     margin-top: -250px;
     margin-left: 100px;
     position: absolute;
+}
+.enemy-img-centaur {
+    width: 375px;
+    margin-top: -290px;
+    margin-left: 60px;
+    transform: scaleX(-1);
 }
 .enemy-health-div {
     position: absolute;

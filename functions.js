@@ -1,11 +1,12 @@
 /* TO DO
-51 FUNCTIONAL CARDS LETS GOOOOOO!!!!!!!!!!!!!!!
 SET UP IMAGES TO SCALE WITH SCREEN SIZE
 SET UP EXCLAMATION AREAS WITH FUNCTIONALITY
 TREASURE: Empower an element and more likely to draw that element type
 MAKE DIFFERENT ENCOUNTERS
+Implement animations
+Talent tree after each fight
 
-UPDATE ENEMY THORN BURN AND IMGS
+BUG: can click card then end turn and play card
 */
 /*
 GENERAL FUNCTIONS
@@ -313,7 +314,7 @@ function resetArena() {
         enemyContainer.innerHTML = "";
 }
 function getRandomEncounter() {
-        randomEncounterNumber = createRandomNumber(1, 2);
+        randomEncounterNumber = createRandomNumber(2, 2);
         switch (randomEncounterNumber) {
                 case 1:
                         createEnemy(enemiesInformation[0].baseHealth, enemiesInformation[0].img);
@@ -324,26 +325,43 @@ function getRandomEncounter() {
                         enemy[1].classList.add("position-middle");
                         enemy[2].classList.add("position-right");
                         numberOfEnemies = 3;
-                        //enemy[0].classList.remove("fade-out");
-                        //enemy[1].classList.remove("fade-out");
-                        //enemy[2].classList.remove("fade-out");
                         enemyLevelUp();
                         enemyAction(0, 1, 2);
                         break;
                 case 2:
-                        createEnemy(enemiesInformation[3].baseHealth, enemiesInformation[3].img);
+                        createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
                         createEnemy(enemiesInformation[4].baseHealth, enemiesInformation[4].img);
-                        createEnemy(enemiesInformation[5].baseHealth, enemiesInformation[5].img);
+                        createEnemy(enemiesInformation[6].baseHealth, enemiesInformation[6].img);
                         initializeEnemyVariables();
                         enemy[0].classList.add("position-left");
                         enemy[1].classList.add("position-middle");
                         enemy[2].classList.add("position-right");
+                        let enemyImg = document.querySelectorAll(".enemy-img");
+                        enemyImg[2].classList.add("enemy-img-centaur");
                         numberOfEnemies = 3;
-                        //enemy[0].classList.remove("fade-out");
-                        //enemy[1].classList.remove("fade-out");
-                        //enemy[2].classList.remove("fade-out");
                         enemyLevelUp();
-                        enemyAction(3, 4, 5);
+                        enemyAction(9, 4, 6);
+                        break;
+        }
+}
+function getRandomEliteEncounter() {
+        randomEncounterNumber = createRandomNumber(2, 2);
+        switch (randomEncounterNumber) {
+                case 1:
+                        createEnemy(enemiesInformation[7].baseHealth, enemiesInformation[7].img);
+                        initializeEnemyVariables();
+                        enemy[0].classList.add("position-left");
+                        numberOfEnemies = 1;
+                        enemyLevelUp();
+                        enemyAction(7);
+                        break;
+                case 2:
+                        createEnemy(enemiesInformation[8].baseHealth, enemiesInformation[8].img);
+                        initializeEnemyVariables();
+                        enemy[0].classList.add("position-left");
+                        numberOfEnemies = 1;
+                        enemyLevelUp();
+                        enemyAction(8);
                         break;
         }
 }
@@ -444,7 +462,7 @@ function chooseLocationPath() {
                         removeGlow(location4Tiles1);
                         addGlow(location5Tiles1);
                         removeELL4();
-                        getRandomEncounter();
+                        getRandomEliteEncounter();
                         location5Tiles1.addEventListener("click", L5T1);
                         break;
                 case "L4T2":
@@ -714,7 +732,7 @@ const cardsInformation = [
                 action: function() {
                         spendMana(3);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                damageEnemy(20, i);    
+                                damageEnemy(1000, i);    
                         }
                 },        
         },
@@ -1660,10 +1678,10 @@ function getRandomNewCards () {
                 allCardsReference[newRandomCard3].removeEventListener("click", newCard3);  
         }
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = 24;//createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard1 = 15;//createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard2 = 26;//createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard3 = 16;//createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard0 = createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard1 = createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard2 = createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard3 = createRandomNumber(0, cardsInformation.length - 1);
         // CHANGE CARDS IF THEY ARE THE SAME
         if (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3) {
                 newRandomCard0 += 1;
@@ -1892,85 +1910,136 @@ const enemiesInformation = [
                 attackChance: 2,
                 blockHealChance: 4,
                 burnChance: 10,
-                attackDamageLow: 10 + Math.ceil(enemyLevel * 1.6),
-                attackDamageHigh: 13 + Math.ceil(enemyLevel * 1.6),
-                blockAmountLow: 10 + Math.ceil(enemyLevel * 1.6),
-                blockAmountHigh: 13 + Math.ceil(enemyLevel * 1.6),
-                healAmountLow: 10 + Math.ceil(enemyLevel * 1.6),
-                healAmountHigh: 13 + Math.ceil(enemyLevel * 1.6),
-                burnAmountLow: 5 + Math.ceil(enemyLevel * 1.6),
-                burnAmountHigh: 7 + Math.ceil(enemyLevel * 1.6),
+                attackDamageLow: 10,
+                attackDamageHigh: 13,
+                blockAmountLow: 10,
+                blockAmountHigh: 13,
+                healAmountLow: 10,
+                healAmountHigh: 13,
+                burnAmountLow: 5,
+                burnAmountHigh: 7,
         },
         {
                 name: "Lightning Fae",
-                baseHealth: 75 + Math.ceil(enemyLevel * 3.5),
+                baseHealth: 75,
                 img: "imgs/enemy-lightning-fae.png",
                 attackChance: 8,
                 blockHealChance: 10,
-                attackDamageLow: 17 + Math.ceil(enemyLevel * 1.6),
-                attackDamageHigh: 20 + Math.ceil(enemyLevel * 1.6),
-                blockAmountLow: 10 + Math.ceil(enemyLevel * 1.6),
-                blockAmountHigh: 13 + Math.ceil(enemyLevel * 1.6),
-                healAmountLow: 10 + Math.ceil(enemyLevel * 1.6),
-                healAmountHigh: 13 + Math.ceil(enemyLevel * 1.6),
+                attackDamageLow: 17,
+                attackDamageHigh: 20,
+                blockAmountLow: 10,
+                blockAmountHigh: 13,
+                healAmountLow: 10,
+                healAmountHigh: 13,
         },
         {
                 name: "Ice Fae",
-                baseHealth: 75 + Math.ceil(enemyLevel * 3.5),
+                baseHealth: 75,
                 img: "imgs/enemy-ice-fae.png",
                 attackChance: 2,
                 blockHealChance: 4,
                 lowerBlockChance: 10,
-                attackDamageLow: 10 + Math.ceil(enemyLevel * 1.6),
-                attackDamageHigh: 13 + Math.ceil(enemyLevel * 1.6),
-                blockAmountLow: 10 + Math.ceil(enemyLevel * 1.6),
-                blockAmountHigh: 13 + Math.ceil(enemyLevel * 1.6),
-                healAmountLow: 10 + Math.ceil(enemyLevel * 1.6),
-                healAmountHigh: 13 + Math.ceil(enemyLevel * 1.6),
+                attackDamageLow: 10,
+                attackDamageHigh: 13,
+                blockAmountLow: 10,
+                blockAmountHigh: 13,
+                healAmountLow: 10,
+                healAmountHigh: 13,
         },
         {
                 name: "Air Fae",
-                baseHealth: 75 + Math.ceil(enemyLevel * 3.5),
+                baseHealth: 75,
                 img: "imgs/enemy-air-fae.png",
                 attackChance: 2,
                 blockHealChance: 4,
                 lowerAttackChance: 10,
-                attackDamageLow: 10 + Math.ceil(enemyLevel * 1.6),
-                attackDamageHigh: 13 + Math.ceil(enemyLevel * 1.6),
-                blockAmountLow: 10 + Math.ceil(enemyLevel * 1.6),
-                blockAmountHigh: 13 + Math.ceil(enemyLevel * 1.6),
-                healAmountLow: 10 + Math.ceil(enemyLevel * 1.6),
-                healAmountHigh: 13 + Math.ceil(enemyLevel * 1.6),
+                attackDamageLow: 10,
+                attackDamageHigh: 13,
+                blockAmountLow: 10,
+                blockAmountHigh: 13,
+                healAmountLow: 10,
+                healAmountHigh: 13,
         },
         {
                 name: "Water Fae",
-                baseHealth: 75 + Math.ceil(enemyLevel * 3.5),
+                baseHealth: 75,
                 img: "imgs/enemy-water-fae.png",
                 attackChance: 4,
                 regenChance: 8,
                 bloodChance: 10,
-                attackDamageLow: 10 + Math.ceil(enemyLevel * 1.6),
-                attackDamageHigh: 13 + Math.ceil(enemyLevel * 1.6),
-                regenAmountLow: 3 + Math.ceil(enemyLevel * 1.6),
-                regenAmountHigh: 5 + Math.ceil(enemyLevel * 1.6),
-                bloodAmountLow: 2 + Math.ceil(enemyLevel * 1.6),
-                bloodAmountHigh: 4 + Math.ceil(enemyLevel * 1.6),
+                attackDamageLow: 10,
+                attackDamageHigh: 13,
+                regenAmountLow: 3,
+                regenAmountHigh: 5,
+                bloodAmountLow: 3,
+                bloodAmountHigh: 4,
         },
         {
                 name: "Forest Fae",
-                baseHealth: 75 + Math.ceil(enemyLevel * 3.5),
+                baseHealth: 75,
                 img: "imgs/enemy-earth-fae.png",
                 attackChance: 2,
                 blockHealChance: 6,
                 thornsChance: 10,
-                attackDamageLow: 10 + Math.ceil(enemyLevel * 1.6),
-                attackDamageHigh: 13 + Math.ceil(enemyLevel * 1.6),
-                blockAmountLow: 20 + Math.ceil(enemyLevel * 1.6),
-                blockAmountHigh: 23 + Math.ceil(enemyLevel * 1.6),
-                healAmountLow: 10 + Math.ceil(enemyLevel * 1.6),
-                healAmountHigh: 13 + Math.ceil(enemyLevel * 1.6),
-                thornsAmountLow: 2 + Math.ceil(enemyLevel * 1.6),
-                thornsAmountHigh: 4 + Math.ceil(enemyLevel * 1.6),
+                attackDamageLow: 10,
+                attackDamageHigh: 13,
+                blockAmountLow: 20,
+                blockAmountHigh: 23,
+                healAmountLow: 10,
+                healAmountHigh: 13,
+                thornsAmountLow: 2,
+                thornsAmountHigh: 4,
+        },
+        {
+                name: "Centaur",
+                baseHealth: 50,
+                img: "imgs/enemy-centaur.png",
+                attackChance: 8,
+                thornsChance: 10,
+                attackDamageLow: 15,
+                attackDamageHigh: 18,
+                thornsAmountLow: 2,
+                thornsAmountHigh: 3,
+        },
+        {
+                name: "Forest Dragon",
+                baseHealth: 150,
+                img: "imgs/enemy-elite-dragon.png",
+                attackChance: 4,
+                burnChance: 10,
+                attackDamageLow: 25,
+                attackDamageHigh: 28,
+                burnAmountLow: 8,
+                burnAmountHigh: 10,
+        },
+        {
+                name: "Forest Giant",
+                baseHealth: 300,
+                img: "imgs/enemy-elite-giant.png",
+                attackChance: 2,
+                blockHealChance: 7,
+                thornsChance: 10,
+                attackDamageLow: 20,
+                attackDamageHigh: 23,
+                blockAmountLow: 40,
+                blockAmountHigh: 45,
+                thornsAmountLow: 5,
+                thornsAmountHigh: 7,
+        },
+        {
+                name: "Dark Elf",
+                baseHealth: 80,
+                img: "imgs/enemy-dark-elf.png",
+                attackChance: 3,
+                blockHealChance: 6,
+                regenChance: 8,
+                bloodChance: 10,
+                attackDamageLow: 15,
+                attackDamageHigh: 18,
+                blockAmountLow: 15,
+                blockAmountHigh: 18,
+                thornsAmountLow: 5,
+                thornsAmountHigh: 7,
         },
 ]
 const enemyContainer = document.querySelector("#enemy-container");
@@ -2045,8 +2114,8 @@ function enemyLevelUp() {
         let enemyCurrentHealth = document.querySelectorAll(".enemy-current-health");
         let enemyMaxHealth = document.querySelectorAll(".enemy-max-health");
         for (let i = 0; i < numberOfEnemies; i++) {
-                enemyCurrentHealth[i].innerText = parseFloat(enemyCurrentHealth[i].innerText) + Math.ceil(enemyLevel * 1.6);
-                enemyMaxHealth[i].innerText = parseFloat(enemyMaxHealth[i].innerText) + Math.ceil(enemyLevel * 1.6);
+                enemyCurrentHealth[i].innerText = parseFloat(enemyCurrentHealth[i].innerText) + (Math.ceil(parseFloat(enemyCurrentHealth[i].innerText) * enemyLevel * .05));
+                enemyMaxHealth[i].innerText = parseFloat(enemyMaxHealth[i].innerText) + (Math.ceil(parseFloat(enemyMaxHealth[i].innerText) * enemyLevel * .05));
         }
 }
 function initializeEnemyVariables() {
@@ -2144,21 +2213,21 @@ let enemyBurnNumber = document.querySelectorAll(".enemy-burn-number");
 // FUNCTION ENEMIES TO ATTACK PLAYER
 function damagePlayer(damage, index) {
         if (enemyLowerAttack[index]) {
-                damage *= .50;
+                damage = Math.floor(damage *= .50);
         }
         if (enemyBloodNumber[index].innerText > 0) {
                 enemyCurrentHealth[index].innerText = parseFloat(enemyCurrentHealth[index].innerText) + Math.floor((damage * .21));
         }
         if (playerBlockNumber.innerText <= 0) {
-                topBarHealthNumber.innerText -= Math.floor(damage);
-                playerCurrentHealth.innerText -= Math.floor(damage);
+                topBarHealthNumber.innerText -= damage;
+                playerCurrentHealth.innerText -= damage;
         } else if (playerBlockNumber.innerText <= damage) {
-                topBarHealthNumber.innerText -= Math.floor(damage) - parseFloat(playerBlockNumber.innerText);
-                playerCurrentHealth.innerText -= Math.floor(damage) - parseFloat(playerBlockNumber.innerText);
+                topBarHealthNumber.innerText -= damage - parseFloat(playerBlockNumber.innerText);
+                playerCurrentHealth.innerText -= damage - parseFloat(playerBlockNumber.innerText);
                 playerBlockNumber.innerText = 0;
                 displayNone(playerBlockNumber, playerBlockImg);
         } else {
-                playerBlockNumber.innerText -= Math.floor(damage);        
+                playerBlockNumber.innerText -= damage;        
         }
         // LOWER HEALTH FROM PLAYER THORNS
         enemyCurrentHealth[index].innerText -= playerThornsNumber.innerText;
@@ -2230,13 +2299,13 @@ function checkEnemyBloodSiphon(index) {
                 displayNone(enemyBloodImg[index], enemyBloodNumber[index]);
         }
 }
-
 let enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
 function checkIfEnemyDead() {
         // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET GOLD
         function allEnemiesDead() {
                 getRandomNewCards();
-                playerGold.innerText = parseFloat(playerGold.innerText) + Math.ceil(enemiesInformation[0].level * 10);
+                console.log("dead");
+                playerGold.innerText = parseFloat(playerGold.innerText) + Math.ceil(20 + ((enemyLevel + 1) * 2.7));
                 displayNone(handContainer);        
         }
        
@@ -2259,13 +2328,13 @@ let chosenEnemy;
 let chosenCard;
 // RANDOM NUMBERS GENERATED FOR ENEMY ACTIONS, DAMAGE, BLOCK, AND HEAL
 let actionChoice = [];
-let enemyRandomDamage;
-let enemyRandomBlock;
-let enemyRandomHeal;
-let enemyRandomBurn;
-let enemyRandomRegen;
-let enemyRandomBlood;
-let enemyRandomThorns;
+let enemyRandomDamage = [];
+let enemyRandomBlock = [];
+let enemyRandomHeal = [];
+let enemyRandomBurn = [];
+let enemyRandomRegen = [];
+let enemyRandomBlood = [];
+let enemyRandomThorns = [];
 let trackEnemies = [];
 // TRACK IF ENEMIES HAVE DEBUFF
 let enemyLowerAttack = [false, false, false];
@@ -2273,71 +2342,81 @@ let enemyLowerBlock = [false, false, false];
 // SET ATTACK AND BLOCK DEBUFFS TO FALSE
 let playerLowerAttack = false;
 let playerLowerBlock = false;
-let enemyActionIndex = 0;
+let eI = 0;
 // ENEMIES CHOOSE AN ACTION BASED ON RANDOM ACTION CHOICE
-function enemyAction(enemy0, enemy1, enemy2) {
-        enemyActionIndex = 0;
-        trackEnemies = [enemy0, enemy1, enemy2];
+function enemyAction() {
+        eI = 0;
+        trackEnemies = [...arguments];
         trackEnemies.forEach((i) => {
+                
                 // RESET ALL ACTIONS
-                actionChoice[i] = createRandomNumber(1, 10);
-                if (actionChoice[i] <= enemiesInformation[i].attackChance) {          
+                actionChoice[eI] = createRandomNumber(1, 10);
+                console.log(actionChoice[eI]);
+                if (actionChoice[eI] <= enemiesInformation[i].attackChance) {          
                         //ATTACK
-                        enemyRandomDamage = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
-                        enemyAttackActionNumber[enemyActionIndex].innerText = enemyRandomDamage;
-                        displayBlock(enemyAttackActionDiv[enemyActionIndex], enemyAttackActionImg[enemyActionIndex], enemyAttackActionNumber[enemyActionIndex]);
-                } else if (actionChoice[i] <= enemiesInformation[i].blockHealChance) {  
-                        if (enemyCurrentHealth[enemyActionIndex].innerText < enemyMaxHealth[enemyActionIndex].innerText - enemyRandomHeal) {
+                        enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
+                        enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
+                        displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
+                } else if (actionChoice[eI] <= enemiesInformation[i].blockHealChance) {  
+                        if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemiesInformation[i].healAmountHigh) {
                                 // HEAL
-                                enemyRandomHeal = createRandomNumber(enemiesInformation[i].healAmountLow, enemiesInformation[i].healAmountHigh);
-                                enemyHealActionNumber[enemyActionIndex].innerText = enemyRandomHeal;
-                                displayBlock(enemyHealActionDiv[enemyActionIndex], enemyHealActionImg[enemyActionIndex], enemyHealActionNumber[enemyActionIndex]);
+                                enemyRandomHeal[eI] = createRandomNumber(enemiesInformation[i].healAmountLow, enemiesInformation[i].healAmountHigh);
+                                enemyHealActionNumber[eI].innerText = enemyRandomHeal[eI];
+                                displayBlock(enemyHealActionDiv[eI], enemyHealActionImg[eI], enemyHealActionNumber[eI]);
                         } else {
                                 //BLOCK
-                                enemyRandomBlock = createRandomNumber(enemiesInformation[i].blockAmountLow, enemiesInformation[i].blockAmountHigh);  
-                                enemyBlockActionNumber[enemyActionIndex].innerText = enemyRandomBlock;
-                                displayBlock(enemyBlockActionDiv[enemyActionIndex], enemyBlockActionImg[enemyActionIndex], enemyBlockActionNumber[enemyActionIndex]);
+                                enemyRandomBlock[eI] = createRandomNumber(enemiesInformation[i].blockAmountLow, enemiesInformation[i].blockAmountHigh);  
+                                enemyBlockActionNumber[eI].innerText = enemyRandomBlock[eI];
+                                displayBlock(enemyBlockActionDiv[eI], enemyBlockActionImg[eI], enemyBlockActionNumber[eI]);
                         }
-                } else if (actionChoice[i] <= enemiesInformation[i].burnChance) {
+                } else if (actionChoice[eI] <= enemiesInformation[i].burnChance) {
                         // BURN
-                        enemyRandomBurn = createRandomNumber(enemiesInformation[i].burnAmountLow, enemiesInformation[i].burnAmountHigh);
-                        enemyBurnActionNumber[enemyActionIndex].innerText = enemyRandomBurn;
-                        displayBlock(enemyBurnActionImg[enemyActionIndex], enemyBurnActionNumber[enemyActionIndex], enemyBurnActionDiv[enemyActionIndex]);
-                } else if (actionChoice[i] <= enemiesInformation[i].regenChance) {
-                        // REGEN
-                        console.log("BEFORE/nAction Choice: ", actionChoice[i]);
-                        console.log("BEFORE/nRegen Chance: ", enemiesInformation[i].regenChance);
-                        console.log("BEFORE/nregen");
-                        enemyRandomRegen = createRandomNumber(enemiesInformation[i].regenAmountLow, enemiesInformation[i].regenAmountHigh);
-                        enemyRegenActionNumber[enemyActionIndex].innerText = enemyRandomRegen;
-                        displayBlock(enemyRegenActionImg[enemyActionIndex], enemyRegenActionNumber[enemyActionIndex], enemyRegenActionDiv[enemyActionIndex]);
-                } else if (actionChoice[i] <= enemiesInformation[i].bloodChance) {
-                        // BLOOD
-                        console.log("BEFORE/nAction Choice: ", actionChoice[i]);
-                        console.log("BEFORE/nBlood Chance: ", enemiesInformation[i].bloodChance);
-                        console.log("BEFORE/nblood");
-                        enemyRandomBlood = createRandomNumber(enemiesInformation[i].bloodAmountLow, enemiesInformation[i].bloodAmountHigh);
-                        enemyBloodActionNumber[enemyActionIndex].innerText = enemyRandomBlood;
-                        displayBlock(enemyBloodActionImg[enemyActionIndex], enemyBloodActionNumber[enemyActionIndex], enemyBloodActionDiv[enemyActionIndex]);
-                } else if (actionChoice[i] <= enemiesInformation[i].thornsChance) {
+                        enemyRandomBurn[eI] = createRandomNumber(enemiesInformation[i].burnAmountLow, enemiesInformation[i].burnAmountHigh);
+                        enemyBurnActionNumber[eI].innerText = enemyRandomBurn[eI];
+                        displayBlock(enemyBurnActionImg[eI], enemyBurnActionNumber[eI], enemyBurnActionDiv[eI]);
+                } else if (actionChoice[eI] <= enemiesInformation[i].regenChance) {
+                        if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemiesInformation[i].regenAmountHigh) {
+                                // REGEN
+                                enemyRandomRegen[eI] = createRandomNumber(enemiesInformation[i].regenAmountLow, enemiesInformation[i].regenAmountHigh);
+                                enemyRegenActionNumber[eI].innerText = enemyRandomRegen[eI];
+                                displayBlock(enemyRegenActionImg[eI], enemyRegenActionNumber[eI], enemyRegenActionDiv[eI]);
+                        } else {
+                                //ATTACK
+                                enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
+                                enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
+                                displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
+                        }
+                } else if (actionChoice[eI] <= enemiesInformation[i].bloodChance) {
+                        if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText) {
+                                // BLOOD
+                                enemyRandomBlood[eI] = createRandomNumber(enemiesInformation[i].bloodAmountLow, enemiesInformation[i].bloodAmountHigh);
+                                enemyBloodActionNumber[eI].innerText = enemyRandomBlood[eI];
+                                displayBlock(enemyBloodActionImg[eI], enemyBloodActionNumber[eI], enemyBloodActionDiv[eI]);
+                        } else {
+                                //ATTACK
+                                enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
+                                enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
+                                displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
+                        }
+                } else if (actionChoice[eI] <= enemiesInformation[i].thornsChance) {
                         // THORNS
-                        enemyRandomThorns = createRandomNumber(enemiesInformation[i].thornsAmountLow, enemiesInformation[i].thornsAmountHigh);   
-                        enemyThornsActionNumber[enemyActionIndex].innerText = enemyRandomThorns;
-                        displayBlock(enemyThornsActionImg[enemyActionIndex], enemyThornsActionNumber[enemyActionIndex], enemyThornsActionDiv[enemyActionIndex]);
-                } else if (actionChoice[i] <= enemiesInformation[i].lowerAttackChance) {  
+                        enemyRandomThorns[eI] = createRandomNumber(enemiesInformation[i].thornsAmountLow, enemiesInformation[i].thornsAmountHigh);   
+                        enemyThornsActionNumber[eI].innerText = enemyRandomThorns[eI];
+                        displayBlock(enemyThornsActionImg[eI], enemyThornsActionNumber[eI], enemyThornsActionDiv[eI]);
+                } else if (actionChoice[eI] <= enemiesInformation[i].lowerAttackChance) {  
                         //LOWER ATTACK
-                        displayBlock(enemyWindsweptActionImg[enemyActionIndex]);
-                } else if (actionChoice[i] <= enemiesInformation[i].lowerBlockChance) {                        
+                        displayBlock(enemyWindsweptActionImg[eI]);
+                } else if (actionChoice[eI] <= enemiesInformation[i].lowerBlockChance) {                        
                         //LOWER BLOCK
-                        displayBlock(enemyFrostbiteActionImg[enemyActionIndex]);
+                        displayBlock(enemyFrostbiteActionImg[eI]);
                 }
-                enemyActionIndex++
+                eI++
         });
 }
 // FUNCTIONS TRIGGERS WHEN END TURN BUTTON IS CLICKED
 function endTurn() {
         initializeEnemyVariables();
-        enemyActionIndex = 0;
+        eI = 0;
         // RESET MANA AND DEBUFFS
         currentMana.innerText = 4;
         playerLowerAttack = false;
@@ -2346,56 +2425,70 @@ function endTurn() {
         displayNone(playerWindsweptImg, playerFrostbiteImg);
         trackEnemies.forEach((i) => {
                 // CHECK IF ENEMY IS DEAD
-                if (enemyIsDead[enemyActionIndex] === false) {
-                        checkEnemyRegenHeal([enemyActionIndex]);
-                        checkEnemyBloodSiphon([enemyActionIndex]);
-                        checkEnemyBurn([enemyActionIndex]);
-                        if (actionChoice[i] <= enemiesInformation[i].attackChance) {
+                if (enemyIsDead[eI] === false) {
+                        checkEnemyRegenHeal([eI]);
+                        checkEnemyBloodSiphon([eI]);
+                        checkEnemyBurn([eI]);
+                        if (actionChoice[eI] <= enemiesInformation[i].attackChance) {
                                 //ATTACK
-                                damagePlayer(enemyRandomDamage, enemyActionIndex);
-                        } else if (actionChoice[i] <= enemiesInformation[i].blockHealChance) {
-                                // HEAL
-                                if (enemyCurrentHealth[enemyActionIndex].innerText < enemyMaxHealth[enemyActionIndex].innerText - enemyRandomHeal) {
-                                        enemyHeal(enemyRandomHeal, enemyActionIndex);
+                                damagePlayer(enemyRandomDamage[eI], eI);
+                        } else if (actionChoice[eI] <= enemiesInformation[i].blockHealChance) {
+                                if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemyRandomHeal[eI] && enemyHealActionImg[eI].style.display === "block") {
+                                        // HEAL
+                                        enemyHeal(enemyRandomHeal[eI], eI);
                                 } else {
                                         //BLOCK
-                                        enemyGainBlock(enemyRandomBlock, enemyActionIndex);
+                                        enemyGainBlock(enemyRandomBlock[eI], eI);
                                 }
-                        } else if (actionChoice[i] <= enemiesInformation[i].burnChance) {
-                                enemyBurnPlayer(enemyRandomBurn, enemyActionIndex);
-                        } else if (actionChoice[i] <= enemiesInformation[i].regenChance) {
-                                enemyGainRegeneration(enemyRandomRegen, enemyActionIndex);
-                                console.log("Action Choice: ", actionChoice[i]);
-                                console.log("Regen Chance: ", enemiesInformation[i].regenChance);
-                                console.log("regen");
-                        } else if (actionChoice[i] <= enemiesInformation[i].bloodChance) {
-                                enemyGainBloodSiphon(enemyRandomBlood, enemyActionIndex);
-                                console.log("Action Choice: ", actionChoice[i]);
-                                console.log("Blood Chance: ", enemiesInformation[i].bloodChance);
-                                console.log("blood");
-                        } else if (actionChoice[i] <= enemiesInformation[i].thornsChance) {
-                                enemyGainThorns(enemyRandomThorns, enemyActionIndex);
-                        } else if (actionChoice[i] <= enemiesInformation[i].lowerAttackChance) {
+                        } else if (actionChoice[eI] <= enemiesInformation[i].burnChance) {
+                                // BURN
+                                enemyBurnPlayer(enemyRandomBurn[eI], eI);
+                        } else if (actionChoice[eI] <= enemiesInformation[i].regenChance) {
+                                if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemyRandomRegen[eI] && enemyRegenActionImg[eI].style.display === "block") {
+                                        //REGEN
+                                        enemyGainRegeneration(enemyRandomRegen[eI], eI);
+                                } else {
+                                        //ATTACK
+                                        damagePlayer(enemyRandomDamage[eI], eI);
+                                }
+                        } else if (actionChoice[eI] <= enemiesInformation[i].bloodChance) {
+                                if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText && enemyBloodActionImg[eI].style.display === "block") {
+                                        // BLOOD
+                                        enemyGainBloodSiphon(enemyRandomBlood[eI], eI);
+                                } else {
+                                        //ATTACK
+                                        damagePlayer(enemyRandomDamage[eI], eI);
+                                }
+                        } else if (actionChoice[eI] <= enemiesInformation[i].thornsChance) {
+                                //THORNS
+                                enemyGainThorns(enemyRandomThorns[eI], eI);
+                        } else if (actionChoice[eI] <= enemiesInformation[i].lowerAttackChance) {
                                 //LOWER ATTACK
                                 playerLowerAttack = true;
                                 displayBlock(playerWindsweptImg);
-                        } else if (actionChoice[i] <= enemiesInformation[i].lowerBlockChance) {                        
+                        } else if (actionChoice[eI] <= enemiesInformation[i].lowerBlockChance) {                        
                                 //LOWER BLOCK
                                 playerLowerBlock = true;
                                 displayBlock(playerFrostbiteImg);
                         }
                         // RESET ACTIONS
-                        displayNone(enemyAttackActionDiv[enemyActionIndex], enemyBlockActionDiv[enemyActionIndex], enemyHealActionDiv[enemyActionIndex], enemyBurnActionDiv[enemyActionIndex], enemyThornsActionDiv[enemyActionIndex],
-                                enemyRegenActionDiv[enemyActionIndex], enemyWindsweptActionImg[enemyActionIndex], enemyFrostbiteActionImg[enemyActionIndex], enemyWindsweptImg[enemyActionIndex], enemyFrostbiteImg[enemyActionIndex]);    
+                        displayNone(enemyAttackActionDiv[eI], enemyBlockActionDiv[eI], enemyHealActionDiv[eI], enemyBurnActionDiv[eI], enemyThornsActionDiv[eI],
+                                enemyRegenActionDiv[eI], enemyWindsweptActionImg[eI], enemyFrostbiteActionImg[eI], enemyWindsweptImg[eI], enemyFrostbiteImg[eI]);    
                 }
-                enemyActionIndex++
+                eI++
         });
         checkIfEnemyDead();
         checkRegenHeal();
         checkBloodSiphon();
         checkGaiasEmbrace();
         addCardsToHand();
-        enemyAction(trackEnemies[0], trackEnemies[1], trackEnemies[2]);
+        if (numberOfEnemies === 1) {
+                enemyAction(trackEnemies[0]);
+        } else if (numberOfEnemies === 2) {
+                enemyAction(trackEnemies[0], trackEnemies[1]);
+        } else {
+                enemyAction(trackEnemies[0], trackEnemies[1], trackEnemies[2]);
+        }     
 }
 getOpeningHand();
 for (let i = 0; i < openingCards.length; i++) {
