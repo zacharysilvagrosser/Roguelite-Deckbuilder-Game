@@ -226,7 +226,7 @@
     justify-content: center;
     margin-left: -100px;
 }
-#player-lower-attack-img, #player-lower-block-img {
+#player-windswept-img, #player-frostbite-img {
     width: 60px;
     display: none;
 }
@@ -404,7 +404,7 @@
     position: absolute;
 }
 .enemy-img-centaur {
-    width: 375px;
+    width: 400px;
     margin-top: -290px;
     margin-left: 60px;
     transform: scaleX(-1);
