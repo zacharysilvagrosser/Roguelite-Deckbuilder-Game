@@ -11,8 +11,6 @@ Make burn damage heal from blood siphon and fire cards deal more self damage
 SYNERGIES: Wind draw, frost thorn block, water burn heal, blood siphon lightning
 
 BUG: can click card then end turn and play card
-enemyBlood appears NaN
-Create damageAllEnemies again for tidalImbuement and snowfall to work
 */
 /*
 GENERAL FUNCTIONS
@@ -323,7 +321,7 @@ function resetArena() {
         enemyContainer.innerHTML = "";
 }
 function getRandomEncounter() {
-        randomEncounterNumber = createRandomNumber(1, 10);
+        randomEncounterNumber = createRandomNumber(1, 1);
         let enemyImg = document.querySelectorAll(".enemy-img");
         switch (randomEncounterNumber) {
                 case 1:
@@ -861,15 +859,21 @@ const cardsInformation = [
                 action: function() {
                         spendMana(3);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                damageEnemy(20, i);    
+                                if (tidalImbuement === true) {
+                                        damageEnemy(20, i);
+                                        tidalImbuement = true;   
+                                } else {
+                                        damageEnemy(20, i);
+                                } 
                         }
+                        tidalImbuement= false;
                 },        
         },
         {
                 manaCost: 1,
                 name: "Frostbolt",
                 cardImg: "imgs/frostbolt.jpeg",
-                cardText: "Deal 10 damage and inflict frostbite",
+                cardText: "Deal 10 damage and inflict frostbite\nFrostbite: Reduce any buffs gained by 50%",
                 chooseEnemyCard: true,
                 element: "ice",
                 action: function() {
@@ -941,7 +945,7 @@ const cardsInformation = [
                 manaCost: 1,
                 name: "Tidal Imbuement",
                 cardImg: "imgs/infusion2.jpg",
-                cardText: "Your next direct damage spell deals 13 more damage",                
+                cardText: "Your next direct damage spell deals 10 more damage",                
                 chooseEnemyCard: false,
                 element: "water",
                 action: function() {
@@ -1819,7 +1823,7 @@ function getRandomNewCards () {
                 allCardsReference[newRandomCard3].removeEventListener("click", newCard3);  
         }
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard0 = 23;//createRandomNumber(0, cardsInformation.length - 1);
         let newRandomCard1 = createRandomNumber(0, cardsInformation.length - 1);
         let newRandomCard2 = createRandomNumber(0, cardsInformation.length - 1);
         let newRandomCard3 = createRandomNumber(0, cardsInformation.length - 1);
@@ -1907,7 +1911,7 @@ function damageEnemy(damage, enemy) {
                 damage += 5;
         }
         if (tidalImbuement) {
-                damage += 13;
+                damage += 10;
                 tidalImbuement = false;
         }
         // IF ATTACK DEBUFF IS ACTIVE, CUT DAMAGE IN HALF
@@ -1918,19 +1922,20 @@ function damageEnemy(damage, enemy) {
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * .21));
                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * .21));
         }
+        // DAMGE ALL ENEMIES IF SNOWFALL ELIXER HAS BEEN PLAYED
         if (snowfallElixir) {
                 for (let i = 0; i < numberOfEnemies; i++) {
-                        if (enemyBlockNumber[enemy].innerText === 0) {
-                                enemyCurrentHealth[enemy].innerText -= damage;
-                                displayNone(enemyBlockNumber[enemy], enemyBlockImg[enemy]);    
-                        } else if (enemyBlockNumber[enemy].innerText < damage) {
-                                enemyCurrentHealth[enemy].innerText -= damage - parseFloat(enemyBlockNumber[enemy].innerText);
-                                enemyBlockNumber[enemy].innerText = 0;
-                                displayNone(enemyBlockNumber[enemy], enemyBlockImg[enemy]);
+                        if (enemyBlockNumber[i].innerText === 0) {
+                                enemyCurrentHealth[i].innerText -= damage;
+                                displayNone(enemyBlockNumber[i], enemyBlockImg[i]);    
+                        } else if (enemyBlockNumber[i].innerText < damage) {
+                                enemyCurrentHealth[i].innerText -= damage - parseFloat(enemyBlockNumber[i].innerText);
+                                enemyBlockNumber[i].innerText = 0;
+                                displayNone(enemyBlockNumber[i], enemyBlockImg[i]);
                         } else {
-                                enemyBlockNumber[enemy].innerText -= damage;
+                                enemyBlockNumber[i].innerText -= damage;
                         }
-                        playerCurrentHealth.innerText -= enemyThornsNumber[enemy].innerText; 
+                        playerCurrentHealth.innerText -= enemyThornsNumber[i].innerText; 
                 }
         } else {
                 // TAKE DAMAGE AWAY FROM BLOCK BEFORE HEALTH
@@ -1944,11 +1949,19 @@ function damageEnemy(damage, enemy) {
                 } else {
                         enemyBlockNumber[enemy].innerText -= damage;
                 }
-                playerCurrentHealth.innerText -= enemyThornsNumber[enemy].innerText;             
         }
+        // CHECK FOR ENEMY THORNS DAMAGE
+        if (playerBlockNumber.innerText <= 0) {
+                playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[enemy].innerText)
+        } else if (playerBlockNumber.innerText <= parseFloat(enemyThornsNumber[enemy].innerText)) {
+                playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[enemy].innerText) - parseFloat(playerBlockNumber.innerText);
+                playerBlockNumber.innerText = 0;
+        } else {
+                playerBlockNumber.innerText -= parseFloat(enemyThornsNumber[enemy].innerText);
+        }          
         checkHealthIsOverMax();
         // IF ENEMY IS DEAD, DELETE THEM
-        checkIfEnemyDead();    
+        checkIfEnemyDead();
 }
 function inflictWindswept (enemy) {
         enemyWindswept[enemy] = true;
@@ -2078,7 +2091,7 @@ const enemiesInformation = [
                 regenAmountLow: 4,
                 regenAmountHigh: 5,
                 bloodAmountLow: 3,
-                bloodAmountLow: 4,
+                bloodAmountHigh: 4,
         },
         {
                 name: "Dwarf",
@@ -2431,10 +2444,17 @@ function damagePlayer(damage, index) {
                 playerBlockNumber.innerText = 0;
                 displayNone(playerBlockNumber, playerBlockImg);
         } else {
-                playerBlockNumber.innerText -= damage;        
+                playerBlockNumber.innerText -= damage; 
         }
-        // LOWER HEALTH FROM PLAYER THORNS
-        enemyCurrentHealth[index].innerText -= playerThornsNumber.innerText;
+        // CHECK FOR PLAYER THORNS DAMAGE
+        if (enemyBlockNumber[index].innerText <= 0) {
+                enemyCurrentHealth[index].innerText -= parseFloat(playerThornsNumber.innerText)
+        } else if (enemyBlockNumber[index].innerText <= parseFloat(playerThornsNumber.innerText)) {
+                enemyCurrentHealth[index].innerText -= parseFloat(playerThornsNumber.innerText) - parseFloat(enemyBlockNumber[index].innerText);
+                enemyBlockNumber[index].innerText = 0;
+        } else {
+                enemyBlockNumber[index].innerText -= parseFloat(playerThornsNumber.innerText);
+        }
         displayNone(enemyAttackActionDiv[index]);
 }
 function enemyGainBlock(blockAmount, index) {
@@ -2487,14 +2507,17 @@ function enemyGainThorns(amount, index) {
         displayNone(enemyThornsActionDiv[index]);
 }
 function checkEnemyBurn(index) {
-        if (enemyBurnNumber[index].innerText >= 1) {
+        if (playerBloodNumber.innerText > 0) {
+                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.ceil(enemyBurnNumber[index].innerText * .21);
+        }
+        if (enemyBurnNumber[index].innerText == enemyCurrentHealth[index].innerText) {
+                displayNone(enemyBurnImg[index], enemyBurnNumber[index], enemyHealth[index], enemyCurrentHealth[index], enemyBlockDiv[index], enemyActionDiv[index]);
+                enemy[index].classList.add("fade-out");
+                enemyIsDead[index] = true;
+        }
+        if (enemyBurnNumber[index].innerText > 0) {
                 enemyCurrentHealth[index].innerText = parseFloat(enemyCurrentHealth[index].innerText) - parseFloat(enemyBurnNumber[index].innerText);
                 enemyBurnNumber[index].innerText--;
-        }
-        if (enemyBurnNumber[index].innerText == enemyCurrentHealth.innerText) {
-                displayNone(enemyBurnImg[i], enemyBurnNumber[i], enemyHealth[i], enemyCurrentHealth[i], enemyBlockDiv[i], enemyActionDiv[i]);
-                enemy[i].classList.add("fade-out");
-                enemyIsDead[index] = true;
         }
         if (enemyBurnNumber[index].innerText == 0) {
                 displayNone(enemyBurnImg[index], enemyBurnNumber[index]);
@@ -2508,9 +2531,9 @@ function checkEnemyRegenHeal(index) {
         }
         if (enemyRegenNumber[index].innerText == 0) {
                 displayNone(enemyRegenImg[index], enemyRegenNumber[index]);
-                startEnemyRegen = false
         }
-        if (enemyCurrentHealth[index].innerText > enemyMaxHealth[index].innerText) {
+        if (parseFloat(enemyCurrentHealth[index].innerText) > parseFloat(enemyMaxHealth[index].innerText)) {
+
                 enemyCurrentHealth[index].innerText = enemyMaxHealth[index].innerText;
         }
 }
@@ -2558,6 +2581,8 @@ let enemyRandomRegen = [];
 let enemyRandomBlood = [];
 let enemyRandomThorns = [];
 let trackEnemies = [];
+// TRIGGER SO ENEMY ONLY GAINS BLOOD SIPHON WHEN BELOW MAX HEALTH AT START OF THEIR TURN
+let enemyCanGainBlood = false;
 // TRACK IF ENEMIES HAVE DEBUFF
 let enemyWindswept = [false, false, false];
 let enemyFrostbite = [false, false, false];
@@ -2612,11 +2637,12 @@ function enemyAction() {
                                 displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
                         }
                 } else if (actionChoice[eI] <= enemiesInformation[i].bloodChance) {
-                        if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText && enemyBloodActionNumber[eI].innerText <= 1) {
+                        if (parseFloat(enemyCurrentHealth[eI].innerText) < parseFloat(enemyMaxHealth[eI].innerText) && parseFloat(enemyBloodNumber[eI].innerText) <= 1) {
                                 // BLOOD
                                 enemyRandomBlood[eI] = createRandomNumber(enemiesInformation[i].bloodAmountLow, enemiesInformation[i].bloodAmountHigh);
                                 enemyBloodActionNumber[eI].innerText = enemyRandomBlood[eI];
                                 displayBlock(enemyBloodActionImg[eI], enemyBloodActionNumber[eI], enemyBloodActionDiv[eI]);
+                                enemyCanGainBlood = true;
                         } else {
                                 // ATTACK
                                 enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
@@ -2640,7 +2666,6 @@ function enemyAction() {
 }
 // FUNCTIONS TRIGGERS WHEN END TURN BUTTON IS CLICKED
 function endTurn() {
-        initializeEnemyVariables();
         eI = 0;
         // RESET MANA AND DEBUFFS
         currentMana.innerText = 4;
@@ -2649,7 +2674,6 @@ function endTurn() {
         checkPlayerBurn();
         displayNone(playerWindsweptImg, playerFrostbiteImg);
         trackEnemies.forEach((i) => {
-                console.log(enemyWindswept[eI]);
                 // CHECK IF ENEMY IS DEAD
                 if (enemyIsDead[eI] === false) {
                         checkEnemyRegenHeal([eI]);
@@ -2681,9 +2705,10 @@ function endTurn() {
                                         damagePlayer(enemyRandomDamage[eI], eI);
                                 }
                         } else if (actionChoice[eI] <= enemiesInformation[i].bloodChance) {
-                                if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText && enemyBloodActionNumber[eI].innerText <= 1) {
+                                if (enemyCanGainBlood === true && parseFloat(enemyCurrentHealth[eI].innerText) < parseFloat(enemyMaxHealth[eI].innerText) && parseFloat(enemyBloodNumber[eI].innerText) <= 1) {
                                         // BLOOD
                                         enemyGainBloodSiphon(enemyRandomBlood[eI], eI);
+                                        enemyCanGainBlood = false;
                                 } else {
                                         // ATTACK
                                         damagePlayer(enemyRandomDamage[eI], eI);
@@ -2709,11 +2734,11 @@ function endTurn() {
                 eI++
                 
         });
-        checkIfEnemyDead();
         checkRegenHeal();
         checkBloodSiphon();
         checkGaiasEmbrace();
         addCardsToHand();
+        checkIfEnemyDead();
         if (numberOfEnemies === 1) {
                 enemyAction(trackEnemies[0]);
         } else if (numberOfEnemies === 2) {
