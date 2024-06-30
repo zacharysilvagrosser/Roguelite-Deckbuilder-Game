@@ -11,6 +11,7 @@
     height: 5vh;
     background-color: aliceblue;
     display: flex;
+    z-index: 10;
 }
 #board-header p {
     font-size: 20px;
@@ -468,13 +469,9 @@
 .exclamation-div {
     width: 100%;
     height: 100vh;
-    background-image: url("imgs/pixel-forest.jpg");
+    position: absolute;
     background-size: cover;
     background-position: 10%;
-    display: none;
-}
-.exclamation-div:nth-of-type(3) {
-    display: none;
 }
 .exclamation-information-container {
     width: 80%;
@@ -492,7 +489,6 @@
 .exclamation-event-img {
     width: 30rem;
     height: 30rem;
-    background-image: url("imgs/ghost.jpg");
     background-size: cover;
     margin-top: -13px;
     margin-left: 38px;
@@ -510,7 +506,7 @@
     width: 56%;
     height: 30%;
     margin-left: 37rem;
-    margin-top: -66px;
+    margin-top: -50px;
     display: flex;
     flex-direction: column;
 }
@@ -530,30 +526,29 @@
 .exclamation-button-div button:active {
     padding-top: 6px;
 }
-.exclamation-button1:hover + #avarice-card {
-    display: flex;
-}
-.exclamation-button1 span {
-    color: lightgreen;
-    font-weight: bold;
-}
-.exclamation-button1 span:nth-last-child(1) {
-    color: gold;
-    font-weight: bold;
-}
-.exclamation-button2 {
+.exclamation-2-button-2 {
     margin-top: 15px;
 }
-.exclamation-button2 span {
-    color: rgb(216, 69, 69);
-    font-weight: bold;
+.exclamation-6-button-1 {
+    margin-top: -15px;
+    color: red;
 }
-#avarice-card {
-    position: absolute;
-    margin-left: 18.5rem;
-    margin-top: -16rem;
+.exclamation-6-button-2 {
+    margin-top: 6px;
+    color: yellow;
 }
-
+.exclamation-6-button-3 {
+    margin-top: 6px;
+}
+.exclamation-6-button-4 {
+    margin-top: 6px;
+}
+.exclamation-6-button-5 {
+    margin-top: 6px;
+}
+.exclamation-6-button-6 {
+    margin-top: 6px;
+}
 /* CARDS */
 #draw-pile-container {
     position: absolute;

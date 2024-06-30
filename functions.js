@@ -5,9 +5,11 @@ TREASURE: Empower an element and more likely to draw that element type
 MAKE DIFFERENT ENCOUNTERS
 Implement animations
 Talent tree after each fight
-if last enemy tries to frostbite or windswept, attack instead
+
+FIRE CARD: Deal damage based on self inflicted burn
+WATER CARD: Gain 1 regen per card played this turn
+
 Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 mana etc.
-Make burn damage heal from blood siphon and fire cards deal more self damage
 SYNERGIES: Wind draw, frost thorn block, water burn heal, blood siphon lightning
 
 BUG: can click card then end turn and play card
@@ -49,13 +51,18 @@ function removeGlow() {
                 arguments[i].classList.remove("glow");
         }
 }
-function switchMapArena() {
+function switchMapToArena() {
         displayBlock(arena);
         displayNone(map);
 }
-function switchArenaMap () {
+function switchArenaToMap() {
         displayNone(arena);
         displayBlock(map);
+}
+function switchExclamationToMap() {
+        displayNone(exclamationDiv);
+        displayBlock(map);
+        exclamationContainer.innerHTML = ``;
 }
 function removeELL1() {
                 location1Tiles1.removeEventListener("click", L1T1);
@@ -148,7 +155,6 @@ const location9Tiles4 = document.querySelector("#location9-tiles4");
 const location10Tiles1 = document.querySelector("#location10-tiles1");
 const location10Tiles2 = document.querySelector("#location10-tiles2");
 const location11Tiles1 = document.querySelector("#location11-tiles1");
-const exclamationDivs = document.querySelectorAll(".exclamation-div");
 // VARIABLE TO TRACK MAP LOCATION CLICK
 let chosenLocation;
 const L1T1 = () => {
@@ -278,11 +284,9 @@ const L11T1 = () => {
         chosenLocation = "L11T1";
         chooseLocationPath();
 };
-// GET A RANDOM ENCOUNTER EACH TIME
-let enemyIsDead = [false, false, false];
-let numberOfEnemies;
-let randomEncounterNumber;
 
+let numberOfEnemies;
+let enemyIsDead = [false, false, false];
 function resetArena() {
         for (i = 0; i < numberOfEnemies; i++) {
                 enemyIsDead[i] = false;
@@ -321,7 +325,7 @@ function resetArena() {
         enemyContainer.innerHTML = "";
 }
 function getRandomEncounter() {
-        randomEncounterNumber = createRandomNumber(1, 1);
+        let randomEncounterNumber = createRandomNumber(2, 2);
         let enemyImg = document.querySelectorAll(".enemy-img");
         switch (randomEncounterNumber) {
                 case 1:
@@ -495,7 +499,7 @@ function getRandomEliteEncounter() {
 function chooseLocationPath() {
         switch (chosenLocation) {
                 case "L1T1":
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
                         addGlow(location2Tiles1, location2Tiles2);
                         removeELL1();
@@ -504,7 +508,7 @@ function chooseLocationPath() {
                         getRandomEncounter();
                         break;
                 case "L1T2":
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
                         addGlow(location2Tiles3);
                         removeELL1();
@@ -512,7 +516,7 @@ function chooseLocationPath() {
                         getRandomEncounter();
                         break;
                 case "L1T3":
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
                         addGlow(location2Tiles4);
                         removeELL1();
@@ -521,26 +525,25 @@ function chooseLocationPath() {
                         break;
                 case "L2T1":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location2Tiles1, location2Tiles2);
                         addGlow(location3Tiles1);
                         removeELL2();
                         location3Tiles1.addEventListener("click", L3T1);
-                        getRandomEncounter();
+                        getRandomExclamation();
                         break;
                 case "L2T2":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location2Tiles1, location2Tiles2);
                         addGlow(location3Tiles2);
                         removeELL2();
                         location3Tiles2.addEventListener("click", L3T2);
-                        displayFlex(exclamationDivs[0]);
-                        displayNone(arena);
+                        getRandomExclamation();
                         break;
                 case "L2T3":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location2Tiles3);
                         addGlow(location3Tiles3);
                         removeELL2();
@@ -549,7 +552,7 @@ function chooseLocationPath() {
                         break;
                 case "L2T4":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location2Tiles4);
                         addGlow(location3Tiles3);
                         removeELL2();
@@ -557,7 +560,7 @@ function chooseLocationPath() {
                         break;
                 case "L3T1":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location3Tiles1);
                         addGlow(location4Tiles1);
                         removeELL3();
@@ -574,7 +577,7 @@ function chooseLocationPath() {
                         break;
                 case "L3T3":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location3Tiles3);
                         addGlow(location4Tiles3, location4Tiles4);
                         removeELL3();
@@ -584,7 +587,7 @@ function chooseLocationPath() {
                         break;
                 case "L4T1":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location4Tiles1);
                         addGlow(location5Tiles1);
                         removeELL4();
@@ -593,7 +596,7 @@ function chooseLocationPath() {
                         break;
                 case "L4T2":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location4Tiles2);
                         addGlow(location5Tiles1, location5Tiles2);
                         removeELL4();
@@ -603,7 +606,7 @@ function chooseLocationPath() {
                         break;
                 case "L4T3":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location4Tiles3, location4Tiles4);
                         addGlow(location5Tiles2, location5Tiles3);
                         removeELL4();
@@ -612,7 +615,7 @@ function chooseLocationPath() {
                         break;
                 case "L4T4":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location4Tiles3, location4Tiles4);
                         addGlow(location5Tiles3);
                         removeELL5();
@@ -620,7 +623,7 @@ function chooseLocationPath() {
                         break;
                 case "L5T1":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location5Tiles1, location5Tiles2, location5Tiles3);
                         addGlow(location6Tiles1);
                         removeELL5();
@@ -628,7 +631,7 @@ function chooseLocationPath() {
                         break;
                 case "L5T2":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location5Tiles1, location5Tiles2, location5Tiles3);
                         addGlow(location6Tiles1);
                         removeELL5();
@@ -636,7 +639,7 @@ function chooseLocationPath() {
                         break;
                 case "L5T3":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location5Tiles2, location5Tiles3);
                         addGlow(location6Tiles1);
                         removeELL5();
@@ -644,7 +647,7 @@ function chooseLocationPath() {
                         break;
                 case "L6T1":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location6Tiles1);
                         addGlow(location7Tiles1, location7Tiles2, location7Tiles3);
                         removeELL6();
@@ -654,7 +657,7 @@ function chooseLocationPath() {
                         break;
                 case "L7T1":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location7Tiles1, location7Tiles2, location7Tiles3);
                         addGlow(location8Tiles1, location8Tiles2);
                         removeELL7();
@@ -664,7 +667,7 @@ function chooseLocationPath() {
                         break;
                 case "L7T2":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location7Tiles1, location7Tiles2, location7Tiles3);
                         addGlow(location8Tiles2);
                         removeELL7();
@@ -672,7 +675,7 @@ function chooseLocationPath() {
                         break;
                 case "L7T3":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location7Tiles1, location7Tiles2, location7Tiles3);
                         addGlow(location8Tiles2, location8Tiles3);
                         removeELL7();
@@ -682,7 +685,7 @@ function chooseLocationPath() {
                         break;
                 case "L8T1":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location8Tiles1, location8Tiles2);
                         addGlow(location9Tiles1, location9Tiles2);
                         removeELL8();
@@ -691,7 +694,7 @@ function chooseLocationPath() {
                         break;
                 case "L8T2":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location8Tiles1, location8Tiles2, location8Tiles3);
                         addGlow(location9Tiles2, location9Tiles3);
                         removeELL8();
@@ -700,7 +703,7 @@ function chooseLocationPath() {
                         break;
                 case "L8T3":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location8Tiles2, location8Tiles3);
                         addGlow(location9Tiles3, location9Tiles4);
                         removeELL8();
@@ -709,7 +712,7 @@ function chooseLocationPath() {
                         break;
                 case "L9T1":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location9Tiles1, location9Tiles2);
                         addGlow(location10Tiles1);
                         removeELL9();
@@ -717,7 +720,7 @@ function chooseLocationPath() {
                         break;
                 case "L9T2":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location9Tiles1, location9Tiles2, location9Tiles3);
                         addGlow(location10Tiles1);
                         removeELL9();
@@ -726,7 +729,7 @@ function chooseLocationPath() {
                         break;
                 case "L9T3":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location9Tiles2, location9Tiles3, location9Tiles4);
                         addGlow(location10Tiles2);
                         removeELL9();
@@ -734,7 +737,7 @@ function chooseLocationPath() {
                         break;
                 case "L9T4":
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location9Tiles3, location9Tiles4);
                         addGlow(location10Tiles2);
                         removeELL9();
@@ -742,7 +745,7 @@ function chooseLocationPath() {
                         break;
                 case "L10T1":          
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location10Tiles1);
                         addGlow(location11Tiles1);
                         removeELL10();
@@ -750,14 +753,14 @@ function chooseLocationPath() {
                         break;
                 case "L10T2":          
                         resetArena();
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location10Tiles2);
                         addGlow(location11Tiles1);
                         removeELL10();
                         location11Tiles1.addEventListener("click", L11T1);
                         break;
                 case "L11T1":
-                        switchMapArena();
+                        switchMapToArena();
                         removeGlow(location11Tiles1);
                         removeELL11();
                         break;
@@ -766,30 +769,143 @@ function chooseLocationPath() {
 /*
 EXCLAMATION SECTION
 */
-const exclamationButtonDiv = document.querySelectorAll(".exclamation-button-div");
-const exclamationButtons1 = document.querySelectorAll(".exclamation-button1");
-const exclamationButtons2 = document.querySelectorAll(".exclamation-button2");
-// KING SPOOKLY EVENT
-exclamationButtons1[0].addEventListener("click", () => {
-        createCard(43, drawPileContainer, newCard);
-        drawPileArray.push(newCard[1]);
-        drawPileContainer.appendChild(allPassiveCardContainers[0]);
-        avariceCard.removeAttribute("id");
-        avariceCard.style.background = "linear-gradient(gold, black)";
-        let newGold = parseFloat(playerGold.innerText);
-        newGold += 200;
-        playerGold.innerText = newGold;
-        displayNone(exclamationDivs[0], arena);
-        displayBlock(map);
-});
-exclamationButtons2[0].addEventListener("click", () => {
-        let newHealth = parseFloat(playerCurrentHealth.innerText);
-        newHealth += 20;
-        playerCurrentHealth.innerText = newHealth;
-        displayNone(exclamationDivs[0], arena);
-        displayBlock(map);
-});
-
+function createExclamation(title, background, img, text0, text1, text2, buttonText0, buttonText1) {
+        const exclamationContainer = document.querySelector("#exclamation-container");
+        exclamationContainer.innerHTML = `
+        <div class="exclamation-div" style= "background-image: url(${background})">
+            <div class="exclamation-information-container">
+                <h1 class="exclamation-title">${title}</h1>
+                <div class="exclamation-event-img" style= "background-image: url(${img})"></div>
+                <div class="exclamation-text-div">
+                    <p class="exclamation-text">${text0}<br><br>
+                        ${text1}<br><br>
+                        ${text2}
+                        </p>
+                </div>
+                <div class="exclamation-button-div">
+                    <button class="exclamation-button1">${buttonText0}</button>
+                    <button class="exclamation-button2">${buttonText1}</button>
+                </div>
+            </div>
+        </div>
+        `
+}
+const exclamationContainer = document.querySelector("#exclamation-container");
+let exclamationDiv = document.querySelector(".exclamation-div");
+let exclamationButtonDiv = document.querySelector(".exclamation-button-div");
+let exclamation2Buttons1 = document.querySelector(".exclamation-2-button-1");
+let exclamation2Buttons2 = document.querySelector(".exclamation-2-button-2");
+let exclamation6Button1 = document.querySelector(".exclamation-6-button-1");
+let exclamation6Button2 = document.querySelector(".exclamation-6-button-2");
+let exclamation6Button3 = document.querySelector(".exclamation-6-button-3");
+let exclamation6Button4 = document.querySelector(".exclamation-6-button-4");
+let exclamation6Button5 = document.querySelector(".exclamation-6-button-5");
+let exclamation6Button6 = document.querySelector(".exclamation-6-button-6");
+function getRandomExclamation() {
+        let randomExclamationNumber = createRandomNumber(2, 2);
+        switch (randomExclamationNumber) {
+                case 1:
+                        createExclamation("King Spookly", "imgs/pixel-forest.jpg", "imgs/ghost.jpg", "A ghost peaks out from a tree up ahead.", 
+                                "He beckons you closer with his translucent appendage. You approach.",
+                                `"I was once a king in this land long ago." His soft whisper echos. "I had all the gold in my possession burried with me. I now realize the arrogance of my actions and would like to make amends for my past mistakes."`,
+                                "Accept: Gain 200 Gold, but add a useless card to your deck", "Refuse: Gain 10 max health and heal for 10");
+                        exclamationDiv = document.querySelector(".exclamation-div");
+                        exclamation2Buttons1 = document.querySelector(".exclamation-button1");
+                        exclamation2Buttons2 = document.querySelector(".exclamation-button2");
+                        exclamation2Buttons1.addEventListener("click", () => {
+                                createCard(51, newCardsContainer, "card", "card-text");
+                                let newCardsArray = document.querySelectorAll(".card");
+                                newCardsArray[0].style.background = "linear-gradient(gold, black)";
+                                drawPileArray.push(newCardsArray[0]);
+                                handContainer.appendChild(newCardsArray[0]);
+                                playerGold.innerText = parseFloat(playerGold.innerText) + 200;
+                                switchExclamationToMap();
+                        });
+                        exclamation2Buttons2.addEventListener("click", () => {
+                                playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 10;
+                                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 10;
+                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
+                                switchExclamationToMap();
+                        });
+                        break;
+                case 2:
+                        createExclamation("King Spookly", "imgs/pixel-forest.jpg", "imgs/ghost.jpg", "A ghost peaks out from a tree up ahead.", 
+                                "He beckons you closer with his translucent appendage. You approach.",
+                                `"I was once a king in this land long ago." His soft whisper echos. "I had all the gold in my possession burried with me. I now realize the arrogance of my actions and would like to make amends for my past mistakes."`,
+                                "", "");
+                        exclamationDiv = document.querySelector(".exclamation-div");
+                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
+                        exclamationButtonDiv.innerHTML = `
+                        <button class="exclamation-6-button-1" style="text-align: center">Fire</button>
+                        <button class="exclamation-6-button-2" style="text-align: center">Lightning</button>
+                        <button class="exclamation-6-button-3" style="text-align: center">Ice</button>
+                        <button class="exclamation-6-button-4" style="text-align: center">Air</button>
+                        <button class="exclamation-6-button-5" style="text-align: center">Water</button>
+                        <button class="exclamation-6-button-6" style="text-align: center">Earth</button>
+                        `;
+                        exclamation6Button1 = document.querySelector(".exclamation-6-button-1");
+                        exclamation6Button2 = document.querySelector(".exclamation-6-button-2");
+                        exclamation6Button3 = document.querySelector(".exclamation-6-button-3");
+                        exclamation6Button4 = document.querySelector(".exclamation-6-button-4");
+                        exclamation6Button5 = document.querySelector(".exclamation-6-button-5");
+                        exclamation6Button6 = document.querySelector(".exclamation-6-button-6");
+                        let destroyedCardsContainer = document.querySelector("#destroyed-cards-container");
+                        function destroyCards(cardType) {
+                                for (let i = 0; i < cardType.length; i++) {
+                                        if (drawPileArray.includes(cardType[i])) {
+                                                console.log("DRAW INCLUDES FIRE");
+                                                let drawIndex = drawPileArray.indexOf(cardType[i]);
+                                                let getFireCard = drawPileArray.splice(drawIndex, 1);
+                                                destroyedCardsArray.push(getFireCard);
+                                                console.log("Destroyed :", destroyedCardsArray);        
+                                        }
+                                        if (handArray.includes(cardType[i])) {
+                                                console.log("HAND INCLUDES FIRE");
+                                                let drawIndex = handArray.indexOf(cardType[i]);
+                                                let getFireCard = handArray.splice(drawIndex, 1);
+                                                destroyedCardsArray.push(getFireCard);
+                                                console.log("Destroyed :", destroyedCardsArray);        
+                                        }
+                                        destroyedCardsContainer.appendChild(cardType[i]);
+                                        console.log("Draw Pile", drawPileArray);
+                                }
+                                destroyedCardsContainer.innerHTML = ``;
+                                destroyedCardsArray = [];
+                        }
+                        exclamation6Button1.addEventListener("click", () => {
+                                let fireCards = document.querySelectorAll(".fire");
+                                destroyCards(fireCards);
+                                switchExclamationToMap();
+                        });
+                        exclamation6Button2.addEventListener("click", () => {
+                                let lightningCards = document.querySelectorAll(".lightning");
+                                destroyCards(lightningCards);
+                                switchExclamationToMap();
+                        });
+                        exclamation6Button3.addEventListener("click", () => {
+                                let iceCards = document.querySelectorAll(".ice");
+                                destroyCards(iceCards);
+                                switchExclamationToMap();
+                        });
+                        exclamation6Button4.addEventListener("click", () => {
+                                let airCards = document.querySelectorAll(".air");
+                                destroyCards(airCards);
+                                switchExclamationToMap();
+                        });
+                        exclamation6Button5.addEventListener("click", () => {
+                                let waterCards = document.querySelectorAll(".water");
+                                destroyCards(waterCards);
+                                switchExclamationToMap();
+                        });
+                        exclamation6Button6.addEventListener("click", () => {
+                                let earthCards = document.querySelectorAll(".earth");
+                                destroyCards(earthCards);
+                                switchExclamationToMap();
+                        });
+                        break;
+        }
+        displayNone(arena);
+}
 /*
 CARDS SECTION
 */
@@ -824,6 +940,8 @@ const cardsInformation = [
                         spendMana(0);
                         damageEnemy(5, chosenEnemy);
                         burnEnemy(5, chosenEnemy);
+                        playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 2;
+                        displayBlock(playerBurnImg, playerBurnNumber); 
                 },
         },
         {
@@ -863,7 +981,7 @@ const cardsInformation = [
                                         damageEnemy(20, i);
                                         tidalImbuement = true;   
                                 } else {
-                                        damageEnemy(20, i);
+                                        damageEnemy(20000, i);
                                 } 
                         }
                         tidalImbuement= false;
@@ -932,7 +1050,7 @@ const cardsInformation = [
         {
                 manaCost: 1,
                 name: "Fountain of Youth",
-                cardImg: "imgs/fountain.jpg",
+                cardImg: "imgs/sanctuary.jpg",
                 cardText: "Gain 2 Blood Siphon",                
                 chooseEnemyCard: false,
                 element: "water",
@@ -1018,15 +1136,15 @@ const cardsInformation = [
                         damageEnemy(25, chosenEnemy);
                         burnEnemy(10, chosenEnemy);
                         if (playerBlockNumber.innerText <= 0) {
-                                topBarHealthNumber.innerText -= Math.floor(5);
-                                playerCurrentHealth.innerText -= Math.floor(5);
+                                topBarHealthNumber.innerText -= 5;
+                                playerCurrentHealth.innerText -= 5;
                         } else if (playerBlockNumber.innerText <= 5) {
-                                topBarHealthNumber.innerText -= Math.floor(5) - parseFloat(playerBlockNumber.innerText);
-                                playerCurrentHealth.innerText -= Math.floor(5) - parseFloat(playerBlockNumber.innerText);
+                                topBarHealthNumber.innerText -= 5 - parseFloat(playerBlockNumber.innerText);
+                                playerCurrentHealth.innerText -= 5 - parseFloat(playerBlockNumber.innerText);
                                 playerBlockNumber.innerText = 0;
                                 displayNone(playerBlockNumber, playerBlockImg);
                         } else {
-                                playerBlockNumber.innerText -= Math.floor(5);        
+                                playerBlockNumber.innerText -= 5;        
                         }
                 }
         },
@@ -1358,7 +1476,7 @@ const cardsInformation = [
                 cardImg: "imgs/forest-fire.jpg",
                 cardText: "Inflict 5 burn to all enemies. Deal damage equal to their burn",
                 chooseEnemyCard: false,
-                element: "fire-lightning",
+                element: "fire-lightning fire lightning",
                 action: function() {
                         spendMana(36);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1373,7 +1491,7 @@ const cardsInformation = [
                 cardImg: "imgs/frostfire-fusion.jpg",
                 cardText: "If the enemy is either burning or inflicted with frostbite they are inflicted with 6 burn and frostbite.",
                 chooseEnemyCard: true,
-                element: "fire-ice",
+                element: "fire-ice fire ice",
                 action: function() {
                         spendMana(37);
                         if (parseFloat(enemyBurnNumber[chosenEnemy].innerText) > 0 || enemyFrostbite[chosenEnemy]) {
@@ -1388,7 +1506,7 @@ const cardsInformation = [
                 cardImg: "imgs/fan-the-flames.jpg",
                 cardText: "Inflict windswept on all enemies and increase burn count by 6 if they're already burning",
                 chooseEnemyCard: false,
-                element: "fire-air",
+                element: "fire-air fire air",
                 action: function() {
                         spendMana(38);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1405,7 +1523,7 @@ const cardsInformation = [
                 cardImg: "imgs/cauterize2.jpg",
                 cardText: "Damage yourself 10. Gain 2 blood siphon and 4 regen",
                 chooseEnemyCard: false,
-                element: "fire-water",
+                element: "fire-water fire water",
                 action: function() {
                         spendMana(39);
                         if (playerBlockNumber.innerText <= 0) {
@@ -1429,7 +1547,7 @@ const cardsInformation = [
                 cardImg: "imgs/magma.jpg",
                 cardText: "Inflict 10 burn on an enemy and gain block equal to their burn",
                 chooseEnemyCard: true,
-                element: "fire-earth",
+                element: "fire-earth fire earth",
                 action: function() {
                         spendMana(40);
                         burnEnemy(10, chosenEnemy);
@@ -1442,7 +1560,7 @@ const cardsInformation = [
                 cardImg: "imgs/deep-freeze.jpg",
                 cardText: "Electrucute enemies with frostbite dealing 20 damage",
                 chooseEnemyCard: false,
-                element: "lightning-ice",
+                element: "lightning-ice lightning ice",
                 action: function() {
                         spendMana(41);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1458,7 +1576,7 @@ const cardsInformation = [
                 cardImg: "imgs/stormblessed4.jpg",
                 cardText: "Deal 12 damage to all enemies. If they are windswept deal 30 instead.",
                 chooseEnemyCard: false,
-                element: "lightning-air",
+                element: "lightning-air lightning air",
                 action: function() {
                         spendMana(42);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1476,7 +1594,7 @@ const cardsInformation = [
                 cardImg: "imgs/electric-current.jpg",
                 cardText: "Deal 26 damage to an enemy and heal for 50% of the damage",
                 chooseEnemyCard: true,
-                element: "lightning-water",
+                element: "lightning-water lightning water",
                 action: function() {
                         spendMana(43);
                         damageEnemy(26, chosenEnemy);
@@ -1493,7 +1611,7 @@ const cardsInformation = [
                 cardImg: "imgs/quaking-thunder3.jpg",
                 cardText: "Deal 10 damage to all enemies and gain 1 thorn per enemy hit",
                 chooseEnemyCard: false,
-                element: "lightning-earth",
+                element: "lightning-earth lightning earth",
                 action: function() {
                         spendMana(44);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1508,7 +1626,7 @@ const cardsInformation = [
                 cardImg: "imgs/flurry.jpg",
                 cardText: "Inflict windswept and frostbite to all enemies",              
                 chooseEnemyCard: false,
-                element: "ice-air",
+                element: "ice-air ice air",
                 action: function() {
                         spendMana(45);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1524,7 +1642,7 @@ const cardsInformation = [
                 cardImg: "imgs/liquify.jpg",
                 cardText: "Gain 2 regen and 1 blood siphon per enemy afflicted with frostbite",
                 chooseEnemyCard: false,
-                element: "ice-water",
+                element: "ice-water ice water",
                 action: function() {
                         for (let i = 0; i < numberOfEnemies; i++) {
                                 if (enemyFrostbite[i]) {
@@ -1540,7 +1658,7 @@ const cardsInformation = [
                 cardImg: "imgs/frozen-tundra3.jpg",
                 cardText: "Inflict everyone with frostbite and gain 5 armor for everyone inflicted",
                 chooseEnemyCard: false,
-                element: "ice-earth",
+                element: "ice-earth ice earth",
                 action: function() {
                         spendMana(47);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1563,7 +1681,7 @@ const cardsInformation = [
                 cardImg: "imgs/hurricane.jpg",
                 cardText: "Inflict windswept and deal 50 damage to all enemies. Heal 10 health, draw a card, and gain 2 mana.",
                 chooseEnemyCard: false,
-                element: "air-water",
+                element: "air-water air water",
                 action: function() {
                         spendMana(48);
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1581,7 +1699,7 @@ const cardsInformation = [
                 cardImg: "imgs/rock-orbit.jpg",
                 cardText: "Gain 5 block and draw a card",
                 chooseEnemyCard: false,
-                element: "air-earth",
+                element: "air-earth air earth",
                 action: function() {
                         spendMana(49);
                         gainBlock(5);
@@ -1594,36 +1712,20 @@ const cardsInformation = [
                 cardImg: "imgs/gaia's-embrace.jpg",
                 cardText: "Gain 4 block and healing at the end of each turn",
                 chooseEnemyCard: false,
-                element: "water-earth",
+                element: "water-earth water earth",
                 action: function() {
                         spendMana(50);
                         gaiasEmbrace = true;
                 }
         },
-
-
-       
-        {
-                manaCost: 1,
-                name: "Sanctuary",
-                cardImg: "imgs/sanctuary.jpg",
-                cardText: "Gain 5 health and 15 block",
-                chooseEnemyCard: true
-        },
-        {
-                manaCost: 2,
-                name: "Fire Whirl",
-                cardImg: "imgs/fire-whirl.jpg",
-                cardText: "Inflict 5 burn and windswept on all enemies",
-                chooseEnemyCard: false
-        },        
+    
         {
                 manaCost: 0,
                 name: "Avarice",
                 cardImg: "imgs/avarice.jpg",
                 cardText: "[DOES NOTHING] Your greed causes you to look down upon peasants",
                 chooseEnemyCard: false,
-                element: "gold"
+                element: "gold",
         },        
 ];
 //  CARD CREATION FUNCTION TO ADD TO HTML
@@ -1651,6 +1753,7 @@ let shuffledCards = openingHand.toSorted(() => 0.5 - Math.random());
 let handArray = shuffledCards.slice(0, 5);
 let drawPileArray = shuffledCards.slice(5);
 let discardPileArray = [];
+let destroyedCardsArray = [];
 let maxHandLength = 5;
 
 // REMOVE OPENING HAND CARDS FROM DRAW PILE AND ADD THEM TO HAND
@@ -1674,7 +1777,7 @@ function drawCards(numberOfCards) {
                         let reshuffle = discardPileArray.shift();
                         drawPileArray.push(reshuffle);
                 }     
-                //console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+                console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
  
         }
         // SHIFT CARDS FROM DRAW PILE TO HAND
@@ -1682,44 +1785,44 @@ function drawCards(numberOfCards) {
                 let drawNewCard = drawPileArray.shift();
                 handArray.unshift(drawNewCard);
         }
-        //console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
 
         // DISPLAY CARDS IN HAND
         for (let i = 0; i < numberOfCards; i++) {
                 displayFlex(handArray[i]);
         }
-        //console.log(handArray);
+        console.log(handArray);
 }
 // GET NEW SET OF 5 CARDS AT THE END OF EACH TURN
 function addCardsToHand() {
         // MOVE HAND CONTAINERS TO DISCARD CONTAINERS
-        //console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 let discarded = handArray.shift();
-                //console.log(discarded);
+                console.log(discarded);
                 discardPileArray.unshift(discarded);
         }
-        //console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         for (let i = 0; i < cardsInHand; i++) {
                displayNone(discardPileArray[i]);
         }
         drawCards(maxHandLength);      
 }
 function reshuffleCards() {
-        //console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 let discarded = handArray.shift();
                 drawPileArray.unshift(discarded);
         }
-        //console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInDiscardPile = discardPileArray.length;
         for (let i = 0; i < cardsInDiscardPile; i++) {
                 let reshuffle = discardPileArray.shift();
                 drawPileArray.push(reshuffle);
         }
-        //console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
          // RESHUFFLE CARDS IN DRAW PILE
         drawPileArray = drawPileArray.toSorted(() => 0.5 - Math.random());
          // SHIFT CARDS FROM DRAW PILE TO HAND
@@ -1727,7 +1830,7 @@ function reshuffleCards() {
                 let drawNewCard = drawPileArray.shift();
                 handArray.unshift(drawNewCard);
         }
-        //console.log(`RESHUFFLE CARDS\nDRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`RESHUFFLE CARDS\nDRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         for (let i = 0; i < maxHandLength; i++) {
                 displayFlex(handArray[i]);
         }
@@ -1736,9 +1839,9 @@ function reshuffleCards() {
         }    
 }
 const allCardsReferenceContainer = document.querySelector("#all-cards-reference-container");
-for (let i = 0; i < cardsInformation.length; i++) {
-        createCard(i, allCardsReferenceContainer, "card-reference", "card-text");
-}
+//for (let i = 0; i < cardsInformation.length; i++) {
+  //      createCard(i, allCardsReferenceContainer, "card-reference", "card-text");
+//}
 // TRIGGER SO YOU CANT CLICK CARD MULTIPLE TIMES TO APPLY CARD EFFECT MULTIPLE TIMES ON ENEMY
 let cardClicked = false;
 // ADD EVENTLISTENERS TO ALL CARDS, STORE CHOSEN CARD IN VARIABLE, PICK ENEMY WHO WILL RECIEVE CARD ACTION
@@ -1794,12 +1897,10 @@ function addCardListeners(cardType, index, CIindex) {
 }        
 const allCardsReference = document.querySelectorAll(".card-reference");
 const newCardsContainer = document.querySelector("#new-cards-container");
-
-let newCard0, newCard1, newCard2, newCard3;
-
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
         function addNewCardInformation(newRandomCard) {
+                chooseNewCardDiv.innerHTML = ``;
                 if (newRandomCard == 24) {
                         createCard(newRandomCard, newCardsContainer, "card winds-of-change", "card-text winds-card-text");
                 } else {
@@ -1807,26 +1908,15 @@ function getRandomNewCards () {
                 }
                 let newCardsArray = document.querySelectorAll(".card");
                 addCardListeners(newCardsArray, 0, newRandomCard);
-                // ADD CLASS TO DYNAMICALLY UPDATE TEXT TO WINDS OF CHANGE WHEN PLAYED
                 drawPileArray.push(newCardsArray[0]);
-                // ADD THE NEW CARD TO THE DRAW PILE
                 handContainer.appendChild(newCardsArray[0]);
-                displayNone(arena, chooseNewCardDiv);
-                displayBlock(map);
-                allCardsReferenceContainer.appendChild(allCardsReference[newRandomCard0]);
-                allCardsReferenceContainer.appendChild(allCardsReference[newRandomCard1]);
-                allCardsReferenceContainer.appendChild(allCardsReference[newRandomCard2]);
-                allCardsReferenceContainer.appendChild(allCardsReference[newRandomCard3]);
-                allCardsReference[newRandomCard0].removeEventListener("click", newCard0);  
-                allCardsReference[newRandomCard1].removeEventListener("click", newCard1);  
-                allCardsReference[newRandomCard2].removeEventListener("click", newCard2);  
-                allCardsReference[newRandomCard3].removeEventListener("click", newCard3);  
+                switchArenaToMap();
         }
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = 23;//createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard1 = createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard2 = createRandomNumber(0, cardsInformation.length - 1);
-        let newRandomCard3 = createRandomNumber(0, cardsInformation.length - 1);
+        let newRandomCard0 = createRandomNumber(0, cardsInformation.length - 2);
+        let newRandomCard1 = createRandomNumber(0, cardsInformation.length - 2);
+        let newRandomCard2 = createRandomNumber(0, cardsInformation.length - 2);
+        let newRandomCard3 = createRandomNumber(0, cardsInformation.length - 2);
         // CHANGE CARDS IF THEY ARE THE SAME
         if (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3) {
                 newRandomCard0 += 1;
@@ -1853,19 +1943,17 @@ function getRandomNewCards () {
                 newRandomCard3 += 1;
         }
         // ADD REFERENCE CARDS TO CHOOSE NEW CARD DIV
-        chooseNewCardDiv.appendChild(allCardsReference[newRandomCard0]);
-        chooseNewCardDiv.appendChild(allCardsReference[newRandomCard1]);
-        chooseNewCardDiv.appendChild(allCardsReference[newRandomCard2]);
-        chooseNewCardDiv.appendChild(allCardsReference[newRandomCard3]);
-        displayFlex(chooseNewCardDiv, allCardsReference[newRandomCard0], allCardsReference[newRandomCard1], allCardsReference[newRandomCard2], allCardsReference[newRandomCard3]);
-        newCard0 = () => {addNewCardInformation(newRandomCard0)}
-        newCard1 = () => {addNewCardInformation(newRandomCard1)}
-        newCard2 = () => {addNewCardInformation(newRandomCard2)}
-        newCard3 = () => {addNewCardInformation(newRandomCard3)}
-        allCardsReference[newRandomCard0].addEventListener("click", newCard0);
-        allCardsReference[newRandomCard1].addEventListener("click", newCard1);
-        allCardsReference[newRandomCard2].addEventListener("click", newCard2);
-        allCardsReference[newRandomCard3].addEventListener("click", newCard3);
+        createCard(newRandomCard0, chooseNewCardDiv, "card", "card-text");
+        createCard(newRandomCard1, chooseNewCardDiv, "card", "card-text");
+        createCard(newRandomCard2, chooseNewCardDiv, "card", "card-text");
+        createCard(newRandomCard3, chooseNewCardDiv, "card", "card-text");
+        let newCardChoices = document.querySelectorAll(".card");
+        console.log(newCardChoices);
+        displayFlex(chooseNewCardDiv, newCardChoices[0], newCardChoices[1], newCardChoices[2], newCardChoices[3]);
+        newCardChoices[0].addEventListener("click", () => {addNewCardInformation(newRandomCard0)});
+        newCardChoices[1].addEventListener("click", () => {addNewCardInformation(newRandomCard1)});
+        newCardChoices[2].addEventListener("click", () => {addNewCardInformation(newRandomCard2)});
+        newCardChoices[3].addEventListener("click", () => {addNewCardInformation(newRandomCard3)});
 }
 
 /*
@@ -2655,11 +2743,25 @@ function enemyAction() {
                         enemyThornsActionNumber[eI].innerText = enemyRandomThorns[eI];
                         displayBlock(enemyThornsActionImg[eI], enemyThornsActionNumber[eI], enemyThornsActionDiv[eI]);
                 } else if (actionChoice[eI] <= enemiesInformation[i].lowerAttackChance) {  
-                        // LOWER ATTACK
-                        displayBlock(enemyWindsweptActionImg[eI]);
+                        if (enemiesAlive > 1) {
+                                // LOWER ATTACK
+                                displayBlock(enemyWindsweptActionImg[eI]);        
+                        } else {
+                                // ATTACK
+                                enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
+                                enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
+                                displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
+                        }
                 } else if (actionChoice[eI] <= enemiesInformation[i].lowerBlockChance) {                        
-                        // LOWER BLOCK
-                        displayBlock(enemyFrostbiteActionImg[eI]);
+                        if (enemiesAlive > 1) {
+                                // LOWER BLOCK
+                                displayBlock(enemyFrostbiteActionImg[eI]);        
+                        } else {
+                                // ATTACK
+                                enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
+                                enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
+                                displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
+                        }
                 }
                 eI++
         });
@@ -2717,13 +2819,23 @@ function endTurn() {
                                 // THORNS
                                 enemyGainThorns(enemyRandomThorns[eI], eI);
                         } else if (actionChoice[eI] <= enemiesInformation[i].lowerAttackChance) {
-                                // LOWER ATTACK
-                                playerWindswept = true;
-                                displayBlock(playerWindsweptImg);
+                                if (enemiesAlive > 1) {
+                                        // LOWER ATTACK
+                                        playerWindswept = true;
+                                        displayBlock(playerWindsweptImg);        
+                                } else {
+                                        // ATTACK
+                                        damagePlayer(enemyRandomDamage[eI], eI);
+                                }   
                         } else if (actionChoice[eI] <= enemiesInformation[i].lowerBlockChance) {                        
-                                // LOWER BLOCK
-                                playerFrostbite = true;
-                                displayBlock(playerFrostbiteImg);
+                                if (enemiesAlive > 1) {
+                                        // LOWER BLOCK
+                                        playerFrostbite = true;
+                                        displayBlock(playerFrostbiteImg);        
+                                } else {
+                                        // ATTACK
+                                        damagePlayer(enemyRandomDamage[eI], eI);
+                                }   
                         }
                         // RESET ACTIONS
                         displayNone(enemyAttackActionDiv[eI], enemyBlockActionDiv[eI], enemyHealActionDiv[eI], enemyBurnActionDiv[eI], enemyThornsActionDiv[eI],
