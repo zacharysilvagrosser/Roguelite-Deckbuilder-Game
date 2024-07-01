@@ -9,10 +9,14 @@ Talent tree after each fight
 FIRE CARD: Deal damage based on self inflicted burn
 WATER CARD: Gain 1 regen per card played this turn
 
+POTIONS: RED POTION: Increase burn by 1
+COPY CARD
+
 Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 mana etc.
 SYNERGIES: Wind draw, frost thorn block, water burn heal, blood siphon lightning
 
 BUG: can click card then end turn and play card
+CREATE NEW CARD COPIES OF YOUR DECK, THEN WHEN YOU CLICK ON IT, DELETE THEM SO YOU DONT HAVE TO REMOVE EVENTLISTENER AND YOUR WORKING CARDS STAY WHERE THEY ARE
 */
 /*
 GENERAL FUNCTIONS
@@ -505,7 +509,7 @@ function chooseLocationPath() {
                         removeELL1();
                         location2Tiles1.addEventListener("click", L2T1);
                         location2Tiles2.addEventListener("click", L2T2);
-                        getRandomEncounter();
+                        getRandomExclamation();
                         break;
                 case "L1T2":
                         switchMapToArena();
@@ -530,7 +534,7 @@ function chooseLocationPath() {
                         addGlow(location3Tiles1);
                         removeELL2();
                         location3Tiles1.addEventListener("click", L3T1);
-                        getRandomExclamation();
+                        getRandomEncounter();
                         break;
                 case "L2T2":
                         resetArena();
@@ -769,7 +773,7 @@ function chooseLocationPath() {
 /*
 EXCLAMATION SECTION
 */
-function createExclamation(title, background, img, text0, text1, text2, buttonText0, buttonText1) {
+function createExclamation(title, background, img, text0, text1, text2) {
         const exclamationContainer = document.querySelector("#exclamation-container");
         exclamationContainer.innerHTML = `
         <div class="exclamation-div" style= "background-image: url(${background})">
@@ -783,8 +787,7 @@ function createExclamation(title, background, img, text0, text1, text2, buttonTe
                         </p>
                 </div>
                 <div class="exclamation-button-div">
-                    <button class="exclamation-button1">${buttonText0}</button>
-                    <button class="exclamation-button2">${buttonText1}</button>
+                    
                 </div>
             </div>
         </div>
@@ -793,26 +796,29 @@ function createExclamation(title, background, img, text0, text1, text2, buttonTe
 const exclamationContainer = document.querySelector("#exclamation-container");
 let exclamationDiv = document.querySelector(".exclamation-div");
 let exclamationButtonDiv = document.querySelector(".exclamation-button-div");
-let exclamation2Buttons1 = document.querySelector(".exclamation-2-button-1");
-let exclamation2Buttons2 = document.querySelector(".exclamation-2-button-2");
-let exclamation6Button1 = document.querySelector(".exclamation-6-button-1");
-let exclamation6Button2 = document.querySelector(".exclamation-6-button-2");
-let exclamation6Button3 = document.querySelector(".exclamation-6-button-3");
-let exclamation6Button4 = document.querySelector(".exclamation-6-button-4");
-let exclamation6Button5 = document.querySelector(".exclamation-6-button-5");
-let exclamation6Button6 = document.querySelector(".exclamation-6-button-6");
+let exclamationButton1 = document.querySelector(".exclamation-button-1");
+let exclamationButton2 = document.querySelector(".exclamation-button-2");
+let exclamationButton3 = document.querySelector(".exclamation-button-3");
+let exclamationButton4 = document.querySelector(".exclamation-button-4");
+let exclamationButton5 = document.querySelector(".exclamation-button-5");
+let exclamationButton6 = document.querySelector(".exclamation-button-6");
+const destroyedCardsContainer = document.querySelector("#destroyed-cards-container");
 function getRandomExclamation() {
-        let randomExclamationNumber = createRandomNumber(2, 2);
+        let randomExclamationNumber = createRandomNumber(3, 3);
         switch (randomExclamationNumber) {
                 case 1:
                         createExclamation("King Spookly", "imgs/pixel-forest.jpg", "imgs/ghost.jpg", "A ghost peaks out from a tree up ahead.", 
                                 "He beckons you closer with his translucent appendage. You approach.",
-                                `"I was once a king in this land long ago." His soft whisper echos. "I had all the gold in my possession burried with me. I now realize the arrogance of my actions and would like to make amends for my past mistakes."`,
-                                "Accept: Gain 200 Gold, but add a useless card to your deck", "Refuse: Gain 10 max health and heal for 10");
+                                `"I was once a king in this land long ago." His soft whisper echos. "I had all the gold in my possession burried with me. I now realize the arrogance of my actions and would like to make amends for my past mistakes."`);
                         exclamationDiv = document.querySelector(".exclamation-div");
-                        exclamation2Buttons1 = document.querySelector(".exclamation-button1");
-                        exclamation2Buttons2 = document.querySelector(".exclamation-button2");
-                        exclamation2Buttons1.addEventListener("click", () => {
+                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
+                        exclamationButtonDiv.innerHTML = `
+                        <button class="exclamation-button-1"><span style="color: lightgreen">Accept:</span> Gain 200 Gold, but add a useless card to your deck</button>
+                        <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83)">Refuse:</span> Gain 10 max health and heal for 10</button>
+                        `;
+                        exclamationButton1 = document.querySelector(".exclamation-button-1");
+                        exclamationButton2 = document.querySelector(".exclamation-button-2");
+                        exclamationButton1.addEventListener("click", () => {
                                 createCard(51, newCardsContainer, "card", "card-text");
                                 let newCardsArray = document.querySelectorAll(".card");
                                 newCardsArray[0].style.background = "linear-gradient(gold, black)";
@@ -821,7 +827,7 @@ function getRandomExclamation() {
                                 playerGold.innerText = parseFloat(playerGold.innerText) + 200;
                                 switchExclamationToMap();
                         });
-                        exclamation2Buttons2.addEventListener("click", () => {
+                        exclamationButton2.addEventListener("click", () => {
                                 playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 10;
                                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 10;
                                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
@@ -829,28 +835,26 @@ function getRandomExclamation() {
                         });
                         break;
                 case 2:
-                        createExclamation("King Spookly", "imgs/pixel-forest.jpg", "imgs/ghost.jpg", "A ghost peaks out from a tree up ahead.", 
-                                "He beckons you closer with his translucent appendage. You approach.",
-                                `"I was once a king in this land long ago." His soft whisper echos. "I had all the gold in my possession burried with me. I now realize the arrogance of my actions and would like to make amends for my past mistakes."`,
-                                "", "");
+                        createExclamation("A Goddess's Request", "imgs/pixel-forest.jpg", "imgs/goddess.jpg", "A wise looking woman approaches you with a knowing look.", 
+                                `I am the Goddess <span style="color: #81b14f">Terra</span>, spiritual guardian of this world. I appear to you now in physical form to ask of you a sacrifice.`,
+                                "This world's natural elemental spirits are slowly withering away due to the dwarves mining operations. I must ask that you lend one of your elemental orbs of power to this land. I would not ask of this if not completely necessary.");
                         exclamationDiv = document.querySelector(".exclamation-div");
                         exclamationButtonDiv = document.querySelector(".exclamation-button-div");
                         exclamationButtonDiv.innerHTML = `
-                        <button class="exclamation-6-button-1" style="text-align: center">Fire</button>
-                        <button class="exclamation-6-button-2" style="text-align: center">Lightning</button>
-                        <button class="exclamation-6-button-3" style="text-align: center">Ice</button>
-                        <button class="exclamation-6-button-4" style="text-align: center">Air</button>
-                        <button class="exclamation-6-button-5" style="text-align: center">Water</button>
-                        <button class="exclamation-6-button-6" style="text-align: center">Earth</button>
+                        <button class="exclamation-button-1" style="text-align: center; width: 50%; height: 50px; margin-top: 20px;">Sacrifice <span style="color: #ba760f">fire</span> cards</button>
+                        <button class="exclamation-button-2" style="text-align: center; width: 50%; height: 50px; margin-top: 20px;">Sacrifice <span style="color: #fafba5">lightning</span> cards</button>
+                        <button class="exclamation-button-3" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #2f989c">ice</span> cards</button>
+                        <button class="exclamation-button-4" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #86bfdf">air</span> cards</button>
+                        <button class="exclamation-button-5" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #74ccf4">water</span> cards</button>
+                        <button class="exclamation-button-6" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #8d624b">earth</span> cards</button>
                         `;
-                        exclamation6Button1 = document.querySelector(".exclamation-6-button-1");
-                        exclamation6Button2 = document.querySelector(".exclamation-6-button-2");
-                        exclamation6Button3 = document.querySelector(".exclamation-6-button-3");
-                        exclamation6Button4 = document.querySelector(".exclamation-6-button-4");
-                        exclamation6Button5 = document.querySelector(".exclamation-6-button-5");
-                        exclamation6Button6 = document.querySelector(".exclamation-6-button-6");
-                        let destroyedCardsContainer = document.querySelector("#destroyed-cards-container");
-                        function destroyCards(cardType) {
+                        exclamationButton1 = document.querySelector(".exclamation-button-1");
+                        exclamationButton2 = document.querySelector(".exclamation-button-2");
+                        exclamationButton3 = document.querySelector(".exclamation-button-3");
+                        exclamationButton4 = document.querySelector(".exclamation-button-4");
+                        exclamationButton5 = document.querySelector(".exclamation-button-5");
+                        exclamationButton6 = document.querySelector(".exclamation-button-6");
+                        function destroyCards(cardType, orb) {
                                 for (let i = 0; i < cardType.length; i++) {
                                         if (drawPileArray.includes(cardType[i])) {
                                                 console.log("DRAW INCLUDES FIRE");
@@ -867,40 +871,105 @@ function getRandomExclamation() {
                                                 console.log("Destroyed :", destroyedCardsArray);        
                                         }
                                         destroyedCardsContainer.appendChild(cardType[i]);
-                                        console.log("Draw Pile", drawPileArray);
                                 }
                                 destroyedCardsContainer.innerHTML = ``;
                                 destroyedCardsArray = [];
+                                const orbImg = document.querySelector(`#${orb}-orb-img`);
+                                displayNone(orbImg);
                         }
-                        exclamation6Button1.addEventListener("click", () => {
-                                let fireCards = document.querySelectorAll(".fire");
-                                destroyCards(fireCards);
+                        exclamationButton1.addEventListener("click", () => {
+                                let fire = document.querySelectorAll(".fire");
+                                destroyCards(fire, "fire");
                                 switchExclamationToMap();
                         });
-                        exclamation6Button2.addEventListener("click", () => {
-                                let lightningCards = document.querySelectorAll(".lightning");
-                                destroyCards(lightningCards);
+                        exclamationButton2.addEventListener("click", () => {
+                                let lightning = document.querySelectorAll(".lightning");
+                                destroyCards(lightning, "lightning");
                                 switchExclamationToMap();
                         });
-                        exclamation6Button3.addEventListener("click", () => {
-                                let iceCards = document.querySelectorAll(".ice");
-                                destroyCards(iceCards);
+                        exclamationButton3.addEventListener("click", () => {
+                                let ice = document.querySelectorAll(".ice");
+                                destroyCards(ice, "ice");
                                 switchExclamationToMap();
                         });
-                        exclamation6Button4.addEventListener("click", () => {
-                                let airCards = document.querySelectorAll(".air");
-                                destroyCards(airCards);
+                        exclamationButton4.addEventListener("click", () => {
+                                let air = document.querySelectorAll(".air");
+                                destroyCards(air, "air");
                                 switchExclamationToMap();
                         });
-                        exclamation6Button5.addEventListener("click", () => {
-                                let waterCards = document.querySelectorAll(".water");
-                                destroyCards(waterCards);
+                        exclamationButton5.addEventListener("click", () => {
+                                let water = document.querySelectorAll(".water");
+                                destroyCards(water, "water");
                                 switchExclamationToMap();
                         });
-                        exclamation6Button6.addEventListener("click", () => {
-                                let earthCards = document.querySelectorAll(".earth");
-                                destroyCards(earthCards);
+                        exclamationButton6.addEventListener("click", () => {
+                                let earth = document.querySelectorAll(".earth");
+                                destroyCards(earth, "earth");
                                 switchExclamationToMap();
+                        });
+                        break;
+                case 3:
+                        createExclamation("The Wizard's Apprentice", "imgs/pixel-forest.jpg", "imgs/clone-mage.jpg", "You see a flustered wizard over the next thicket trying and failing to cast a spell.", 
+                                `"Are you trying to burn down this entire forest?!" You demand indignantly.`,
+                                `"No you damnable fool! I've been trying for days to clone this Terra forsaken thing!" he yells emphatically. "Say...do you think I could get a little bit of practice on one of those spells of yours?"`);
+                        exclamationDiv = document.querySelector(".exclamation-div");
+                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
+                        exclamationButtonDiv.innerHTML = `
+                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: lightgreen">Success:</span> His spell clones the card you choose</button>
+                        <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83)">Failure:</span> The card you choose disappears</button>
+                        `;
+                        exclamationButton1 = document.querySelector(".exclamation-button-1");
+                        exclamationButton2 = document.querySelector(".exclamation-button-2");
+                        exclamationButton1.addEventListener("click", () => {
+                                let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
+                                exclamationContainer.innerHTML = `<div class="all-cards-list"></div>`;
+                                const allCardsList = document.querySelector(".all-cards-list");
+                                allCardsArray.forEach((i) => {
+                                        allCardsList.appendChild(i);
+                                        displayFlex(i);
+                                        let cardIndex;
+                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                if (i.classList.contains(j)) {
+                                                        cardIndex = j;
+                                                }
+                                        }
+                                        i.addEventListener("click", () => {
+                                                addNewCardInformation(cardIndex);
+                                                switchExclamationToMap();
+                                                drawPileArray.forEach((i) => {handContainer.appendChild(i)});
+                                                handArray.forEach((i) => {handContainer.appendChild(i)});
+                                                discardPileArray.forEach((i) => {handContainer.appendChild(i)});
+                                        }, { once: true } );   
+                                });
+                        });
+                        exclamationButton2.addEventListener("click", () => {
+                                exclamationContainer.innerHTML = `<div class="all-cards-list"></div>`;
+                                const allCardsList = document.querySelector(".all-cards-list");
+                                let cardsInHand = handArray.length;
+                                for (let i = 0; i < cardsInHand; i++) {
+                                        let discarded = handArray.shift();
+                                        drawPileArray.unshift(discarded);
+                                }
+                                let cardsInDiscardPile = discardPileArray.length;
+                                for (let i = 0; i < cardsInDiscardPile; i++) {
+                                        let reshuffle = discardPileArray.shift();
+                                        drawPileArray.push(reshuffle);
+                                }
+                                drawPileArray.forEach((i) => {
+                                        allCardsList.appendChild(i);
+                                        displayFlex(i);
+                                        let destroyCard = () => {
+                                                let drawIndex = drawPileArray.indexOf(i);
+                                                let getCard = drawPileArray.splice(drawIndex, 1);
+                                                destroyedCardsArray.push(getCard);
+                                                destroyedCardsArray = [];
+                                                destroyedCardsContainer.appendChild(i);
+                                                destroyedCardsContainer.innerHTML = ``;
+                                                i.removeEventListener(destroyCard);
+                                        }
+                                        i.addEventListener("click", destroyCard);
+                                        
+                                });
                         });
                         break;
         }
@@ -1731,7 +1800,7 @@ const cardsInformation = [
 //  CARD CREATION FUNCTION TO ADD TO HTML
 function createCard(index, innerLocation, cardClass, cardText) {
         innerLocation.innerHTML +=
-        `<div class="${cardClass} ${cardsInformation[index].element}">
+        `<div class="${cardClass} ${cardsInformation[index].element} ${index}">
                 <p class="card-mana-number">${cardsInformation[index].manaCost}</p>
                 <img class="card-mana-img" src="imgs/block-icon.png">
                 <h1 class="card-name">${cardsInformation[index].name}</h1>
@@ -1894,31 +1963,39 @@ function addCardListeners(cardType, index, CIindex) {
                         }  
                 }
         }
+}
+function addNewCardInformation(newRandomCard) {
+        chooseNewCardDiv.innerHTML = ``;
+        if (newRandomCard == 24) {
+                createCard(newRandomCard, newCardsContainer, "card winds-of-change", "card-text winds-card-text");
+        } else {
+                createCard(newRandomCard, newCardsContainer, "card", "card-text");
+        }
+        let newCardsArray = document.querySelectorAll(".card");
+        addCardListeners(newCardsArray, 0, newRandomCard);
+        drawPileArray.push(newCardsArray[0]);
+        handContainer.appendChild(newCardsArray[0]);
+        switchArenaToMap();
 }        
 const allCardsReference = document.querySelectorAll(".card-reference");
 const newCardsContainer = document.querySelector("#new-cards-container");
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
-        function addNewCardInformation(newRandomCard) {
-                chooseNewCardDiv.innerHTML = ``;
-                if (newRandomCard == 24) {
-                        createCard(newRandomCard, newCardsContainer, "card winds-of-change", "card-text winds-card-text");
-                } else {
-                        createCard(newRandomCard, newCardsContainer, "card", "card-text");
-                }
-                let newCardsArray = document.querySelectorAll(".card");
-                addCardListeners(newCardsArray, 0, newRandomCard);
-                drawPileArray.push(newCardsArray[0]);
-                handContainer.appendChild(newCardsArray[0]);
-                switchArenaToMap();
-        }
+        
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
         let newRandomCard0 = createRandomNumber(0, cardsInformation.length - 2);
         let newRandomCard1 = createRandomNumber(0, cardsInformation.length - 2);
         let newRandomCard2 = createRandomNumber(0, cardsInformation.length - 2);
         let newRandomCard3 = createRandomNumber(0, cardsInformation.length - 2);
         // CHANGE CARDS IF THEY ARE THE SAME
-        if (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3) {
+        while (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3 || 
+                newRandomCard1 == newRandomCard2 || newRandomCard1 == newRandomCard3 || newRandomCard2 == newRandomCard3) {
+                newRandomCard0 = createRandomNumber(0, cardsInformation.length - 2);
+                newRandomCard1 = createRandomNumber(0, cardsInformation.length - 2);
+                newRandomCard2 = createRandomNumber(0, cardsInformation.length - 2);
+                newRandomCard3 = createRandomNumber(0, cardsInformation.length - 2);
+        }
+        /*if (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3) {
                 newRandomCard0 += 1;
         }
         if (newRandomCard1 == newRandomCard0 || newRandomCard1 == newRandomCard2 || newRandomCard1 == newRandomCard3) {
@@ -1941,7 +2018,7 @@ function getRandomNewCards () {
         }
         if (newRandomCard3 == newRandomCard0 || newRandomCard3 == newRandomCard1 || newRandomCard3 == newRandomCard2) {
                 newRandomCard3 += 1;
-        }
+        }*/
         // ADD REFERENCE CARDS TO CHOOSE NEW CARD DIV
         createCard(newRandomCard0, chooseNewCardDiv, "card", "card-text");
         createCard(newRandomCard1, chooseNewCardDiv, "card", "card-text");
@@ -1989,11 +2066,6 @@ endTurnButton.addEventListener("click", endTurn);
 function spendMana(cardNumber) {
         currentMana.innerText -= cardsInformation[cardNumber].manaCost;
 }
-function allEnemies(action, amount, enemy) {
-        for (let i = 0; i < numberOfEnemies; i++) {
-                action(amount, enemy);
-        }
-} 
 function damageEnemy(damage, enemy) {
         if (liquidLightning) {
                 damage += 5;
