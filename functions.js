@@ -924,50 +924,68 @@ function getRandomExclamation() {
                                 let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
                                 exclamationContainer.innerHTML = `<div class="all-cards-list"></div>`;
                                 const allCardsList = document.querySelector(".all-cards-list");
+                                let cardIndex;
                                 allCardsArray.forEach((i) => {
-                                        allCardsList.appendChild(i);
-                                        displayFlex(i);
-                                        let cardIndex;
                                         for (let j = 0; j < cardsInformation.length; j++) {
                                                 if (i.classList.contains(j)) {
+                                                        console.log(cardIndex)
                                                         cardIndex = j;
+                                                        createCard(cardIndex, allCardsList, "card-reference", "card-text");
                                                 }
                                         }
-                                        i.addEventListener("click", () => {
-                                                addNewCardInformation(cardIndex);
-                                                switchExclamationToMap();
-                                                drawPileArray.forEach((i) => {handContainer.appendChild(i)});
-                                                handArray.forEach((i) => {handContainer.appendChild(i)});
-                                                discardPileArray.forEach((i) => {handContainer.appendChild(i)});
-                                        }, { once: true } );   
                                 });
-                        });
+                                let cardReference = document.querySelectorAll(".card-reference");
+                                cardReference.forEach((i) => {
+                                        displayFlex(i);
+                                        i.addEventListener("click", () => {
+                                                for (let j = 0; j < cardsInformation.length; j++) {
+                                                        if (i.classList.contains(j)) {
+                                                                console.log("x");
+                                                                cardIndex = j;
+                                                                createCard(cardIndex, drawPileContainer, "card", "card-text");
+                                                                addNewCardInformation(cardIndex);
+                                                                switchExclamationToMap();
+                                                        }
+                                                }
+                                        });
+                                });
+                        });    
                         exclamationButton2.addEventListener("click", () => {
+                                let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
                                 exclamationContainer.innerHTML = `<div class="all-cards-list"></div>`;
                                 const allCardsList = document.querySelector(".all-cards-list");
-                                let cardsInHand = handArray.length;
-                                for (let i = 0; i < cardsInHand; i++) {
-                                        let discarded = handArray.shift();
-                                        drawPileArray.unshift(discarded);
-                                }
-                                let cardsInDiscardPile = discardPileArray.length;
-                                for (let i = 0; i < cardsInDiscardPile; i++) {
-                                        let reshuffle = discardPileArray.shift();
-                                        drawPileArray.push(reshuffle);
-                                }
-                                drawPileArray.forEach((i) => {
-                                        allCardsList.appendChild(i);
-                                        displayFlex(i);
-                                        let destroyCard = () => {
-                                                let drawIndex = drawPileArray.indexOf(i);
-                                                let getCard = drawPileArray.splice(drawIndex, 1);
-                                                destroyedCardsArray.push(getCard);
-                                                destroyedCardsArray = [];
-                                                destroyedCardsContainer.appendChild(i);
-                                                destroyedCardsContainer.innerHTML = ``;
-                                                i.removeEventListener(destroyCard);
+                                let cardIndex;
+                                allCardsArray.forEach((i) => {
+                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                if (i.classList.contains(j)) {
+                                                        console.log(cardIndex)
+                                                        cardIndex = j;
+                                                        createCard(cardIndex, allCardsList, "card-reference", "card-text");
+                                                }
                                         }
-                                        i.addEventListener("click", destroyCard);
+                                });
+                                let cardReference = document.querySelectorAll(".card-reference");
+                                cardReference.forEach((i) => {
+                                        displayFlex(i);
+                                        i.addEventListener("click", () => {
+                                                for (let j = 0; j < cardsInformation.length; j++) {
+                                                        if (i.classList.contains(j)) {
+                                                                drawPileArray.forEach((k) => {
+                                                                        if (k.classList.contains(j)) {
+                                                                                console.log("x");
+                                                                                let drawIndex = drawPileArray.indexOf(k);
+                                                                                let getCard = drawPileArray.splice(drawIndex, 1);
+                                                                                let holdCard = getCard.pop();
+                                                                                destroyedCardsArray.push(holdCard);
+                                                                                destroyedCardsContainer.appendChild(holdCard);
+                                                                                destroyedCardsArray = [];
+                                                                                destroyedCardsContainer.innerHTML = ``;
+                                                                                switchExclamationToMap();
+                                                                        }
+                                                                });
+                                                        }
+                                                }
+                                        });
                                         
                                 });
                         });
