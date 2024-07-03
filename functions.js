@@ -319,13 +319,11 @@ function resetArena() {
         terrasBlessing = false;
         gaiasEmbrace = false;
         maxHandLength = 5;
-        let windsCards = document.querySelectorAll(".winds-card-text");
-        for (let i = 0; i < windsCards.length; i++) {
-                windsCards[i].innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +3 damage.`;  
-        }
+        healthGainedThisFight = 0;
         displayNone();
         displayFlex(handContainer);
         reshuffleCards();
+        updateCardText();
         enemyContainer.innerHTML = "";
 }
 function getRandomEncounter() {
@@ -509,7 +507,7 @@ function chooseLocationPath() {
                         removeELL1();
                         location2Tiles1.addEventListener("click", L2T1);
                         location2Tiles2.addEventListener("click", L2T2);
-                        getShop();
+                        getRandomEncounter();
                         break;
                 case "L1T2":
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
@@ -777,12 +775,9 @@ const destroyedCardsContainer = document.querySelector("#destroyed-cards-contain
 let dontRepeatEncounter = [];
 function getRandomExclamation() {
         let randomExclamationNumber = createRandomNumber(1, 3);
-        console.log("randum #", randomExclamationNumber);
         switchArea(exclamationContainer, map);
         while (dontRepeatEncounter.includes(randomExclamationNumber)) {
-                console.log("randum # start", randomExclamationNumber);
                 randomExclamationNumber = createRandomNumber(1, 3);
-                console.log("randum # change", randomExclamationNumber);
         }
         switch (randomExclamationNumber) {
                 case 1:
@@ -837,18 +832,14 @@ function getRandomExclamation() {
                         function destroyCards(cardType, orb) {
                                 for (let i = 0; i < cardType.length; i++) {
                                         if (drawPileArray.includes(cardType[i])) {
-                                                console.log("DRAW INCLUDES FIRE");
                                                 let drawIndex = drawPileArray.indexOf(cardType[i]);
                                                 let getFireCard = drawPileArray.splice(drawIndex, 1);
                                                 destroyedCardsArray.push(getFireCard);
-                                                console.log("Destroyed :", destroyedCardsArray);        
                                         }
                                         if (handArray.includes(cardType[i])) {
-                                                console.log("HAND INCLUDES FIRE");
                                                 let drawIndex = handArray.indexOf(cardType[i]);
                                                 let getFireCard = handArray.splice(drawIndex, 1);
                                                 destroyedCardsArray.push(getFireCard);
-                                                console.log("Destroyed :", destroyedCardsArray);        
                                         }
                                         destroyedCardsContainer.appendChild(cardType[i]);
                                 }
@@ -909,7 +900,6 @@ function getRandomExclamation() {
                                 allCardsArray.forEach((i) => {
                                         for (let j = 0; j < cardsInformation.length; j++) {
                                                 if (i.classList.contains(j)) {
-                                                        console.log(cardIndex)
                                                         cardIndex = j;
                                                         createCard(cardIndex, allCardsList, "card-reference", "card-text");
                                                 }
@@ -921,7 +911,6 @@ function getRandomExclamation() {
                                         i.addEventListener("click", () => {
                                                 for (let j = 0; j < cardsInformation.length; j++) {
                                                         if (i.classList.contains(j)) {
-                                                                console.log("x");
                                                                 cardIndex = j;
                                                                 createCard(cardIndex, drawPileContainer, "card", "card-text");
                                                                 addNewCardInformation(cardIndex);
@@ -939,7 +928,6 @@ function getRandomExclamation() {
                                 allCardsArray.forEach((i) => {
                                         for (let j = 0; j < cardsInformation.length; j++) {
                                                 if (i.classList.contains(j)) {
-                                                        console.log(cardIndex)
                                                         cardIndex = j;
                                                         createCard(cardIndex, allCardsList, "card-reference", "card-text");
                                                 }
@@ -953,7 +941,6 @@ function getRandomExclamation() {
                                                         if (i.classList.contains(j)) {
                                                                 drawPileArray.forEach((k) => {
                                                                         if (k.classList.contains(j)) {
-                                                                                console.log("x");
                                                                                 let drawIndex = drawPileArray.indexOf(k);
                                                                                 let getCard = drawPileArray.splice(drawIndex, 1);
                                                                                 let holdCard = getCard.pop();
@@ -1054,32 +1041,33 @@ const cardsInformation = [
                         spendMana(0);
                         damageEnemy(5, chosenEnemy);
                         burnEnemy(5, chosenEnemy);
-                        playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 2;
-                        displayBlock(playerBurnImg, playerBurnNumber); 
                 },
         },
         {
-                manaCost: 0,
-                name: "Combust",
-                cardImg: "imgs/combustion.jpg",
-                cardText: "Inflict 3 burn",
+                manaCost: 3,
+                name: "Cascading Flames",
+                cardImg: "imgs/cascading-flames.jpg",
+                cardText: "Deal 15 damage and inflict 10 burn on an enemy and 4 burn on yourself",
                 chooseEnemyCard: true,
                 element: "fire",
                 action: function() {
-                        burnEnemy(3, chosenEnemy);
-                },        
+                        spendMana(1);
+                        damageEnemy(20, chosenEnemy);
+                        burnEnemy(10, chosenEnemy);
+                        playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 4;
+                }
         },
         {
-                manaCost: 2,
-                name: "Lightning Bolt",
-                cardImg: "imgs/lightning2.jpg",
-                cardText: "Deal 26 damage to an enemy",                
-                chooseEnemyCard: true,
-                element: "lightning",
+                manaCost: 1,
+                name: "Reenergize",
+                cardImg: "imgs/liquid-regeneration.jpg",
+                cardText: "Energize: 2",
+                chooseEnemyCard: false,
+                element: "water",
                 action: function() {
                         spendMana(2);
-                        damageEnemy(26, chosenEnemy);
-                },      
+                        gainEnergize(2);
+                }      
         },
         {
                 manaCost: 3,
@@ -1118,15 +1106,15 @@ const cardsInformation = [
                 manaCost: 2,
                 name: "Frost Fingers",
                 cardImg: "imgs/frost-fingers.jpg",
-                cardText: "Deal 18 damage, if you or the enemy has frostbite deal 40 instead",
+                cardText: "Deal 15 damage, if you or the enemy has frostbite deal 30 instead",
                 chooseEnemyCard: true,
                 element: "ice",
                 action: function() {
                         spendMana(5);
                         if (playerFrostbite || enemyFrostbite[chosenEnemy]) {
-                                damageEnemy(40, chosenEnemy);
+                                damageEnemy(30, chosenEnemy);
                         } else {
-                                damageEnemy(18, chosenEnemy);
+                                damageEnemy(15, chosenEnemy);
                         }
                 }
         },
@@ -1214,16 +1202,32 @@ const cardsInformation = [
                 manaCost: 2,
                 name: "Firefall",
                 cardImg: "imgs/Rain-of-fire.jpg",
-                cardText: "Inflict 8 burn on all enemies",
+                cardText: "Inflict 7 burn on all enemies and 3 on yourself",
                 chooseEnemyCard: false,
                 element: "fire",
                 action: function() {
                         spendMana(12);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                burnEnemy(8, i);
+                                burnEnemy(7, i);
                         }
-                        
+                        playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 3;
+                        displayBlock(playerBurnImg, playerBurnNumber);
                 }
+        },
+        {
+                manaCost: 1,
+                name: "Combust",
+                cardImg: "imgs/combustion.jpg",
+                cardText: "Gain 3 burn and transfer your burn onto the enemy",
+                chooseEnemyCard: true,
+                element: "fire",
+                action: function() {
+                        spendMana(13);
+                        playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 3;
+                        burnEnemy(parseFloat(playerBurnNumber.innerText), chosenEnemy);
+                        playerBurnNumber.innerText = 0;
+                        displayNone(playerBurnImg, playerBurnNumber); 
+                },        
         },
         {
                 manaCost: 2,
@@ -1233,33 +1237,9 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 element: "fire",
                 action: function() {
-                        spendMana(13);
+                        spendMana(14);
                         let phoenixDamage = 5 + (parseFloat(enemyBurnNumber[chosenEnemy].innerText) * 2);
                         damageEnemy(phoenixDamage, chosenEnemy);
-                }
-        },
-        {
-                manaCost: 3,
-                name: "Cascading Flames",
-                cardImg: "imgs/cascading-flames.jpg",
-                cardText: "Deal 25 damage, inflict 10 burn and deal 5 damage to yourself",
-                chooseEnemyCard: true,
-                element: "fire",
-                action: function() {
-                        spendMana(14);
-                        damageEnemy(25, chosenEnemy);
-                        burnEnemy(10, chosenEnemy);
-                        if (playerBlockNumber.innerText <= 0) {
-                                topBarHealthNumber.innerText -= 5;
-                                playerCurrentHealth.innerText -= 5;
-                        } else if (playerBlockNumber.innerText <= 5) {
-                                topBarHealthNumber.innerText -= 5 - parseFloat(playerBlockNumber.innerText);
-                                playerCurrentHealth.innerText -= 5 - parseFloat(playerBlockNumber.innerText);
-                                playerBlockNumber.innerText = 0;
-                                displayNone(playerBlockNumber, playerBlockImg);
-                        } else {
-                                playerBlockNumber.innerText -= 5;        
-                        }
                 }
         },
         {
@@ -1275,51 +1255,58 @@ const cardsInformation = [
                 }
         },
         {
-                manaCost: 0,
-                name: "Static Shock",
-                cardImg: "imgs/static-shock.jpg",
-                cardText: "Deal 6 Damage. If you have no mana left deal 12 instead",
+                manaCost: 2,
+                name: "Stormblessed",
+                cardImg: "imgs/stormblessed4.jpg",
+                cardText: "Deal 50% of the damage you've dealt this turn to an enemy",
                 chooseEnemyCard: true,
                 element: "lightning",
                 action: function() {
                         spendMana(16);
-                        if (currentMana.innerText == 0) {
-                                damageEnemy(12, chosenEnemy);
-                        } else {
-                                damageEnemy(6, chosenEnemy);
-                        }
+                        damageEnemy(Math.floor(damageThisTurn / 2), chosenEnemy);
+                        gainEnergize(1);
                 }
         },
         {
-                manaCost: 2,
+                manaCost: 3,
                 name: "Ball Lightning",
                 cardImg: "imgs/static-electricity.jpg",
-                cardText: "Deal 10 damage to a random enemy three times",
+                cardText: "Deal 10 damage to a random enemy three times and gain Energize for each unique enemy damaged",
                 chooseEnemyCard: false,
                 element: "lightning",
                 action: function() {
                         spendMana(17);
+                        let randomEnemies = [];
+                        let randomEnemy;
+                        let index = 0;
                         for (let i = 0; i < 3; i++) {
-                                let randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
-                                damageEnemy(10, randomEnemy);        
-                        }  
+                                randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
+                                while (enemyIsDead[randomEnemy]) {
+                                        randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
+                                }
+                                damageEnemy(10, randomEnemy);
+                                if (!randomEnemies.includes(randomEnemy)) {
+                                        randomEnemies[index] = randomEnemy;
+                                        index++;
+                                }
+                        }
+                        gainEnergize(randomEnemies.length);
                 }
         },
         {
-                manaCost: 1,
+                manaCost: 4,
                 name: "Conduit",
                 cardImg: "imgs/conduit2.jpg",
-                cardText: "Deal 4 damage for each mana you have remaining",
+                cardText: "Deal 10 damage for each mana you have currently have",
                 chooseEnemyCard: true,
                 element: "lightning",
                 action: function() {
-                        let remainingMana = currentMana.innerText;
-                        damageEnemy(4 * remainingMana, chosenEnemy);
+                        damageEnemy(10 * currentMana.innerText, chosenEnemy);
                         spendMana(18);  
                 }
         },
         {
-                manaCost: 1,
+                manaCost: 2,
                 name: "Liquid Lightning",
                 cardImg: "imgs/liquid-lightning.jpg",
                 cardText: "[POTION]<br>All damage is increased by 5",
@@ -1371,7 +1358,6 @@ const cardsInformation = [
                 element: "ice",
                 action: function() {
                         spendMana(22);
-                        //let currentBlock = parseFloat(playerBlockNumber.innerText);
                         damageEnemy(10 + parseFloat(playerBlockNumber.innerText), chosenEnemy);
                 }
         },
@@ -1397,10 +1383,6 @@ const cardsInformation = [
                 action: function() {
                         damageEnemy(windsOfChange, chosenEnemy);
                         windsOfChange += 3;
-                        let windCardsText = document.querySelectorAll(".winds-card-text");
-                        for (let i = 0; i < windCardsText.length; i++) {
-                                windCardsText[i].innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +3 damage.`;  
-                        }
                 }
         },
         {
@@ -1469,25 +1451,14 @@ const cardsInformation = [
                 }
         },
         {
-                manaCost: 0,
-                name: "Rejuvenate",
-                cardImg: "imgs/liquid-regeneration.jpg",
-                cardText: "Instantly gain 2 mana",
-                chooseEnemyCard: false,
-                element: "water",
-                action: function() {
-                        currentMana.innerText = parseFloat(currentMana.innerText) + 2;
-                }      
-        },
-        {
                 manaCost: 2,
                 name: "Sanguine Spring",
-                cardImg: "imgs/sanguine-spring4.jpg",
+                cardImg: "imgs/sanguine.jpg",
                 cardText: "Cleanse all debuffs and gain blood siphon for three turns",
                 chooseEnemyCard: false,
                 element: "water",
                 action: function() {
-                        spendMana(29);
+                        spendMana(28);
                         playerWindswept = false;
                         playerFrostbite = false;
                         playerBurnNumber.innerText = 0;
@@ -1509,17 +1480,21 @@ const cardsInformation = [
                         currentMana.innerText = 0;
                 }
         },
-        /*{
+        {
                 manaCost: 2,
-                name: "Downpour",
-                cardImg: "imgs/downpour2.jpg",
-                cardText: "Gain 5 regeneration",
+                name: "Tsunami",
+                cardImg: "imgs/tsunami-2.jpg",
+                cardText: "Deal damage to all enemies equal to how much you've healed this fight",
                 chooseEnemyCard: false,
                 element: "water",
                 action: function() {
-                        spendMana(9);
-                        gainRegen(5);
-        }*/
+                        spendMana(30);
+                        gainRegen(3);
+                        for (let i = 0; i < numberOfEnemies; i++) {
+                                damageEnemy(healthGainedThisFight, i);
+                        }
+                }
+        },
         {
                 manaCost: 2,
                 name: "Spring Water",
@@ -1635,24 +1610,14 @@ const cardsInformation = [
                 manaCost: 1,
                 name: "Cauterize",
                 cardImg: "imgs/cauterize2.jpg",
-                cardText: "Damage yourself 10. Gain 2 blood siphon and 4 regen",
+                cardText: "Gain 4 burn, 5 regen, and 2 blood siphon.",
                 chooseEnemyCard: false,
                 element: "fire-water fire water",
                 action: function() {
                         spendMana(39);
-                        if (playerBlockNumber.innerText <= 0) {
-                                topBarHealthNumber.innerText -= Math.floor(10);
-                                playerCurrentHealth.innerText -= Math.floor(10);
-                        } else if (playerBlockNumber.innerText <= 10) {
-                                topBarHealthNumber.innerText -= Math.floor(10) - parseFloat(playerBlockNumber.innerText);
-                                playerCurrentHealth.innerText -= Math.floor(10) - parseFloat(playerBlockNumber.innerText);
-                                playerBlockNumber.innerText = 0;
-                                displayNone(playerBlockNumber, playerBlockImg);
-                        } else {
-                                playerBlockNumber.innerText -= Math.floor(10);        
-                        }
+                        playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 4;
                         gainBloodSiphon(2);
-                        gainRegen(4);
+                        gainRegen(5);
                 }
         },
         {
@@ -1685,38 +1650,32 @@ const cardsInformation = [
                 }
         },
         {
-                manaCost: 2,
-                name: "Stormblessed",
-                cardImg: "imgs/stormblessed4.jpg",
-                cardText: "Deal 12 damage to all enemies. If they are windswept deal 30 instead.",
+                manaCost: 5,
+                name: "Hurricane",
+                cardImg: "imgs/hurricane.jpg",
+                cardText: "Inflict windswept and deal 50 damage to all enemies. Draw a card, and gain 2 mana.",
                 chooseEnemyCard: false,
                 element: "lightning-air lightning air",
                 action: function() {
                         spendMana(42);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                if (enemyWindswept[i]) {
-                                        damageEnemy(30, i);
-                                } else {
-                                        damageEnemy(12, i);
-                                }
+                                damageEnemy(50, i);    
+                                inflictWindswept(i);
                         }
+                        drawCards(1);
+                        currentMana.innerText = parseFloat(currentMana.innerText) + 2;
                 }
         },
         {
                 manaCost: 3,
                 name: "Electric Current",
                 cardImg: "imgs/electric-current.jpg",
-                cardText: "Deal 26 damage to an enemy and heal for 50% of the damage",
+                cardText: "Deal 2 damage per 5 health you currently have",
                 chooseEnemyCard: true,
                 element: "lightning-water lightning water",
                 action: function() {
                         spendMana(43);
-                        damageEnemy(26, chosenEnemy);
-                        if (playerWindswept) {
-                                playerHeal(6);
-                        } else {
-                                playerHeal(13);
-                        }
+                        damageEnemy(Math.floor(2 * playerCurrentHealth.innerText / 5), chosenEnemy);
                 }
         },
         {
@@ -1790,21 +1749,21 @@ const cardsInformation = [
                 }
         },
         {
-                manaCost: 5,
-                name: "Hurricane",
-                cardImg: "imgs/hurricane.jpg",
-                cardText: "Inflict windswept and deal 50 damage to all enemies. Heal 10 health, draw a card, and gain 2 mana.",
+                manaCost: 2,
+                name: "Stormblessed",
+                cardImg: "imgs/stormblessed4.jpg",
+                cardText: "",
                 chooseEnemyCard: false,
                 element: "air-water air water",
                 action: function() {
-                        spendMana(48);
+                        spendMana(42);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                damageEnemy(50, i);    
-                                inflictWindswept(i);
+                                if (enemyWindswept[i]) {
+                                        damageEnemy(30, i);
+                                } else {
+                                        damageEnemy(12, i);
+                                }
                         }
-                        playerHeal(10);
-                        drawCards(2);
-                        currentMana.innerText = parseFloat(currentMana.innerText) + 2;
                 }
         },
         {
@@ -1891,7 +1850,7 @@ function drawCards(numberOfCards) {
                         let reshuffle = discardPileArray.shift();
                         drawPileArray.push(reshuffle);
                 }     
-                console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+                //console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
  
         }
         // SHIFT CARDS FROM DRAW PILE TO HAND
@@ -1899,44 +1858,44 @@ function drawCards(numberOfCards) {
                 let drawNewCard = drawPileArray.shift();
                 handArray.unshift(drawNewCard);
         }
-        console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
 
         // DISPLAY CARDS IN HAND
         for (let i = 0; i < numberOfCards; i++) {
                 displayFlex(handArray[i]);
         }
-        console.log(handArray);
+        //console.log(handArray);
 }
 // GET NEW SET OF 5 CARDS AT THE END OF EACH TURN
 function addCardsToHand() {
         // MOVE HAND CONTAINERS TO DISCARD CONTAINERS
-        console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 let discarded = handArray.shift();
-                console.log(discarded);
+                //console.log(discarded);
                 discardPileArray.unshift(discarded);
         }
-        console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         for (let i = 0; i < cardsInHand; i++) {
                displayNone(discardPileArray[i]);
         }
         drawCards(maxHandLength);      
 }
 function reshuffleCards() {
-        console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 let discarded = handArray.shift();
                 drawPileArray.unshift(discarded);
         }
-        console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInDiscardPile = discardPileArray.length;
         for (let i = 0; i < cardsInDiscardPile; i++) {
                 let reshuffle = discardPileArray.shift();
                 drawPileArray.push(reshuffle);
         }
-        console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
          // RESHUFFLE CARDS IN DRAW PILE
         drawPileArray = drawPileArray.toSorted(() => 0.5 - Math.random());
          // SHIFT CARDS FROM DRAW PILE TO HAND
@@ -1944,7 +1903,7 @@ function reshuffleCards() {
                 let drawNewCard = drawPileArray.shift();
                 handArray.unshift(drawNewCard);
         }
-        console.log(`RESHUFFLE CARDS\nDRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`RESHUFFLE CARDS\nDRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         for (let i = 0; i < maxHandLength; i++) {
                 displayFlex(handArray[i]);
         }
@@ -1981,6 +1940,7 @@ function addCardListeners(cardType, index, CIindex) {
                         if (currentMana.innerText >= cardsInformation[CIindex].manaCost) {
                                 cardsInformation[CIindex].action();
                                 addToDiscard();
+                                updateCardText();
                         }
                 });
         }
@@ -2003,6 +1963,7 @@ function addCardListeners(cardType, index, CIindex) {
                         addToDiscard();
                         cardClicked = false;
                         checkHealthIsOverMax();
+                        updateCardText();
                         for (let i = 0; i < numberOfEnemies; i++) {
                                 enemy[i].removeEventListener("click", clickEnemy);        
                         }  
@@ -2013,10 +1974,16 @@ function addNewCardInformation(newRandomCard) {
         chooseNewCardDiv.innerHTML = ``;
         if (newRandomCard == 24) {
                 createCard(newRandomCard, newCardsContainer, "card winds-of-change", "card-text winds-card-text");
+        } else if (newRandomCard == 43) {
+                createCard(newRandomCard, newCardsContainer, "card", "card-text electric-card-text");
+        } else if (newRandomCard == 16) {
+                createCard(newRandomCard, newCardsContainer, "card", "card-text storm-card-text");
+        } else if (newRandomCard == 30) {
+                createCard(newRandomCard, newCardsContainer, "card", "card-text downpour-card-text");
         } else {
                 createCard(newRandomCard, newCardsContainer, "card", "card-text");
         }
-        let newCardsArray = document.querySelectorAll(".card");
+                let newCardsArray = document.querySelectorAll(".card");
         addCardListeners(newCardsArray, 0, newRandomCard);
         drawPileArray.push(newCardsArray[0]);
         handContainer.appendChild(newCardsArray[0]);
@@ -2028,10 +1995,10 @@ const newCardsContainer = document.querySelector("#new-cards-container");
 function getRandomNewCards () {
         
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = createRandomNumber(0, cardsInformation.length - 2);
-        let newRandomCard1 = createRandomNumber(0, cardsInformation.length - 2);
-        let newRandomCard2 = createRandomNumber(0, cardsInformation.length - 2);
-        let newRandomCard3 = createRandomNumber(0, cardsInformation.length - 2);
+        let newRandomCard0 = 30;//createRandomNumber(0, cardsInformation.length - 2);
+        let newRandomCard1 = 29;//createRandomNumber(0, cardsInformation.length - 2);
+        let newRandomCard2 = 28;//createRandomNumber(0, cardsInformation.length - 2);
+        let newRandomCard3 = 27;//createRandomNumber(0, cardsInformation.length - 2);
         // CHANGE CARDS IF THEY ARE THE SAME
         while (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3 || 
                 newRandomCard1 == newRandomCard2 || newRandomCard1 == newRandomCard3 || newRandomCard2 == newRandomCard3) {
@@ -2070,7 +2037,6 @@ function getRandomNewCards () {
         createCard(newRandomCard2, chooseNewCardDiv, "card", "card-text");
         createCard(newRandomCard3, chooseNewCardDiv, "card", "card-text");
         let newCardChoices = document.querySelectorAll(".card");
-        console.log(newCardChoices);
         displayFlex(chooseNewCardDiv, newCardChoices[0], newCardChoices[1], newCardChoices[2], newCardChoices[3]);
         newCardChoices[0].addEventListener("click", () => {addNewCardInformation(newRandomCard0)});
         newCardChoices[1].addEventListener("click", () => {addNewCardInformation(newRandomCard1)});
@@ -2092,6 +2058,8 @@ const endTurnButton = document.querySelector("#end-turn-button");
 // BUFFS AND DEBUFFS
 const playerBlockImg = document.querySelector("#block-img");
 const playerBlockNumber = document.querySelector("#block-img-number");
+const playerEnergizeImg = document.querySelector("#player-energize-img");
+const playerEnergizeNumber = document.querySelector("#player-energize-number");
 const playerThornsNumber = document.querySelector("#player-thorns-number");
 const playerThornsImg = document.querySelector("#player-thorns-img");
 const playerRegenNumber = document.querySelector("#player-regen-number");
@@ -2111,6 +2079,7 @@ endTurnButton.addEventListener("click", endTurn);
 function spendMana(cardNumber) {
         currentMana.innerText -= cardsInformation[cardNumber].manaCost;
 }
+let damageThisTurn = 0;
 function damageEnemy(damage, enemy) {
         if (liquidLightning) {
                 damage += 5;
@@ -2126,6 +2095,7 @@ function damageEnemy(damage, enemy) {
         if (playerBloodNumber.innerText > 0) {
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * .21));
                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * .21));
+                healthGainedThisFight += Math.floor((damage * .21));
         }
         // DAMGE ALL ENEMIES IF SNOWFALL ELIXER HAS BEEN PLAYED
         if (snowfallElixir) {
@@ -2167,6 +2137,7 @@ function damageEnemy(damage, enemy) {
         checkHealthIsOverMax();
         // IF ENEMY IS DEAD, DELETE THEM
         checkIfEnemyDead();
+        damageThisTurn += damage;
 }
 function inflictWindswept (enemy) {
         enemyWindswept[enemy] = true;
@@ -2183,15 +2154,25 @@ function inflictFrostbite (enemy) {
         displayBlock(enemyFrostbiteImg[enemy]);  
 }
 function checkHealthIsOverMax() {
-                if (parseFloat(playerCurrentHealth.innerText) > parseFloat(playerMaxHealth.innerText))  {
-                        playerCurrentHealth.innerText = playerMaxHealth.innerText;
-                        topBarHealthNumber.innerText = playerMaxHealth.innerText;
+        if (parseFloat(playerCurrentHealth.innerText) > parseFloat(playerMaxHealth.innerText))  {
+                playerCurrentHealth.innerText = playerMaxHealth.innerText;
+                topBarHealthNumber.innerText = playerMaxHealth.innerText;
+        }
+        for (let i = 0; i < numberOfEnemies.length; i++) {
+                if (parseFloat(enemyCurrentHealth.innerText) > parseFloat(enemyMaxHealth.innerText))  {
+                        enemyCurrentHealth.innerText = playerMaxHealth.innerText;
                 }
         }
+}
 function playerHeal(amount) {
         playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + amount;
         topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + amount;
+        healthGainedThisFight += (amount);
         checkHealthIsOverMax();
+}
+function gainEnergize (amount) {
+        playerEnergizeNumber.innerText = parseFloat(playerEnergizeNumber.innerText) + amount;
+        displayBlock(playerEnergizeImg, playerEnergizeNumber);
 }
 function gainBlock(blockAmount) {
         if (terrasBlessing) {
@@ -2246,8 +2227,15 @@ function checkPlayerBurn() {
                 displayNone(playerBurnImg, playerBurnNumber);
         }
 }
+function checkPlayerEnergize() {
+        currentMana.innerText = parseFloat(currentMana.innerText) + parseFloat(playerEnergizeNumber.innerText);
+        playerEnergizeNumber.innerText = 0;
+        displayNone(playerEnergizeImg, playerEnergizeNumber);
+}
+let healthGainedThisFight = 0;
 function checkRegenHeal() {
         if (playerRegenNumber.innerText >= 1) {
+                healthGainedThisFight += parseFloat(playerRegenNumber.innerText);
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + parseFloat(playerRegenNumber.innerText);
                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + parseFloat(playerRegenNumber.innerText);
                 playerRegenNumber.innerText--;
@@ -2257,7 +2245,6 @@ function checkRegenHeal() {
         }
         checkHealthIsOverMax();
 }
-
 function checkBloodSiphon() {
         if (playerBloodNumber.innerText >= 1) {
                 playerBloodNumber.innerText--;    
@@ -2265,6 +2252,20 @@ function checkBloodSiphon() {
         if (playerBloodNumber.innerText == 0) {
                 displayNone(playerBloodImg, playerBloodNumber);
         }
+}
+function updateCardText() {
+        document.querySelectorAll(".winds-card-text").forEach((i) => {
+                i.innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +3 damage.`;  
+        });
+        document.querySelectorAll(".electric-card-text").forEach((i) => {
+                i.innerText = `Deal 2 damage per 5 health you currently have. Damage: ${Math.floor(2 * playerCurrentHealth.innerText / 5)}`;  
+        });
+        document.querySelectorAll(".storm-card-text").forEach((i) => {
+                i.innerText = `Deal 50% of the damage you've dealt this turn to an enemy. Damage: ${Math.floor(damageThisTurn / 2)}`;  
+        });
+        document.querySelectorAll(".downpour-card-text").forEach((i) => {
+                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight}`;  
+        });
 }
 function checkGaiasEmbrace() {
         if (gaiasEmbrace) {
@@ -2678,7 +2679,6 @@ function enemyHeal(healAmount, index) {
         displayNone(enemyHealActionDiv[[index]]);
 }
 function enemyBurnPlayer(amount, index) {
-        console.log(enemyWindswept[index]);
         if (enemyWindswept[index]) {
                 amount = Math.floor(amount * .5);
         }
@@ -2703,7 +2703,6 @@ function enemyGainBloodSiphon(amount, index) {
         displayNone(enemyBloodActionDiv[index]);
 }
 function enemyGainThorns(amount, index) {
-        console.log(enemyFrostbite[index]);
         if (enemyFrostbite[index]) {
                 amount = Math.floor(amount * .5);
         }
@@ -2716,7 +2715,6 @@ function checkEnemyBurn(index) {
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.ceil(enemyBurnNumber[index].innerText * .21);
         }
         if (parseFloat(enemyBurnNumber[index].innerText) >= enemyCurrentHealth[index].innerText) {
-                console.log(enemyBurnNumber[index].innerText, enemyCurrentHealth[index].innerText)
                 displayNone(enemyBurnImg[index], enemyBurnNumber[index], enemyHealth[index], enemyCurrentHealth[index], enemyBlockDiv[index], enemyActionDiv[index]);
                 enemy[index].classList.add("fade-out");
                 enemyIsDead[index] = true;
@@ -2961,21 +2959,23 @@ function endTurn() {
                 enemyWindswept[eI] = false;
                 enemyFrostbite[eI] = false;
                 }
-                eI++
-                
+                eI++     
         });
+        checkPlayerEnergize();
         checkRegenHeal();
         checkBloodSiphon();
         checkGaiasEmbrace();
         addCardsToHand();
         checkIfEnemyDead();
+        updateCardText();
         if (numberOfEnemies === 1) {
                 enemyAction(trackEnemies[0]);
         } else if (numberOfEnemies === 2) {
                 enemyAction(trackEnemies[0], trackEnemies[1]);
         } else {
                 enemyAction(trackEnemies[0], trackEnemies[1], trackEnemies[2]);
-        }     
+        }
+        damageThisTurn = 0;
 }
 getOpeningHand();
 for (let i = 0; i < openingCards.length; i++) {

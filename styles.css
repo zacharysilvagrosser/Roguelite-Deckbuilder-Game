@@ -131,6 +131,35 @@
     margin-top: -3px;
 }
 
+#shop-container {
+    background-image: url("imgs/shopkeeper.jpg");
+    background-size: cover;
+}
+#shop-div {
+    width: 55%;
+    height: 60vh;
+    margin-top: 60px;
+    margin-left: 60px;
+    flex-wrap: wrap;
+    position: absolute;
+    display: flex;
+    background-color: #0f5e9c;
+}
+#shop-container button {
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    margin-left: 580px;
+    margin-top: 650px;
+    border-radius: 10%;
+    border: 5px double rgb(127, 128, 131);
+    background-color:rgb(11, 28, 83);
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    transition-duration: .1s;
+}
+
 /* GAME ARENA */
 #arena {
     width: 100%;
@@ -234,12 +263,12 @@
 #player-windswept-img:hover ~ #player-windswept-div {
     display: block;
 }
-#player-thorns-img, #player-regen-img, #player-blood-img, #player-burn-img {
+#player-burn-img, #player-energize-img, #player-thorns-img, #player-regen-img, #player-blood-img {
     width: 60px;
     text-align: center;
     display: none;
 }
-#player-thorns-number, #player-regen-number, #player-blood-number, #player-burn-number {
+#player-burn-number, #player-energize-number, #player-thorns-number, #player-regen-number, #player-blood-number {
     position: absolute;
     font-weight: bolder;
     margin-top: 15px;
@@ -252,6 +281,9 @@
 }
 #player-burn-number {
     margin-top: 26px;
+}
+#player-energize-number {
+    font-size: 24px;
 }
 #choose-new-card-div {
     position: absolute;
