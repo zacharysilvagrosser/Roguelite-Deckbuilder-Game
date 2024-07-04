@@ -9,13 +9,19 @@
     position: fixed;
     width: 100%;
     height: 5vh;
-    background-color: aliceblue;
+    background-color: rgb(63, 92, 100);
     display: flex;
     z-index: 10;
+    color: white
 }
 #board-header p {
     font-size: 20px;
     margin: auto;
+}
+.relic-img {
+    width: 50px;
+    height: 50px;
+    margin-top: -2px;
 }
 
 /* MAP */
@@ -256,7 +262,7 @@
     justify-content: center;
     margin-left: -100px;
 }
-#player-windswept-img, #player-frostbite-img {
+#player-windswept-img, #player-frostbite-img, #player-tidal-imbuement-img {
     width: 60px;
     display: none;
 }
@@ -309,12 +315,52 @@
     font-size: 32px;
     color: rgb(255, 3, 3);
 }
+.giant-enemy-health {
+    margin-top: -122px;
+    margin-left: 130px;
+    font-weight: bold;
+    font-size: 36px;
+}
+.dragon-enemy-health {
+    margin-top: -142px;
+    margin-left: 70px;
+    font-weight: bold;
+    font-size: 36px;
+}
+.unicorn-enemy-health {
+    margin-top: -122px;
+    margin-left: 128px;
+    font-weight: bold;
+    font-size: 36px;
+}
+.druid-enemy-health {
+    margin-top: -102px;
+    margin-left: 85px;
+    font-weight: bold;
+    font-size: 36px;
+}
 .enemy-action-div {
     position: absolute;
     width: 100px;
     height: 100px;
     margin-left: 214px;
     margin-top: -320px;
+}
+.dragon-action-div {
+    margin-left: 160px;
+    margin-top: -330px;
+}
+.giant-action-div {
+    margin-left: 210px;
+    margin-top: -585px;
+}
+.unicorn-action-div {
+    margin-left: 210px;
+    margin-top: -385px;
+}
+.druid-action-div {
+    margin-left: 160px;
+    margin-top: -440px;
 }
 .enemy-action-img {
     width: 80px;
@@ -389,6 +435,14 @@
     color: white;
     display: none;
 }
+.giant-block-img {
+    margin-top: 84px;
+    margin-left: 157px; 
+}
+.giant-block-number {
+    margin-top: 96px;
+    margin-left: 157px;
+}
 .enemy-buffs, .enemy-debuffs {
     width: 200px;
     display: flex;
@@ -397,6 +451,58 @@
 }
 .enemy-buffs {
     margin-top: 85px;
+}
+.dragon-enemy-buffs {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    margin-left: 100px;
+    margin-top: 105px;
+}
+.dragon-enemy-debuffs {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    margin-left: 100px;
+}
+.giant-enemy-buffs {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    margin-left: 160px;
+    margin-top: 125px;
+}
+.giant-enemy-debuffs {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    margin-left: 160px;
+}
+.unicorn-enemy-debuffs {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    margin-left: 160px;
+}
+.unicorn-enemy-buffs {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    margin-left: 160px;
+    margin-top: 125px;
+}
+.druid-enemy-buffs {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    margin-left: 115px;
+    margin-top: 145px;
+}
+.druid-enemy-debuffs {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    margin-left: 115px;
 }
 .enemy-windswept-img, .enemy-frostbite-img {
     width: 60px;
@@ -436,11 +542,25 @@
     margin-left: 1500px;
     margin-top: 40px;
 }
+.position-fly {
+    margin-left: 1280px;
+    margin-top: -140px;
+}
 .enemy-img {
     width: 300px;
     margin-top: -250px;
     margin-left: 100px;
     position: absolute;
+}
+.elite-enemy-img {
+    width: 500px;
+    margin-top: -380px;
+    margin-left: -50px;
+}
+.giant-enemy-img {
+    width: 700px;
+    margin-top: -560px;
+    margin-left: -150px;
 }
 .enemy-img-centaur {
     width: 400px;
