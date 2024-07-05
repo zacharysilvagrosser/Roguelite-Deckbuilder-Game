@@ -24,7 +24,8 @@ Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 m
 SYNERGIES: Wind draw, frost thorn block, water burn heal, blood siphon lightning
 
 BUG: can click card then end turn and play card
-CREATE NEW CARD COPIES OF YOUR DECK, THEN WHEN YOU CLICK ON IT, DELETE THEM SO YOU DONT HAVE TO REMOVE EVENTLISTENER AND YOUR WORKING CARDS STAY WHERE THEY ARE
+can't change mind when clicking another card after clicking initial card
+blood siphon is healing for all enemies on aoe damage even when they're dead. probably for loop enemiesAlive not NumberOfEnemies
 */
 /*
 GENERAL FUNCTIONS
@@ -306,7 +307,11 @@ function resetArena() {
         playerBurnNumber.innerText = 0;
         displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber, playerRegenImg, playerRegenNumber, playerThornsImg, playerThornsNumber,
                 playerBloodImg, playerBloodNumber, playerBlockImg, playerBlockNumber);
-        currentMana.innerText = 4;
+        if (thunderTalisman) {
+                currentMana.innerText = 5;
+        } else {
+                currentMana.innerText = 4;
+        }
         playerThornsNumber.innerText = 0;
         playerBlockNumber.innerText = 0;
         playerRegenNumber.innerText = 0;
@@ -323,9 +328,22 @@ function resetArena() {
         healthGainedThisFight = 0;
         getEliteRelic = false;
         airBubble = false;
+        if (caspiansTear) {
+                playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 3;
+                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 3;
+                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 3;
+        }
+        if (crownOfThorns) {
+                playerThornsNumber.innerText = 2;
+                displayBlock(playerThornsImg, playerThornsNumber);
+        }
+        if (windDisc) {
+                maxHandLength = 6;
+        }
         displayNone();
         displayFlex(handContainer);
         reshuffleCards();
+        maxHandLength = 5;
         updateCardText();
         enemyContainer.innerHTML = "";
 }
@@ -420,7 +438,7 @@ function getRandomEncounter() {
                         enemyImg[2].classList.add("enemy-img-centaur");
                         numberOfEnemies = 3;
                         enemyLevelUp();
-                        enemyAction(1, 1, 7);
+                        enemyAction(5, 6, 2);
                         break;
                 case 8:
                         createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
@@ -465,37 +483,103 @@ function getRandomEncounter() {
         }
 }
 let dontRepeatRelic = [];
-let frostHeart = false;
+let iceEmpower1 = false;
 let bloodAmulet = false;
+let eternalFlame = false;
+let eternalFlameTracking = [false, false, false];
+let ringOfFire = false;
+let thunderTalisman = false;
+let lightningInABottle = false;
+let crownOfThorns = false;
+let frostHeart = false;
+let iceSpear = false;
+let vineBracelet = false;
+let caspiansTear = false;
+let stratus = false;
+let windDisc = false;
 function getRelic() {
-        let randomRelicNumber = createRandomNumber(1, 2);
+        let randomRelicNumber = createRandomNumber(1, 12);
         while (dontRepeatRelic.includes(randomRelicNumber)) {
-                randomRelicNumber = createRandomNumber(1, 2);
+                randomRelicNumber = createRandomNumber(1, 12);
         }
         const relicContainer = document.querySelector("#relic-container");
         switch (randomRelicNumber) {
                 case 1:
-                        frostHeart = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/frostheart2.png">`;
+                        ringOfFire = true;
+                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/ring-of-fire.png">`;
                         dontRepeatRelic.push(1);
                         break;
                 case 2:
+                        eternalFlame = true;
+                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/eternal-flame2.png">`;
+                        dontRepeatRelic.push(2);
+                        break;
+                case 3:
+                        thunderTalisman = true;
+                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/thunder-talisman2.png">`;
+                        dontRepeatRelic.push(3);
+                        break;
+                case 4:
+                        lightningInABottle = true;
+                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/lightning-in-a-bottle.png">`;
+                        dontRepeatRelic.push(4);
+                        break;
+                case 5:
+                        iceSpear = true;
+                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/ice-spear.png">`;
+                        dontRepeatRelic.push(5);
+                        break;
+                case 6:
+                        frostHeart = true;
+                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/frostheart.png">`;
+                        dontRepeatRelic.push(6);
+                        break;
+                case 7:
+                        stratus = true;
+                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/stratus.png">`;
+                        dontRepeatRelic.push(7);
+                        break;
+                case 8:
+                        windDisc = true;
+                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/wind-disc.png">`;
+                        dontRepeatRelic.push(8);
+                        break;
+                case 9:
                         bloodAmulet = true;
                         relicContainer.innerHTML += `<img class="relic-img" src="imgs/blood-amulet2.png">`;
-                        dontRepeatRelic.push(2);
+                        dontRepeatRelic.push(9);
+                        break;
+                case 10:
+                        caspiansTear = true;
+                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/caspians-tear2.png">`;
+                        dontRepeatRelic.push(10);
+                        break;
+                case 11:
+                        crownOfThorns = true;
+                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/crown-of-thorns2.png">`;
+                        dontRepeatRelic.push(11);
+                        break;
+                case 12:
+                        vineBracelet = true;
+                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/vine-bracelet.png">`;
+                        dontRepeatRelic.push(12);
+                        break;
+                case 13:
+                        iceEmpower1 = true;
+                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/iceEmpower12.png">`;
+                        dontRepeatRelic.push(1);
                         break;
         }
 }
 let getEliteRelic = false;
 function getRandomEliteEncounter() {
-        randomEncounterNumber = createRandomNumber(4, 4);
+        randomEncounterNumber = createRandomNumber(1, 4);
         getEliteRelic = true;
         switchArea(arena, map);
         switch (randomEncounterNumber) {
                 case 1:
                         createEnemy(enemiesInformation[10].baseHealth, enemiesInformation[10].img);
                         initializeEnemyVariables();
-                        enemyLevelUp();
                         enemy[0].classList.add("position-fly");
                         enemyImg[0].classList.add("elite-enemy-img");
                         enemyHealth[0].classList.add("dragon-enemy-health");
@@ -503,12 +587,12 @@ function getRandomEliteEncounter() {
                         enemyBuffDiv[0].classList = ("dragon-enemy-buffs");
                         enemyDebuffDiv[0].classList = ("dragon-enemy-debuffs");
                         numberOfEnemies = 1;
+                        enemyLevelUp();
                         enemyAction(10);
                         break;
                 case 2:
                         createEnemy(enemiesInformation[11].baseHealth, enemiesInformation[11].img);
                         initializeEnemyVariables();
-                        enemyLevelUp();
                         enemy[0].classList.add("position-middle");
                         enemyImg[0].classList.add("giant-enemy-img");
                         enemyHealth[0].classList.add("giant-enemy-health");
@@ -518,12 +602,12 @@ function getRandomEliteEncounter() {
                         enemyBuffDiv[0].classList = ("giant-enemy-buffs");
                         enemyDebuffDiv[0].classList = ("giant-enemy-debuffs");
                         numberOfEnemies = 1;
+                        enemyLevelUp();
                         enemyAction(11);
                         break;
                 case 3:
                         createEnemy(enemiesInformation[12].baseHealth, enemiesInformation[12].img);
                         initializeEnemyVariables();
-                        enemyLevelUp();
                         enemy[0].classList.add("position-middle");
                         enemyImg[0].classList.add("elite-enemy-img");
                         enemyHealth[0].classList.add("unicorn-enemy-health");
@@ -532,12 +616,12 @@ function getRandomEliteEncounter() {
                         enemyBuffDiv[0].classList = ("giant-enemy-buffs");
                         enemyDebuffDiv[0].classList = ("giant-enemy-debuffs");
                         numberOfEnemies = 1;
+                        enemyLevelUp();
                         enemyAction(12);
                         break;
                 case 4:
                         createEnemy(enemiesInformation[13].baseHealth, enemiesInformation[13].img);
                         initializeEnemyVariables();
-                        enemyLevelUp();
                         enemy[0].classList.add("position-middle");
                         enemyImg[0].classList.add("elite-enemy-img");
                         enemyHealth[0].classList.add("druid-enemy-health");
@@ -545,6 +629,7 @@ function getRandomEliteEncounter() {
                         enemyBuffDiv[0].classList = ("druid-enemy-buffs");
                         enemyDebuffDiv[0].classList = ("druid-enemy-debuffs");
                         numberOfEnemies = 1;
+                        enemyLevelUp();
                         enemyAction(13);
                         break;
         }
@@ -557,7 +642,7 @@ function chooseLocationPath() {
                         removeELL1();
                         location2Tiles1.addEventListener("click", L2T1);
                         location2Tiles2.addEventListener("click", L2T2);
-                        getRandomEliteEncounter();
+                        getRandomEncounter();
                         break;
                 case "L1T2":
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
@@ -579,7 +664,7 @@ function chooseLocationPath() {
                         addGlow(location3Tiles1);
                         removeELL2();
                         location3Tiles1.addEventListener("click", L3T1);
-                        getRandomEliteEncounter();
+                        getRandomEncounter();
                         break;
                 case "L2T2":
                         resetArena();
@@ -610,7 +695,7 @@ function chooseLocationPath() {
                         addGlow(location4Tiles1);
                         removeELL3();
                         location4Tiles1.addEventListener("click", L4T1);
-                        getRandomEncounter();
+                        getRandomExclamation();
                         break;
                 case "L3T2":
                         resetArena();
@@ -667,6 +752,7 @@ function chooseLocationPath() {
                         addGlow(location6Tiles1);
                         removeELL5();
                         location6Tiles1.addEventListener("click", L6T1);
+                        getShop();
                         break;
                 case "L5T2":
                         resetArena();
@@ -690,6 +776,7 @@ function chooseLocationPath() {
                         location7Tiles1.addEventListener("click", L7T1);
                         location7Tiles2.addEventListener("click", L7T2);
                         location7Tiles3.addEventListener("click", L7T3);
+                        getRelic();
                         break;
                 case "L7T1":
                         resetArena();
@@ -723,6 +810,7 @@ function chooseLocationPath() {
                         removeELL8();
                         location9Tiles1.addEventListener("click", L9T1);
                         location9Tiles2.addEventListener("click", L9T2);
+                        getRandomExclamation();
                         break;
                 case "L8T2":
                         resetArena();
@@ -746,6 +834,7 @@ function chooseLocationPath() {
                         addGlow(location10Tiles1);
                         removeELL9();
                         location10Tiles1.addEventListener("click", L10T1);
+                        getRandomEncounter()
                         break;
                 case "L9T2":
                         resetArena();
@@ -775,6 +864,7 @@ function chooseLocationPath() {
                         addGlow(location11Tiles1);
                         removeELL10();
                         location11Tiles1.addEventListener("click", L11T1);
+                        getRandomEliteEncounter();
                         break;
                 case "L10T2":          
                         resetArena();
@@ -786,6 +876,7 @@ function chooseLocationPath() {
                 case "L11T1":
                         removeGlow(location11Tiles1);
                         removeELL11();
+                        getRandomEliteEncounter();
                         break;
         }
 }
@@ -1084,28 +1175,29 @@ const cardsInformation = [
                 manaCost: 1,
                 name: "Fireball",
                 cardImg: "imgs/fireball2.jpg",
-                cardText: "Deal 5 damage and inflict 5 burn",
+                cardText: "Deal 5 damage and inflict 4 burn",
                 chooseEnemyCard: true,
                 element: "fire",
                 index: 0,
                 action: function() {
                         spendMana(0);
                         damageEnemy(5, chosenEnemy);
-                        burnEnemy(5, chosenEnemy);
+                        burnEnemy(4, chosenEnemy);
                 },
         },
         {
                 manaCost: 3,
                 name: "Cascading Flames",
                 cardImg: "imgs/cascading-flames.jpg",
-                cardText: "Deal 15 damage and inflict 10 burn on an enemy and 4 burn on yourself",
+                cardText: "Deal 15 damage and inflict 8 burn on an enemy and 4 burn on yourself",
                 chooseEnemyCard: true,
                 element: "fire",
                 action: function() {
                         spendMana(1);
-                        damageEnemy(20, chosenEnemy);
-                        burnEnemy(10, chosenEnemy);
+                        damageEnemy(15, chosenEnemy);
+                        burnEnemy(8, chosenEnemy);
                         playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 4;
+                        displayBlock(playerBurnImg, playerBurnNumber);
                 }
         },
         {
@@ -1129,7 +1221,7 @@ const cardsInformation = [
                 element: "lightning",
                 action: function() {
                         spendMana(3);
-                        damageAllEnemies(50000);
+                        damageAllEnemies(20);
                 },        
         },
         {
@@ -1170,8 +1262,10 @@ const cardsInformation = [
                 element: "air",
                 action: function() {
                         spendMana(6);
+                        let enemyIsWindswept = [];
                         for (let i = 0; i < numberOfEnemies; i++) {
                                 if (enemyWindswept[i]) {
+                                        enemyIsWindswept.push(true);
                                         if (tidalImbuement) {
                                                 damageEnemy(22, i);
                                                 tidalImbuement = true;   
@@ -1182,8 +1276,10 @@ const cardsInformation = [
                                         inflictWindswept(i);
                                 }
                         }
-                        tidalImbuement = false;
-                        displayNone(playerTidalImbuementImg);
+                        if (enemyIsWindswept.length > 0) {
+                                tidalImbuement = false;
+                                displayNone(playerTidalImbuementImg);
+                        }
                 }
         },
         {
@@ -1258,9 +1354,7 @@ const cardsInformation = [
                 element: "fire",
                 action: function() {
                         spendMana(12);
-                        for (let i = 0; i < numberOfEnemies; i++) {
-                                burnEnemy(7, i);
-                        }
+                        burnAllEnemies(7)
                         playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 3;
                         displayBlock(playerBurnImg, playerBurnNumber);
                 }
@@ -1622,9 +1716,7 @@ const cardsInformation = [
                 element: "fire-lightning fire lightning",
                 action: function() {
                         spendMana(36);
-                        for (let i = 0; i < numberOfEnemies; i++) {
-                                burnEnemy(5, i);
-                        }
+                        burnAllEnemies(5);
                         damageAllEnemies(enemyBurnNumber[i].innerText);
                 }
         },
@@ -1805,7 +1897,7 @@ const cardsInformation = [
         {
                 manaCost: 1,
                 name: "Air Bubbles",
-                cardImg: "imgs/air-bubble2.jpg",
+                cardImg: "imgs/air-bubbles4.jpg",
                 cardText: "Gain 1 regen for each card played this turn",
                 chooseEnemyCard: false,
                 element: "air-water air water",
@@ -1830,7 +1922,7 @@ const cardsInformation = [
         {
                 manaCost: 4,
                 name: "Gaia's Embrace",
-                cardImg: "imgs/gaia's-embrace.jpg",
+                cardImg: "imgs/gaias-embrace2.jpg",
                 cardText: "Gain 4 block and healing at the end of each turn",
                 chooseEnemyCard: false,
                 element: "water-earth water earth",
@@ -2051,17 +2143,17 @@ const newCardsContainer = document.querySelector("#new-cards-container");
 function getRandomNewCards () {
         
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = 48;//createRandomNumber(0, cardsInformation.length - 2);
-        let newRandomCard1 = createRandomNumber(0, cardsInformation.length - 2);
-        let newRandomCard2 = createRandomNumber(0, cardsInformation.length - 2);
-        let newRandomCard3 = createRandomNumber(0, cardsInformation.length - 2);
+        let newRandomCard0 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
         // CHANGE CARDS IF THEY ARE THE SAME
         while (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3 || 
                 newRandomCard1 == newRandomCard2 || newRandomCard1 == newRandomCard3 || newRandomCard2 == newRandomCard3) {
-                newRandomCard0 = createRandomNumber(0, cardsInformation.length - 2);
-                newRandomCard1 = createRandomNumber(0, cardsInformation.length - 2);
-                newRandomCard2 = createRandomNumber(0, cardsInformation.length - 2);
-                newRandomCard3 = createRandomNumber(0, cardsInformation.length - 2);
+                newRandomCard0 = createRandomNumber(12, cardsInformation.length - 2);
+                newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
+                newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
+                newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
         }
         /*if (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3) {
                 newRandomCard0 += 1;
@@ -2150,6 +2242,9 @@ function damageEnemy(damage, enemy) {
                 tidalImbuement = false;
                 displayNone(playerTidalImbuementImg);
         }
+        if (iceSpear && enemyFrostbite[enemy]) {
+                damage += 4;
+        }
         // IF ATTACK DEBUFF IS ACTIVE, CUT DAMAGE IN HALF
         if (playerWindswept) {
                 damage = Math.floor(damage * .50);
@@ -2173,8 +2268,10 @@ function damageEnemy(damage, enemy) {
         // CHECK FOR ENEMY THORNS DAMAGE
         if (playerBlockNumber.innerText <= 0) {
                 playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[enemy].innerText)
+                topBarHealthNumber.innerText -= parseFloat(enemyThornsNumber[enemy].innerText)
         } else if (playerBlockNumber.innerText <= parseFloat(enemyThornsNumber[enemy].innerText)) {
                 playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[enemy].innerText) - parseFloat(playerBlockNumber.innerText);
+                topBarHealthNumber.innerText -= parseFloat(enemyThornsNumber[enemy].innerText) - parseFloat(playerBlockNumber.innerText);
                 playerBlockNumber.innerText = 0;
         } else {
                 playerBlockNumber.innerText -= parseFloat(enemyThornsNumber[enemy].innerText);
@@ -2185,6 +2282,11 @@ function damageEnemy(damage, enemy) {
         damageThisTurn += damage;
 }
 function damageAllEnemies(damage) {
+        for (let i = 0; i < numberOfEnemies; i++) {
+                if (iceSpear && enemyFrostbite[i]) {
+                        damageEnemy(4, i);
+                }
+        }
         if (liquidLightning) {
                 damage += 5;
         }
@@ -2213,9 +2315,11 @@ function damageAllEnemies(damage) {
                 }
                 // CHECK THORNS 
                 if (playerBlockNumber.innerText <= 0) {
-                        playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[i].innerText)
+                        playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[i].innerText);
+                        topBarHealthNumber.innerText -= parseFloat(enemyThornsNumber[i].innerText);
                 } else if (playerBlockNumber.innerText <= parseFloat(enemyThornsNumber[i].innerText)) {
                         playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[i].innerText) - parseFloat(playerBlockNumber.innerText);
+                        topBarHealthNumber.innerText -= parseFloat(enemyThornsNumber[i].innerText) - parseFloat(playerBlockNumber.innerText);
                         playerBlockNumber.innerText = 0;
                 } else {
                         playerBlockNumber.innerText -= parseFloat(enemyThornsNumber[i].innerText);
@@ -2227,18 +2331,35 @@ function damageAllEnemies(damage) {
         tidalImbuement = false;
         displayNone(playerTidalImbuementImg);
 }
-function inflictWindswept (enemy) {
+function inflictWindswept(enemy) {
         enemyWindswept[enemy] = true;
-        displayBlock(enemyWindsweptImg[enemy]);  
+        displayBlock(enemyWindsweptImg[enemy]);
+        if (stratus) {
+                enemyCurrentHealth[enemy].innerText = parseFloat(enemyCurrentHealth[enemy].innerText) -  Math.floor(enemyAttackActionNumber[enemy].innerText * .25);
+        }
         enemyAttackActionNumber[enemy].innerText = Math.floor(enemyAttackActionNumber[enemy].innerText * .50);    
         enemyBurnActionNumber[enemy].innerText = Math.floor(enemyBurnActionNumber[enemy].innerText * .50);    
 }
-function inflictFrostbite (enemy) {
-        if (frostHeart) {
+function inflictFrostbite(enemy) {
+        if (iceEmpower1) {
                 gainBlock(4);
         }
         if (playerFrostbite) {
                 gainBlock(4);
+        }
+        if (frostHeart) {
+                if (enemyBlockNumber[enemy].innerText > 0) {
+                        enemyBlockNumber[enemy].innerText = parseFloat(enemyBlockNumber[enemy].innerText) - 1;
+                }
+                if (enemyRegenNumber[enemy].innerText > 0) {
+                        enemyRegenNumber[enemy].innerText = parseFloat(enemyRegenNumber[enemy].innerText) - 1;
+                }
+                if (enemyBloodNumber[enemy].innerText > 0) {
+                        enemyBloodNumber[enemy].innerText = parseFloat(enemyBloodNumber[enemy].innerText) - 1;
+                }
+                if (enemyThornsNumber[enemy].innerText > 0) {
+                        enemyThornsNumber[enemy].innerText = parseFloat(enemyThornsNumber[enemy].innerText) - 1;
+                }
         }
         enemyFrostbite[enemy] = true;
         enemyBlockActionNumber[enemy].innerText = Math.floor(enemyBlockActionNumber[enemy].innerText * .50);  
@@ -2294,8 +2415,38 @@ function burnEnemy(burn, enemy) {
         if (essenceOfEmber) {
                 burn += 5;
         }
+        if (eternalFlameTracking[enemy]) {
+                burn = Math.floor(burn * 1.5);
+                eternalFlameTracking[enemy] = false;
+        }
+        if (eternalFlame) {
+                eternalFlameTracking[enemy] = true;
+        }
+        if (ringOfFire) {
+                for (let i = 0; i < numberOfEnemies; i++) {
+                        enemyBurnNumber[i].innerText = parseFloat(enemyBurnNumber[i].innerText) + Math.floor(burn / 2);
+                        displayBlock(enemyBurnImg[i], enemyBurnNumber[i]);
+                        enemyBurnNumber[enemy].innerText = parseFloat(enemyBurnNumber[i].innerText) - Math.floor(burn / 2);
+                }
+        }
         enemyBurnNumber[enemy].innerText = parseFloat(enemyBurnNumber[enemy].innerText) + burn;
         displayBlock(enemyBurnImg[enemy], enemyBurnNumber[enemy]);
+}
+function burnAllEnemies(burn) {
+        if (essenceOfEmber) {
+                burn += 5;
+        }
+        for (let i = 0; i < numberOfEnemies.length; i++) {
+                if (eternalFlameTracking[i]) {
+                        burn = Math.floor(burn * 1.5);
+                        eternalFlameTracking[i] = false;
+                }
+                if (eternalFlame) {
+                        eternalFlameTracking[i] = true;
+                }
+                enemyBurnNumber[i].innerText = parseFloat(enemyBurnNumber[i].innerText) + burn;
+                displayBlock(enemyBurnImg[i], enemyBurnNumber[i]);        
+        }
 }
 function gainRegen(amount) {
         if (playerFrostbite) {
@@ -2553,8 +2704,8 @@ const enemiesInformation = [
                 attackChance: 1,
                 //damageincreasechance
                 bloodChance: 10,
-                attackDamageLow: 30,
-                attackDamageHigh: 32,
+                attackDamageLow: 24,
+                attackDamageHigh: 26,
                 bloodAmountLow: 3,
                 bloodAmountHigh: 4,
         },
@@ -2747,8 +2898,12 @@ function damagePlayer(damage, index) {
         } else if (playerBlockNumber.innerText <= damage) {
                 topBarHealthNumber.innerText -= damage - parseFloat(playerBlockNumber.innerText);
                 playerCurrentHealth.innerText -= damage - parseFloat(playerBlockNumber.innerText);
-                playerBlockNumber.innerText = 0;
-                displayNone(playerBlockNumber, playerBlockImg);
+                if (vineBracelet) {
+                        playerBlockNumber.innerText = 10
+                } else {
+                        playerBlockNumber.innerText = 0;        
+                        displayNone(playerBlockNumber, playerBlockImg);
+                }
         } else {
                 playerBlockNumber.innerText -= damage; 
         }
@@ -2813,6 +2968,7 @@ function enemyGainThorns(amount, index) {
 function checkEnemyBurn(index) {
         if (playerBloodNumber.innerText > 0) {
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.ceil(enemyBurnNumber[index].innerText * .21);
+                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.ceil(enemyBurnNumber[index].innerText * .21);
         }
         if (parseFloat(enemyBurnNumber[index].innerText) >= enemyCurrentHealth[index].innerText) {
                 displayNone(enemyBurnImg[index], enemyBurnNumber[index], enemyHealth[index], enemyCurrentHealth[index], enemyBlockDiv[index], enemyActionDiv[index]);
@@ -2989,7 +3145,11 @@ function enemyAction() {
 function endTurn() {
         eI = 0;
         // RESET MANA AND DEBUFFS
-        currentMana.innerText = 4;
+        if (lightningInABottle) {
+                currentMana.innerText = parseFloat(currentMana.innerText) + 4;
+        } else {
+                currentMana.innerText = 4;
+        }
         playerWindswept = false;
         playerFrostbite = false;
         checkPlayerBurn();
@@ -3061,6 +3221,7 @@ function endTurn() {
                                 enemyRegenActionDiv[eI], enemyWindsweptActionImg[eI], enemyFrostbiteActionImg[eI], enemyWindsweptImg[eI], enemyFrostbiteImg[eI]);    
                 enemyWindswept[eI] = false;
                 enemyFrostbite[eI] = false;
+                eternalFlameTracking[eI] = false;
                 }
                 eI++     
         });
