@@ -24,8 +24,6 @@ Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 m
 SYNERGIES: Wind draw, frost thorn block, water burn heal, blood siphon lightning
 
 BUG: can click card then end turn and play card
-can't change mind when clicking another card after clicking initial card
-blood siphon is healing for all enemies on aoe damage even when they're dead. probably for loop enemiesAlive not NumberOfEnemies
 */
 /*
 GENERAL FUNCTIONS
@@ -295,11 +293,6 @@ let enemyIsDead = [false, false, false];
 function resetArena() {
         for (i = 0; i < numberOfEnemies; i++) {
                 enemyIsDead[i] = false;
-                enemyBurnNumber[i].innerText = 0;
-                enemyCurrentHealth[i].innerText = enemyMaxHealth[i].innerText;
-                enemyWindswept[i] = false;
-                enemyFrostbite[i] = false;
-                displayInline(enemyHealth[i]);
         }
         enemyLevel++;
         playerWindswept = false;
@@ -347,8 +340,14 @@ function resetArena() {
         updateCardText();
         enemyContainer.innerHTML = "";
 }
+let dontRepeatEncounter = [];
 function getRandomEncounter() {
         let randomEncounterNumber = createRandomNumber(1, 10);
+        console.log(randomEncounterNumber);
+        while (dontRepeatEncounter.includes(randomEncounterNumber)) {
+                randomEncounterNumber = createRandomNumber(1, 10);
+                
+        }
         let enemyImg = document.querySelectorAll(".enemy-img");
         switchArea(arena, map);
         switch (randomEncounterNumber) {
@@ -365,6 +364,7 @@ function getRandomEncounter() {
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(1, 0, 2);
+                        dontRepeatEncounter.push(1);
                         break;
                 case 2:
                         createEnemy(enemiesInformation[5].baseHealth, enemiesInformation[5].img);
@@ -377,6 +377,7 @@ function getRandomEncounter() {
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(5, 6, 7);
+                        dontRepeatEncounter.push(2);
                         break;
                 case 3:
                         createEnemy(enemiesInformation[3].baseHealth, enemiesInformation[3].img);
@@ -389,6 +390,7 @@ function getRandomEncounter() {
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(3, 3, 4);
+                        dontRepeatEncounter.push(3);
                         break;
                 case 4:
                         createEnemy(enemiesInformation[1].baseHealth, enemiesInformation[1].img);
@@ -401,6 +403,7 @@ function getRandomEncounter() {
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(1, 9, 8);
+                        dontRepeatEncounter.push(4);
                         break;
                 case 5:
                         createEnemy(enemiesInformation[1].baseHealth, enemiesInformation[1].img);
@@ -413,6 +416,7 @@ function getRandomEncounter() {
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(1, 1, 7);
+                        dontRepeatEncounter.push(5);
                         break;
                 case 6:
                         createEnemy(enemiesInformation[0].baseHealth, enemiesInformation[0].img);
@@ -425,6 +429,7 @@ function getRandomEncounter() {
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(0, 0, 3);
+                        dontRepeatEncounter.push(6);
                         break;
                 case 7:
                         createEnemy(enemiesInformation[5].baseHealth, enemiesInformation[5].img);
@@ -439,6 +444,7 @@ function getRandomEncounter() {
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(5, 6, 2);
+                        dontRepeatEncounter.push(7);
                         break;
                 case 8:
                         createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
@@ -453,6 +459,7 @@ function getRandomEncounter() {
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(9, 8, 2);
+                        dontRepeatEncounter.push(8);
                         break;
                 case 9:
                         createEnemy(enemiesInformation[4].baseHealth, enemiesInformation[4].img);
@@ -466,6 +473,7 @@ function getRandomEncounter() {
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(4, 4, 4);
+                        dontRepeatEncounter.push(9);
                         break;
                 case 10:
                         createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
@@ -479,6 +487,7 @@ function getRandomEncounter() {
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(9, 9, 9);
+                        dontRepeatEncounter.push(10);
                         break;
         }
 }
@@ -572,11 +581,15 @@ function getRelic() {
         }
 }
 let getEliteRelic = false;
+let dontRepeatEliteEncounter = [];
 function getRandomEliteEncounter() {
-        randomEncounterNumber = createRandomNumber(1, 4);
+        let randomEliteEncounterNumber = createRandomNumber(1, 4);
+        while (dontRepeatEliteEncounter.includes(randomEliteEncounterNumber)) {
+                randomEliteEncounterNumber = createRandomNumber(1, 4);
+        }
         getEliteRelic = true;
         switchArea(arena, map);
-        switch (randomEncounterNumber) {
+        switch (randomEliteEncounterNumber) {
                 case 1:
                         createEnemy(enemiesInformation[10].baseHealth, enemiesInformation[10].img);
                         initializeEnemyVariables();
@@ -589,6 +602,7 @@ function getRandomEliteEncounter() {
                         numberOfEnemies = 1;
                         enemyLevelUp();
                         enemyAction(10);
+                        dontRepeatEliteEncounter.push(1);
                         break;
                 case 2:
                         createEnemy(enemiesInformation[11].baseHealth, enemiesInformation[11].img);
@@ -604,6 +618,7 @@ function getRandomEliteEncounter() {
                         numberOfEnemies = 1;
                         enemyLevelUp();
                         enemyAction(11);
+                        dontRepeatEliteEncounter.push(2);
                         break;
                 case 3:
                         createEnemy(enemiesInformation[12].baseHealth, enemiesInformation[12].img);
@@ -618,6 +633,7 @@ function getRandomEliteEncounter() {
                         numberOfEnemies = 1;
                         enemyLevelUp();
                         enemyAction(12);
+                        dontRepeatEliteEncounter.push(3);
                         break;
                 case 4:
                         createEnemy(enemiesInformation[13].baseHealth, enemiesInformation[13].img);
@@ -631,6 +647,7 @@ function getRandomEliteEncounter() {
                         numberOfEnemies = 1;
                         enemyLevelUp();
                         enemyAction(13);
+                        dontRepeatEliteEncounter.push(4);
                         break;
         }
 }
@@ -913,11 +930,11 @@ let exclamationButton4 = document.querySelector(".exclamation-button-4");
 let exclamationButton5 = document.querySelector(".exclamation-button-5");
 let exclamationButton6 = document.querySelector(".exclamation-button-6");
 const destroyedCardsContainer = document.querySelector("#destroyed-cards-container");
-let dontRepeatEncounter = [];
+let dontRepeatExclamation = [];
 function getRandomExclamation() {
         let randomExclamationNumber = createRandomNumber(1, 3);
         switchArea(exclamationContainer, map);
-        while (dontRepeatEncounter.includes(randomExclamationNumber)) {
+        while (dontRepeatExclamation.includes(randomExclamationNumber)) {
                 randomExclamationNumber = createRandomNumber(1, 3);
         }
         switch (randomExclamationNumber) {
@@ -948,7 +965,7 @@ function getRandomExclamation() {
                                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
                                 switchArea(map, exclamationContainer);
                         });
-                        dontRepeatEncounter.push(1);
+                        dontRepeatExclamation.push(1);
                         break;
                 case 2:
                         createExclamation("A Goddess's Request", "imgs/pixel-forest.jpg", "imgs/goddess.jpg", "A wise looking woman approaches you with a knowing look.", 
@@ -1019,7 +1036,7 @@ function getRandomExclamation() {
                                 destroyCards(earth, "earth");
                                 switchArea(map, exclamationContainer);
                         });
-                        dontRepeatEncounter.push(2);
+                        dontRepeatExclamation.push(2);
                         break;
                 case 3:
                         createExclamation("The Wizard's Apprentice", "imgs/pixel-forest.jpg", "imgs/clone-mage.jpg", "You see a flustered wizard over the next thicket trying and failing to cast a spell.", 
@@ -1098,7 +1115,7 @@ function getRandomExclamation() {
                                         
                                 });
                         });
-                        dontRepeatEncounter.push(3);
+                        dontRepeatExclamation.push(3);
                         break;
         }
 }
@@ -1262,18 +1279,21 @@ const cardsInformation = [
                 element: "air",
                 action: function() {
                         spendMana(6);
+                        // causing armor to NaN possibly from thorns
                         let enemyIsWindswept = [];
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                if (enemyWindswept[i]) {
-                                        enemyIsWindswept.push(true);
-                                        if (tidalImbuement) {
-                                                damageEnemy(22, i);
-                                                tidalImbuement = true;   
+                                if (enemyIsDead[i] === false) {
+                                        if (enemyWindswept[i]) {
+                                                enemyIsWindswept.push(1);
+                                                if (tidalImbuement) {
+                                                        damageEnemy(22, i);
+                                                        tidalImbuement = true;   
+                                                } else {
+                                                        damageEnemy(12, i);
+                                                }
                                         } else {
-                                                damageEnemy(12, i);
+                                                inflictWindswept(i);
                                         }
-                                } else {
-                                        inflictWindswept(i);
                                 }
                         }
                         if (enemyIsWindswept.length > 0) {
@@ -1479,12 +1499,19 @@ const cardsInformation = [
                 element: "ice",
                 action: function() {
                         spendMana(20);
-                        displayBlock(playerFrostbiteImg);
-                        playerFrostbite = true;
                         damageAllEnemies(14);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                inflictFrostbite(i);
+                                if (enemyIsDead[i] === false) {
+                                        inflictFrostbite(i);
+                                }
                         }
+                        if (iceEmpower1 && playerFrostbite === false) {
+                                displayBlock(playerFrostbiteImg);
+                                playerFrostbite = true;
+                                gainBlock(4);
+                        }
+                        displayBlock(playerFrostbiteImg);
+                        playerFrostbite = true;
                 }
         },
         {
@@ -1745,9 +1772,11 @@ const cardsInformation = [
                 action: function() {
                         spendMana(38);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                if (enemyBurnNumber[i].innerText > 0) {
-                                        inflictWindswept(i);
-                                        burnEnemy(6, i);
+                                if (enemyIsDead[i] === false) {
+                                        if (enemyBurnNumber[i].innerText > 0) {
+                                                inflictWindswept(i);
+                                                burnEnemy(6, i);
+                                        }
                                 }
                         }
                 }
@@ -1762,6 +1791,7 @@ const cardsInformation = [
                 action: function() {
                         spendMana(39);
                         playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 4;
+                        displayBlock(playerBurnImg, playerBurnNumber);
                         gainBloodSiphon(2);
                         gainRegen(5);
                 }
@@ -1789,7 +1819,7 @@ const cardsInformation = [
                 action: function() {
                         spendMana(41);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                if (enemyFrostbite[i]) {
+                                if (enemyIsDead[i] === false && enemyFrostbite[i]) {
                                         damageEnemy(20, i);
                                 }
                         }
@@ -1805,8 +1835,10 @@ const cardsInformation = [
                 action: function() {
                         spendMana(42);
                         damageAllEnemies(50);
-                        for (let i = 0; i < numberOfEnemies; i++) {    
-                                inflictWindswept(i);
+                        for (let i = 0; i < numberOfEnemies; i++) {
+                                if (enemyIsDead[i] === false) {
+                                        inflictWindswept(i);
+                                }
                         }
                         drawCards(1);
                         currentMana.innerText = parseFloat(currentMana.innerText) + 2;
@@ -1835,7 +1867,9 @@ const cardsInformation = [
                         spendMana(44);
                         damageAllEnemies(10);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                gainThorns(1);
+                                if (enemyIsDead[i] === false) {
+                                        gainThorns(1);
+                                }
                         }
                 }
         },
@@ -1849,10 +1883,11 @@ const cardsInformation = [
                 action: function() {
                         spendMana(45);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                inflictWindswept(i);
-                                inflictFrostbite(i);    
+                                if (enemyIsDead[i] === false) {
+                                        inflictWindswept(i);
+                                        inflictFrostbite(i);  
+                                }  
                         }
-                        
                 }
         },
         {
@@ -1864,7 +1899,7 @@ const cardsInformation = [
                 element: "ice-water ice water",
                 action: function() {
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                if (enemyFrostbite[i]) {
+                                if (enemyIsDead[i] === false && enemyFrostbite[i]) {
                                         gainRegen(2);
                                         gainBloodSiphon(1);     
                                 }      
@@ -1875,19 +1910,22 @@ const cardsInformation = [
                 manaCost: 2,
                 name: "Frozen Tundra",
                 cardImg: "imgs/frozen-tundra3.jpg",
-                cardText: "Inflict everyone with frostbite and gain 5 armor for everyone inflicted",
+                cardText: "Inflict everyone including yourself with frostbite and gain 5 armor for everyone inflicted",
                 chooseEnemyCard: false,
                 element: "ice-earth ice earth",
                 action: function() {
                         spendMana(47);
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                if (enemyFrostbite[i] === false) {
+                                if (enemyIsDead[i] === false && enemyFrostbite[i] === false) {
                                         gainBlock(5);
                                         inflictFrostbite(i);      
                                 }      
                         }
                         if (playerFrostbite === false) {
                                 gainBlock(5);
+                                if (iceEmpower1) {
+                                        gainBlock(4);
+                                }
                                 displayBlock(playerFrostbiteImg);
                                 playerFrostbite = true;
                         }
@@ -2069,10 +2107,20 @@ function addCardListeners(cardType, index, CIindex) {
         // IF CARD REQUIRES YOU TO CLICK ON AN ENEMY
         if (cardsInformation[CIindex].chooseEnemyCard) {
                 cardType[index].addEventListener("click", () => {
-                        chosenCard = CIindex;
                         if (cardClicked === false) {
                                 cardClicked = true;
+                                chosenCard = CIindex;
+                                cardType[index].classList.add("card-clicked");
                                 chooseEnemy();          
+                        } else {
+                                for (let i = 0; i < handContainer.childElementCount; i++) {
+                                        if (cardType[i].classList.contains("card-clicked")) {
+                                                cardType[i].classList.remove("card-clicked");
+                                        }
+                                } 
+                                cardType[index].classList.add("card-clicked");
+                                chosenCard = CIindex;
+                                chooseEnemy();
                         }
                 });  
         } else {
@@ -2091,29 +2139,37 @@ function addCardListeners(cardType, index, CIindex) {
         // ADD EVENTLISTENERS TO ALL ENEMIES
         function chooseEnemy() {
         for (let i = 0; i < numberOfEnemies; i++) {
-                // LOG WHICH ENEMY HAS BEEN CLICKED
-                enemy[i].addEventListener("click", () => {
-                        chosenEnemy = i;
-                       
-                }, { once: true } );
-                // PERFORM CHOSEN CARD ACTION ON CHOSEN ENEMY
-                enemy[i].addEventListener("click", clickEnemy);
+                if (enemyIsDead[i] === false) {
+                        // LOG WHICH ENEMY HAS BEEN CLICKED
+                        enemy[i].addEventListener("click", () => {
+                                chosenEnemy = i;
+                        }, { once: true } );
+                        // PERFORM CHOSEN CARD ACTION ON CHOSEN ENEMY
+                        enemy[i].addEventListener("click", clickEnemy);
+                        }
                 }
         }
         // SEPERATE FUNCTION WHEN ENEMY IS CLICKED SO EVENTLISTENER CAN BE REMOVED ON EACH ENEMY AFTER CLICKING
         function clickEnemy() {
-                if (currentMana.innerText >= cardsInformation[chosenCard].manaCost && chosenCard === chosenCard) {
+                if (currentMana.innerText >= cardsInformation[chosenCard].manaCost && chosenCard === CIindex) {
                         cardsInformation[CIindex].action();
                         addToDiscard();
                         cardClicked = false;
                         checkHealthIsOverMax();
                         updateCardText();
+                        for (let i = 0; i < handContainer.childElementCount; i++) {
+                                if (cardType[i].classList.contains("card-clicked")) {
+                                        cardType[i].classList.remove("card-clicked");
+                                }
+                        }
                         if (airBubble) {
                                 playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + 1;
                                 displayBlock(playerRegenImg, playerRegenNumber);
                         }
                         for (let i = 0; i < numberOfEnemies; i++) {
-                                enemy[i].removeEventListener("click", clickEnemy);        
+                                if (enemyIsDead[i] === false) {
+                                        enemy[i].removeEventListener("click", clickEnemy);   
+                                }     
                         }  
                 }
         }
@@ -2283,7 +2339,7 @@ function damageEnemy(damage, enemy) {
 }
 function damageAllEnemies(damage) {
         for (let i = 0; i < numberOfEnemies; i++) {
-                if (iceSpear && enemyFrostbite[i]) {
+                if (enemyIsDead[i] === false && iceSpear && enemyFrostbite[i]) {
                         damageEnemy(4, i);
                 }
         }
@@ -2297,33 +2353,35 @@ function damageAllEnemies(damage) {
                 damage = Math.floor(damage * .50);
         }
         for (let i = 0; i < numberOfEnemies; i++) {
-                if (playerBloodNumber.innerText > 0) {
-                        playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * .21));
-                        topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * .21));
-                        healthGainedThisFight += Math.floor((damage * .21));
+                if (enemyIsDead[i] === false) {
+                        if (playerBloodNumber.innerText > 0) {
+                                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * .21));
+                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * .21));
+                                healthGainedThisFight += Math.floor((damage * .21));
+                        }
+                        // CHECK ARMOR
+                        if (enemyBlockNumber[i].innerText === 0) {
+                                enemyCurrentHealth[i].innerText -= damage;
+                                displayNone(enemyBlockNumber[i], enemyBlockImg[i]);    
+                        } else if (enemyBlockNumber[i].innerText < damage) {
+                                enemyCurrentHealth[i].innerText -= damage - parseFloat(enemyBlockNumber[i].innerText);
+                                enemyBlockNumber[i].innerText = 0;
+                                displayNone(enemyBlockNumber[i], enemyBlockImg[i]);
+                        } else {
+                                enemyBlockNumber[i].innerText -= damage;
+                        }
+                        // CHECK THORNS 
+                        if (playerBlockNumber.innerText <= 0) {
+                                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) - parseFloat(enemyThornsNumber[i].innerText);
+                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) - parseFloat(enemyThornsNumber[i].innerText);                
+                        } else if (playerBlockNumber.innerText <= parseFloat(enemyThornsNumber[i].innerText)) {
+                                playerCurrentHealth.innerText =  parseFloat(playerCurrentHealth.innerText) - (parseFloat(enemyThornsNumber[i].innerText) - parseFloat(playerBlockNumber.innerText));
+                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) - (parseFloat(enemyThornsNumber[i].innerText) - parseFloat(playerBlockNumber.innerText));
+                                playerBlockNumber.innerText = 0;
+                        } else {
+                                playerBlockNumber.innerText = parseFloat(playerBlockNumber.innerText) - parseFloat(enemyThornsNumber[i].innerText);
+                        }          
                 }
-                // CHECK ARMOR
-                if (enemyBlockNumber[i].innerText === 0) {
-                        enemyCurrentHealth[i].innerText -= damage;
-                        displayNone(enemyBlockNumber[i], enemyBlockImg[i]);    
-                } else if (enemyBlockNumber[i].innerText < damage) {
-                        enemyCurrentHealth[i].innerText -= damage - parseFloat(enemyBlockNumber[i].innerText);
-                        enemyBlockNumber[i].innerText = 0;
-                        displayNone(enemyBlockNumber[i], enemyBlockImg[i]);
-                } else {
-                        enemyBlockNumber[i].innerText -= damage;
-                }
-                // CHECK THORNS 
-                if (playerBlockNumber.innerText <= 0) {
-                        playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[i].innerText);
-                        topBarHealthNumber.innerText -= parseFloat(enemyThornsNumber[i].innerText);
-                } else if (playerBlockNumber.innerText <= parseFloat(enemyThornsNumber[i].innerText)) {
-                        playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[i].innerText) - parseFloat(playerBlockNumber.innerText);
-                        topBarHealthNumber.innerText -= parseFloat(enemyThornsNumber[i].innerText) - parseFloat(playerBlockNumber.innerText);
-                        playerBlockNumber.innerText = 0;
-                } else {
-                        playerBlockNumber.innerText -= parseFloat(enemyThornsNumber[i].innerText);
-                }          
                 checkHealthIsOverMax();
                 checkIfEnemyDead();
                 damageThisTurn += damage;
@@ -2344,9 +2402,7 @@ function inflictFrostbite(enemy) {
         if (iceEmpower1) {
                 gainBlock(4);
         }
-        if (playerFrostbite) {
-                gainBlock(4);
-        }
+        
         if (frostHeart) {
                 if (enemyBlockNumber[enemy].innerText > 0) {
                         enemyBlockNumber[enemy].innerText = parseFloat(enemyBlockNumber[enemy].innerText) - 1;
@@ -2374,8 +2430,10 @@ function checkHealthIsOverMax() {
                 topBarHealthNumber.innerText = playerMaxHealth.innerText;
         }
         for (let i = 0; i < numberOfEnemies.length; i++) {
-                if (parseFloat(enemyCurrentHealth.innerText) > parseFloat(enemyMaxHealth.innerText))  {
-                        enemyCurrentHealth.innerText = playerMaxHealth.innerText;
+                if (enemyIsDead[i] === false) {
+                        if (parseFloat(enemyCurrentHealth.innerText) > parseFloat(enemyMaxHealth.innerText))  {
+                                enemyCurrentHealth.innerText = playerMaxHealth.innerText;
+                        }
                 }
         }
 }
@@ -2424,9 +2482,11 @@ function burnEnemy(burn, enemy) {
         }
         if (ringOfFire) {
                 for (let i = 0; i < numberOfEnemies; i++) {
-                        enemyBurnNumber[i].innerText = parseFloat(enemyBurnNumber[i].innerText) + Math.floor(burn / 2);
-                        displayBlock(enemyBurnImg[i], enemyBurnNumber[i]);
-                        enemyBurnNumber[enemy].innerText = parseFloat(enemyBurnNumber[i].innerText) - Math.floor(burn / 2);
+                        if (enemyIsDead[i] === false) {
+                                enemyBurnNumber[i].innerText = parseFloat(enemyBurnNumber[i].innerText) + Math.floor(burn / 2);
+                                displayBlock(enemyBurnImg[i], enemyBurnNumber[i]);
+                                enemyBurnNumber[enemy].innerText = parseFloat(enemyBurnNumber[i].innerText) - Math.floor(burn / 2);
+                        }
                 }
         }
         enemyBurnNumber[enemy].innerText = parseFloat(enemyBurnNumber[enemy].innerText) + burn;
@@ -2437,15 +2497,17 @@ function burnAllEnemies(burn) {
                 burn += 5;
         }
         for (let i = 0; i < numberOfEnemies.length; i++) {
-                if (eternalFlameTracking[i]) {
-                        burn = Math.floor(burn * 1.5);
-                        eternalFlameTracking[i] = false;
-                }
-                if (eternalFlame) {
-                        eternalFlameTracking[i] = true;
-                }
-                enemyBurnNumber[i].innerText = parseFloat(enemyBurnNumber[i].innerText) + burn;
-                displayBlock(enemyBurnImg[i], enemyBurnNumber[i]);        
+                if (enemyIsDead[i] === false) {
+                        if (eternalFlameTracking[i]) {
+                                burn = Math.floor(burn * 1.5);
+                                eternalFlameTracking[i] = false;
+                        }
+                        if (eternalFlame) {
+                                eternalFlameTracking[i] = true;
+                        }
+                        enemyBurnNumber[i].innerText = parseFloat(enemyBurnNumber[i].innerText) + burn;
+                        displayBlock(enemyBurnImg[i], enemyBurnNumber[i]);  
+                }      
         }
 }
 function gainRegen(amount) {
@@ -3014,12 +3076,12 @@ function checkIfEnemyDead() {
                 displayNone(handContainer);
                 if (getEliteRelic) {
                         getRelic();
-                } 
+                }
         }
        
         // IF ENEMY  IS DEAD, DELETE THEM
         for (let i = 0; i < numberOfEnemies; i++) {
-                if (enemyCurrentHealth[i].innerText <= 0) {
+                if (enemyIsDead[i] === false && enemyCurrentHealth[i].innerText <= 0) {
                         displayNone(enemyBurnImg[i], enemyBurnNumber[i], enemyHealth[i], enemyCurrentHealth[i], enemyBlockDiv[i], enemyActionDiv[i]);
                         enemy[i].classList.add("fade-out");
                         enemyIsDead[i] = true;

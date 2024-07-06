@@ -927,6 +927,9 @@
     transform: translateY(-50px);
     transition-duration: .5s;
 }
+.card-clicked {
+    transform: translateY(-50px);
+}
 .card-name {
     width: 100%;
     color: white;
