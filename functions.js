@@ -1,24 +1,11 @@
 /* TO DO
 SET UP IMAGES TO SCALE WITH SCREEN SIZE
-SET UP EXCLAMATION AREAS WITH FUNCTIONALITY
 TREASURE: Empower an element and more likely to draw that element type
-MAKE DIFFERENT ENCOUNTERS
 Implement animations
 Talent tree after each fight
 
-FIRE CARD: Deal damage based on how much youve been burned
-WATER CARD: Gain 1 regen per card played this turn
-
 POTIONS: RED POTION: Increase burn by 1
 COPY CARD
-
-elite relics
-gain 2 block each time you frostbite
-windswept also deals 5 damage
-start each round with 1 blood siphon
-first card you play that deals damage deals 10 more
-start each round with 2 regen
-each time you inflict burn burn yourself 1
 
 Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 mana etc.
 SYNERGIES: Wind draw, frost thorn block, water burn heal, blood siphon lightning
@@ -506,10 +493,10 @@ let vineBracelet = false;
 let caspiansTear = false;
 let stratus = false;
 let windDisc = false;
-function getRelic() {
-        let randomRelicNumber = createRandomNumber(1, 12);
+function getRelic(min, max) {
+        let randomRelicNumber = createRandomNumber(min, max);
         while (dontRepeatRelic.includes(randomRelicNumber)) {
-                randomRelicNumber = createRandomNumber(1, 12);
+                randomRelicNumber = createRandomNumber(min, max);
         }
         const relicContainer = document.querySelector("#relic-container");
         switch (randomRelicNumber) {
@@ -659,7 +646,7 @@ function chooseLocationPath() {
                         removeELL1();
                         location2Tiles1.addEventListener("click", L2T1);
                         location2Tiles2.addEventListener("click", L2T2);
-                        getRandomEncounter();
+                        getShop();
                         break;
                 case "L1T2":
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
@@ -793,7 +780,7 @@ function chooseLocationPath() {
                         location7Tiles1.addEventListener("click", L7T1);
                         location7Tiles2.addEventListener("click", L7T2);
                         location7Tiles3.addEventListener("click", L7T3);
-                        getRelic();
+                        getRelic(1, 12);
                         break;
                 case "L7T1":
                         resetArena();
@@ -1120,40 +1107,54 @@ function getRandomExclamation() {
         }
 }
 function getShop () {
-        displayNone(map);
         const shopContainer = document.querySelector("#shop-container");
+        displayNone(map);
+        displayFlex(shopContainer);
         shopContainer.innerHTML = `
-                <div id="shop-div">
-                </div>
+                <div id="shop-cards-div"></div>
+                <div id="shop-relic-container"></div>
                 <button id="leave-shop-button">Leave Shop</button>
         `;
+        // LEAVE SHOP BUTTON
         const leaveShopButton = document.querySelector("#leave-shop-button");
         leaveShopButton.addEventListener("click", () => {
                 switchArea(map, shopContainer);
         });
-        const shopDiv = document.querySelector("#shop-div");
+        // SHOP CARDS
+        const shopCardsDiv = document.querySelector("#shop-cards-div");
         let shopCards = [];
         let dontRepeatCard = [];
         while (dontRepeatCard.length < 10) {
-                let newRandomNumber = createRandomNumber(0, cardsInformation.length - 2);
+                let newRandomNumber = createRandomNumber(12, cardsInformation.length - 2);
                 if (dontRepeatCard.includes(newRandomNumber)) {
-                        newRandomNumber = createRandomNumber(0, cardsInformation.length - 2);
+                        newRandomNumber = createRandomNumber(12, cardsInformation.length - 2);
                 } else {
                         dontRepeatCard.push(newRandomNumber);
                 }
         }
+        let index = 0;
         dontRepeatCard.forEach((i) => {
-                createCard(i, shopDiv, "card-reference", "card-text");
+                shopCardsDiv.innerHTML += `
+                <div class="shop-cards-cost-div"></div>`;
+                let shopCardsCostDiv = document.querySelectorAll(".shop-cards-cost-div");
+                createCard(i, shopCardsCostDiv[index], "card-reference", "card-text");
+                shopCardsCostDiv[index].innerHTML += `<img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`
                 let shopCardsReference = document.querySelectorAll(".card-reference");
+                index++;
                 shopCards.push(shopCardsReference[shopCardsReference.length - 1]);
+                console.log(shopCards);
         });
         let cardIndex;
-        shopCards.forEach((i) => {
+        let shopCardsCostDiv = document.querySelectorAll(".shop-cards-cost-div");
+        let shopCardsReference = document.querySelectorAll(".card-reference");
+        index = 0;
+        shopCardsReference.forEach((i) => {
                 displayFlex(i);
-                shopDiv.appendChild(i);
+                index++;
                 i.addEventListener("click", () => {       
                         for (let j = 0; j < cardsInformation.length; j++) {
                                 if (i.classList.contains(j)) {
+                                        console.log(j);
                                         cardIndex = j;
                                         createCard(cardIndex, drawPileContainer, "card", "card-text");
                                         addNewCardInformation(cardIndex);
@@ -1163,7 +1164,86 @@ function getShop () {
                         }
                 });
         });
-                                        
+        // SHOP RELICS
+        const shopRelicContainer = document.querySelector("#shop-relic-container");
+        let dontRepeatShopRelic = [];
+        function getShopRelic(timesToRun) {
+                for (let i = 0; i < timesToRun; i++) {
+                        let randomRelicNumber = createRandomNumber(1, 12);
+                        while (dontRepeatRelic.includes(randomRelicNumber) || dontRepeatShopRelic.includes(randomRelicNumber)) {
+                                randomRelicNumber = createRandomNumber(1, 12);
+                        }
+                        switch (randomRelicNumber) {
+                                case 1:
+                                        shopRelicContainer.innerHTML += `<img class="relic-img 1" src="imgs/ring-of-fire.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        dontRepeatShopRelic.push(1);
+                                        break;
+                                case 2:
+                                        shopRelicContainer.innerHTML += `<img class="relic-img 2" src="imgs/eternal-flame2.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        dontRepeatShopRelic.push(2);
+                                        break;
+                                case 3:
+                                        shopRelicContainer.innerHTML += `<img class="relic-img 3" src="imgs/thunder-talisman2.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        dontRepeatShopRelic.push(3);
+                                        break;
+                                case 4:
+                                        shopRelicContainer.innerHTML += `<img class="relic-img 4" src="imgs/lightning-in-a-bottle.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        dontRepeatShopRelic.push(4);
+                                        break;
+                                case 5:
+                                        shopRelicContainer.innerHTML += `<img class="relic-img 5" src="imgs/ice-spear.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        dontRepeatShopRelic.push(5);
+                                        break;
+                                case 6:
+                                        shopRelicContainer.innerHTML += `<img class="relic-img 6" src="imgs/frostheart.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        dontRepeatShopRelic.push(6);
+                                        break;
+                                case 7:
+                                        shopRelicContainer.innerHTML += `<img class="relic-img 7" src="imgs/stratus.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        dontRepeatShopRelic.push(7);
+                                        break;
+                                case 8:
+                                        shopRelicContainer.innerHTML += `<img class="relic-img 8" src="imgs/wind-disc.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        dontRepeatShopRelic.push(8);
+                                        break;
+                                case 9:
+                                        shopRelicContainer.innerHTML += `<img class="relic-img 9" src="imgs/blood-amulet2.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        dontRepeatShopRelic.push(9);
+                                        break;
+                                case 10:
+                                        shopRelicContainer.innerHTML += `<img class="relic-img 10" src="imgs/caspians-tear2.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        dontRepeatShopRelic.push(10);
+                                        break;
+                                case 11:
+                                        shopRelicContainer.innerHTML += `<img class="relic-img 11" src="imgs/crown-of-thorns2.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        dontRepeatShopRelic.push(11);
+                                        break;
+                                case 12:
+                                        shopRelicContainer.innerHTML += `<img class="relic-img 12" src="imgs/vine-bracelet.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        dontRepeatShopRelic.push(12);
+                                        break;
+                        }
+                }
+        }
+        getShopRelic(4);
+        const relicImg = document.querySelectorAll(".relic-img");
+        const shopAetherImg = document.querySelectorAll(".shop-aether");
+        const shopAetherCost = document.querySelectorAll(".shop-aether-cost");
+
+        for (let i = 0; i < relicImg.length; i++) {
+                relicImg[i].style.width = "150px";
+                relicImg[i].style.height = "150px";
+                relicImg[i].addEventListener("click", () => {
+                        for (let k = 0; k <= 12; k++) {
+                                if (relicImg[i].classList.contains(k) && playerGold.innerText >= 100) {
+                                        console.log(relicImg[i], shopAetherImg[i], shopAetherCost[i]);
+                                        getRelic(k, k);
+                                        displayNone(relicImg[i], shopAetherImg[i], shopAetherCost[i]);
+                                        playerGold.innerText -= 100;
+                                }
+                        }
+                });
+        }
 }
 /*
 CARDS SECTION
@@ -1800,12 +1880,12 @@ const cardsInformation = [
                 manaCost: 3,
                 name: "Magma",
                 cardImg: "imgs/magma.jpg",
-                cardText: "Inflict 10 burn on an enemy and gain block equal to their burn",
+                cardText: "Inflict 6 burn on an enemy and gain block equal to their burn",
                 chooseEnemyCard: true,
                 element: "fire-earth fire earth",
                 action: function() {
                         spendMana(40);
-                        burnEnemy(10, chosenEnemy);
+                        burnEnemy(6, chosenEnemy);
                         gainBlock(parseFloat(enemyBurnNumber[chosenEnemy].innerText));
                 }
         },
@@ -3075,7 +3155,7 @@ function checkIfEnemyDead() {
                 playerGold.innerText = parseFloat(playerGold.innerText) + Math.ceil(20 + ((enemyLevel + 1) * 2.7));
                 displayNone(handContainer);
                 if (getEliteRelic) {
-                        getRelic();
+                        getRelic(1, 12);
                 }
         }
        
