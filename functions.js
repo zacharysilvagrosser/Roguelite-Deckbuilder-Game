@@ -3,9 +3,13 @@ SET UP IMAGES TO SCALE WITH SCREEN SIZE
 TREASURE: Empower an element and more likely to draw that element type
 Implement animations
 Talent tree after each fight
+Set up mouseover for topbar relics and windswept and frostbite and thorns ect. keywords
 
+! DIV
+Personality type quiz that grants buff based on answer of what you value most
 POTIONS: RED POTION: Increase burn by 1
-COPY CARD
+         BLUE POTION
+         COPY CARD
 
 Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 mana etc.
 SYNERGIES: Wind draw, frost thorn block, water burn heal, blood siphon lightning
@@ -330,7 +334,6 @@ function resetArena() {
 let dontRepeatEncounter = [];
 function getRandomEncounter() {
         let randomEncounterNumber = createRandomNumber(1, 10);
-        console.log(randomEncounterNumber);
         while (dontRepeatEncounter.includes(randomEncounterNumber)) {
                 randomEncounterNumber = createRandomNumber(1, 10);
                 
@@ -919,7 +922,7 @@ let exclamationButton6 = document.querySelector(".exclamation-button-6");
 const destroyedCardsContainer = document.querySelector("#destroyed-cards-container");
 let dontRepeatExclamation = [];
 function getRandomExclamation() {
-        let randomExclamationNumber = createRandomNumber(1, 3);
+        let randomExclamationNumber = createRandomNumber(4, 4);
         switchArea(exclamationContainer, map);
         while (dontRepeatExclamation.includes(randomExclamationNumber)) {
                 randomExclamationNumber = createRandomNumber(1, 3);
@@ -928,12 +931,12 @@ function getRandomExclamation() {
                 case 1:
                         createExclamation("King Spookly", "imgs/pixel-forest.jpg", "imgs/ghost.jpg", "A ghost peaks out from a tree up ahead.", 
                                 "He beckons you closer with his translucent appendage. You approach.",
-                                `"I was once a king in this land long ago." His soft whisper echos. "I had all the gold in my possession burried with me. I now realize the arrogance of my actions and would like to make amends for my past mistakes."`);
+                                `"I was once king in this land long ago." His soft whisper echos. "I had all the gold in my possession burried with me. I now realize the arrogance of my actions and would like to make amends for my past mistakes. Please share this amongt the local townsfolk."`);
                         exclamationDiv = document.querySelector(".exclamation-div");
                         exclamationButtonDiv = document.querySelector(".exclamation-button-div");
                         exclamationButtonDiv.innerHTML = `
-                        <button class="exclamation-button-1"><span style="color: lightgreen">Accept:</span> Gain 200 Gold, but add a useless card to your deck</button>
-                        <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83)">Refuse:</span> Gain 10 max health and heal for 10</button>
+                        <button class="exclamation-button-1"><span style="color: rgb(206, 83, 83)">Take It All:</span> Gain 200 Gold. Add Avarice to your deck which can't be used</button>
+                        <button class="exclamation-button-2"><span style="color: lightgreen">Share It:</span>Gain good fortune healing 10 health and gaining 10 max health</button>
                         `;
                         exclamationButton1 = document.querySelector(".exclamation-button-1");
                         exclamationButton2 = document.querySelector(".exclamation-button-2");
@@ -1104,6 +1107,58 @@ function getRandomExclamation() {
                         });
                         dontRepeatExclamation.push(3);
                         break;
+                case 4:
+                        createExclamation("The Hooded Figure", "imgs/meadow-path.jpg", "imgs/rogue.jpg", "You strain to hear barely audible footsteps through the brush.", 
+                                `A hooded figure passes by with his head towards the ground. You aren't sure, but you think you see a smirk for a fraction of a second.`,
+                                `As you pass by, you bump into each other dropping both of your belongings. "My apologies" the gravely voice says. As you pick up your supplies you realize they have been swapped. You turn to confront the man, but he's nowhere to be found.`);
+                        exclamationDiv = document.querySelector(".exclamation-div");
+                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
+                        exclamationButtonDiv.innerHTML = `<button class="exclamation-button-1" style="margin-top: 100px;">Your entire starting hand has been swapped!</button>`
+                        exclamationButton1 = document.querySelector(".exclamation-button-1");
+                        exclamationButton1.addEventListener("click", () => {
+                        // DESTROY OPENING HAND CARDS
+                        let allCards = document.querySelectorAll(".card");
+                        allCards.forEach((i) => {
+                                for (let j = 0; j < 12; j++) {
+                                        if (i.classList.contains(j)) {
+                                                if (drawPileArray.includes(i)) {
+                                                        let drawIndex = drawPileArray.indexOf(i);
+                                                        let getFireCard = drawPileArray.splice(drawIndex, 1);
+                                                        destroyedCardsArray.push(getFireCard);
+                                                        destroyedCardsContainer.appendChild(i);
+                                                }
+                                                if (handArray.includes(i)) {
+                                                        let drawIndex = handArray.indexOf(i);
+                                                        let getFireCard = handArray.splice(drawIndex, 1);
+                                                        destroyedCardsArray.push(getFireCard);
+                                                        destroyedCardsContainer.appendChild(i);
+                                                }
+                                        }
+                                }
+                                
+                        });
+                        destroyedCardsContainer.innerHTML = ``;
+                        destroyedCardsArray = [];
+                        // ADD NEW RANDOM CARDS
+                        let newOpeningHand = [];
+                        while (newOpeningHand.length < 12) {
+                                let newCard = createRandomNumber(0, cardsInformation.length - 2);
+                                while (newOpeningHand.includes(newCard)) {
+                                        newCard = createRandomNumber(0, cardsInformation.length - 2);
+                                }
+                                createCard(newCard, newCardsContainer, "card", "card-text");
+                                newOpeningHand.push(newCard);
+                        }
+                        let newCards = document.querySelectorAll(".card");
+                        newCards.forEach((i) => {
+                                for (let j = 0; j < cardsInformation.length; j++) {
+                                        if (i.classList.contains(j)) {
+                                                addNewCardInformation(j);
+                                        }
+                                }
+                        });
+                        switchArea(map, exclamationDiv);
+                });
         }
 }
 function getShop () {
@@ -1111,15 +1166,28 @@ function getShop () {
         displayNone(map);
         displayFlex(shopContainer);
         shopContainer.innerHTML = `
+        <div id="cards-and-relics-container">
                 <div id="shop-cards-div"></div>
                 <div id="shop-relic-container"></div>
-                <button id="leave-shop-button">Leave Shop</button>
+        </div>
+        <button id="leave-shop-button">Leave Shop</button>
+        <img id="shopkeeper" src="imgs/gnome-shopkeeper.png">
         `;
         // LEAVE SHOP BUTTON
         const leaveShopButton = document.querySelector("#leave-shop-button");
         leaveShopButton.addEventListener("click", () => {
                 switchArea(map, shopContainer);
         });
+        // HEALTH BUTTON
+        /*const shopHealthButton = document.querySelector("#shop-health-button");
+        shopHealthButton.addEventListener("click", () => {
+                if (playerGold.innerText >= 25) {
+                        playerGold.innerText -= 25;
+                        playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 5;
+                        playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 5;
+                        topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 5;
+                }
+        });*/
         // SHOP CARDS
         const shopCardsDiv = document.querySelector("#shop-cards-div");
         let shopCards = [];
@@ -1138,32 +1206,31 @@ function getShop () {
                 <div class="shop-cards-cost-div"></div>`;
                 let shopCardsCostDiv = document.querySelectorAll(".shop-cards-cost-div");
                 createCard(i, shopCardsCostDiv[index], "card-reference", "card-text");
-                shopCardsCostDiv[index].innerHTML += `<img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`
+                shopCardsCostDiv[index].innerHTML += `<img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">50</p>`
                 let shopCardsReference = document.querySelectorAll(".card-reference");
                 index++;
                 shopCards.push(shopCardsReference[shopCardsReference.length - 1]);
-                console.log(shopCards);
         });
         let cardIndex;
         let shopCardsCostDiv = document.querySelectorAll(".shop-cards-cost-div");
         let shopCardsReference = document.querySelectorAll(".card-reference");
-        index = 0;
-        shopCardsReference.forEach((i) => {
-                displayFlex(i);
-                index++;
-                i.addEventListener("click", () => {       
+        for (let i = 0; i < shopCardsReference.length; i++) {
+                displayFlex(shopCardsReference[i]);
+                shopCardsReference[i].addEventListener("click", () => {       
                         for (let j = 0; j < cardsInformation.length; j++) {
-                                if (i.classList.contains(j)) {
-                                        console.log(j);
+                                if (shopCardsReference[i].classList.contains(j) && playerGold.innerText >= 50) {
                                         cardIndex = j;
                                         createCard(cardIndex, drawPileContainer, "card", "card-text");
                                         addNewCardInformation(cardIndex);
                                         playerGold.innerText -= 50;
-                                        displayNone(i, map);
+                                        
+                                        displayNone(shopCardsCostDiv[i], map);
+                                        console.log(index)
+                                        
                                 }
                         }
                 });
-        });
+        }
         // SHOP RELICS
         const shopRelicContainer = document.querySelector("#shop-relic-container");
         let dontRepeatShopRelic = [];
@@ -1175,73 +1242,189 @@ function getShop () {
                         }
                         switch (randomRelicNumber) {
                                 case 1:
-                                        shopRelicContainer.innerHTML += `<img class="relic-img 1" src="imgs/ring-of-fire.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        shopRelicContainer.innerHTML += `
+                                        <div class="shop-relic-div">
+                                                <img class="shop-relic-img 1" src="imgs/ring-of-fire.png">
+                                                <div class="shop-relic-img-text">
+                                                        <h4>Ring of Fire</h4>
+                                                        <p>Single target burn duplicates half it's burn and spreads it to all enemies</p>
+                                                </div>
+                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <p class="shop-aether-cost">100</p>
+                                        </div>`;
                                         dontRepeatShopRelic.push(1);
                                         break;
                                 case 2:
-                                        shopRelicContainer.innerHTML += `<img class="relic-img 2" src="imgs/eternal-flame2.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        shopRelicContainer.innerHTML += `
+                                        <div class="shop-relic-div">
+                                                <img class="shop-relic-img 2" src="imgs/eternal-flame2.png">
+                                                <div class="shop-relic-img-text">
+                                                        <h4>Eternal Flame</h4>
+                                                        <p>Burning an enemy twice in one turn will increase the second burn by 50%</p>
+                                                </div>
+                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <p class="shop-aether-cost">100</p>
+                                        </div>`;
                                         dontRepeatShopRelic.push(2);
                                         break;
                                 case 3:
-                                        shopRelicContainer.innerHTML += `<img class="relic-img 3" src="imgs/thunder-talisman2.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        shopRelicContainer.innerHTML += `
+                                        <div class="shop-relic-div">
+                                                <img class="shop-relic-img 3" src="imgs/thunder-talisman2.png">
+                                                <div class="shop-relic-img-text">
+                                                        <h4>Thunder Talisman</h4>
+                                                        <p>Start each encounter with +1 mana for the first turn</p>
+                                                </div>
+                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <p class="shop-aether-cost">100</p>;
+                                        </div>`
                                         dontRepeatShopRelic.push(3);
                                         break;
                                 case 4:
-                                        shopRelicContainer.innerHTML += `<img class="relic-img 4" src="imgs/lightning-in-a-bottle.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        shopRelicContainer.innerHTML += `
+                                        <div class="shop-relic-div">
+                                                <img class="shop-relic-img 4" src="imgs/lightning-in-a-bottle.png">
+                                                <div class="shop-relic-img-text">
+                                                        <h4>Lightning in a Bottle</h4>
+                                                        <p>Your unused mana will not be lost</p>
+                                                </div>
+                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <p class="shop-aether-cost">100</p>
+                                        </div>`;
                                         dontRepeatShopRelic.push(4);
                                         break;
                                 case 5:
-                                        shopRelicContainer.innerHTML += `<img class="relic-img 5" src="imgs/ice-spear.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        shopRelicContainer.innerHTML += `
+                                        <div class="shop-relic-div">
+                                                <img class="shop-relic-img 5" src="imgs/ice-spear.png">
+                                                <div class="shop-relic-img-text">
+                                                        <h4>Ice Spear</h4>
+                                                        <p>Deal 4 more damage to enemies with Frostbite</p>
+                                                </div>
+                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <p class="shop-aether-cost">100</p>
+                                        </div>`;
                                         dontRepeatShopRelic.push(5);
                                         break;
                                 case 6:
-                                        shopRelicContainer.innerHTML += `<img class="relic-img 6" src="imgs/frostheart.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        shopRelicContainer.innerHTML += `
+                                        <div class="shop-relic-div">
+                                                <img class="shop-relic-img 6" src="imgs/frostheart.png">
+                                                <div class="shop-relic-img-text">
+                                                        <h4>Frostheart</h4>
+                                                        <p>Frostbite will reduce each enemy buff by 1</p>
+                                                </div>
+                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <p class="shop-aether-cost">100</p>
+                                        </div>`;
                                         dontRepeatShopRelic.push(6);
                                         break;
                                 case 7:
-                                        shopRelicContainer.innerHTML += `<img class="relic-img 7" src="imgs/stratus.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        shopRelicContainer.innerHTML += `
+                                        <div class="shop-relic-div">
+                                                <img class="shop-relic-img 7" src="imgs/stratus.png">
+                                                <div class="shop-relic-img-text">
+                                                        <h4>Stratus</h4>
+                                                        <p>Windswept will now reflect 25% of the damage enemies intend to attack for back to them</p>
+                                                </div>
+                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <p class="shop-aether-cost">100</p>
+                                        </div>`;
                                         dontRepeatShopRelic.push(7);
                                         break;
                                 case 8:
-                                        shopRelicContainer.innerHTML += `<img class="relic-img 8" src="imgs/wind-disc.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        shopRelicContainer.innerHTML += `
+                                        <div class="shop-relic-div">
+                                                <img class="shop-relic-img 8" src="imgs/wind-disc.png">
+                                                <div class="shop-relic-img-text">
+                                                        <h4>Wind Disc</h4>
+                                                        <p>Start each encounter with one extra card for the first turn</p>
+                                                </div>
+                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <p class="shop-aether-cost">100</p>
+                                        </div>`;
                                         dontRepeatShopRelic.push(8);
                                         break;
                                 case 9:
-                                        shopRelicContainer.innerHTML += `<img class="relic-img 9" src="imgs/blood-amulet2.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        shopRelicContainer.innerHTML += `
+                                        <div class="shop-relic-div">
+                                                <img class="shop-relic-img 9" src="imgs/blood-amulet2.png">
+                                                <div class="shop-relic-img-text">
+                                                        <h4>Blood Amulet</h4>
+                                                        <p>Gain 1 blood siphon on your second turn</p>
+                                                </div>
+                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <p class="shop-aether-cost">100</p>
+                                        </div>`;
                                         dontRepeatShopRelic.push(9);
                                         break;
                                 case 10:
-                                        shopRelicContainer.innerHTML += `<img class="relic-img 10" src="imgs/caspians-tear2.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        shopRelicContainer.innerHTML += `
+                                        <div class="shop-relic-div">
+                                                <img class="shop-relic-img 10" src="imgs/caspians-tear2.png">
+                                                <div class="shop-relic-img-text">
+                                                        <h4>Caspian's Tear</h4>
+                                                        <p>Gain +3 max health when you start a new encounter</p>
+                                                </div>
+                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <p class="shop-aether-cost">100</p>
+                                        </div>`;
                                         dontRepeatShopRelic.push(10);
                                         break;
                                 case 11:
-                                        shopRelicContainer.innerHTML += `<img class="relic-img 11" src="imgs/crown-of-thorns2.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        shopRelicContainer.innerHTML += `
+                                        <div class="shop-relic-div">
+                                                <img class="shop-relic-img 11" src="imgs/crown-of-thorns2.png">
+                                                <div class="shop-relic-img-text">
+                                                        <h4>Crown of Thorns</h4>
+                                                        <p>Start each encounter with 2 thorns</p>
+                                                </div>
+                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <p class="shop-aether-cost">100</p>
+                                        </div>`;
                                         dontRepeatShopRelic.push(11);
                                         break;
                                 case 12:
-                                        shopRelicContainer.innerHTML += `<img class="relic-img 12" src="imgs/vine-bracelet.png"><img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">100</p>`;
+                                        shopRelicContainer.innerHTML += `
+                                        <div class="shop-relic-div">
+                                                <img class="shop-relic-img 12" src="imgs/vine-bracelet.png">
+                                                <div class="shop-relic-img-text">
+                                                        <h4>Vine Bracelet</h4>
+                                                        <p>When you lose all of your armor gain 10 armor</p>
+                                                </div>
+                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <p class="shop-aether-cost">100</p>
+                                        </div>`;
                                         dontRepeatShopRelic.push(12);
                                         break;
                         }
                 }
         }
         getShopRelic(4);
-        const relicImg = document.querySelectorAll(".relic-img");
+        const shopRelicImg = document.querySelectorAll(".shop-relic-img");
         const shopAetherImg = document.querySelectorAll(".shop-aether");
         const shopAetherCost = document.querySelectorAll(".shop-aether-cost");
-
-        for (let i = 0; i < relicImg.length; i++) {
-                relicImg[i].style.width = "150px";
-                relicImg[i].style.height = "150px";
-                relicImg[i].addEventListener("click", () => {
+        const shopRelicImgText = document.querySelectorAll(".shop-relic-img-text");
+        for (let i = 0; i < shopRelicImg.length; i++) {
+                shopRelicImg[i].addEventListener("click", () => {
                         for (let k = 0; k <= 12; k++) {
-                                if (relicImg[i].classList.contains(k) && playerGold.innerText >= 100) {
-                                        console.log(relicImg[i], shopAetherImg[i], shopAetherCost[i]);
+                                if (shopRelicImg[i].classList.contains(k) && playerGold.innerText >= 100) {
+                                        console.log(shopRelicImg[i], shopAetherImg[i], shopAetherCost[i]);
                                         getRelic(k, k);
-                                        displayNone(relicImg[i], shopAetherImg[i], shopAetherCost[i]);
+                                        displayNone(shopAetherImg[i + 10], shopAetherCost[i + 10]);
+                                        displayNone(shopRelicImg[i]);
+                                        console.log(shopAetherImg, shopAetherCost);
                                         playerGold.innerText -= 100;
                                 }
                         }
+                });
+                shopRelicImg[i].addEventListener("mouseover", () => {
+                        displayFlex(shopRelicImgText[i]);
+                        console.log(shopRelicImgText[i]);
+                });
+                shopRelicImg[i].addEventListener("mouseout", () => {
+                        displayNone(shopRelicImgText[i]);
+                        console.log(shopRelicImgText[i]);
                 });
         }
 }
@@ -1318,7 +1501,7 @@ const cardsInformation = [
                 element: "lightning",
                 action: function() {
                         spendMana(3);
-                        damageAllEnemies(20);
+                        damageAllEnemies(20000);
                 },        
         },
         {
@@ -2108,7 +2291,7 @@ function drawCards(numberOfCards) {
                         let reshuffle = discardPileArray.shift();
                         drawPileArray.push(reshuffle);
                 }     
-                //console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+                console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
  
         }
         // SHIFT CARDS FROM DRAW PILE TO HAND
@@ -2116,44 +2299,44 @@ function drawCards(numberOfCards) {
                 let drawNewCard = drawPileArray.shift();
                 handArray.unshift(drawNewCard);
         }
-        //console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
 
         // DISPLAY CARDS IN HAND
         for (let i = 0; i < numberOfCards; i++) {
                 displayFlex(handArray[i]);
         }
-        //console.log(handArray);
+        console.log(handArray);
 }
 // GET NEW SET OF 5 CARDS AT THE END OF EACH TURN
 function addCardsToHand() {
         // MOVE HAND CONTAINERS TO DISCARD CONTAINERS
-        //console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 let discarded = handArray.shift();
-                //console.log(discarded);
+                console.log(discarded);
                 discardPileArray.unshift(discarded);
         }
-        //console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         for (let i = 0; i < cardsInHand; i++) {
                displayNone(discardPileArray[i]);
         }
         drawCards(maxHandLength);      
 }
 function reshuffleCards() {
-        //console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 let discarded = handArray.shift();
                 drawPileArray.unshift(discarded);
         }
-        //console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInDiscardPile = discardPileArray.length;
         for (let i = 0; i < cardsInDiscardPile; i++) {
                 let reshuffle = discardPileArray.shift();
                 drawPileArray.push(reshuffle);
         }
-        //console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
          // RESHUFFLE CARDS IN DRAW PILE
         drawPileArray = drawPileArray.toSorted(() => 0.5 - Math.random());
          // SHIFT CARDS FROM DRAW PILE TO HAND
@@ -2161,7 +2344,7 @@ function reshuffleCards() {
                 let drawNewCard = drawPileArray.shift();
                 handArray.unshift(drawNewCard);
         }
-        //console.log(`RESHUFFLE CARDS\nDRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        console.log(`RESHUFFLE CARDS\nDRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         for (let i = 0; i < maxHandLength; i++) {
                 displayFlex(handArray[i]);
         }
@@ -2193,9 +2376,9 @@ function addCardListeners(cardType, index, CIindex) {
                                 cardType[index].classList.add("card-clicked");
                                 chooseEnemy();          
                         } else {
-                                for (let i = 0; i < handContainer.childElementCount; i++) {
-                                        if (cardType[i].classList.contains("card-clicked")) {
-                                                cardType[i].classList.remove("card-clicked");
+                                for (let i = 0; i < handArray.length; i++) {
+                                        if (handArray[i].classList.contains("card-clicked")) {
+                                                handArray[i].classList.remove("card-clicked");
                                         }
                                 } 
                                 cardType[index].classList.add("card-clicked");
@@ -2237,9 +2420,9 @@ function addCardListeners(cardType, index, CIindex) {
                         cardClicked = false;
                         checkHealthIsOverMax();
                         updateCardText();
-                        for (let i = 0; i < handContainer.childElementCount; i++) {
-                                if (cardType[i].classList.contains("card-clicked")) {
-                                        cardType[i].classList.remove("card-clicked");
+                        for (let i = 0; i < handArray.length; i++) {
+                                if (handArray[i].classList.contains("card-clicked")) {
+                                        handArray[i].classList.remove("card-clicked");
                                 }
                         }
                         if (airBubble) {
@@ -2267,7 +2450,7 @@ function addNewCardInformation(newRandomCard) {
         } else {
                 createCard(newRandomCard, newCardsContainer, "card", "card-text");
         }
-                let newCardsArray = document.querySelectorAll(".card");
+        let newCardsArray = document.querySelectorAll(".card");
         addCardListeners(newCardsArray, 0, newRandomCard);
         drawPileArray.push(newCardsArray[0]);
         handContainer.appendChild(newCardsArray[0]);
@@ -2277,7 +2460,6 @@ const allCardsReference = document.querySelectorAll(".card-reference");
 const newCardsContainer = document.querySelector("#new-cards-container");
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
-        
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
         let newRandomCard0 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
@@ -2291,30 +2473,6 @@ function getRandomNewCards () {
                 newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
                 newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
         }
-        /*if (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3) {
-                newRandomCard0 += 1;
-        }
-        if (newRandomCard1 == newRandomCard0 || newRandomCard1 == newRandomCard2 || newRandomCard1 == newRandomCard3) {
-                newRandomCard1 += 1;
-        }
-        if (newRandomCard2 == newRandomCard0 || newRandomCard2 == newRandomCard1 || newRandomCard2 == newRandomCard3) {
-                newRandomCard2 += 1;
-        }
-        if (newRandomCard3 == newRandomCard0 || newRandomCard3 == newRandomCard1 || newRandomCard3 == newRandomCard2) {
-                newRandomCard3 += 1;
-        }
-        if (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3) {
-                newRandomCard0 += 1;
-        }
-        if (newRandomCard1 == newRandomCard0 || newRandomCard1 == newRandomCard2 || newRandomCard1 == newRandomCard3) {
-                newRandomCard1 += 1;
-        }
-        if (newRandomCard2 == newRandomCard0 || newRandomCard2 == newRandomCard1 || newRandomCard2 == newRandomCard3) {
-                newRandomCard2 += 1;
-        }
-        if (newRandomCard3 == newRandomCard0 || newRandomCard3 == newRandomCard1 || newRandomCard3 == newRandomCard2) {
-                newRandomCard3 += 1;
-        }*/
         // ADD REFERENCE CARDS TO CHOOSE NEW CARD DIV
         createCard(newRandomCard0, chooseNewCardDiv, "card", "card-text");
         createCard(newRandomCard1, chooseNewCardDiv, "card", "card-text");
@@ -2327,7 +2485,23 @@ function getRandomNewCards () {
         newCardChoices[2].addEventListener("click", () => {addNewCardInformation(newRandomCard2)});
         newCardChoices[3].addEventListener("click", () => {addNewCardInformation(newRandomCard3)});
 }
-
+function removeCardClickedClass() {
+        for (let i = 0; i < drawPileArray.length; i++) {
+                if (drawPileArray[i].classList.contains("card-clicked")) {
+                        drawPileArray[i].classList.remove("card-clicked");
+                }
+        }
+        for (let i = 0; i < handArray.length; i++) {
+                if (handArray[i].classList.contains("card-clicked")) {
+                        handArray[i].classList.remove("card-clicked");
+                }
+        }
+        for (let i = 0; i < discardPileArray.length; i++) {
+                if (discardPileArray[i].classList.contains("card-clicked")) {
+                        discardPileArray[i].classList.remove("card-clicked");
+                }
+        }
+}
 /*
 PLAYER SECTION
 */
@@ -3171,7 +3345,6 @@ function checkIfEnemyDead() {
         if (enemiesAlive == 0) {
                 allEnemiesDead();
         }
-
 }
 // TRACK WHICH CARD AND ENEMY HAS BEEN CLICKED ON
 let chosenEnemy;
@@ -3367,6 +3540,7 @@ function endTurn() {
                 }
                 eI++     
         });
+        removeCardClickedClass();
         checkPlayerEnergize();
         checkRegenHeal();
         checkBloodSiphon();
@@ -3393,3 +3567,4 @@ getOpeningHand();
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i)  ;      
 }
+getShop();
