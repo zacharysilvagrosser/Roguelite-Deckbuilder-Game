@@ -12,11 +12,21 @@
     background-color: rgb(63, 92, 100);
     display: flex;
     z-index: 10;
-    color: white
+    color: white;
 }
-#board-header p {
+#board-header div {
     font-size: 20px;
+    width: 6rem;
     margin: auto;
+}
+#relic-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#top-bar-aether {
+    display: flex;
+    align-items: center;
 }
 .relic-img {
     width: 48px;
@@ -141,12 +151,11 @@
     width: 100%;
     height: 100vh;
     background-image: url("imgs/shop-background-night.jpg");
-    background-size: ;
     background-position: 90%;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    display: ;
+    display: none;
 }
 #cards-and-relics-container {
     display: flex;
@@ -170,7 +179,7 @@
     width: 40rem;
     height: 20rem;
 }
-.shop-relic-div {
+.shop-relic-div, .relic-div {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -181,7 +190,7 @@
     width: 120px;
     height: 120px;
 }
-.shop-relic-img-text {
+.shop-relic-img-text, .relic-img-text {
     position: absolute;
     margin-top: 12rem;
     display: none;
@@ -196,10 +205,16 @@
     flex-direction: column;
     border: 2px double rgb(81, 81, 81);
 }
-.shop-relic-img-text h4 {
+.player-frostbite-img:hover + div {
+    display: flex;
+}
+.player-windswept-img:hover + div {
+    display: flex;
+}
+.relic-img-text-h4, .debuff-img-text-h4 {
     font-size: 1.3rem;
 }
-.shop-relic-img-text p {
+.relic-img-text-p, .debuff-img-text-p {
     margin: .8rem .5rem ;
     font-size: 1.2rem;
 }
@@ -338,6 +353,21 @@
     display: flex;
     justify-content: center;
     margin-left: -100px;
+}
+.debuff-img-text {
+    position: absolute;
+    margin-left: -6rem;
+    display: none;
+    width: 16rem;
+    height: 10rem;
+    background-image: linear-gradient(rgb(158, 157, 157), rgb(56, 55, 55));
+    z-index: 9;
+    color: white;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: 2px double rgb(81, 81, 81);
 }
 #player-windswept-img, #player-frostbite-img, #player-tidal-imbuement-img {
     width: 60px;

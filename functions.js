@@ -1,9 +1,11 @@
 /* TO DO
-SET UP IMAGES TO SCALE WITH SCREEN SIZE
-TREASURE: Empower an element and more likely to draw that element type
-Implement animations
 Talent tree after each fight
+SET UP IMAGES TO SCALE WITH SCREEN SIZE
+BOSS TREASURE: Empower an element and more likely to draw that element type
+Implement animations
 Set up mouseover for topbar relics and windswept and frostbite and thorns ect. keywords
+when viewing inventory have a sorter based on element type
+replacing entire starting hand destroys you if puled early game
 
 ! DIV
 Personality type quiz that grants buff based on answer of what you value most
@@ -15,6 +17,11 @@ Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 m
 SYNERGIES: Wind draw, frost thorn block, water burn heal, blood siphon lightning
 
 BUG: can click card then end turn and play card
+Frost and Wind faes showed attack but frostbite and windswept
+
+Reorganized top bar and created divs for relic desc
+added potion functionality where they disappear until the end of the round
+Updated frostbite functionality and ice cards
 */
 /*
 GENERAL FUNCTIONS
@@ -284,7 +291,10 @@ let enemyIsDead = [false, false, false];
 function resetArena() {
         for (i = 0; i < numberOfEnemies; i++) {
                 enemyIsDead[i] = false;
+                enemyFrostbite[i] = false;
+                enemyWindswept[i] = false;
         }
+        console.log("Hand: ", handArray, "Draw: ", drawPileArray, "Discard: ", discardPileArray);
         enemyLevel++;
         playerWindswept = false;
         playerFrostbite = false;
@@ -301,6 +311,11 @@ function resetArena() {
         playerRegenNumber.innerText = 0;
         playerBloodNumber.innerText = 0;
         frostbitten = false;
+        for (let i = 0; i < destroyedCardsArray.length; i++) {
+                let holdCard = destroyedCardsArray.pop();
+                drawPileArray.push(holdCard);
+                handContainer.appendChild(holdCard);
+        }
         essenceOfEmber = false;
         liquidLightning = false;
         snowfallElixir = false;
@@ -312,6 +327,7 @@ function resetArena() {
         healthGainedThisFight = 0;
         getEliteRelic = false;
         airBubble = false;
+        console.log(airBubble);
         if (caspiansTear) {
                 playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 3;
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 3;
@@ -327,6 +343,16 @@ function resetArena() {
         displayNone();
         displayFlex(handContainer);
         reshuffleCards();
+        for (let i = 0; i < handArray.length; i++) {
+                if (handArray[i].classList.contains("card-clicked")) {
+                        handArray[i].classList.remove("card-clicked");
+                }
+        }
+        for (let i = 0; i < drawPileArray.length; i++) {
+                if (drawPileArray[i].classList.contains("card-clicked")) {
+                        drawPileArray[i].classList.remove("card-clicked");
+                }
+        }
         maxHandLength = 5;
         updateCardText();
         enemyContainer.innerHTML = "";
@@ -505,62 +531,146 @@ function getRelic(min, max) {
         switch (randomRelicNumber) {
                 case 1:
                         ringOfFire = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/ring-of-fire.png">`;
+                        relicContainer.innerHTML += `
+                        <div class="relic-div">
+                                <img class="relic-img" src="imgs/ring-of-fire.png">
+                                <div class="relic-img-text">
+                                        <h4 class="relic-img-text-h4">Ring Of Fire</h4>
+                                        <p class="relic-img-text-p">Single target burn duplicates half it's burn and spreads it to all enemies</p>
+                                </div>
+                        </div>`;                        
                         dontRepeatRelic.push(1);
                         break;
                 case 2:
                         eternalFlame = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/eternal-flame2.png">`;
+                        relicContainer.innerHTML += `                        
+                        <div class="relic-div">
+                                <img class="relic-img" src="imgs/eternal-flame2.png">
+                                <div class="relic-img-text">
+                                        <h4 class="relic-img-text-h4">Eternal Flame</h4>
+                                        <p class="relic-img-text-p">Burning an enemy twice in one turn will increase the second burn by 50%</p>
+                                </div>
+                        </div>`;
                         dontRepeatRelic.push(2);
                         break;
                 case 3:
                         thunderTalisman = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/thunder-talisman2.png">`;
+                        relicContainer.innerHTML += `                        
+                        <div class="relic-div">
+                                <img class="relic-img" src="imgs/thunder-talisman2.png">
+                                <div class="relic-img-text">
+                                        <h4 class="relic-img-text-h4">Thunder Talisman</h4>
+                                        <p class="relic-img-text-p">Start each encounter with +1 mana for the first turn</p>
+                                </div>
+                        </div>`
                         dontRepeatRelic.push(3);
                         break;
                 case 4:
                         lightningInABottle = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/lightning-in-a-bottle.png">`;
+                        relicContainer.innerHTML += `                        
+                        <div class="relic-div">
+                                <img class="relic-img" src="imgs/lightning-in-a-bottle.png">
+                                <div class="relic-img-text">
+                                        <h4 class="relic-img-text-h4">Lightning in a Bottle</h4>
+                                        <p class="relic-img-text-p">Your unused mana will not be lost</p>
+                                </div>
+                        </div>`;
                         dontRepeatRelic.push(4);
                         break;
                 case 5:
                         iceSpear = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/ice-spear.png">`;
+                        relicContainer.innerHTML += `                        
+                        <div class="relic-div">
+                                <img class="relic-img" src="imgs/ice-spear.png">
+                                <div class="relic-img-text">
+                                        <h4 class="relic-img-text-h4">Ice Spear</h4>
+                                        <p class="relic-img-text-p">Deal 4 more damage to enemies with Frostbite</p>
+                                </div>
+                        </div>`;
                         dontRepeatRelic.push(5);
                         break;
                 case 6:
                         frostHeart = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/frostheart.png">`;
+                        relicContainer.innerHTML += `                        
+                        <div class="relic-div">
+                                <img class="relic-img" src="imgs/frostheart.png">
+                                <div class="relic-img-text">
+                                        <h4 class="relic-img-text-h4">Frostheart</h4>
+                                        <p class="relic-img-text-p">Frostbite will reduce each enemy buff by 1</p>
+                                </div>
+                        </div>`;
                         dontRepeatRelic.push(6);
                         break;
                 case 7:
                         stratus = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/stratus.png">`;
+                        relicContainer.innerHTML += `                        
+                        <div class="relic-div">
+                                <img class="relic-img" src="imgs/stratus.png">
+                                <div class="relic-img-text">
+                                        <h4 class="relic-img-text-h4">Stratus</h4>
+                                        <p class="relic-img-text-p">Windswept will now reflect 25% of the damage enemies intend to attack for back to them</p>
+                                </div>
+                        </div>`;
                         dontRepeatRelic.push(7);
                         break;
                 case 8:
                         windDisc = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/wind-disc.png">`;
+                        relicContainer.innerHTML += `                        
+                        <div class="relic-div">
+                                <img class="relic-img" src="imgs/wind-disc.png">
+                                <div class="relic-img-text">
+                                        <h4 class="relic-img-text-h4">Wind Disc</h4>
+                                        <p class="relic-img-text-p">Start each encounter with one extra card for the first turn</p>
+                                </div>
+                        </div>`;
                         dontRepeatRelic.push(8);
                         break;
                 case 9:
                         bloodAmulet = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/blood-amulet2.png">`;
+                        relicContainer.innerHTML += `                        
+                        <div class="relic-div">
+                                <img class="relic-img" src="imgs/blood-amulet2.png">
+                                <div class="relic-img-text">
+                                        <h4 class="relic-img-text-h4">Blood Amulet</h4>
+                                        <p class="relic-img-text-p">Gain 1 blood siphon on your second turn</p>
+                                </div>
+                        </div>`;
                         dontRepeatRelic.push(9);
                         break;
                 case 10:
                         caspiansTear = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/caspians-tear2.png">`;
+                        relicContainer.innerHTML += `                        
+                        <div class="relic-div">
+                                <img class="relic-img" src="imgs/caspians-tear2.png">
+                                <div class="relic-img-text">
+                                        <h4 class="relic-img-text-h4">Caspian's Tear</h4>
+                                        <p class="relic-img-text-p">Gain +3 max health when you start a new encounter</p>
+                                </div>
+                        </div>`;
                         dontRepeatRelic.push(10);
                         break;
                 case 11:
                         crownOfThorns = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/crown-of-thorns2.png">`;
+                        relicContainer.innerHTML += `                        
+                        <div class="relic-div">
+                                <img class="relic-img" src="imgs/crown-of-thorns2.png">
+                                <div class="relic-img-text">
+                                        <h4 class="relic-img-text-h4">Crown of Thorns</h4>
+                                        <p class="relic-img-text-p">Start each encounter with 2 thorns</p>
+                                </div>
+                        </div>`;
                         dontRepeatRelic.push(11);
                         break;
                 case 12:
                         vineBracelet = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/vine-bracelet.png">`;
+                        relicContainer.innerHTML += `
+                        <div class="relic-div">
+                                <img class="relic-img" src="imgs/vine-bracelet.png">
+                                <div class="relic-img-text">
+                                        <h4 class="relic-img-text-h4">Vine Bracelet</h4>
+                                        <p class="relic-img-text-p">When you lose all of your armor gain 10 armor</p>
+                                </div>
+                        </div>`;
                         dontRepeatRelic.push(12);
                         break;
                 case 13:
@@ -568,6 +678,16 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `<img class="relic-img" src="imgs/iceEmpower12.png">`;
                         dontRepeatRelic.push(1);
                         break;
+        }
+        let relicImg = document.querySelectorAll(".relic-img");
+        let relicImgText = document.querySelectorAll(".relic-img-text");
+        for (let i = 0; i < relicImg.length; i++) {
+                relicImg[i].addEventListener("mouseover", () => {
+                        displayFlex(relicImgText[i]);
+                });
+                relicImg[i].addEventListener("mouseout", () => {
+                        displayNone(relicImgText[i]);
+                });
         }
 }
 let getEliteRelic = false;
@@ -649,7 +769,7 @@ function chooseLocationPath() {
                         removeELL1();
                         location2Tiles1.addEventListener("click", L2T1);
                         location2Tiles2.addEventListener("click", L2T2);
-                        getShop();
+                        getRandomEncounter();
                         break;
                 case "L1T2":
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
@@ -922,10 +1042,10 @@ let exclamationButton6 = document.querySelector(".exclamation-button-6");
 const destroyedCardsContainer = document.querySelector("#destroyed-cards-container");
 let dontRepeatExclamation = [];
 function getRandomExclamation() {
-        let randomExclamationNumber = createRandomNumber(4, 4);
+        let randomExclamationNumber = createRandomNumber(1, 4);
         switchArea(exclamationContainer, map);
         while (dontRepeatExclamation.includes(randomExclamationNumber)) {
-                randomExclamationNumber = createRandomNumber(1, 3);
+                randomExclamationNumber = createRandomNumber(1, 4);
         }
         switch (randomExclamationNumber) {
                 case 1:
@@ -935,7 +1055,7 @@ function getRandomExclamation() {
                         exclamationDiv = document.querySelector(".exclamation-div");
                         exclamationButtonDiv = document.querySelector(".exclamation-button-div");
                         exclamationButtonDiv.innerHTML = `
-                        <button class="exclamation-button-1"><span style="color: rgb(206, 83, 83)">Take It All:</span> Gain 200 Gold. Add Avarice to your deck which can't be used</button>
+                        <button class="exclamation-button-1"><span style="color: rgb(206, 83, 83)">Take It All:</span> Gain 200 Aether. Add Avarice to your deck which can't be used</button>
                         <button class="exclamation-button-2"><span style="color: lightgreen">Share It:</span>Gain good fortune healing 10 health and gaining 10 max health</button>
                         `;
                         exclamationButton1 = document.querySelector(".exclamation-button-1");
@@ -946,7 +1066,7 @@ function getRandomExclamation() {
                                 newCardsArray[0].style.background = "linear-gradient(gold, black)";
                                 drawPileArray.push(newCardsArray[0]);
                                 handContainer.appendChild(newCardsArray[0]);
-                                playerGold.innerText = parseFloat(playerGold.innerText) + 200;
+                                playerAether.innerText = parseFloat(playerAether.innerText) + 200;
                                 switchArea(map, exclamationContainer);
                         });
                         exclamationButton2.addEventListener("click", () => {
@@ -1061,7 +1181,7 @@ function getRandomExclamation() {
                                                         if (i.classList.contains(j)) {
                                                                 cardIndex = j;
                                                                 createCard(cardIndex, drawPileContainer, "card", "card-text");
-                                                                addNewCardInformation(cardIndex);
+                                                                createNewCard(cardIndex);
                                                                 switchArea(map, exclamationContainer);
                                                         }
                                                 }
@@ -1146,17 +1266,10 @@ function getRandomExclamation() {
                                 while (newOpeningHand.includes(newCard)) {
                                         newCard = createRandomNumber(0, cardsInformation.length - 2);
                                 }
-                                createCard(newCard, newCardsContainer, "card", "card-text");
+                                createNewCard(newCard);
                                 newOpeningHand.push(newCard);
+                                console.log(newOpeningHand);
                         }
-                        let newCards = document.querySelectorAll(".card");
-                        newCards.forEach((i) => {
-                                for (let j = 0; j < cardsInformation.length; j++) {
-                                        if (i.classList.contains(j)) {
-                                                addNewCardInformation(j);
-                                        }
-                                }
-                        });
                         switchArea(map, exclamationDiv);
                 });
         }
@@ -1181,8 +1294,8 @@ function getShop () {
         // HEALTH BUTTON
         /*const shopHealthButton = document.querySelector("#shop-health-button");
         shopHealthButton.addEventListener("click", () => {
-                if (playerGold.innerText >= 25) {
-                        playerGold.innerText -= 25;
+                if (playerAether.innerText >= 25) {
+                        playerAether.innerText -= 25;
                         playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 5;
                         playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 5;
                         topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 5;
@@ -1218,15 +1331,12 @@ function getShop () {
                 displayFlex(shopCardsReference[i]);
                 shopCardsReference[i].addEventListener("click", () => {       
                         for (let j = 0; j < cardsInformation.length; j++) {
-                                if (shopCardsReference[i].classList.contains(j) && playerGold.innerText >= 50) {
+                                if (shopCardsReference[i].classList.contains(j) && playerAether.innerText >= 50) {
                                         cardIndex = j;
                                         createCard(cardIndex, drawPileContainer, "card", "card-text");
-                                        addNewCardInformation(cardIndex);
-                                        playerGold.innerText -= 50;
-                                        
+                                        createNewCard(cardIndex);
+                                        playerAether.innerText -= 50;
                                         displayNone(shopCardsCostDiv[i], map);
-                                        console.log(index)
-                                        
                                 }
                         }
                 });
@@ -1246,8 +1356,8 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 1" src="imgs/ring-of-fire.png">
                                                 <div class="shop-relic-img-text">
-                                                        <h4>Ring of Fire</h4>
-                                                        <p>Single target burn duplicates half it's burn and spreads it to all enemies</p>
+                                                        <h4 class="relic-img-text-h4">Ring of Fire</h4>
+                                                        <p class="relic-img-text-p">Single target burn duplicates half it's burn and spreads it to all enemies</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1259,8 +1369,8 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 2" src="imgs/eternal-flame2.png">
                                                 <div class="shop-relic-img-text">
-                                                        <h4>Eternal Flame</h4>
-                                                        <p>Burning an enemy twice in one turn will increase the second burn by 50%</p>
+                                                        <h4 class="relic-img-text-h4">Eternal Flame</h4>
+                                                        <p class="relic-img-text-p">Burning an enemy twice in one turn will increase the second burn by 50%</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1272,8 +1382,8 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 3" src="imgs/thunder-talisman2.png">
                                                 <div class="shop-relic-img-text">
-                                                        <h4>Thunder Talisman</h4>
-                                                        <p>Start each encounter with +1 mana for the first turn</p>
+                                                        <h4 class="relic-img-text-h4">Thunder Talisman</h4>
+                                                        <p class="relic-img-text-p">Start each encounter with +1 mana for the first turn</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>;
@@ -1285,8 +1395,8 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 4" src="imgs/lightning-in-a-bottle.png">
                                                 <div class="shop-relic-img-text">
-                                                        <h4>Lightning in a Bottle</h4>
-                                                        <p>Your unused mana will not be lost</p>
+                                                        <h4 class="relic-img-text-h4">Lightning in a Bottle</h4>
+                                                        <p class="relic-img-text-p">Your unused mana will not be lost</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1298,8 +1408,8 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 5" src="imgs/ice-spear.png">
                                                 <div class="shop-relic-img-text">
-                                                        <h4>Ice Spear</h4>
-                                                        <p>Deal 4 more damage to enemies with Frostbite</p>
+                                                        <h4 class="relic-img-text-h4">Ice Spear</h4>
+                                                        <p class="relic-img-text-p">Deal 4 more damage to enemies with Frostbite</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1311,8 +1421,8 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 6" src="imgs/frostheart.png">
                                                 <div class="shop-relic-img-text">
-                                                        <h4>Frostheart</h4>
-                                                        <p>Frostbite will reduce each enemy buff by 1</p>
+                                                        <h4 class="relic-img-text-h4">Frostheart</h4>
+                                                        <p class="relic-img-text-p">Frostbite will reduce each enemy buff by 1</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1324,8 +1434,8 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 7" src="imgs/stratus.png">
                                                 <div class="shop-relic-img-text">
-                                                        <h4>Stratus</h4>
-                                                        <p>Windswept will now reflect 25% of the damage enemies intend to attack for back to them</p>
+                                                        <h4 class="relic-img-text-h4">Stratus</h4>
+                                                        <p class="relic-img-text-p">Windswept will now reflect 25% of the damage enemies intend to attack for back to them</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1337,8 +1447,8 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 8" src="imgs/wind-disc.png">
                                                 <div class="shop-relic-img-text">
-                                                        <h4>Wind Disc</h4>
-                                                        <p>Start each encounter with one extra card for the first turn</p>
+                                                        <h4 class="relic-img-text-h4">Wind Disc</h4>
+                                                        <p class="relic-img-text-p">Start each encounter with one extra card for the first turn</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1350,8 +1460,8 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 9" src="imgs/blood-amulet2.png">
                                                 <div class="shop-relic-img-text">
-                                                        <h4>Blood Amulet</h4>
-                                                        <p>Gain 1 blood siphon on your second turn</p>
+                                                        <h4 class="relic-img-text-h4">Blood Amulet</h4>
+                                                        <p class="relic-img-text-p">Gain 1 blood siphon on your second turn</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1363,8 +1473,8 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 10" src="imgs/caspians-tear2.png">
                                                 <div class="shop-relic-img-text">
-                                                        <h4>Caspian's Tear</h4>
-                                                        <p>Gain +3 max health when you start a new encounter</p>
+                                                        <h4 class="relic-img-text-h4">Caspian's Tear</h4>
+                                                        <p class="relic-img-text-p">Gain +3 max health when you start a new encounter</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1376,8 +1486,8 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 11" src="imgs/crown-of-thorns2.png">
                                                 <div class="shop-relic-img-text">
-                                                        <h4>Crown of Thorns</h4>
-                                                        <p>Start each encounter with 2 thorns</p>
+                                                        <h4 class="relic-img-text-h4">Crown of Thorns</h4>
+                                                        <p class="relic-img-text-p">Start each encounter with 2 thorns</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1389,8 +1499,8 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 12" src="imgs/vine-bracelet.png">
                                                 <div class="shop-relic-img-text">
-                                                        <h4>Vine Bracelet</h4>
-                                                        <p>When you lose all of your armor gain 10 armor</p>
+                                                        <h4 class="relic-img-text-h4">Vine Bracelet</h4>
+                                                        <p class="relic-img-text-p">When you lose all of your armor gain 10 armor</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1408,23 +1518,19 @@ function getShop () {
         for (let i = 0; i < shopRelicImg.length; i++) {
                 shopRelicImg[i].addEventListener("click", () => {
                         for (let k = 0; k <= 12; k++) {
-                                if (shopRelicImg[i].classList.contains(k) && playerGold.innerText >= 100) {
-                                        console.log(shopRelicImg[i], shopAetherImg[i], shopAetherCost[i]);
+                                if (shopRelicImg[i].classList.contains(k) && playerAether.innerText >= 100) {
                                         getRelic(k, k);
-                                        displayNone(shopAetherImg[i + 10], shopAetherCost[i + 10]);
-                                        displayNone(shopRelicImg[i]);
+                                        displayNone(shopAetherImg[i + 10], shopAetherCost[i + 10],shopRelicImg[i], map);
                                         console.log(shopAetherImg, shopAetherCost);
-                                        playerGold.innerText -= 100;
+                                        playerAether.innerText -= 100;
                                 }
                         }
                 });
                 shopRelicImg[i].addEventListener("mouseover", () => {
                         displayFlex(shopRelicImgText[i]);
-                        console.log(shopRelicImgText[i]);
                 });
                 shopRelicImg[i].addEventListener("mouseout", () => {
                         displayNone(shopRelicImgText[i]);
-                        console.log(shopRelicImgText[i]);
                 });
         }
 }
@@ -1501,7 +1607,7 @@ const cardsInformation = [
                 element: "lightning",
                 action: function() {
                         spendMana(3);
-                        damageAllEnemies(20000);
+                        damageAllEnemies(20);
                 },        
         },
         {
@@ -1637,7 +1743,7 @@ const cardsInformation = [
                 element: "fire",
                 action: function() {
                         spendMana(12);
-                        burnAllEnemies(7)
+                        burnAllEnemies(7);
                         playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 3;
                         displayBlock(playerBurnImg, playerBurnNumber);
                 }
@@ -1674,11 +1780,12 @@ const cardsInformation = [
                 manaCost: 1,
                 name: "Essence of Ember",
                 cardImg: "imgs/essence-of-ember.jpg",
-                cardText: "[POTION]<br>You apply +5 burn damage",
+                cardText: "[POTION]<br>You apply +2 burn damage",
                 chooseEnemyCard: false,
                 element: "fire",
                 action: function() {
                         spendMana(15);
+                        let emberCards = document.querySelectorAll(".essence-of-ember");
                         essenceOfEmber = true;
                 }
         },
@@ -1712,32 +1819,25 @@ const cardsInformation = [
                                 while (enemyIsDead[randomEnemy]) {
                                         randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
                                 }
-                                if (tidalImbuement) {
-                                        damageEnemy(20, randomEnemy);
-                                        tidalImbuement = true;
-                                } else {
-                                        damageEnemy(20, randomEnemy);
-                                }
+                                damageEnemy(10, randomEnemy);
                                 if (!randomEnemies.includes(randomEnemy)) {
                                         randomEnemies[index] = randomEnemy;
                                         index++;
                                 }
                         }
                         gainEnergize(randomEnemies.length);        
-                        tidalImbuement = false;
-                        displayNone(playerTidalImbuementImg);
                 }
         },
         {
                 manaCost: 4,
                 name: "Conduit",
                 cardImg: "imgs/conduit2.jpg",
-                cardText: "Deal 10 damage for each mana you have currently have",
+                cardText: "Deal 40 damage plus 15 for each mana you have after playing Conduit",
                 chooseEnemyCard: true,
                 element: "lightning",
                 action: function() {
-                        damageEnemy(10 * currentMana.innerText, chosenEnemy);
                         spendMana(18);  
+                        damageEnemy(40 + (currentMana.innerText * 15), chosenEnemy);
                 }
         },
         {
@@ -1763,16 +1863,7 @@ const cardsInformation = [
                 action: function() {
                         spendMana(20);
                         damageAllEnemies(14);
-                        for (let i = 0; i < numberOfEnemies; i++) {
-                                if (enemyIsDead[i] === false) {
-                                        inflictFrostbite(i);
-                                }
-                        }
-                        if (iceEmpower1 && playerFrostbite === false) {
-                                displayBlock(playerFrostbiteImg);
-                                playerFrostbite = true;
-                                gainBlock(4);
-                        }
+                        inflictAllFrostbite();
                         displayBlock(playerFrostbiteImg);
                         playerFrostbite = true;
                 }
@@ -1807,7 +1898,7 @@ const cardsInformation = [
                 manaCost: 3,
                 name: "Snowfall Elixir",
                 cardImg: "imgs/fresh-snowfall.jpg",
-                cardText: "[POTION]<br>Spells now damage every enemy",
+                cardText: "[POTION]<br>Damage and Frostbite now hits every enemy",
                 chooseEnemyCard: false,
                 element: "ice",
                 action: function() {
@@ -1819,12 +1910,16 @@ const cardsInformation = [
                 manaCost: 0,
                 name: "Winds of Change",
                 cardImg: "imgs/winds-of-change2.jpg",
-                cardText: "Deal 5 damage. All Winds of Change gain +3 damage.",
+                cardText: "Deal 5 damage. All Winds of Change gain +3 damage or +5 damage if enemy is windswept",
                 chooseEnemyCard: true,
                 element: "air",
                 action: function() {
                         damageEnemy(windsOfChange, chosenEnemy);
-                        windsOfChange += 3;
+                        if (enemyWindswept[chosenEnemy]) {
+                                windsOfChange += 5;
+                        } else {
+                                windsOfChange += 3;
+                        }
                 }
         },
         {
@@ -1904,7 +1999,7 @@ const cardsInformation = [
                         playerWindswept = false;
                         playerFrostbite = false;
                         playerBurnNumber.innerText = 0;
-                        displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnImg);
+                        displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber);
                         gainBloodSiphon(3);
                 }
         },
@@ -2007,7 +2102,11 @@ const cardsInformation = [
                 action: function() {
                         spendMana(36);
                         burnAllEnemies(5);
-                        damageAllEnemies(enemyBurnNumber[i].innerText);
+                        for (let i = 0; i < numberOfEnemies; i++) {
+                                if (enemyIsDead[i] === false) {
+                                        damageEnemy(enemyBurnNumber[i].innerText);
+                                }
+                        }
                 }
         },
         {
@@ -2157,16 +2256,22 @@ const cardsInformation = [
                 manaCost: 0,
                 name: "Liquify",
                 cardImg: "imgs/liquify.jpg",
-                cardText: "Gain 2 regen and 1 blood siphon per enemy afflicted with frostbite",
+                cardText: "Gain 2 regen and 1 blood siphon for everyone afflicted with frostbite",
                 chooseEnemyCard: false,
                 element: "ice-water ice water",
                 action: function() {
+                        // ADD ALL FROSTBITTEN ENEMIES FIRST SO WHEN YOU ARE FROSTBITTEN YOU GAIN 4 / 2 BLOOD NOT 1 / .5 EACH TIME
+                        let addFrostbittenEnemies = [];
                         for (let i = 0; i < numberOfEnemies; i++) {
                                 if (enemyIsDead[i] === false && enemyFrostbite[i]) {
-                                        gainRegen(2);
-                                        gainBloodSiphon(1);     
+                                        addFrostbittenEnemies.push(1);
                                 }      
                         }
+                        if (playerFrostbite) {
+                                addFrostbittenEnemies.push(1);
+                        }
+                        gainRegen(addFrostbittenEnemies.length * 2);
+                        gainBloodSiphon(addFrostbittenEnemies.length);     
                 }
         },
         {
@@ -2224,7 +2329,7 @@ const cardsInformation = [
                 manaCost: 4,
                 name: "Gaia's Embrace",
                 cardImg: "imgs/gaias-embrace2.jpg",
-                cardText: "Gain 4 block and healing at the end of each turn",
+                cardText: "[POTION]\nGain 4 block and healing at the end of each turn",
                 chooseEnemyCard: false,
                 element: "water-earth water earth",
                 action: function() {
@@ -2308,10 +2413,11 @@ function drawCards(numberOfCards) {
         console.log(handArray);
 }
 // GET NEW SET OF 5 CARDS AT THE END OF EACH TURN
+let cardsInHand;
 function addCardsToHand() {
         // MOVE HAND CONTAINERS TO DISCARD CONTAINERS
         console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
-        let cardsInHand = handArray.length;
+        cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 let discarded = handArray.shift();
                 console.log(discarded);
@@ -2364,7 +2470,13 @@ function addCardListeners(cardType, index, CIindex) {
                 let handIndex = handArray.indexOf(cardType[index]);
                 let getCard = handArray.splice(handIndex, 1);
                 let holdCard = getCard.pop();
-                discardPileArray.push(holdCard);
+                if (CIindex === 15 || CIindex === 19 || CIindex === 23 || CIindex === 27 || CIindex === 31 || CIindex === 35 || CIindex === 50) {
+                        destroyedCardsArray.push(cardType[index]);
+                        destroyedCardsContainer.appendChild(cardType[index]);
+                        console.log("discardPile", handArray);
+                } else {
+                        discardPileArray.push(holdCard);
+                }
                 displayNone(cardType[index]);
         }
         // IF CARD REQUIRES YOU TO CLICK ON AN ENEMY
@@ -2437,7 +2549,7 @@ function addCardListeners(cardType, index, CIindex) {
                 }
         }
 }
-function addNewCardInformation(newRandomCard) {
+function createNewCard(newRandomCard) {
         chooseNewCardDiv.innerHTML = ``;
         if (newRandomCard == 24) {
                 createCard(newRandomCard, newCardsContainer, "card winds-of-change", "card-text winds-card-text");
@@ -2480,10 +2592,10 @@ function getRandomNewCards () {
         createCard(newRandomCard3, chooseNewCardDiv, "card", "card-text");
         let newCardChoices = document.querySelectorAll(".card");
         displayFlex(chooseNewCardDiv, newCardChoices[0], newCardChoices[1], newCardChoices[2], newCardChoices[3]);
-        newCardChoices[0].addEventListener("click", () => {addNewCardInformation(newRandomCard0)});
-        newCardChoices[1].addEventListener("click", () => {addNewCardInformation(newRandomCard1)});
-        newCardChoices[2].addEventListener("click", () => {addNewCardInformation(newRandomCard2)});
-        newCardChoices[3].addEventListener("click", () => {addNewCardInformation(newRandomCard3)});
+        newCardChoices[0].addEventListener("click", () => {createNewCard(newRandomCard0)});
+        newCardChoices[1].addEventListener("click", () => {createNewCard(newRandomCard1)});
+        newCardChoices[2].addEventListener("click", () => {createNewCard(newRandomCard2)});
+        newCardChoices[3].addEventListener("click", () => {createNewCard(newRandomCard3)});
 }
 function removeCardClickedClass() {
         for (let i = 0; i < drawPileArray.length; i++) {
@@ -2510,7 +2622,7 @@ const playerDiv = document.querySelector("#player-div");
 const topBarHealthNumber = document.querySelector("#top-bar-health-number");
 const playerCurrentHealth = document.querySelector("#player-current-health");
 const playerMaxHealth = document.querySelector("#player-max-health");
-const playerGold = document.querySelector("#top-bar-gold-number");
+const playerAether = document.querySelector("#top-bar-aether-number");
 const currentMana = document.querySelector("#current-mana");
 const endTurnButton = document.querySelector("#end-turn-button");
 // BUFFS AND DEBUFFS
@@ -2529,9 +2641,22 @@ const playerBurnNumber = document.querySelector("#player-burn-number");
 const playerBurnImg = document.querySelector("#player-burn-img");
 const playerWindsweptImg = document.querySelector("#player-windswept-img");
 const playerFrostbiteImg = document.querySelector("#player-frostbite-img");
+const debuffImgText = document.querySelectorAll(".debuff-img-text");
+playerFrostbiteImg.addEventListener("mouseover", () => {
+        displayFlex(debuffImgText[0]);
+});
+playerWindsweptImg.addEventListener("mouseover", () => {
+        displayFlex(debuffImgText[1]);
+});
+playerFrostbiteImg.addEventListener("mouseout", () => {
+        displayNone(debuffImgText[0]);
+});
+playerWindsweptImg.addEventListener("mouseout", () => {
+        displayNone(debuffImgText[1]);
+});
+
 
 let frostbitten = false;
-
 // TRACK WHEN END TURN BUTTON HAS BEEN CLICKED
 endTurnButton.addEventListener("click", endTurn);
 // CARD FUNCTIONS WHEN CARD IS PLAYED
@@ -2644,39 +2769,86 @@ function damageAllEnemies(damage) {
         displayNone(playerTidalImbuementImg);
 }
 function inflictWindswept(enemy) {
-        enemyWindswept[enemy] = true;
-        displayBlock(enemyWindsweptImg[enemy]);
-        if (stratus) {
-                enemyCurrentHealth[enemy].innerText = parseFloat(enemyCurrentHealth[enemy].innerText) -  Math.floor(enemyAttackActionNumber[enemy].innerText * .25);
+        if (enemyWindswept[enemy] === false) {
+                enemyWindswept[enemy] = true;
+                displayBlock(enemyWindsweptImg[enemy]);
+                if (stratus) {
+                        enemyCurrentHealth[enemy].innerText = parseFloat(enemyCurrentHealth[enemy].innerText) -  Math.floor(enemyAttackActionNumber[enemy].innerText * .25);
+                }
+                enemyAttackActionNumber[enemy].innerText = Math.floor(enemyAttackActionNumber[enemy].innerText * .50);    
+                enemyBurnActionNumber[enemy].innerText = Math.floor(enemyBurnActionNumber[enemy].innerText * .50);
         }
-        enemyAttackActionNumber[enemy].innerText = Math.floor(enemyAttackActionNumber[enemy].innerText * .50);    
-        enemyBurnActionNumber[enemy].innerText = Math.floor(enemyBurnActionNumber[enemy].innerText * .50);    
 }
 function inflictFrostbite(enemy) {
-        if (iceEmpower1) {
-                gainBlock(4);
+        if (snowfallElixir) {
+                inflictAllFrostbite();
         }
-        
-        if (frostHeart) {
-                if (enemyBlockNumber[enemy].innerText > 0) {
-                        enemyBlockNumber[enemy].innerText = parseFloat(enemyBlockNumber[enemy].innerText) - 1;
+        if (enemyFrostbite[enemy] === false) {
+                if (iceEmpower1) {
+                        gainBlock(4);
                 }
-                if (enemyRegenNumber[enemy].innerText > 0) {
-                        enemyRegenNumber[enemy].innerText = parseFloat(enemyRegenNumber[enemy].innerText) - 1;
+                if (frostHeart) {
+                        if (enemyBlockNumber[enemy].innerText > 0) {
+                                enemyBlockNumber[enemy].innerText = parseFloat(enemyBlockNumber[enemy].innerText) - 1;
+                        }
+                        if (enemyRegenNumber[enemy].innerText > 0) {
+                                enemyRegenNumber[enemy].innerText = parseFloat(enemyRegenNumber[enemy].innerText) - 1;
+                        }
+                        if (enemyBloodNumber[enemy].innerText > 0) {
+                                enemyBloodNumber[enemy].innerText = parseFloat(enemyBloodNumber[enemy].innerText) - 1;
+                        }
+                        if (enemyThornsNumber[enemy].innerText > 0) {
+                                enemyThornsNumber[enemy].innerText = parseFloat(enemyThornsNumber[enemy].innerText) - 1;
+                        }
                 }
-                if (enemyBloodNumber[enemy].innerText > 0) {
-                        enemyBloodNumber[enemy].innerText = parseFloat(enemyBloodNumber[enemy].innerText) - 1;
-                }
-                if (enemyThornsNumber[enemy].innerText > 0) {
-                        enemyThornsNumber[enemy].innerText = parseFloat(enemyThornsNumber[enemy].innerText) - 1;
+                enemyFrostbite[enemy] = true;
+                enemyBlockActionNumber[enemy].innerText = Math.floor(enemyBlockActionNumber[enemy].innerText * .50);  
+                enemyRegenActionNumber[enemy].innerText = Math.floor(enemyRegenActionNumber[enemy].innerText * .50);  
+                enemyBloodActionNumber[enemy].innerText = Math.floor(enemyBloodActionNumber[enemy].innerText * .50);  
+                enemyThornsActionNumber[enemy].innerText = Math.floor(enemyThornsActionNumber[enemy].innerText * .50);  
+                displayBlock(enemyFrostbiteImg[enemy]);
+        }
+}
+function inflictAllFrostbite() {
+        for (let i = 0; i < numberOfEnemies; i++) {
+                if (enemyIsDead[i] === false && enemyFrostbite[i] === false) {
+                        if (iceEmpower1) {
+                                gainBlock(4);
+                        }
+                        if (frostHeart) {
+                                if (enemyBlockNumber[i].innerText > 0) {
+                                        enemyBlockNumber[i].innerText = parseFloat(enemyBlockNumber[i].innerText) - 1;
+                                        if (enemyBlockNumber[i].innerText == 0) {
+                                                displayNone(enemyBlockImg[i], enemyBlockNumber[i]);
+                                        }
+                                }
+                                if (enemyRegenNumber[i].innerText > 0) {
+                                        enemyRegenNumber[i].innerText = parseFloat(enemyRegenNumber[i].innerText) - 1;
+                                        if (enemyRegenNumber[i].innerText == 0) {
+                                                displayNone(enemyRegenImg[i], enemyRegenNumber[i]);
+                                        }
+                                }
+                                if (enemyBloodNumber[i].innerText > 0) {
+                                        enemyBloodNumber[i].innerText = parseFloat(enemyBloodNumber[i].innerText) - 1;
+                                        if (enemyBloodNumber[i].innerText == 0) {
+                                                displayNone(enemyBloodImg[i], enemyBloodNumber[i]);
+                                        }
+                                }
+                                if (enemyThornsNumber[i].innerText > 0) {
+                                        enemyThornsNumber[i].innerText = parseFloat(enemyThornsNumber[i].innerText) - 1;
+                                        if (enemyThornsNumber[i].innerText == 0) {
+                                                displayNone(enemyThornsImg[i], enemyThornsNumber[i]);
+                                        }
+                                }
+                        }
+                        enemyFrostbite[i] = true;
+                        enemyBlockActionNumber[i].innerText = Math.floor(enemyBlockActionNumber[i].innerText * .50);  
+                        enemyRegenActionNumber[i].innerText = Math.floor(enemyRegenActionNumber[i].innerText * .50);  
+                        enemyBloodActionNumber[i].innerText = Math.floor(enemyBloodActionNumber[i].innerText * .50);  
+                        enemyThornsActionNumber[i].innerText = Math.floor(enemyThornsActionNumber[i].innerText * .50);  
+                        displayBlock(enemyFrostbiteImg[i]);  
                 }
         }
-        enemyFrostbite[enemy] = true;
-        enemyBlockActionNumber[enemy].innerText = Math.floor(enemyBlockActionNumber[enemy].innerText * .50);  
-        enemyRegenActionNumber[enemy].innerText = Math.floor(enemyRegenActionNumber[enemy].innerText * .50);  
-        enemyBloodActionNumber[enemy].innerText = Math.floor(enemyBloodActionNumber[enemy].innerText * .50);  
-        enemyThornsActionNumber[enemy].innerText = Math.floor(enemyThornsActionNumber[enemy].innerText * .50);  
-        displayBlock(enemyFrostbiteImg[enemy]);  
 }
 function checkHealthIsOverMax() {
         if (parseFloat(playerCurrentHealth.innerText) > parseFloat(playerMaxHealth.innerText))  {
@@ -2725,7 +2897,7 @@ function gainThorns(amount) {
 }
 function burnEnemy(burn, enemy) {
         if (essenceOfEmber) {
-                burn += 5;
+                burn += 2;
         }
         if (eternalFlameTracking[enemy]) {
                 burn = Math.floor(burn * 1.5);
@@ -2733,6 +2905,9 @@ function burnEnemy(burn, enemy) {
         }
         if (eternalFlame) {
                 eternalFlameTracking[enemy] = true;
+        }
+        if (playerWindswept) {
+                burn *= .5;
         }
         if (ringOfFire) {
                 for (let i = 0; i < numberOfEnemies; i++) {
@@ -2748,9 +2923,10 @@ function burnEnemy(burn, enemy) {
 }
 function burnAllEnemies(burn) {
         if (essenceOfEmber) {
-                burn += 5;
+                burn += 2;
         }
-        for (let i = 0; i < numberOfEnemies.length; i++) {
+        for (let i = 0; i < numberOfEnemies; i++) {
+                console.log("enemy dead: ", enemyIsDead[i]);
                 if (enemyIsDead[i] === false) {
                         if (eternalFlameTracking[i]) {
                                 burn = Math.floor(burn * 1.5);
@@ -2816,7 +2992,7 @@ function checkBloodSiphon() {
 }
 function updateCardText() {
         document.querySelectorAll(".winds-card-text").forEach((i) => {
-                i.innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +3 damage.`;  
+                i.innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +3 damage or +5 damage if enemy is windswept.`;  
         });
         document.querySelectorAll(".electric-card-text").forEach((i) => {
                 i.innerText = `Deal 2 damage per 5 health you currently have. Damage: ${Math.floor(2 * playerCurrentHealth.innerText / 5)}`;  
@@ -2832,6 +3008,9 @@ function checkGaiasEmbrace() {
         if (gaiasEmbrace) {
                 playerHeal(4);
                 gainBlock(4);
+                if (playerFrostbite && frostbitten) {
+                        gainBlock(4);
+                }
         }
 }
 
@@ -2894,8 +3073,8 @@ const enemiesInformation = [
                 //stealChance: ,
                 attackDamageLow: 8,
                 attackDamageHigh: 12,
-                healAmountLow: 8,
-                healAmountHigh: 12,
+                healAmountLow: 16,
+                healAmountHigh: 20,
         },
         {
                 name: "Fire Fae",
@@ -2915,12 +3094,12 @@ const enemiesInformation = [
                 name: "Lightning Fae",
                 baseHealth: 40,
                 img: "imgs/enemy-lightning-fae.png",
-                attackChance: 8,
+                attackChance: 9,
                 healChance: 10,
                 attackDamageLow: 15,
                 attackDamageHigh: 25,
-                healAmountLow: 12,
-                healAmountHigh: 14,
+                healAmountLow: 18,
+                healAmountHigh: 20,
         },
         {
                 name: "Ice Fae",
@@ -2978,12 +3157,12 @@ const enemiesInformation = [
                 name: "Forest Dragon",
                 baseHealth: 150,
                 img: "imgs/enemy-elite-dragon.png",
-                attackChance: 4,
+                attackChance: 3,
                 burnChance: 10,
-                attackDamageLow: 25,
-                attackDamageHigh: 28,
-                burnAmountLow: 8,
-                burnAmountHigh: 10,
+                attackDamageLow: 20,
+                attackDamageHigh: 24,
+                burnAmountLow: 7,
+                burnAmountHigh: 9,
         },
         {
                 name: "Forest Giant",
@@ -3059,8 +3238,8 @@ function createEnemy(baseHealth, img) {
                         <p class="enemy-thorns-action-number"></p>
                         <img class="enemy-thorns-action-img enemy-action-img" src="imgs/thorns-icon.png">
                     </div>
-                    <img class="enemy-windswept-action-img enemy-action-img" src="imgs/windswept-icon.png">
                     <img class="enemy-frostbite-action-img enemy-action-img" src="imgs/frostbite-icon.png">
+                    <img class="enemy-windswept-action-img enemy-action-img" src="imgs/windswept-icon.png">
                 </div>
                 <img class="enemy-img" src="${img}">
                 <div class="enemy-block-div">
@@ -3323,10 +3502,10 @@ function checkEnemyBloodSiphon(index) {
 }
 let enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
 function checkIfEnemyDead() {
-        // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET GOLD
+        // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET AETHER
         function allEnemiesDead() {
                 getRandomNewCards();
-                playerGold.innerText = parseFloat(playerGold.innerText) + Math.ceil(20 + ((enemyLevel + 1) * 2.7));
+                playerAether.innerText = parseFloat(playerAether.innerText) + Math.ceil(30 + ((enemyLevel + 1) * 2.7));
                 displayNone(handContainer);
                 if (getEliteRelic) {
                         getRelic(1, 12);
@@ -3465,8 +3644,6 @@ function endTurn() {
         } else {
                 currentMana.innerText = 4;
         }
-        playerWindswept = false;
-        playerFrostbite = false;
         checkPlayerBurn();
         displayNone(playerWindsweptImg, playerFrostbiteImg);
         trackEnemies.forEach((i) => {
@@ -3557,14 +3734,16 @@ function endTurn() {
         }
         damageThisTurn = 0;
         airBubble = false;
+        console.log(airBubble);
         if (bloodAmulet) {
                 playerBloodNumber.innerText = parseFloat(playerBloodNumber.innerText) + 1;
                 displayBlock(playerBloodImg, playerBloodNumber);
                 bloodAmulet = false;
         }
+        playerWindswept = false;
+        playerFrostbite = false;
 }
 getOpeningHand();
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i)  ;      
 }
-getShop();

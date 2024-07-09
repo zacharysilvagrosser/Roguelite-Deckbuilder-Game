@@ -9,9 +9,13 @@
   <body onload='location.href="#bottom-anchor"'>
     <header>
         <div id="board-header">
-            <p id="top-bar-health">Health: <span id="top-bar-health-number">100</span></p>
-            <span id="relic-container"></span>
-            <p id="top-bar-gold"><img style="width: 50px; height: 50px" src="imgs/aether.png"> <span id="top-bar-gold-number">1000</span></p>           
+            <div id="top-bar-health">
+                Health: <span id="top-bar-health-number">100</span>
+            </div>
+            <div id="relic-container"></div>
+            <div id="top-bar-aether">
+                <img style="width: 50px; height: 50px" src="imgs/aether.png"><p id="top-bar-aether-number">0</p>
+            </div>           
         </div>
     </header>
     <main>        
@@ -49,8 +53,20 @@
                     <img id="player-tidal-imbuement-img" src="imgs/tidal-imbuement-icon.png">
                 </div>
                 <div id="debuffs">
-                    <img id="player-windswept-img" src="imgs/windswept-icon.png">
-                    <img id="player-frostbite-img" src="imgs/frostbite-icon.png">
+                    <div>
+                        <img id="player-frostbite-img" src="imgs/frostbite-icon.png">
+                        <div class="debuff-img-text">
+                            <h4 class="debuff-img-text-h4">Frostbite</h4>
+                            <p class="debuff-img-text-p">Reduce all buff gains by 50%</p>
+                        </div>
+                    </div>
+                    <div>
+                        <img id="player-windswept-img" src="imgs/windswept-icon.png">
+                        <div class="debuff-img-text">
+                            <h4 class="relic-img-text-h4">Windswept</h4>
+                            <p class="relic-img-text-p">Reduce all damage and burn by 50%</p>
+                        </div>
+                    </div>
                     <div>
                         <p id="player-burn-number">0</p>
                         <img id="player-burn-img" src="imgs/burn-icon.png">
