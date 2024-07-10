@@ -40,6 +40,7 @@
     height: 200vh;
     background-image: url("imgs/meadow-path2.jpg");
     background-size: cover;
+    display: ;
 }
 .locations {
     display: flex;
@@ -100,8 +101,19 @@
       box-shadow: 0 0 10px 10px red;
     }
   }
+@keyframes upgraded {
+    from {
+      box-shadow: 0 0 15px -15px rgb(186, 79, 248);
+    }
+    to {
+      box-shadow: 0 0 15px 15px rgb(121, 1, 190);
+    }
+  }
 .glow {
     animation: glow 1s infinite alternate;
+}
+.upgraded {
+    animation: upgraded 2s infinite alternate;
 }
 
 /* IMG PLACEMENT images by icons8.com*/
@@ -257,7 +269,18 @@
     width: 400px;
     height: 400px;
 }
+/*BLACKSMITH SECTION*/
 
+#blacksmith-container {
+    width: 100%;
+    height: 100vh;
+    background-image: url("imgs/shop-background-night.jpg");
+    background-position: 90%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    display: none;
+}
 /* GAME ARENA */
 #arena {
     width: 100%;
@@ -785,7 +808,7 @@
 .exclamation-button-div button:active {
     padding-top: 6px;
 } 
-.all-cards-list {
+#all-cards-list {
     position: absolute;
     width: 100%;
     height: 100vh;
@@ -1030,12 +1053,16 @@
     position: relative;
     z-index: 3;
 }
+.upgraded {
+    border: 2px solid gold;
+}
 .card:hover, .new-card:hover {
     transform: translateY(-50px);
     transition-duration: .5s;
 }
 .card-clicked {
     transform: translateY(-50px);
+    box-shadow: 0 0 10px 10px rgb(255, 255, 255);
 }
 .card-name {
     width: 100%;
@@ -1071,4 +1098,7 @@
     font-size: 14px;
     padding: 10px 8px;
     border: 1px solid black;
+}
+.upgraded-text {
+    color: rgb(186, 79, 248)
 }
