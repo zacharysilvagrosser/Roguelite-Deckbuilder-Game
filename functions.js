@@ -316,21 +316,20 @@ function resetArena() {
                 drawPileArray.push(spliceCard);
                 handContainer.appendChild(spliceCard);
         }
-        essenceOfEmber = false;
-        essenceOfEmberUpgrade = false;
-        liquidLightning = false;
-        liquidLightningUpgrade = false;
+        essenceOfEmber = [];
+        essenceOfEmberUpgrade = [];
+        liquidLightning = [];
+        liquidLightningUpgrade = [];
         snowfallElixir = false;
         windsOfChange = 5;
         tidalImbuement = false;
-        terrasBlessing = false;
-        gaiasEmbrace = false;
-        gaiasEmbraceUpgrade = false;
+        terrasBlessing = [];
+        gaiasEmbrace = [];
+        gaiasEmbraceUpgrade = [];
         maxHandLength = 5;
         healthGainedThisFight = 0;
         getEliteRelic = false;
-        airBubble = false;
-        console.log(airBubble);
+        airBubble = [];
         if (caspiansTear) {
                 playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 3;
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 3;
@@ -1556,17 +1555,17 @@ const exitDiscardPileShowCards = document.querySelector("#exit-discard-pile-show
 const handContainer = document.querySelector("#hand-container");
 const chooseNewCardDiv = document.querySelector("#choose-new-card-div");
 
-let essenceOfEmber = false;
-let essenceOfEmberUpgrade = false;
-let liquidLightning = false;
-let liquidLightningUpgrade = false;
+let essenceOfEmber = [];
+let essenceOfEmberUpgrade = [];
+let liquidLightning = [];
+let liquidLightningUpgrade = [];
 let snowfallElixir = false;
 let windsOfChange = 5;
 let tidalImbuement = false;
-let terrasBlessing = false;
-let gaiasEmbrace = false;
-let gaiasEmbraceUpgrade = false;
-let airBubble = false;
+let terrasBlessing = [];
+let gaiasEmbrace = [];
+let gaiasEmbraceUpgrade = [];
+let airBubble = [];
 // CARD INFO ARRAY TO MAKE CARD DIVS IN HTML
 const cardsInformation = [
         {
@@ -1648,7 +1647,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(20);
+                                damageAllEnemies(20000);
                         },
                         function() {
                                 spendMana(3);
@@ -1723,7 +1722,7 @@ const cardsInformation = [
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false) {
                                                 if (enemyWindswept[i]) {
-                                                        enemyIsWindswept.push(1);
+                                                        enemyIsWindswept.push(true);
                                                         if (tidalImbuement) {
                                                                 damageEnemy(22, i);
                                                                 tidalImbuement = true;   
@@ -1747,7 +1746,7 @@ const cardsInformation = [
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false) {
                                                 if (enemyWindswept[i]) {
-                                                        enemyIsWindswept.push(1);
+                                                        enemyIsWindswept.push(true);
                                                         if (tidalImbuement) {
                                                                 damageEnemy(22, i);
                                                                 tidalImbuement = true;   
@@ -1955,11 +1954,12 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(1);
-                                essenceOfEmber = true;
+                                
+                                essenceOfEmber.push(true);
                         },
                         function() {
                                 spendMana(2);
-                                essenceOfEmberUpgrade = true;
+                                essenceOfEmberUpgrade.push(true);
                         }
                 ]
         },
@@ -2068,11 +2068,11 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(2);
-                                liquidLightning = true;
+                                liquidLightning.push(true);
                         },
                         function() {
                                 spendMana(2);
-                                liquidLightningUpgrade = true;
+                                liquidLightningUpgrade.push(true);
                         }
                 ]
         },
@@ -2310,11 +2310,11 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                maxHandLength = 6;
+                                maxHandLength++;
                         },
                         function() {
                                 spendMana(2);
-                                maxHandLength = 6;
+                                maxHandLength++;
                         },
                 ]
         },
@@ -2490,13 +2490,13 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(2);
-                                terrasBlessing = true;
+                                terrasBlessing.push(true);
                         },
                         function() {
                                 spendMana(2);
                                 gainBlock(10);
                                 gainThorns(2);
-                                terrasBlessing = true;
+                                terrasBlessing.push(true);
                         },
                 ]
         },
@@ -2801,11 +2801,11 @@ const cardsInformation = [
                                 let addFrostbittenEnemies = [];
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false && enemyFrostbite[i]) {
-                                                addFrostbittenEnemies.push(1);
+                                                addFrostbittenEnemies.push(true);
                                         }      
                                 }
                                 if (playerFrostbite) {
-                                        addFrostbittenEnemies.push(1);
+                                        addFrostbittenEnemies.push(true);
                                 }
                                 gainRegen(addFrostbittenEnemies.length);
                                 gainBloodSiphon(addFrostbittenEnemies.length);     
@@ -2816,11 +2816,11 @@ const cardsInformation = [
                                 let addFrostbittenEnemies = [];
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false && enemyFrostbite[i]) {
-                                                addFrostbittenEnemies.push(1);
+                                                addFrostbittenEnemies.push(true);
                                         }      
                                 }
                                 if (playerFrostbite) {
-                                        addFrostbittenEnemies.push(1);
+                                        addFrostbittenEnemies.push(true);
                                 }
                                 gainRegen(addFrostbittenEnemies.length);
                                 gainBloodSiphon(addFrostbittenEnemies.length);     
@@ -2887,12 +2887,12 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(1);
-                                airBubble = true;
+                                airBubble.push(true);
                         },
                         function() {
                                 spendMana(1);
                                 drawCards(1);
-                                airBubble = true;
+                                airBubble.push(true);
                         },
                 ]
         },
@@ -2928,11 +2928,11 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(4);
-                                gaiasEmbrace = true;
+                                gaiasEmbrace.push(true);
                         },
                         function() {
                                 spendMana(4);
-                                gaiasEmbraceUpgrade = true;
+                                gaiasEmbraceUpgrade.push(true);
                         },
                 ]
         },
@@ -3066,7 +3066,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                                 addToDiscard();
                                 updateCardText();
                                 if (airBubble) {
-                                        playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + 1;
+                                        playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
                                         displayBlock(playerRegenImg, playerRegenNumber);
                                 }
                         }
@@ -3099,7 +3099,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                                 }
                         }
                         if (airBubble) {
-                                playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + 1;
+                                playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
                                 displayBlock(playerRegenImg, playerRegenNumber);
                         }
                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -3139,7 +3139,7 @@ const newCardsContainer = document.querySelector("#new-cards-container");
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard0 = 15;//createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
@@ -3236,9 +3236,9 @@ function damageEnemy(damage, enemy) {
                 damageAllEnemies(damage);
         }
         if (liquidLightning) {
-                damage += 5;
+                damage += liquidLightning.length * 5;
         } else if (liquidLightningUpgrade) {
-                damage += 7;
+                damage += liquidLightningUpgrade * 7;
         }
         if (tidalImbuement) {
                 damage += 10;
@@ -3445,7 +3445,7 @@ function gainEnergize (amount) {
 }
 function gainBlock(blockAmount) {
         if (terrasBlessing) {
-                blockAmount += 5;
+                blockAmount += terrasBlessing.length * 5;
         }
         if (frostbitten && playerFrostbite) {
                 blockAmount = Math.floor(blockAmount * 2);
@@ -3457,7 +3457,7 @@ function gainBlock(blockAmount) {
 }
 function gainThorns(amount) {
         if (terrasBlessing) {
-                amount += 1;
+                amount += terrasBlessing.length;
         }
         if (playerFrostbite) {
                 amount = Math.floor(amount * .5);
@@ -3467,9 +3467,9 @@ function gainThorns(amount) {
 }
 function burnEnemy(burn, enemy) {
         if (essenceOfEmber) {
-                burn += 2;
+                burn += essenceOfEmber.length * 2;
         } else if (essenceOfEmberUpgrade) {
-                burn += 4;
+                burn += essenceOfEmberUpgrade.length * 4;
         }
         if (eternalFlameTracking[enemy]) {
                 burn = Math.floor(burn * 1.5);
@@ -3580,17 +3580,17 @@ function updateCardText() {
 }
 function checkGaiasEmbrace() {
         if (gaiasEmbrace) {
-                playerHeal(3);
-                gainBlock(3);
+                playerHeal(gaiasEmbrace.length * 3);
+                gainBlock(gaiasEmbrace.length * 3);
                 if (playerFrostbite && frostbitten) {
-                        gainBlock(3);
+                        gainBlock(gaiasEmbrace.length * 3);
                 }
         }
         if (gaiasEmbraceUpgrade) {
-                playerHeal(5);
-                gainBlock(5);
+                playerHeal(gaiasEmbraceUpgrade.length * 5);
+                gainBlock(gaiasEmbraceUpgrade.length * 5);
                 if (playerFrostbite && frostbitten) {
-                        gainBlock(5);
+                        gainBlock(gaiasEmbraceUpgrade.length * 5);
                 }
         }
 }
@@ -4314,8 +4314,7 @@ function endTurn() {
                 enemyAction(trackEnemies[0], trackEnemies[1], trackEnemies[2]);
         }
         damageThisTurn = 0;
-        airBubble = false;
-        console.log(airBubble);
+        airBubble = [];
         if (bloodAmulet) {
                 playerBloodNumber.innerText = parseFloat(playerBloodNumber.innerText) + 1;
                 displayBlock(playerBloodImg, playerBloodNumber);
