@@ -3231,6 +3231,44 @@ function removeCardClickedClass() {
                 }
         }
 }
+function displayCardPiles(container, pile) {
+        displayFlex(container);
+        arena.classList.add("dim");
+        pile.forEach((i) => {
+                for (let j = 0; j < cardsInformation.length; j++) {
+                        if (i.classList.contains(j)) {
+                                createCard(j, container, "card-reference", "card-text", 0);
+                        }
+                }
+        });
+        let cardReference = document.querySelectorAll(".card-reference");
+        cardReference.forEach(i => {
+                displayFlex(i);
+                console.log(i);
+
+        });
+}
+function removeCardPiles() {
+        drawPileContainer.innerHTML = ``;
+        displayNone(drawPileContainer);
+        arena.classList.remove("dim");
+}
+const drawPileImg = document.querySelector("#draw-pile-img");
+const discardPileImg = document.querySelector("#discard-pile-img");
+drawPileImg.addEventListener("mouseover", () => {
+        displayCardPiles(drawPileContainer, drawPileArray);
+});
+discardPileImg.addEventListener("mouseover", () => {
+        displayCardPiles(discardPileContainer, discardPileArray);
+});
+drawPileImg.addEventListener("mouseout", () => {
+        removeCardPiles();
+        drawPileArray = drawPileArray.toSorted(() => 0.5 - Math.random());
+});
+discardPileImg.addEventListener("mouseout", () => {
+        removeCardPiles();
+});
+
 /*
 PLAYER SECTION
 */
@@ -4377,4 +4415,3 @@ function endTurn() {
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
-getBlacksmith();
