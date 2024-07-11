@@ -1504,43 +1504,94 @@ function getShop () {
 }
 function getBlacksmith() {
         const blacksmithContainer = document.querySelector("#blacksmith-container");
-        switchArea(blacksmithContainer, map);
-        let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
-        blacksmithContainer.innerHTML = `<div id="all-cards-list"></div>`;
-        const allCardsList = document.querySelector("#all-cards-list");
-        allCardsArray.forEach((i) => {
-                for (let j = 0; j < cardsInformation.length; j++) {
-                        if (i.classList.contains(j)) {
-                                createCard(j, allCardsList, "card-reference", "card-text", 0);
-                        }
-                }
-        });
-        let cardReference = document.querySelectorAll(".card-reference");
-        let allCurrentCards = document.querySelectorAll(".card");
-        function upgradeCard(cardIndex) {
-                for (let k = 0; k < allCurrentCards.length; k++) {
-                        if (allCurrentCards[k].classList.contains(cardIndex)) {
-                                        let spliceCard = drawPileArray.splice(drawPileArray.indexOf(allCurrentCards[k]), 1).pop();
-                                        destroyedCardsArray.push(spliceCard);
-                                        destroyedCardsContainer.appendChild(spliceCard);
-                                        destroyedCardsArray = [];
-                                        destroyedCardsContainer.innerHTML = ``;
-                                        createNewCard(cardIndex, 1);
-                        }
-                }
-        }
-        cardReference.forEach((i) => {
-                displayFlex(i);
-                i.addEventListener("click", () => {
-                        for (let j = 0; j < cardsInformation.length; j++) {
-                                if (i.classList.contains(j)) {
-                                        upgradeCard(j);
-                                }
-                        }
+        displayFlex(blacksmithContainer);
+        displayNone(map);
+        const blacksmithText = document.querySelector("#blacksmith-text");
+        let clickCount = 0;
+        if (playerAether.innerText < 75) {
+                blacksmithText.innerHTML = `<p>I can infuse your cards with aether to make them stronger if you've got the materials.<br><br>Come back when you have 75 aether for me.</p>`;
+                blacksmithText.addEventListener("click", () => {
                         switchArea(map, blacksmithContainer);
                 });
-                
-        });
+        } else {
+                blacksmithText.addEventListener("click", () => {
+                        blacksmithText.innerHTML = `<br>Leave Blacksmith<br><br>`;
+                        blacksmithText.style = "margin-top: 50px";
+                        blacksmithContainer.innerHTML += `<div id="blacksmith-cards-list"></div>`
+                        const blacksmithCardsList = document.querySelector("#blacksmith-cards-list");
+                        let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
+                        for (let i = 0; i < allCardsArray.length; i++) {
+                                blacksmithCardsList.innerHTML += `<div class="blacksmith-upgrade-pair"></div>`
+                        }
+                        const blacksmithUpgradePair = document.querySelectorAll(".blacksmith-upgrade-pair");
+                        for (let i = 0; i < allCardsArray.length; i++) {
+                                for (let j = 0; j < cardsInformation.length; j++) {
+                                        if (allCardsArray[i].classList.contains(j)) {
+                                                createCard(j, blacksmithUpgradePair[i], "card-reference", "card-text", 0);
+                                                createCard(j, blacksmithUpgradePair[i], "card upgraded upgrade-reference", "card-text upgraded-text", 1);
+                                                displayNone(map);
+                                        }
+                                }
+                        }
+                        let cardReference = document.querySelectorAll(".card-reference");
+                        let cardReferenceUpgraded = document.querySelectorAll(".upgraded");
+                        let allCurrentCards = document.querySelectorAll(".card");
+                        function upgradeCard(cardIndex) {
+                                for (let k = 0; k < allCurrentCards.length; k++) {
+                                        if (allCurrentCards[k].classList.contains(cardIndex)) {
+                                                        let spliceCard = drawPileArray.splice(drawPileArray.indexOf(allCurrentCards[k]), 1).pop();
+                                                        destroyedCardsArray.push(spliceCard);
+                                                        destroyedCardsContainer.appendChild(spliceCard);
+                                                        destroyedCardsArray = [];
+                                                        destroyedCardsContainer.innerHTML = ``;
+                                                        createNewCard(cardIndex, 1);
+                                        }
+                                }
+                        }
+                        cardReference.forEach((i) => {
+                                displayFlex(i);
+                                i.addEventListener("click", () => {
+                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                if (i.classList.contains(j)) {
+                                                        if (playerAether.innerText >= 75) {
+                                                                upgradeCard(j);
+                                                                playerAether.innerText -= 75;
+                                                                displayNone(i);
+                                                        }
+                                                }
+                                        }
+                                });
+                                i.addEventListener("mouseover", () => {
+                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                if (i.classList.contains(j)) {
+                                                        cardReferenceUpgraded.forEach(k => {
+                                                                if (k.classList.contains(j)) {
+                                                                        displayFlex(k);
+                                                                }
+                                                        });
+                                                }
+                                        }
+                                });
+                                i.addEventListener("mouseout", () => {
+                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                if (i.classList.contains(j)) {
+                                                        cardReferenceUpgraded.forEach(k => {
+                                                                if (k.classList.contains(j)) {
+                                                                        displayNone(k);
+                                                                }
+                                                        });
+                                                }
+                                        }
+                                });
+                        });
+                        this.addEventListener("click", () => {
+                                clickCount++;
+                                if (clickCount === 2) {
+                                        switchArea(map, blacksmithContainer);
+                                }
+                        });
+                });
+        }
 }
 /*
 CARDS SECTION
@@ -4326,3 +4377,4 @@ function endTurn() {
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
+getBlacksmith();
