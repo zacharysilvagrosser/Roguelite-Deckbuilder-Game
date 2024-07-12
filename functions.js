@@ -3233,7 +3233,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                                         handArray[i].classList.remove("card-clicked");
                                 }
                         }
-                        if (airBubble) {
+                        if (airBubble.length > 0) {
                                 playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
                                 displayBlock(playerRegenImg, playerRegenNumber);
                         }

@@ -727,10 +727,12 @@
 .position-left {
     margin-left: 1020px;
     margin-top: 60px;
+    z-index: 3;
 }
 .position-middle {
     margin-left: 1280px;
     margin-top: 60px;
+    z-index: 2;
 }
 .position-right {
     margin-left: 1500px;
@@ -930,7 +932,7 @@
 #hand-container {
     display: flex;
     width: 45%;
-    margin: -40px 0px 0px 380px;
+    margin: -55px 0px 0px 380px;
 }
 #opening-cards-container, #all-cards-reference-container, #new-cards-container {
     display: none;
@@ -1078,6 +1080,7 @@
     transition: .5s;
     display: none;
     position: relative;
+    box-shadow: 5px 3px 3px black;
     z-index: 3;
 }
 .upgraded {
@@ -1126,6 +1129,23 @@
     padding: 10px 8px;
     border: 1px solid black;
 }
+.card-element {
+    position: absolute;
+    margin-left: 148px;
+    margin-top: 2px;
+    width: 18px;
+    height: 18px;
+}
+.card-element-2 {
+    position: absolute;
+    margin-left: 118px;
+    margin-top: 2px;
+    width: 18px;
+    height: 18px;
+}
+img[src="imgs/undefined-icon.png"] {
+    display: none;
+  }
 .upgraded-text {
     color: rgb(186, 79, 248)
 }
