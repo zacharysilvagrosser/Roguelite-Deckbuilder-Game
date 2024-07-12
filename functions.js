@@ -2777,7 +2777,7 @@ const cardsInformation = [
         },
         {
                 manaCost: [2, 2],
-                name: "Quaking Thunder",
+                name: "Quaking Jolt",
                 cardImg: "imgs/quaking-thunder3.jpg",
                 cardText: ["Deal 10 damage to all enemies and gain 1 thorn per enemy hit", "Deal 10 damage to all enemies and gain 1 thorn and 4 block per enemy hit"],
                 chooseEnemyCard: false,
@@ -2999,11 +2999,94 @@ const cardsInformation = [
 ];
 //  CARD CREATION FUNCTION TO ADD TO HTML
 function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
+        let element, element2;
+        switch (index) {
+                case 0: case 1: case 12: case 13: case 14: case 15:
+                        element = "fire2";
+                        break;
+                case 2: case 3: case 16: case 17: case 18: case 19:
+                        element = "energize";
+                        break;
+                case 4: case 5: case 20: case 21: case 22: case 23:
+                        element = "ice2";
+                        break;
+                case 6: case 7: case 24: case 25: case 26: case 27:
+                        element = "windswept";
+                        break;
+                case 8: case 9: case 28: case 29: case 30: case 31:
+                        element = "regen";
+                        break;
+                case 10: case 11: case 32: case 33: case 34: case 35:
+                        element = "earth2";
+                        break;
+                case 36:
+                        element = "fire2";
+                        element2 = "energize";
+                        break;
+                case 37:
+                        element = "fire2";
+                        element2 = "ice2";
+                        break;
+                case 38:
+                        element = "windswept";
+                        element2 = "fire2";
+                        break;
+                case 39:
+                        element = "fire2";
+                        element2 = "regen";
+                        break;
+                case 40:
+                        element = "fire2";
+                        element2 = "earth2";
+                        break;
+                case 41:
+                        element = "ice2";
+                        element2 = "energize";
+                        break;
+                case 42:
+                        element = "windswept";
+                        element2 = "energize";
+                        break;
+                case 43:
+                        element = "energize";
+                        element2 = "regen";
+                        break;
+                case 44:
+                        element = "fire2";
+                        element2 = "earth2";
+                        break;
+                case 45:
+                        element = "windswept";
+                        element2 = "ice2";
+                        break;
+                case 46:
+                        element = "ice2";
+                        element2 = "regen";
+                        break;
+                case 47:
+                        element = "ice2";
+                        element2 = "earth2";
+                        break;
+                case 48:
+                        element = "windswept";
+                        element2 = "regen";
+                        break;
+                case 49:
+                        element = "windswept";
+                        element2 = "earth2";
+                        break;
+                case 50:
+                        element = "regen";
+                        element2 = "earth2";
+                        break;
+        }
         innerLocation.innerHTML +=
         `<div class="${cardClass} ${cardsInformation[index].element} ${index}">
                 <p class="card-mana-number">${cardsInformation[index].manaCost[upgradeIndex]}</p>
                 <img class="card-mana-img" src="imgs/block-icon.png">
                 <h1 class="card-name">${cardsInformation[index].name}</h1>
+                <img src="imgs/${element}-icon.png" class="card-element">
+                <img src="imgs/${element2}-icon.png" class="card-element-2">
                 <img class="card-img" src="${cardsInformation[index].cardImg}">
                 <p class="${cardText}">${cardsInformation[index].cardText[upgradeIndex]}</p>
         </div>`
@@ -3116,9 +3199,10 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                                 cardsInformation[CIindex].action[upgradeIndex]();
                                 addToDiscard();
                                 updateCardText();
-                                if (airBubble) {
+                                if (airBubble.length > 0) {
                                         playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
                                         displayBlock(playerRegenImg, playerRegenNumber);
+                                        console.log("BLUBBLES");
                                 }
                         }
                 });
@@ -3190,7 +3274,7 @@ const newCardsContainer = document.querySelector("#new-cards-container");
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = 15;//createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard0 = 36;//createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
@@ -3379,9 +3463,9 @@ function damageAllEnemies(damage) {
                         damageEnemy(4, i);
                 }
         }
-        if (liquidLightning) {
+        if (liquidLightning.length > 0) {
                 damage += 5;
-        } else if (liquidLightningUpgrade) {
+        } else if (liquidLightningUpgrade.length > 0) {
                 damage += 7;
         }
         if (tidalImbuement) {
@@ -3533,7 +3617,7 @@ function gainEnergize (amount) {
         displayBlock(playerEnergizeImg, playerEnergizeNumber);
 }
 function gainBlock(blockAmount) {
-        if (terrasBlessing) {
+        if (terrasBlessing.length > 0) {
                 blockAmount += terrasBlessing.length * 5;
         }
         if (frostbitten && playerFrostbite) {
@@ -3545,7 +3629,7 @@ function gainBlock(blockAmount) {
         displayBlock(playerBlockImg, playerBlockNumber);
 }
 function gainThorns(amount) {
-        if (terrasBlessing) {
+        if (terrasBlessing.length > 0) {
                 amount += terrasBlessing.length;
         }
         if (playerFrostbite) {
@@ -3555,9 +3639,9 @@ function gainThorns(amount) {
         displayBlock(playerThornsNumber, playerThornsImg);
 }
 function burnEnemy(burn, enemy) {
-        if (essenceOfEmber) {
+        if (essenceOfEmber.length > 0) {
                 burn += essenceOfEmber.length * 2;
-        } else if (essenceOfEmberUpgrade) {
+        } else if (essenceOfEmberUpgrade.length > 0) {
                 burn += essenceOfEmberUpgrade.length * 4;
         }
         if (eternalFlameTracking[enemy]) {
@@ -3668,14 +3752,14 @@ function updateCardText() {
         });
 }
 function checkGaiasEmbrace() {
-        if (gaiasEmbrace) {
+        if (gaiasEmbrace.length > 0) {
                 playerHeal(gaiasEmbrace.length * 3);
                 gainBlock(gaiasEmbrace.length * 3);
                 if (playerFrostbite && frostbitten) {
                         gainBlock(gaiasEmbrace.length * 3);
                 }
         }
-        if (gaiasEmbraceUpgrade) {
+        if (gaiasEmbraceUpgrade.length > 0) {
                 playerHeal(gaiasEmbraceUpgrade.length * 5);
                 gainBlock(gaiasEmbraceUpgrade.length * 5);
                 if (playerFrostbite && frostbitten) {
