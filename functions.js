@@ -323,6 +323,7 @@ function resetArena() {
         gaiasEmbraceUpgrade = [];
         maxHandLength = 5;
         healthGainedThisFight = 0;
+        damageThisTurn = 0;
         getEliteRelic = false;
         airBubble = [];
         if (caspiansTear) {
@@ -356,9 +357,9 @@ function resetArena() {
 }
 let dontRepeatEncounter = [];
 function getRandomEncounter() {
-        let randomEncounterNumber = createRandomNumber(1, 10);
+        let randomEncounterNumber = createRandomNumber(1, 1);
         while (dontRepeatEncounter.includes(randomEncounterNumber)) {
-                randomEncounterNumber = createRandomNumber(1, 10);
+                randomEncounterNumber = createRandomNumber(2, 2);
                 
         }
         let enemyImg = document.querySelectorAll(".enemy-img");
@@ -1606,19 +1607,258 @@ let essenceOfEmberUpgrade = [];
 let liquidLightning = [];
 let liquidLightningUpgrade = [];
 let snowfallElixir = false;
-let windsOfChange = 5;
 let tidalImbuement = false;
 let terrasBlessing = [];
 let gaiasEmbrace = [];
 let gaiasEmbraceUpgrade = [];
 let airBubble = [];
+function getWindsweptDamage() {
+        // STORMBLESSED WILL LIKELY UPDATE BACK TO 100% DAMAGE WHEN WINDSWEPT BECAUSE OF ORDER OF UPDATECARDTEXT()
+        let currentCardText = document.querySelectorAll(".card-text");
+        if (playerWindswept && playerFrostbite) {
+                for (let i = 0; i < handArray.length; i++) {
+                        for (let j = 0; j < cardsInformation.length; j++) {
+                                if (handArray[i].classList.contains(j)) {
+                                        for (let k = 0; k < currentCardText.length; k++) {
+                                                if (currentCardText[k].classList.contains(j)) {
+                                                        if (currentCardText[k].classList.contains("upgraded")) {
+                                                                currentCardText[k].innerHTML = frostWindText[j][1];
+                                                        } else {
+                                                                currentCardText[k].innerHTML = frostWindText[j][0];
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                }
+        } else if (playerWindswept) {
+                for (let i = 0; i < handArray.length; i++) {
+                        for (let j = 0; j < cardsInformation.length; j++) {
+                                if (handArray[i].classList.contains(j)) {
+                                        for (let k = 0; k < currentCardText.length; k++) {
+                                                if (currentCardText[k].classList.contains(j)) {
+                                                        if (currentCardText[k].classList.contains("upgraded")) {
+                                                                currentCardText[k].innerHTML = windsweptDamage[j][1];
+                                                        } else {
+                                                                currentCardText[k].innerHTML = windsweptDamage[j][0];
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                }
+        } else if (playerFrostbite) {
+                for (let i = 0; i < handArray.length; i++) {
+                        for (let j = 0; j < cardsInformation.length; j++) {
+                                if (handArray[i].classList.contains(j)) {
+                                        for (let k = 0; k < currentCardText.length; k++) {
+                                                if (currentCardText[k].classList.contains(j)) {
+                                                        if (currentCardText[k].classList.contains("upgraded")) {
+                                                                currentCardText[k].innerHTML = frostbiteBuffs[j][1];
+                                                        } else {
+                                                                currentCardText[k].innerHTML = frostbiteBuffs[j][0];
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                }
+        } else {
+                for (let i = 0; i < handArray.length; i++) {
+                        for (let j = 0; j < cardsInformation.length; j++) {
+                                if (handArray[i].classList.contains(j)) {
+                                        for (let k = 0; k < currentCardText.length; k++) {
+                                                if (currentCardText[k].classList.contains(j)) {
+                                                        if (currentCardText[k].classList.contains("upgraded")) {
+                                                                currentCardText[k].innerHTML = cardsInformation[j].cardText[1];
+                                                        } else {
+                                                                currentCardText[k].innerHTML = cardsInformation[j].cardText[0];
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                }
+        }
+}
+let damageThisTurn = 0;
+let healthGainedThisFight = 0;
+let windsOfChange = 5;
+const playerThornsNumber = document.querySelector("#player-thorns-number");
+const playerCurrentHealth = document.querySelector("#player-current-health");
+
+let windsweptDamage = [
+        [`Deal 2 damage and inflict 2 burn`, "Inflict 3 burn"],
+        ["Deal 7 damage and inflict 4 burn on an enemy and 2 burn on yourself", "Deal 7 damage and inflict 4 burn on an enemy and 2 burn on yourself"],
+        ["Energize 2", "Energize 3"],
+        ["Deal 10 damage to all enemies", "Deal 10 damage to all enemies and Energize 2"],
+        ["Deal 5 damage and inflict frostbite", "Deal 7 damage and inflict frostbite"],
+        ["Deal 7 damage, if you or the enemy has frostbite deal 15 instead", "Deal 7 damage, if you or the enemy has frostbite deal 22 instead"],
+        ["Enemies with windswept take 6 damage. Enemies without gain windswept", "Enemies with windswept take 6 damage. Enemies without gain windswept. Draw a card."],
+        ["Deal 5 damage to an enemy and inflict windswept", "Deal 5 damage to an enemy and inflict windswept. Increase Winds of Wind damage by 3"],
+        ["Gain 1 Blood Siphon", "Gain 2 Blood Siphon"],
+        ["Your next direct damage spell deals 10 more damage", "Your next direct damage spell deals 10 more damage"],
+        ["Gain 12 block", "Gain 22 block"],
+        ["Gain 16 block and 2 thorns", "Gain 20 block and 3 thorns"],
+        ["Inflict 3 burn on all enemies and 3 on yourself", "Inflict 4 burn on all enemies and 4 on yourself"],
+        ["Gain 3 burn and transfer your burn onto the enemy", "Gain 3 burn and transfer your burn onto all enemies"],
+        ["Deal 3 damage plus the burn on the enemy", "Deal 1.5x the burn on the enemy"],
+        ["[POTION]<br>You apply +2 burn damage", "[POTION]<br>You apply +4 burn damage"],
+        [`Deal 25% of the damage you've dealt this turn to an enemy Damage: ${damageThisTurn / 4}`, `Deal 37% of the damage you've dealt this turn to an enemy  Damage: ${(damageThisTurn * .75) / 2}`],
+        ["Deal 5 damage to a random enemy three times and gain Energize for each unique enemy damaged",
+                "Deal 5 damage to a random enemy four times and gain Energize for each unique enemy damaged"],
+        ["Deal 20 damage plus 7 for each mana you have after playing Conduit. Energize 1", "Deal 20 damage plus 10 for each mana you have after playing Conduit. Energize 1"],
+        ["[POTION]<br>All damage is increased by 5", "[POTION]<br>All damage is increased by 7"],
+        ["Deal 7 damage to all enemies and inflict frostbite on everyone including yourself", "Deal 10 damage to all enemies and inflict frostbite on everyone including yourself"],
+        ["When you have frostbite, gain double armor. Inflict frostbite on yourself", "When you have frostbite, gain double armor. Inflict frostbite on yourself"],
+        ["Inflict frostbite and deal damage equal to half your block amount", "Gain 10 block, inflict frostbite, and deal damage equal to half your block amount"],
+        ["[POTION]<br>Damage and Frostbite now hits every enemy", "[POTION]<br>Damage and Frostbite now hits every enemy"],
+        [`Deal ${windsOfChange / 2} damage. All Winds of Change gain +3 damage or +5 damage if enemy is windswept`, `Deal ${windsOfChange / 2} damage. All Winds of Change gain +4 damage or +6 damage if enemy is windswept`],
+        ["Draw two cards", "Draw two cards and inflict windswept on a random enemy"],
+        ["Draw one Winds of Change from your draw pile and one from your discard pile", "Draw one Winds of Change from your draw pile and one from your discard pile. Winds of Change gain +1 for each drawn."],
+        ["[POTION]<br>Draw one more card at the end of each turn", "[POTION]<br>Draw one more card at the end of each turn"],
+        ["Cleanse all debuffs and gain blood siphon for two turns", "Cleanse all debuffs and gain blood siphon for three turns"],
+        ["Use all mana to gain 1 regeneration, blood siphon and healing per mana spent", "Use all mana to gain 1 regeneration, blood siphon, block and healing per mana spent"],
+        [`Deal damage equal to how much you've healed this fight Damage:${healthGainedThisFight / 2}`, `Deal damage to all enemies equal to how much you've healed this fight Damage: ${healthGainedThisFight / 2}`],
+        ["[POTION]<br>Permanently gain 5 max health", "[POTION]<br>Permanently gain 6 max health and gain 6 health"],
+        ["Lose all of your armor and deal damage equal to half of how much was lost", "Lose all of your armor and deal damage equal to half of how much was lost. Regain 25% of your block."],
+        ["Gain 4 thorns", "Gain 6 thorns"],
+        [`Deal 2 damage plus 1.5x your thorns Damage:${2 + (playerThornsNumber.innerText * 1.5)}`, `Gain 2 thorns and deal damage equal to 1.5x your thorns Damage:${2 + (playerThornsNumber.innerText * 1.5)}`],
+        ["[POTION]<br>All block gained is increased by 5 and thorns increased by 1", "[POTION]<br>Gain 10 block and 2 thorns. All block gained is increased by 5 and thorns increased by 1"],
+        ["Inflict 2 burn to all enemies. Deal damage equal to half their burn", "Inflict 2 burn to all enemies. Deal damage equal to half their burn"],
+        ["If the enemy is either burning or inflicted with frostbite they are inflicted with 3 burn and frostbite.", "If the enemy is either burning or inflicted with frostbite they are inflicted with 4 burn and frostbite."],
+        ["Inflict windswept on all enemies and increase burn count by 3 if they're already burning", "Inflict windswept on all enemies and increase burn count by 4 if they're already burning"],
+        ["Gain 4 burn, 4 regen, and 1 blood siphon", "Gain 5 burn, 5 regen, and 2 blood siphon"],
+        ["Inflict 3 burn on an enemy and gain block equal to their burn", "Inflict 3 burn on an enemy and gain block equal to their burn"],
+        ["Electrucute enemies with frostbite dealing 10 damage", "Electrucute enemies with frostbite dealing 13 damage"],
+        ["Inflict windswept and deal 25 damage to all enemies. Draw a card, and gain 2 mana.", "Inflict windswept and deal 25 damage to all enemies. Draw a card, energize 1 and gain 3 mana."],
+        [`Deal 1 damage per 5 health you currently have and gain 3 regeneration Damage:${playerCurrentHealth.innerText / 5}`, `Deal 1 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage:${playerCurrentHealth.innerText / 5}`],
+        ["Deal 5 damage to all enemies and gain 1 thorn per enemy hit", "Deal 5 damage to all enemies and gain 1 thorn and 4 block per enemy hit"],
+        ["Inflict windswept and frostbite to all enemies", "Inflict windswept and frostbite to all enemies"],
+        ["Gain 1 regen and 1 blood siphon for everyone afflicted with frostbite", "Gain 1 regen and 1 blood siphon for everyone afflicted with frostbite"],
+        ["Inflict everyone including yourself with frostbite and gain 5 armor for everyone inflicted", "Inflict everyone including yourself with frostbite and gain 7 armor for everyone inflicted"],
+        ["Gain 1 regen for each card played this turn", "Gain 1 regen for each card played this turn and draw a card"],
+        ["Gain 4 block and draw a card", "Gain 7 block and draw a card"],
+        ["[POTION]\nGain 3 block and healing at the end of each turn", "[POTION]\nGain 5 block and healing at the end of each turn"],
+        ["[DOES NOTHING] Your greed causes you to look down upon peasants", "[DOES NOTHING] Your greed causes you to look down upon peasants"]
+]
+let frostbiteBuffs = [
+        [`Deal 5 damage and inflict 4 burn`, "Inflict 6 burn"],
+        ["Deal 15 damage and inflict 8 burn on an enemy and 2 burn on yourself", "Deal 15 damage and inflict 8 burn on an enemy and 2 burn on yourself"],
+        ["Energize 1", "Energize 1"],
+        ["Deal 20 damage to all enemies", "Deal 20 damage to all enemies and Energize 1"],
+        ["Deal 10 damage and inflict frostbite", "Deal 15 damage and inflict frostbite"],
+        ["Deal 15 damage, if you or the enemy has frostbite deal 30 instead", "Deal 15 damage, if you or the enemy has frostbite deal 45 instead"],
+        ["Enemies with windswept take 12 damage. Enemies without gain windswept", "Enemies with windswept take 12 damage. Enemies without gain windswept. Draw a card."],
+        ["Deal 10 damage to an enemy and inflict windswept", "Deal 10 damage to an enemy and inflict windswept. Increase Winds of Wind damage by 3"],
+        ["Gain 0 Blood Siphon", "Gain 1 Blood Siphon"],
+        ["Your next direct damage spell deals 10 more damage", "Your next direct damage spell deals 10 more damage"],
+        ["Gain 6 block", "Gain 11 block"],
+        ["Gain 8 block and 1 thorn", "Gain 10 block and 1 thorn"],
+        ["Inflict 6 burn on all enemies and 3 on yourself", "Inflict 8 burn on all enemies and 4 on yourself"],
+        ["Gain 3 burn and transfer your burn onto the enemy", "Gain 3 burn and transfer your burn onto all enemies"],
+        ["Deal 6 damage plus 2x the burn on the enemy", "Deal 3x the burn on the enemy"],
+        ["[POTION]<br>You apply +2 burn damage", "[POTION]<br>You apply +4 burn damage"],
+        [`Deal 50% of the damage you've dealt this turn to an enemy Damage: ${damageThisTurn / 2}`, `Deal 75% of the damage you've dealt this turn to an enemy  Damage: ${(damageThisTurn * .75)}`],
+        ["Deal 10 damage to a random enemy three times and gain Energize for half of each unique enemy damaged",
+                "Deal 10 damage to a random enemy four times and gain Energize for half of each unique enemy damaged"],
+        ["Deal 40 damage plus 15 for each mana you have after playing Conduit. Energize 0", "Deal 40 damage plus 20 for each mana you have after playing Conduit. Energize 0"],
+        ["[POTION]<br>All damage is increased by 5", "[POTION]<br>All damage is increased by 7"],
+        ["Deal 14 damage to all enemies and inflict frostbite on everyone including yourself", "Deal 20 damage to all enemies and inflict frostbite on everyone including yourself"],
+        ["When you have frostbite, gain double armor. Inflict frostbite on yourself", "When you have frostbite, gain double armor. Inflict frostbite on yourself"],
+        ["Inflict frostbite and deal damage equal to your block amount", "Gain 5 block, inflict frostbite, and deal damage equal to your block amount"],
+        ["[POTION]<br>Damage and Frostbite now hits every enemy", "[POTION]<br>Damage and Frostbite now hits every enemy"],
+        [`Deal ${windsOfChange} damage. All Winds of Change gain +3 damage or +5 damage if enemy is windswept`, `Deal ${windsOfChange} damage. All Winds of Change gain +4 damage or +6 damage if enemy is windswept`],
+        ["Draw two cards", "Draw two cards and inflict windswept on a random enemy"],
+        ["Draw one Winds of Change from your draw pile and one from your discard pile", "Draw one Winds of Change from your draw pile and one from your discard pile. Winds of Change gain +1 for each drawn."],
+        ["[POTION]<br>Draw one more card at the end of each turn", "[POTION]<br>Draw one more card at the end of each turn"],
+        ["Cleanse all debuffs and gain blood siphon", "Cleanse all debuffs and gain blood siphon"],
+        ["Use all mana to gain 1 regeneration, blood siphon and healing per 2 mana spent", "Use all mana to gain 1 regeneration, blood siphon, block and healing per 2 mana spent"],
+        [`Deal damage equal to how much you've healed this fight Damage:${healthGainedThisFight}`, `Deal damage to all enemies equal to how much you've healed this fight Damage: ${healthGainedThisFight}`],
+        ["[POTION]<br>Permanently gain 5 max health", "[POTION]<br>Permanently gain 6 max health and gain 6 health"],
+        ["Lose all of your armor and deal damage equal to how much was lost", "Lose all of your armor and deal damage equal to how much was lost. Regain 25% of your block."],
+        ["Gain 2 thorns", "Gain 3 thorns"],
+        [`Deal 4 damage plus 3x your thorns Damage:${4 + (playerThornsNumber.innerText * 3)}`, `Gain 1 thorn and deal damage equal to 3x your thorns Damage:${1 + (playerThornsNumber.innerText * 3)}`],
+        ["[POTION]<br>All block gained is increased by 5 and thorns increased by 1", "[POTION]<br>Gain 5 block and 1 thorn. All block gained is increased by 5 and thorns increased by 1"],
+        ["Inflict 4 burn to all enemies. Deal damage equal to their burn", "Inflict 4 burn to all enemies. Deal damage equal to their burn"],
+        ["If the enemy is either burning or inflicted with frostbite they are inflicted with 6 burn and frostbite.", "If the enemy is either burning or inflicted with frostbite they are inflicted with 8 burn and frostbite."],
+        ["Inflict windswept on all enemies and increase burn count by 6 if they're already burning", "Inflict windswept on all enemies and increase burn count by 8 if they're already burning"],
+        ["Gain 4 burn, 2 regen, and 0 blood siphon", "Gain 5 burn, 2 regen, and 1 blood siphon"],
+        ["Inflict 6 burn on an enemy and gain block equal to half their burn", "Inflict 6 burn on an enemy and gain block equal to half their burn"],
+        ["Electrucute enemies with frostbite dealing 20 damage", "Electrucute enemies with frostbite dealing 26 damage"],
+        ["Inflict windswept and deal 50 damage to all enemies. Draw a card, and gain 2 mana.", "Inflict windswept and deal 50 damage to all enemies. Draw a card, energize 0 and gain 3 mana."],
+        [`Deal 2 damage per 5 health you currently have and gain 1 regeneration Damage:${playerCurrentHealth.innerText / 2.5}`, `Deal 2 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage:${playerCurrentHealth.innerText / 2.5}`],
+        ["Deal 10 damage to all enemies and gain 0 thorn per 2 enemies hit", "Deal 10 damage to all enemies and gain 0 thorns and 2 block per enemy hit"],
+        ["Inflict windswept and frostbite to all enemies", "Inflict windswept and frostbite to all enemies"],
+        ["Gain 1 regen and 1 blood siphon for every 2 characters afflicted with frostbite", "Gain 1 regen and 1 blood siphon for every two characters afflicted with frostbite"],
+        ["Inflict everyone including yourself with frostbite and gain 2 armor for everyone inflicted", "Inflict everyone including yourself with frostbite and gain 3 armor for everyone inflicted"],
+        ["Gain 0 regen for each card played this turn", "Gain 0 regen for each card played this turn and draw a card"],
+        ["Gain 2 block and draw a card", "Gain 3 block and draw a card"],
+        ["[POTION]\nGain 3 block and healing at the end of each turn", "[POTION]\nGain 5 block and healing at the end of each turn"],
+        ["[DOES NOTHING] Your greed causes you to look down upon peasants", "[DOES NOTHING] Your greed causes you to look down upon peasants"]
+]
+let frostWindText = [
+        [`Deal 2 damage and inflict 4 burn`, "Inflict 3 burn"],
+        ["Deal 7 damage and inflict 4 burn on an enemy and 2 burn on yourself", "Deal 7 damage and inflict 4 burn on an enemy and 2 burn on yourself"],
+        ["Energize 1", "Energize 1"],
+        ["Deal 10 damage to all enemies", "Deal 10 damage to all enemies and Energize 1"],
+        ["Deal 5 damage and inflict frostbite", "Deal 7 damage and inflict frostbite"],
+        ["Deal 7 damage, if you or the enemy has frostbite deal 15 instead", "Deal 7 damage, if you or the enemy has frostbite deal 22 instead"],
+        ["Enemies with windswept take 6 damage. Enemies without gain windswept", "Enemies with windswept take 6 damage. Enemies without gain windswept. Draw a card."],
+        ["Deal 5 damage to an enemy and inflict windswept", "Deal 5 damage to an enemy and inflict windswept. Increase Winds of Wind damage by 3"],
+        ["Gain 0 Blood Siphon", "Gain 1 Blood Siphon"],
+        ["Your next direct damage spell deals 10 more damage", "Your next direct damage spell deals 10 more damage"],
+        ["Gain 6 block", "Gain 11 block"],
+        ["Gain 8 block and 1 thorn", "Gain 10 block and 1 thorn"],
+        ["Inflict 3 burn on all enemies and 3 on yourself", "Inflict 4 burn on all enemies and 4 on yourself"],
+        ["Gain 3 burn and transfer your burn onto the enemy", "Gain 3 burn and transfer your burn onto all enemies"],
+        ["Deal 3 damage plus the burn on the enemy", "Deal 1.5x the burn on the enemy"],
+        ["[POTION]<br>You apply +2 burn damage", "[POTION]<br>You apply +4 burn damage"],
+        [`Deal 25% of the damage you've dealt this turn to an enemy Damage: ${damageThisTurn / 4}`, `Deal 37% of the damage you've dealt this turn to an enemy  Damage: ${(damageThisTurn * .75) / 2}`],
+        ["Deal 5 damage to a random enemy three times and gain Energize for half of each unique enemy damaged",
+                "Deal 5 damage to a random enemy four times and gain Energize for half of each unique enemy damaged"],
+        ["Deal 20 damage plus 7 for each mana you have after playing Conduit. Energize 0", "Deal 20 damage plus 10 for each mana you have after playing Conduit. Energize 0"],
+        ["[POTION]<br>All damage is increased by 5", "[POTION]<br>All damage is increased by 7"],
+        ["Deal 7 damage to all enemies and inflict frostbite on everyone including yourself", "Deal 10 damage to all enemies and inflict frostbite on everyone including yourself"],
+        ["When you have frostbite, gain double armor. Inflict frostbite on yourself", "When you have frostbite, gain double armor. Inflict frostbite on yourself"],
+        ["Inflict frostbite and deal damage equal to half your block amount", "Gain 5 block, inflict frostbite, and deal damage equal to half your block amount"],
+        ["[POTION]<br>Damage and Frostbite now hits every enemy", "[POTION]<br>Damage and Frostbite now hits every enemy"],
+        [`Deal ${windsOfChange / 2} damage. All Winds of Change gain +3 damage or +5 damage if enemy is windswept`, `Deal ${windsOfChange / 2} damage. All Winds of Change gain +4 damage or +6 damage if enemy is windswept`],
+        ["Draw two cards", "Draw two cards and inflict windswept on a random enemy"],
+        ["Draw one Winds of Change from your draw pile and one from your discard pile", "Draw one Winds of Change from your draw pile and one from your discard pile. Winds of Change gain +1 for each drawn."],
+        ["[POTION]<br>Draw one more card at the end of each turn", "[POTION]<br>Draw one more card at the end of each turn"],
+        ["Cleanse all debuffs and gain blood siphon", "Cleanse all debuffs and gain blood siphon"],
+        ["Use all mana to gain 1 regeneration, blood siphon and healing per 2 mana spent", "Use all mana to gain 1 regeneration, blood siphon, block and healing per 2 mana spent"],
+        [`Deal damage equal to half of how much you've healed this fight Damage:${healthGainedThisFight / 2}`, `Deal damage to all enemies equal to half of how much you've healed this fight Damage: ${healthGainedThisFight / 2}`],
+        ["[POTION]<br>Permanently gain 5 max health", "[POTION]<br>Permanently gain 6 max health and gain 6 health"],
+        ["Lose all of your armor and deal damage equal to half of how much was lost", "Lose all of your armor and deal damage equal to half of how much was lost. Regain 25% of your block."],
+        ["Gain 2 thorns", "Gain 3 thorns"],
+        [`Deal 2 damage plus 1.5x your thorns Damage:${2 + (playerThornsNumber.innerText * 1.5)}`, `Gain 1 thorn and deal damage equal to 1.5x your thorns Damage:${1 + (playerThornsNumber.innerText * 1.5)}`],
+        ["[POTION]<br>All block gained is increased by 5 and thorns increased by 1", "[POTION]<br>Gain 5 block and 1 thorn. All block gained is increased by 5 and thorns increased by 1"],
+        ["Inflict 2 burn to all enemies. Deal damage equal to their burn", "Inflict 2 burn to all enemies. Deal damage equal to their burn"],
+        ["If the enemy is either burning or inflicted with frostbite they are inflicted with 3 burn and frostbite.", "If the enemy is either burning or inflicted with frostbite they are inflicted with 4 burn and frostbite."],
+        ["Inflict windswept on all enemies and increase burn count by 3 if they're already burning", "Inflict windswept on all enemies and increase burn count by 4 if they're already burning"],
+        ["Gain 4 burn, 2 regen, and 0 blood siphon", "Gain 5 burn, 2 regen, and 1 blood siphon"],
+        ["Inflict 3 burn on an enemy and gain block equal to half their burn", "Inflict 3 burn on an enemy and gain block equal to half their burn"],
+        ["Electrucute enemies with frostbite dealing 10 damage", "Electrucute enemies with frostbite dealing 13 damage"],
+        ["Inflict windswept and deal 25 damage to all enemies. Draw a card, and gain 2 mana.", "Inflict windswept and deal 25 damage to all enemies. Draw a card, energize 0 and gain 3 mana."],
+        [`Deal 1 damage per 5 health you currently have and gain 1 regeneration Damage:${playerCurrentHealth.innerText / 5}`, `Deal 1 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage:${playerCurrentHealth.innerText / 5}`],
+        ["Deal 5 damage to all enemies and gain 0 thorn per 2 enemies hit", "Deal 5 damage to all enemies and gain 0 thorns and 2 block per enemy hit"],
+        ["Inflict windswept and frostbite to all enemies", "Inflict windswept and frostbite to all enemies"],
+        ["Gain 1 regen and 1 blood siphon for every 2 characters afflicted with frostbite", "Gain 1 regen and 1 blood siphon for every two characters afflicted with frostbite"],
+        ["Inflict everyone including yourself with frostbite and gain 2 armor for everyone inflicted", "Inflict everyone including yourself with frostbite and gain 3 armor for everyone inflicted"],
+        ["Gain 0 regen for each card played this turn", "Gain 0 regen for each card played this turn and draw a card"],
+        ["Gain 2 block and draw a card", "Gain 3 block and draw a card"],
+        ["[POTION]\nGain 3 block and healing at the end of each turn", "[POTION]\nGain 5 block and healing at the end of each turn"],
+        ["[DOES NOTHING] Your greed causes you to look down upon peasants", "[DOES NOTHING] Your greed causes you to look down upon peasants"]
+]
 // CARD INFO ARRAY TO MAKE CARD DIVS IN HTML
 const cardsInformation = [
         {
                 manaCost: [1, 1],
                 name: "Fireball",
                 cardImg: "imgs/fireball2.jpg",
-                cardText: ["Deal 5 damage and inflict 4 burn", "Inflict 6 burn"],
+                cardText: [`Deal 5 damage and inflict 4 burn`, "Inflict 6 burn"],
                 chooseEnemyCard: true,
                 index: 0,
                 element: "fire",
@@ -2022,12 +2262,10 @@ const cardsInformation = [
                         function() {
                                 spendMana(1);
                                 damageEnemy(Math.floor(damageThisTurn / 2), chosenEnemy);
-                                gainEnergize(1);
                         },
                         function() {
                                 spendMana(1);
                                 damageEnemy(Math.floor(damageThisTurn * .75), chosenEnemy);
-                                gainEnergize(1);
                         }
                 ]
         },
@@ -3043,8 +3281,8 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
                         element2 = "energize";
                         break;
                 case 43:
-                        element = "energize";
-                        element2 = "regen";
+                        element = "regen";
+                        element2 = "energize";
                         break;
                 case 44:
                         element = "fire2";
@@ -3085,7 +3323,7 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
                         <img src="imgs/${element2}-icon.png" class="card-element-2">
                 </div>
                 <img class="card-img" src="${cardsInformation[index].cardImg}">
-                <p class="${cardText}">${cardsInformation[index].cardText[upgradeIndex]}</p>
+                <p class="${cardText} ${index}">${cardsInformation[index].cardText[upgradeIndex]}</p>
         </div>`
 }
 
@@ -3120,7 +3358,7 @@ function drawCards(numberOfCards) {
                 handArray.unshift(drawPileArray.shift());
                 displayFlex(handArray[0]);
         }
-        handContainer.style = `width: ${numberOfCards}0%`;
+        handContainer.style = `width: ${numberOfCards - 1}7%`;
         console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         //console.log(handArray);
 }
@@ -3177,7 +3415,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                 addToDiscard();
                 updateCardText();
                 checkHealthIsOverMax();
-                handContainer.style = `width: ${handArray.length}0%`;
+                handContainer.style = `width: ${handArray.length - 1}7%`;
                 if (airBubble.length > 0) {
                         playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
                         displayBlock(playerRegenImg, playerRegenNumber);
@@ -3225,7 +3463,6 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         // SEPERATE FUNCTION WHEN ENEMY IS CLICKED SO EVENTLISTENER CAN BE REMOVED ON EACH ENEMY AFTER CLICKING
         function clickEnemy() {
                 if (currentMana.innerText >= cardsInformation[chosenCard].manaCost[upgradeIndex] && chosenCard === CIindex) {
-                        cardsInformation[CIindex].action[upgradeIndex]();
                         playCard();
                         cardClicked = false;
                         for (let i = 0; i < handArray.length; i++) {
@@ -3274,7 +3511,7 @@ const newCardsContainer = document.querySelector("#new-cards-container");
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = 36;//createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard0 = 16;//createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
@@ -3359,7 +3596,6 @@ PLAYER SECTION
 // PLAYER AND UI
 const playerDiv = document.querySelector("#player-div");
 const topBarHealthNumber = document.querySelector("#top-bar-health-number");
-const playerCurrentHealth = document.querySelector("#player-current-health");
 const playerMaxHealth = document.querySelector("#player-max-health");
 const playerAether = document.querySelector("#top-bar-aether-number");
 const currentMana = document.querySelector("#current-mana");
@@ -3369,7 +3605,6 @@ const playerBlockImg = document.querySelector("#block-img");
 const playerBlockNumber = document.querySelector("#block-img-number");
 const playerEnergizeImg = document.querySelector("#player-energize-img");
 const playerEnergizeNumber = document.querySelector("#player-energize-number");
-const playerThornsNumber = document.querySelector("#player-thorns-number");
 const playerThornsImg = document.querySelector("#player-thorns-img");
 const playerRegenNumber = document.querySelector("#player-regen-number");
 const playerRegenImg = document.querySelector("#player-regen-img");
@@ -3402,8 +3637,9 @@ endTurnButton.addEventListener("click", endTurn);
 function spendMana(manaCost) {
         currentMana.innerText -= manaCost;
 }
-let damageThisTurn = 0;
 function damageEnemy(damage, enemy) {
+        console.log("wind", playerWindswept);
+
         // DAMGE ALL ENEMIES IF SNOWFALL ELIXER HAS BEEN PLAYED
         if (snowfallElixir) {
                 damageAllEnemies(damage);
@@ -3413,17 +3649,17 @@ function damageEnemy(damage, enemy) {
         } else if (liquidLightningUpgrade) {
                 damage += liquidLightningUpgrade * 7;
         }
-        if (tidalImbuement) {
-                damage += 10;
-                tidalImbuement = false;
-                displayNone(playerTidalImbuementImg);
-        }
         if (iceSpear && enemyFrostbite[enemy]) {
                 damage += 4;
         }
         // IF ATTACK DEBUFF IS ACTIVE, CUT DAMAGE IN HALF
         if (playerWindswept) {
                 damage = Math.floor(damage * .50);
+        }
+        if (tidalImbuement) {
+                damage += 10;
+                tidalImbuement = false;
+                displayNone(playerTidalImbuementImg);
         }
         if (playerBloodNumber.innerText > 0) {
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * .21));
@@ -3468,11 +3704,11 @@ function damageAllEnemies(damage) {
         } else if (liquidLightningUpgrade.length > 0) {
                 damage += 7;
         }
-        if (tidalImbuement) {
-                damage += 10;
-        }
         if (playerWindswept) {
                 damage = Math.floor(damage * .50);
+        }
+        if (tidalImbuement) {
+                damage += 10;
         }
         for (let i = 0; i < numberOfEnemies; i++) {
                 if (enemyIsDead[i] === false) {
@@ -3613,6 +3849,9 @@ function playerHeal(amount) {
         checkHealthIsOverMax();
 }
 function gainEnergize (amount) {
+        if (playerFrostbite) {
+                amount *= .5;
+        }
         playerEnergizeNumber.innerText = parseFloat(playerEnergizeNumber.innerText) + amount;
         displayBlock(playerEnergizeImg, playerEnergizeNumber);
 }
@@ -3716,7 +3955,6 @@ function checkPlayerEnergize() {
         playerEnergizeNumber.innerText = 0;
         displayNone(playerEnergizeImg, playerEnergizeNumber);
 }
-let healthGainedThisFight = 0;
 function checkRegenHeal() {
         if (playerRegenNumber.innerText >= 1) {
                 healthGainedThisFight += parseFloat(playerRegenNumber.innerText);
@@ -3738,6 +3976,7 @@ function checkBloodSiphon() {
         }
 }
 function updateCardText() {
+        getWindsweptDamage();
         document.querySelectorAll(".winds-card-text").forEach((i) => {
                 i.innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +3 damage or +5 damage if enemy is windswept.`;  
         });
@@ -3745,10 +3984,18 @@ function updateCardText() {
                 i.innerText = `Deal 2 damage per 5 health you currently have. Damage: ${Math.floor(2 * playerCurrentHealth.innerText / 5)}`;  
         });
         document.querySelectorAll(".storm-card-text").forEach((i) => {
-                i.innerText = `Deal 50% of the damage you've dealt this turn to an enemy. Damage: ${Math.floor(damageThisTurn / 2)}`;  
+                if (playerWindswept) {
+                        i.innerText = `Deal 25% of the damage you've dealt this turn to an enemy. Damage: ${Math.floor(damageThisTurn / 4)}`;
+                } else {
+                        i.innerText = `Deal 50% of the damage you've dealt this turn to an enemy. Damage: ${Math.floor(damageThisTurn / 2)}`;
+                }
         });
         document.querySelectorAll(".downpour-card-text").forEach((i) => {
-                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight}`;  
+                if (playerWindswept) {
+                        i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight / 2}`;
+                } else {
+                        i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight}`;
+                }
         });
 }
 function checkGaiasEmbrace() {
@@ -3977,23 +4224,51 @@ function createEnemy(baseHealth, img) {
                         <img class="enemy-heal-action-img enemy-action-img" src="imgs/heal-icon.png">
                     </div>
                     <div class="enemy-burn-action-div">
+                        <div class="burn-img-text">
+                                <h4 class="relic-img-text-h4">Burn</h4>
+                                <p class="relic-img-text-p">Take this much damage at the end of each turn. Decreases by one each turn.</p>
+                        </div>
                         <p class="enemy-burn-action-number"></p>
                         <img class="enemy-burn-action-img enemy-action-img" src="imgs/burn-icon.png">
                     </div>
                     <div class="enemy-regen-action-div">
+                        <div class="regen-img-text">
+                                <h4 class="relic-img-text-h4">Regeneration</h4>
+                                <p class="relic-img-text-p">Heal this much at the end of each turn. Decreases by one each turn.</p>
+                        </div>
                         <p class="enemy-regen-action-number"></p>
                         <img class="enemy-regen-action-img enemy-action-img" src="imgs/regen-icon.png">
                     </div>
                     <div class="enemy-blood-action-div">
+                        <div class="blood-img-text">
+                                <h4 class="relic-img-text-h4">Blood Siphon</h4>
+                                <p class="relic-img-text-p">Heal for 20% of damage done. Decreases by one at the end of each turn.</p>
+                        </div>
                         <p class="enemy-blood-action-number"></p>
                         <img class="enemy-blood-action-img enemy-action-img" src="imgs/blood-icon.png">
                     </div>
                     <div class="enemy-thorns-action-div">
+                        <div class="thorns-img-text">
+                                <h4 class="relic-img-text-h4">Thorns</h4>
+                                <p class="relic-img-text-p">Take this much damage when attacking.</p>
+                        </div>
                         <p class="enemy-thorns-action-number"></p>
                         <img class="enemy-thorns-action-img enemy-action-img" src="imgs/thorns-icon.png">
                     </div>
-                    <img class="enemy-frostbite-action-img enemy-action-img" src="imgs/frostbite-icon.png">
+                    <div class="enemy-frostbite-action-div">
+                        <div class="frostbite-img-text">
+                                <h4 class="relic-img-text-h4">Frostbite</h4>
+                                <p class="relic-img-text-p">Reduce all buffs gained by 50%.</p>
+                        </div>
+                        <img class="enemy-frostbite-action-img enemy-action-img" src="imgs/frostbite-icon.png">
+                   </div>
+                   <div class="enemy-windswept-action-div">
+                        <div class="windswept-img-text">
+                                <h4 class="relic-img-text-h4">Windswept</h4>
+                                <p class="relic-img-text-p">Reduce all attack and burn by 50%.</p>
+                        </div>
                     <img class="enemy-windswept-action-img enemy-action-img" src="imgs/windswept-icon.png">
+                   </div>
                 </div>
                 <img class="enemy-img" src="${img}">
                 <div class="enemy-block-div">
@@ -4026,6 +4301,38 @@ function createEnemy(baseHealth, img) {
                     <img class="enemy-frostbite-img" src="imgs/frostbite-icon.png"> 
                 </div>  
             </div>`
+            const burnImgText = document.querySelectorAll(".burn-img-text");
+            const enemyBurnActionDiv = document.querySelectorAll(".enemy-burn-action-div");
+            const regenImgText = document.querySelectorAll(".regen-img-text");
+            const enemyRegenActionDiv = document.querySelectorAll(".enemy-regen-action-div");
+            const bloodImgText = document.querySelectorAll(".blood-img-text");
+            const enemyBloodActionDiv = document.querySelectorAll(".enemy-blood-action-div");
+            const thornsImgText = document.querySelectorAll(".thorns-img-text");
+            const enemyThornsActionDiv = document.querySelectorAll(".enemy-thorns-action-div");
+            const frostbiteImgText = document.querySelectorAll(".frostbite-img-text");
+            const enemyFrostbiteActionDiv = document.querySelectorAll(".enemy-frostbite-action-div");
+            const windsweptImgText = document.querySelectorAll(".windswept-img-text");
+            const enemyWindsweptActionDiv = document.querySelectorAll(".enemy-windswept-action-div");
+            function addEnemyActionText(actionDiv, text) {
+                for (let i = 0; i < actionDiv.length; i++) {
+                        console.log(actionDiv[i], text[i]);
+                            actionDiv[i].addEventListener("mouseover", () => {
+                                    displayFlex(text[i]);
+                            });
+                    }
+                    for (let i = 0; i < actionDiv.length; i++) {
+                        console.log(actionDiv[i], text[i]);
+                            actionDiv[i].addEventListener("mouseout", () => {
+                                    displayNone(text[i]);
+                            });
+                    }
+            }
+            addEnemyActionText(enemyBurnActionDiv, burnImgText);
+            addEnemyActionText(enemyRegenActionDiv, regenImgText);
+            addEnemyActionText(enemyBloodActionDiv, bloodImgText);
+            addEnemyActionText(enemyThornsActionDiv, thornsImgText);
+            addEnemyActionText(enemyFrostbiteActionDiv, frostbiteImgText);
+            addEnemyActionText(enemyWindsweptActionDiv, windsweptImgText);
 }
 function enemyLevelUp() {
         let enemyCurrentHealth = document.querySelectorAll(".enemy-current-health");
@@ -4400,6 +4707,8 @@ function endTurn() {
         }
         checkPlayerBurn();
         displayNone(playerWindsweptImg, playerFrostbiteImg);
+        playerWindswept = false;
+        playerFrostbite = false;
         trackEnemies.forEach((i) => {
                 checkEnemyBurn([eI]);
                 // CHECK IF ENEMY IS DEAD
@@ -4493,19 +4802,7 @@ function endTurn() {
                 displayBlock(playerBloodImg, playerBloodNumber);
                 bloodAmulet = false;
         }
-        playerWindswept = false;
-        playerFrostbite = false;
 }
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
-getRelic(1, 12);
-getRelic(1, 12);
-getRelic(1, 12);
-getRelic(1, 12);
-getRelic(1, 12);
-getRelic(1, 12);
-getRelic(1, 12);
-getRelic(1, 12);
-getRelic(1, 12);
-getRelic(1, 12);
