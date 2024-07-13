@@ -13,15 +13,10 @@ POTIONS: RED POTION: Increase burn by 1
          COPY CARD
 
 Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 mana etc.
-SYNERGIES: Wind draw, frost thorn block, water burn heal, blood siphon lightning
 
 BUG: can click card then end turn and play card
 Frost and Wind faes showed attack but frostbite and windswept
 clickedon rock orbit and got thorn whip at end of encounter
-
-Added blacksmith
-reorganized shuffle mechanic so all cards sit in draw pile until an encounter
-cleaned up code by chaining methods more effectively
 
 */
 /*
@@ -3084,9 +3079,11 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
         `<div class="${cardClass} ${cardsInformation[index].element} ${index}">
                 <p class="card-mana-number">${cardsInformation[index].manaCost[upgradeIndex]}</p>
                 <img class="card-mana-img" src="imgs/block-icon.png">
-                <h1 class="card-name">${cardsInformation[index].name}</h1>
-                <img src="imgs/${element}-icon.png" class="card-element">
-                <img src="imgs/${element2}-icon.png" class="card-element-2">
+                <div class="card-name-element-div">
+                        <h1 class="card-name">${cardsInformation[index].name}</h1>
+                        <img src="imgs/${element}-icon.png" class="card-element">
+                        <img src="imgs/${element2}-icon.png" class="card-element-2">
+                </div>
                 <img class="card-img" src="${cardsInformation[index].cardImg}">
                 <p class="${cardText}">${cardsInformation[index].cardText[upgradeIndex]}</p>
         </div>`
@@ -3123,6 +3120,7 @@ function drawCards(numberOfCards) {
                 handArray.unshift(drawPileArray.shift());
                 displayFlex(handArray[0]);
         }
+        handContainer.style = `width: ${numberOfCards}0%`;
         console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         //console.log(handArray);
 }
@@ -3174,6 +3172,17 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                 }
                 displayNone(cardType[index]);
         }
+        function playCard() {
+                cardsInformation[CIindex].action[upgradeIndex]();
+                addToDiscard();
+                updateCardText();
+                checkHealthIsOverMax();
+                handContainer.style = `width: ${handArray.length}0%`;
+                if (airBubble.length > 0) {
+                        playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
+                        displayBlock(playerRegenImg, playerRegenNumber);
+                }
+        }
         // IF CARD REQUIRES YOU TO CLICK ON AN ENEMY
         if (cardsInformation[CIindex].chooseEnemyCard) {
                 cardType[index].addEventListener("click", () => {
@@ -3196,14 +3205,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         } else {
                 cardType[index].addEventListener("click", () => {
                         if (currentMana.innerText >= cardsInformation[CIindex].manaCost[upgradeIndex]) {
-                                cardsInformation[CIindex].action[upgradeIndex]();
-                                addToDiscard();
-                                updateCardText();
-                                if (airBubble.length > 0) {
-                                        playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
-                                        displayBlock(playerRegenImg, playerRegenNumber);
-                                        console.log("BLUBBLES");
-                                }
+                                playCard();
                         }
                 });
         }
@@ -3224,10 +3226,8 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         function clickEnemy() {
                 if (currentMana.innerText >= cardsInformation[chosenCard].manaCost[upgradeIndex] && chosenCard === CIindex) {
                         cardsInformation[CIindex].action[upgradeIndex]();
-                        addToDiscard();
+                        playCard();
                         cardClicked = false;
-                        checkHealthIsOverMax();
-                        updateCardText();
                         for (let i = 0; i < handArray.length; i++) {
                                 if (handArray[i].classList.contains("card-clicked")) {
                                         handArray[i].classList.remove("card-clicked");
@@ -3332,9 +3332,9 @@ function displayCardPiles(container, pile) {
 
         });
 }
-function removeCardPiles() {
-        drawPileContainer.innerHTML = ``;
-        displayNone(drawPileContainer);
+function removeCardPiles(pile) {
+        pile.innerHTML = ``;
+        displayNone(pile);
         arena.classList.remove("dim");
 }
 const drawPileImg = document.querySelector("#draw-pile-img");
@@ -3346,11 +3346,11 @@ discardPileImg.addEventListener("mouseover", () => {
         displayCardPiles(discardPileContainer, discardPileArray);
 });
 drawPileImg.addEventListener("mouseout", () => {
-        removeCardPiles();
+        removeCardPiles(drawPileContainer);
         drawPileArray = drawPileArray.toSorted(() => 0.5 - Math.random());
 });
 discardPileImg.addEventListener("mouseout", () => {
-        removeCardPiles();
+        removeCardPiles(discardPileContainer);
 });
 
 /*
@@ -4499,3 +4499,13 @@ function endTurn() {
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
+getRelic(1, 12);
+getRelic(1, 12);
+getRelic(1, 12);
+getRelic(1, 12);
+getRelic(1, 12);
+getRelic(1, 12);
+getRelic(1, 12);
+getRelic(1, 12);
+getRelic(1, 12);
+getRelic(1, 12);
