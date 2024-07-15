@@ -15,9 +15,9 @@ POTIONS: RED POTION: Increase burn by 1
 Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 mana etc.
 
 BUG: can click card then end turn and play card
-Frost and Wind faes showed attack but frostbite and windswept
-clickedon rock orbit and got thorn whip at end of encounter
-
+transfer burn doing way too much burn
+frostfire fusion too much burn
+dark elf blood nan
 */
 /*
 GENERAL FUNCTIONS
@@ -285,6 +285,8 @@ const L11T1 = () => {
 let numberOfEnemies;
 let enemyIsDead = [false, false, false];
 function resetArena() {
+        console.log("REFERENCE: ", document.querySelectorAll(".reference-card"));
+        arena.classList.remove("darken");
         for (i = 0; i < numberOfEnemies; i++) {
                 enemyIsDead[i] = false;
                 enemyFrostbite[i] = false;
@@ -297,7 +299,7 @@ function resetArena() {
         displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber, playerRegenImg, playerRegenNumber, playerThornsImg, playerThornsNumber,
                 playerBloodImg, playerBloodNumber, playerBlockImg, playerBlockNumber);
         if (thunderTalisman) {
-                currentMana.innerText = 5;
+                currentMana.innerText = 6;
         } else {
                 currentMana.innerText = 4;
         }
@@ -306,8 +308,8 @@ function resetArena() {
         playerRegenNumber.innerText = 0;
         playerBloodNumber.innerText = 0;
         frostbitten = false;
-        for (let i = 0; i < destroyedCardsArray.length; i++) {
-                let spliceCard = destroyedCardsArray.pop();
+        for (let i = 0; i < potionCards.length; i++) {
+                let spliceCard = potionCards.pop();
                 drawPileArray.push(spliceCard);
                 handContainer.appendChild(spliceCard);
         }
@@ -336,13 +338,14 @@ function resetArena() {
                 displayBlock(playerThornsImg, playerThornsNumber);
         }
         maxHandLength = 5;
-        if (windDisc) {
-                maxHandLength = 6;
-        }
         reshuffleCards();
         updateCardText();
-        drawCards(maxHandLength);
-        console.log(handContainer.childElementCount);
+        if (windDisc) {
+                console.log("WINDDISC");
+                drawCards(6);
+        } else {
+                drawCards(maxHandLength);
+        }
         for (let i = 0; i < handArray.length; i++) {
                 if (handArray[i].classList.contains("card-clicked")) {
                         handArray[i].classList.remove("card-clicked");
@@ -357,9 +360,9 @@ function resetArena() {
 }
 let dontRepeatEncounter = [];
 function getRandomEncounter() {
-        let randomEncounterNumber = createRandomNumber(1, 1);
+        let randomEncounterNumber = createRandomNumber(1, 10);
         while (dontRepeatEncounter.includes(randomEncounterNumber)) {
-                randomEncounterNumber = createRandomNumber(2, 2);
+                randomEncounterNumber = createRandomNumber(1, 10);
                 
         }
         let enemyImg = document.querySelectorAll(".enemy-img");
@@ -558,7 +561,7 @@ function getRelic(min, max) {
                                 <img class="relic-img" src="imgs/thunder-talisman2.png">
                                 <div class="relic-img-text">
                                         <h4 class="relic-img-text-h4">Thunder Talisman</h4>
-                                        <p class="relic-img-text-p">Start each encounter with +1 mana for the first turn</p>
+                                        <p class="relic-img-text-p">Start each encounter with +2 mana for the first turn</p>
                                 </div>
                         </div>`
                         dontRepeatRelic.push(3);
@@ -917,7 +920,7 @@ function chooseLocationPath() {
                         removeELL8();
                         location9Tiles1.addEventListener("click", L9T1);
                         location9Tiles2.addEventListener("click", L9T2);
-                        getBlacksmith();
+                        getRandomExclamation();
                         break;
                 case "L8T2":
                         removeGlow(location8Tiles1, location8Tiles2, location8Tiles3);
@@ -938,7 +941,7 @@ function chooseLocationPath() {
                         addGlow(location10Tiles1);
                         removeELL9();
                         location10Tiles1.addEventListener("click", L10T1);
-                        getRandomExclamation();
+                        getRandomEncounter();
                         break;
                 case "L9T2":
                         removeGlow(location9Tiles1, location9Tiles2, location9Tiles3);
@@ -964,7 +967,7 @@ function chooseLocationPath() {
                         addGlow(location11Tiles1);
                         removeELL10();
                         location11Tiles1.addEventListener("click", L11T1);
-                        getRandomEliteEncounter();
+                        getBlacksmith();
                         break;
                 case "L10T2":          
                         removeGlow(location10Tiles2);
@@ -1014,7 +1017,7 @@ let exclamationButton6 = document.querySelector(".exclamation-button-6");
 const destroyedCardsContainer = document.querySelector("#destroyed-cards-container");
 let dontRepeatExclamation = [];
 function getRandomExclamation() {
-        let randomExclamationNumber = createRandomNumber(3, 3);
+        let randomExclamationNumber = createRandomNumber(1, 3);
         switchArea(exclamationContainer, map);
         while (dontRepeatExclamation.includes(randomExclamationNumber)) {
                 randomExclamationNumber = createRandomNumber(1, 4);
@@ -1028,16 +1031,12 @@ function getRandomExclamation() {
                         exclamationButtonDiv = document.querySelector(".exclamation-button-div");
                         exclamationButtonDiv.innerHTML = `
                         <button class="exclamation-button-1"><span style="color: rgb(206, 83, 83)">Take It All:</span> Gain 200 Aether. Add Avarice to your deck which can't be used</button>
-                        <button class="exclamation-button-2"><span style="color: lightgreen">Share It:</span>Gain good fortune healing 10 health and gaining 10 max health</button>
+                        <button class="exclamation-button-2"><span style="color: lightgreen">Share It:</span> Gain good fortune healing 10 health and gaining 10 max health</button>
                         `;
                         exclamationButton1 = document.querySelector(".exclamation-button-1");
                         exclamationButton2 = document.querySelector(".exclamation-button-2");
                         exclamationButton1.addEventListener("click", () => {
-                                createCard(51, newCardsContainer, "card", "card-text", 0);
-                                let newCardsArray = document.querySelectorAll(".card");
-                                newCardsArray[0].style.background = "linear-gradient(gold, black)";
-                                drawPileArray.push(newCardsArray[0]);
-                                handContainer.appendChild(newCardsArray[0]);
+                                createNewCard(51, 0);
                                 playerAether.innerText = parseFloat(playerAether.innerText) + 200;
                                 switchArea(map, exclamationContainer);
                         });
@@ -1153,6 +1152,12 @@ function getRandomExclamation() {
                                                                 switchArea(map, exclamationContainer);
                                                         }
                                                 }
+                                                for (let k = 0; k < cardReference.length; k++) {
+                                                        destroyedCardsArray.push(cardReference[k]);
+                                                        destroyedCardsContainer.appendChild(cardReference[k]);
+                                                        destroyedCardsArray = [];
+                                                        destroyedCardsContainer.innerHTML = ``;
+                                                }
                                         });
                                 });
                         });    
@@ -1173,17 +1178,27 @@ function getRandomExclamation() {
                                         i.addEventListener("click", () => {
                                                 for (let j = 0; j < cardsInformation.length; j++) {
                                                         if (i.classList.contains(j)) {
-                                                                drawPileArray.forEach((k) => {
-                                                                        if (k.classList.contains(j)) {
-                                                                                let spliceCard = drawPileArray.splice(drawPileArray.indexOf(k), 1).pop();
-                                                                                destroyedCardsArray.push(spliceCard);
-                                                                                destroyedCardsContainer.appendChild(spliceCard);
-                                                                                destroyedCardsArray = [];
-                                                                                destroyedCardsContainer.innerHTML = ``;
-                                                                                switchArea(map, exclamationContainer);
-                                                                        }
-                                                                });
+                                                                function removeCard(pile) {
+                                                                        pile.forEach((k) => {
+                                                                                if (k.classList.contains(j)) {
+                                                                                        let spliceCard = pile.splice(pile.indexOf(k), 1).pop();
+                                                                                        destroyedCardsArray.push(spliceCard);
+                                                                                        destroyedCardsContainer.appendChild(spliceCard);
+                                                                                        destroyedCardsArray = [];
+                                                                                        destroyedCardsContainer.innerHTML = ``;
+                                                                                        switchArea(map, exclamationContainer);
+                                                                                }
+                                                                        });
+                                                                }
+                                                                removeCard(drawPileArray);
+                                                                removeCard(handArray);
                                                         }
+                                                }
+                                                for (let k = 0; k < cardReference.length; k++) {
+                                                        destroyedCardsArray.push(cardReference[k]);
+                                                        destroyedCardsContainer.appendChild(cardReference[k]);
+                                                        destroyedCardsArray = [];
+                                                        destroyedCardsContainer.innerHTML = ``;
                                                 }
                                         });
                                         
@@ -1232,7 +1247,6 @@ function getRandomExclamation() {
                                 }
                                 createNewCard(newCard, 0);
                                 newOpeningHand.push(newCard);
-                                console.log(newOpeningHand);
                         }
                         switchArea(map, exclamationDiv);
                 });
@@ -1279,8 +1293,7 @@ function getShop () {
         }
         let index = 0;
         dontRepeatCard.forEach((i) => {
-                shopCardsDiv.innerHTML += `
-                <div class="shop-cards-cost-div"></div>`;
+                shopCardsDiv.innerHTML += `<div class="shop-cards-cost-div"></div>`;
                 let shopCardsCostDiv = document.querySelectorAll(".shop-cards-cost-div");
                 createCard(i, shopCardsCostDiv[index], "card-reference", "card-text", 0);
                 shopCardsCostDiv[index].innerHTML += `<img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">50</p>`
@@ -1288,7 +1301,6 @@ function getShop () {
                 index++;
                 shopCards.push(shopCardsReference[shopCardsReference.length - 1]);
         });
-        let cardIndex;
         let shopCardsCostDiv = document.querySelectorAll(".shop-cards-cost-div");
         let shopCardsReference = document.querySelectorAll(".card-reference");
         for (let i = 0; i < shopCardsReference.length; i++) {
@@ -1296,12 +1308,16 @@ function getShop () {
                 shopCardsReference[i].addEventListener("click", () => {       
                         for (let j = 0; j < cardsInformation.length; j++) {
                                 if (shopCardsReference[i].classList.contains(j) && playerAether.innerText >= 50) {
-                                        cardIndex = j;
-                                        createCard(cardIndex, drawPileContainer, "card", "card-text", 0);
-                                        createNewCard(cardIndex, 0);
+                                        createNewCard(j, 0);
                                         playerAether.innerText -= 50;
                                         displayNone(shopCardsCostDiv[i], map);
                                 }
+                        }
+                        for (let k = 0; k < shopCardsReference.length; k++) {
+                                destroyedCardsArray.push(shopCardsReference[k]);
+                                destroyedCardsContainer.appendChild(shopCardsReference[k]);
+                                destroyedCardsArray = [];
+                                destroyedCardsContainer.innerHTML = ``;
                         }
                 });
         }
@@ -1485,7 +1501,6 @@ function getShop () {
                                 if (shopRelicImg[i].classList.contains(k) && playerAether.innerText >= 100) {
                                         getRelic(k, k);
                                         displayNone(shopAetherImg[i + 10], shopAetherCost[i + 10],shopRelicImg[i], map);
-                                        console.log(shopAetherImg, shopAetherCost);
                                         playerAether.innerText -= 100;
                                 }
                         }
@@ -1511,8 +1526,7 @@ function getBlacksmith() {
                 });
         } else {
                 blacksmithText.addEventListener("click", () => {
-                        blacksmithText.innerHTML = `<br>Leave Blacksmith<br><br>`;
-                        blacksmithText.style = "margin-top: 50px";
+                        blacksmithText.innerHTML = `Leave Blacksmith<br>`;
                         blacksmithContainer.innerHTML += `<div id="blacksmith-cards-list"></div>`
                         const blacksmithCardsList = document.querySelector("#blacksmith-cards-list");
                         let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
@@ -1530,56 +1544,65 @@ function getBlacksmith() {
                                 }
                         }
                         let cardReference = document.querySelectorAll(".card-reference");
-                        let cardReferenceUpgraded = document.querySelectorAll(".upgraded");
+                        let cardReferenceUpgraded = document.querySelectorAll(".upgrade-reference");
                         let allCurrentCards = document.querySelectorAll(".card");
+                        console.log("CARD REFERENCE: ", cardReference, "cardReferenceUpgraded: ", cardReferenceUpgraded);
                         function upgradeCard(cardIndex) {
                                 for (let k = 0; k < allCurrentCards.length; k++) {
                                         if (allCurrentCards[k].classList.contains(cardIndex)) {
+                                                if (drawPileArray.includes(allCurrentCards[k])) {
                                                         let spliceCard = drawPileArray.splice(drawPileArray.indexOf(allCurrentCards[k]), 1).pop();
                                                         destroyedCardsArray.push(spliceCard);
                                                         destroyedCardsContainer.appendChild(spliceCard);
                                                         destroyedCardsArray = [];
                                                         destroyedCardsContainer.innerHTML = ``;
                                                         createNewCard(cardIndex, 1);
+                                                        break;
+                                                }
+                                                if (handArray.includes(allCurrentCards[k])) {
+                                                        let spliceCard = handArray.splice(handArray.indexOf(allCurrentCards[k]), 1).pop();
+                                                        destroyedCardsArray.push(spliceCard);
+                                                        destroyedCardsContainer.appendChild(spliceCard);
+                                                        destroyedCardsArray = [];
+                                                        destroyedCardsContainer.innerHTML = ``;
+                                                        createNewCard(cardIndex, 1);
+                                                        break;
+                                                }
                                         }
                                 }
                         }
-                        cardReference.forEach((i) => {
-                                displayFlex(i);
-                                i.addEventListener("click", () => {
+                        for (let i = 0; i < cardReference.length; i++) {
+                                displayFlex(cardReference[i]);
+                                cardReference[i].addEventListener("click", () => {
+                                        clickCount--;
                                         for (let j = 0; j < cardsInformation.length; j++) {
-                                                if (i.classList.contains(j)) {
-                                                        if (playerAether.innerText >= 75) {
-                                                                upgradeCard(j);
-                                                                playerAether.innerText -= 75;
-                                                                displayNone(i);
+                                                if (cardReference[i].classList.contains(j) && playerAether.innerText >= 75) {
+                                                        upgradeCard(j);
+                                                        playerAether.innerText -= 75;
+                                                        displayNone(cardReference[i]);
+                                                        break;
+                                                }
+                                        }
+                                });
+                                cardReference[i].addEventListener("mouseover", () => {
+                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                if (cardReference[i].classList.contains(j)) {
+                                                        if (cardReferenceUpgraded[i].classList.contains(j)) {
+                                                                displayFlex(cardReferenceUpgraded[i]);
                                                         }
                                                 }
                                         }
                                 });
-                                i.addEventListener("mouseover", () => {
+                                cardReference[i].addEventListener("mouseout", () => {
                                         for (let j = 0; j < cardsInformation.length; j++) {
-                                                if (i.classList.contains(j)) {
-                                                        cardReferenceUpgraded.forEach(k => {
-                                                                if (k.classList.contains(j)) {
-                                                                        displayFlex(k);
-                                                                }
-                                                        });
+                                                if (cardReference[i].classList.contains(j)) {
+                                                        if (cardReferenceUpgraded[i].classList.contains(j)) {
+                                                                displayNone(cardReferenceUpgraded[i]);
+                                                        }
                                                 }
                                         }
                                 });
-                                i.addEventListener("mouseout", () => {
-                                        for (let j = 0; j < cardsInformation.length; j++) {
-                                                if (i.classList.contains(j)) {
-                                                        cardReferenceUpgraded.forEach(k => {
-                                                                if (k.classList.contains(j)) {
-                                                                        displayNone(k);
-                                                                }
-                                                        });
-                                                }
-                                        }
-                                });
-                        });
+                        }
                         this.addEventListener("click", () => {
                                 clickCount++;
                                 if (clickCount === 2) {
@@ -1933,7 +1956,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(20000);
+                                damageAllEnemies(2000);
                         },
                         function() {
                                 spendMana(3);
@@ -2289,6 +2312,9 @@ const cardsInformation = [
                                         randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
                                         while (enemyIsDead[randomEnemy]) {
                                                 randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
+                                                if (enemyIsDead[0] && enemyIsDead[1] && enemyIsDead[2]) {
+                                                        return;
+                                                }
                                         }
                                         damageEnemy(10, randomEnemy);
                                         if (!randomEnemies.includes(randomEnemy)) {
@@ -2785,30 +2811,32 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [3, 2],
+                manaCost: [0, 1],
                 name: "Forest Fire",
                 cardImg: "imgs/forest-fire.jpg",
-                cardText: ["Inflict 5 burn to all enemies. Deal damage equal to their burn", "Inflict 5 burn to all enemies. Deal damage equal to their burn"],
+                cardText: ["Energize 1 for each enemy burning", "Burn all enemies for 3 and Energize 1 for each enemy burning"],
                 chooseEnemyCard: false,
                 index: 36,
                 element: "fire-lightning fire lightning",
                 action:
                 [
                         function() {
-                                spendMana(3);
-                                burnAllEnemies(5);
                                 for (let i = 0; i < numberOfEnemies; i++) {
+                                        console.log(enemyIsDead[i] === false, parseFloat(enemyBurnNumber[i].innerText));
                                         if (enemyIsDead[i] === false) {
-                                                damageEnemy(enemyBurnNumber[i].innerText);
+                                                if (enemyBurnNumber[i].innerText > 0) {
+                                                        gainEnergize(1)
+                                                }
                                         }
                                 }
                         },
                         function() {
-                                spendMana(2);
-                                burnAllEnemies(5);
+                                burnAllEnemies(3);
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false) {
-                                                damageEnemy(enemyBurnNumber[i].innerText);
+                                                if (enemyBurnNumber[i].innerText > 0) {
+                                                        gainEnergize(1)
+                                                }
                                         }
                                 }
                         },
@@ -2954,7 +2982,7 @@ const cardsInformation = [
                 manaCost: [6, 6],
                 name: "Hurricane",
                 cardImg: "imgs/hurricane.jpg",
-                cardText: ["Inflict windswept and deal 50 damage to all enemies. Draw a card, and gain 2 mana.", "Inflict windswept and deal 50 damage to all enemies. Draw a card, energize 1 and gain 3 mana."],
+                cardText: ["Inflict windswept and deal 50 damage to all enemies. Draw a card, energize 1 and gain 2 mana.", "Inflict windswept and deal 50 damage to all enemies. Draw a card, energize 2 and gain 3 mana."],
                 chooseEnemyCard: false,
                 index: 42,
                 element: "lightning-air lightning air",
@@ -2968,6 +2996,7 @@ const cardsInformation = [
                                                 inflictWindswept(i);
                                         }
                                 }
+                                gainEnergize(1);
                                 drawCards(1);
                                 currentMana.innerText = parseFloat(currentMana.innerText) + 2;
                         },
@@ -2981,7 +3010,7 @@ const cardsInformation = [
                                 }
                                 drawCards(1);
                                 currentMana.innerText = parseFloat(currentMana.innerText) + 3;
-                                gainEnergize(1);
+                                gainEnergize(2);
                         },
                 ]
         },
@@ -3012,7 +3041,7 @@ const cardsInformation = [
                 manaCost: [2, 2],
                 name: "Quaking Jolt",
                 cardImg: "imgs/quaking-thunder3.jpg",
-                cardText: ["Deal 10 damage to all enemies and gain 1 thorn per enemy hit", "Deal 10 damage to all enemies and gain 1 thorn and 4 block per enemy hit"],
+                cardText: ["Gain 1 thorn and energize for each enemy alive", "Gain 1 thorn, 4 block and 1 energize for each enemy alive"],
                 chooseEnemyCard: false,
                 index: 44,
                 element: "lightning-earth lightning earth",
@@ -3024,6 +3053,7 @@ const cardsInformation = [
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false) {
                                                 gainThorns(1);
+                                                gainEnergize(1);
                                         }
                                 }
                         },
@@ -3033,6 +3063,7 @@ const cardsInformation = [
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false) {
                                                 gainThorns(1);
+                                                gainEnergize(1);
                                                 gainArmor(4);
                                         }
                                 }
@@ -3221,10 +3252,10 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: 0,
+                manaCost: [0, 0],
                 name: "Avarice",
                 cardImg: "imgs/avarice.jpg",
-                cardText: "[DOES NOTHING] Your greed causes you to look down upon peasants",
+                cardText: ["Your greed causes you to look down upon peasants", "Your greed causes you to look down upon peasants"],
                 chooseEnemyCard: false,
                 index: 51,
                 element: "gold",
@@ -3326,12 +3357,11 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
                 <p class="${cardText} ${index}">${cardsInformation[index].cardText[upgradeIndex]}</p>
         </div>`
 }
-
+arena.classList.remove("darken");
 // LOOP TO CREATE OPENING 12 CARDS
 for (let i = 0; i < 12; i++) {
         createCard(i, handContainer, "card", "card-text", 0);
 }
-
 // SET CARDS TO ACTIVATE WHEN CLICKED RATHER THAN WHEN ENEMY IS CLICKED
 let chooseEnemyCard = false;
 let [...openingCards] = document.querySelectorAll(".card");
@@ -3360,7 +3390,7 @@ function drawCards(numberOfCards) {
         }
         handContainer.style = `width: ${numberOfCards - 1}7%`;
         console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
-        //console.log(handArray);
+        console.log(handArray);
 }
 // GET NEW SET OF 5 CARDS AT THE END OF EACH TURN
 let cardsInHand;
@@ -3392,19 +3422,17 @@ function reshuffleCards() {
         // RESHUFFLE CARDS IN DRAW PILE
         drawPileArray = drawPileArray.toSorted(() => 0.5 - Math.random());
 }
-const allCardsReferenceContainer = document.querySelector("#all-cards-reference-container");
-//for (let i = 0; i < cardsInformation.length; i++) {
-  //      createCard(i, allCardsReferenceContainer, "card-reference", "card-text");
-//}
 // TRIGGER SO YOU CANT CLICK CARD MULTIPLE TIMES TO APPLY CARD EFFECT MULTIPLE TIMES ON ENEMY
 let cardClicked = false;
+let potionCards = [];
+let potionCardsContainer = document.querySelector("#potion-cards-container");
 // ADD EVENTLISTENERS TO ALL CARDS, STORE CHOSEN CARD IN VARIABLE, PICK ENEMY WHO WILL RECIEVE CARD ACTION
 function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         function addToDiscard() {
                 let spliceCard = handArray.splice(handArray.indexOf(cardType[index]), 1).pop();
                 if (CIindex === 15 || CIindex === 19 || CIindex === 23 || CIindex === 27 || CIindex === 31 || CIindex === 35 || CIindex === 50) {
-                        destroyedCardsArray.push(cardType[index]);
-                        destroyedCardsContainer.appendChild(cardType[index]);
+                        potionCards.push(cardType[index]);
+                        potionCardsContainer.appendChild(cardType[index]);
                 } else {
                         discardPileArray.push(spliceCard);
                 }
@@ -3415,7 +3443,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                 addToDiscard();
                 updateCardText();
                 checkHealthIsOverMax();
-                handContainer.style = `width: ${handArray.length - 1}7%`;
+                handContainer.style = `width: ${handArray.length- 1}9.5%`;
                 if (airBubble.length > 0) {
                         playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
                         displayBlock(playerRegenImg, playerRegenNumber);
@@ -3470,10 +3498,6 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                                         handArray[i].classList.remove("card-clicked");
                                 }
                         }
-                        if (airBubble.length > 0) {
-                                playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
-                                displayBlock(playerRegenImg, playerRegenNumber);
-                        }
                         for (let i = 0; i < numberOfEnemies; i++) {
                                 if (enemyIsDead[i] === false) {
                                         enemy[i].removeEventListener("click", clickEnemy);   
@@ -3483,7 +3507,9 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         }
 }
 function createNewCard(newRandomCard, upgradeIndex) {
+        console.log("CREATING CARD NEW RANDOM CARD", newRandomCard);
         chooseNewCardDiv.innerHTML = ``;
+        // THIS WONT WORK ANYMORE UPDATE IN CREATECARD
         if (newRandomCard == 24) {
                 createCard(newRandomCard, newCardsContainer, "card winds-of-change", "card-text winds-card-text", upgradeIndex);
         } else if (newRandomCard == 43) {
@@ -3496,6 +3522,7 @@ function createNewCard(newRandomCard, upgradeIndex) {
                 createCard(newRandomCard, newCardsContainer, "card", "card-text", upgradeIndex);
         }
         let newCardsArray = document.querySelectorAll(".card");
+        console.log("1 NEWCARDSARRAY[0]", newCardsArray[0]);
         let newCardsText = document.querySelectorAll(".card-text");
         if (upgradeIndex === 1) {
                 newCardsArray[0].classList.add("upgraded");
@@ -3504,17 +3531,20 @@ function createNewCard(newRandomCard, upgradeIndex) {
         addCardListeners(newCardsArray, 0, newRandomCard, upgradeIndex);
         drawPileArray.push(newCardsArray[0]);
         handContainer.appendChild(newCardsArray[0]);
+        console.log("2 NEWCARDSARRAY[0]", newCardsArray[0]);
         switchArea(map, arena);
 }        
 const allCardsReference = document.querySelectorAll(".card-reference");
 const newCardsContainer = document.querySelector("#new-cards-container");
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
+        arena.classList.add("darken");
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = 16;//createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard0 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
+        console.log("BEFORE 0", newRandomCard0, "1", newRandomCard1, "2", newRandomCard2, "3", newRandomCard3);
         // CHANGE CARDS IF THEY ARE THE SAME
         while (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3 || 
                 newRandomCard1 == newRandomCard2 || newRandomCard1 == newRandomCard3 || newRandomCard2 == newRandomCard3) {
@@ -3523,17 +3553,20 @@ function getRandomNewCards () {
                 newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
                 newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
         }
+        console.log("REPEAT 0", newRandomCard0, "1", newRandomCard1, "2", newRandomCard2, "3", newRandomCard3);
         // ADD REFERENCE CARDS TO CHOOSE NEW CARD DIV
         createCard(newRandomCard0, chooseNewCardDiv, "card", "card-text", 0);
         createCard(newRandomCard1, chooseNewCardDiv, "card", "card-text", 0);
         createCard(newRandomCard2, chooseNewCardDiv, "card", "card-text", 0);
         createCard(newRandomCard3, chooseNewCardDiv, "card", "card-text", 0);
         let newCardChoices = document.querySelectorAll(".card");
+        console.log("NEW CARD CHOICES", newCardChoices);
         displayFlex(chooseNewCardDiv, newCardChoices[0], newCardChoices[1], newCardChoices[2], newCardChoices[3]);
         newCardChoices[0].addEventListener("click", () => {createNewCard(newRandomCard0, 0)});
         newCardChoices[1].addEventListener("click", () => {createNewCard(newRandomCard1, 0)});
         newCardChoices[2].addEventListener("click", () => {createNewCard(newRandomCard2, 0)});
         newCardChoices[3].addEventListener("click", () => {createNewCard(newRandomCard3, 0)});
+        return;
 }
 function removeCardClickedClass() {
         for (let i = 0; i < drawPileArray.length; i++) {
@@ -3565,8 +3598,6 @@ function displayCardPiles(container, pile) {
         let cardReference = document.querySelectorAll(".card-reference");
         cardReference.forEach(i => {
                 displayFlex(i);
-                console.log(i);
-
         });
 }
 function removeCardPiles(pile) {
@@ -3638,8 +3669,6 @@ function spendMana(manaCost) {
         currentMana.innerText -= manaCost;
 }
 function damageEnemy(damage, enemy) {
-        console.log("wind", playerWindswept);
-
         // DAMGE ALL ENEMIES IF SNOWFALL ELIXER HAS BEEN PLAYED
         if (snowfallElixir) {
                 damageAllEnemies(damage);
@@ -3850,7 +3879,7 @@ function playerHeal(amount) {
 }
 function gainEnergize (amount) {
         if (playerFrostbite) {
-                amount *= .5;
+                amount = Math.floor(amount * .5);
         }
         playerEnergizeNumber.innerText = parseFloat(playerEnergizeNumber.innerText) + amount;
         displayBlock(playerEnergizeImg, playerEnergizeNumber);
@@ -3912,7 +3941,6 @@ function burnAllEnemies(burn) {
                 burn += 4;
         }
         for (let i = 0; i < numberOfEnemies; i++) {
-                console.log("enemy dead: ", enemyIsDead[i]);
                 if (enemyIsDead[i] === false) {
                         if (eternalFlameTracking[i]) {
                                 burn = Math.floor(burn * 1.5);
@@ -4315,13 +4343,11 @@ function createEnemy(baseHealth, img) {
             const enemyWindsweptActionDiv = document.querySelectorAll(".enemy-windswept-action-div");
             function addEnemyActionText(actionDiv, text) {
                 for (let i = 0; i < actionDiv.length; i++) {
-                        console.log(actionDiv[i], text[i]);
                             actionDiv[i].addEventListener("mouseover", () => {
                                     displayFlex(text[i]);
                             });
                     }
                     for (let i = 0; i < actionDiv.length; i++) {
-                        console.log(actionDiv[i], text[i]);
                             actionDiv[i].addEventListener("mouseout", () => {
                                     displayNone(text[i]);
                             });
@@ -4565,12 +4591,12 @@ let enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
 function checkIfEnemyDead() {
         // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET AETHER
         function allEnemiesDead() {
-                getRandomNewCards();
                 playerAether.innerText = parseFloat(playerAether.innerText) + Math.ceil(30 + ((enemyLevel + 1) * 2.7));
-                //displayNone(handContainer);
                 if (getEliteRelic) {
                         getRelic(1, 12);
                 }
+                getRandomNewCards();
+                return;
         }
        
         // IF ENEMY  IS DEAD, DELETE THEM
@@ -4806,3 +4832,4 @@ function endTurn() {
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
+getRelic(8, 8);

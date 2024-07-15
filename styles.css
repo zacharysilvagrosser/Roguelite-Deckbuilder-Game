@@ -203,11 +203,11 @@
     width: 120px;
     height: 120px;
 }
-.shop-relic-img-text, .relic-img-text {
+.shop-relic-img-text, .relic-img-text, .burn-img-text, .regen-img-text, .blood-img-text, .thorns-img-text, .frostbite-img-text, .windswept-img-text {
     position: absolute;
     margin-top: 12rem;
     display: none;
-    width: 16rem;
+    width: 25rem;
     height: 10rem;
     background-image: linear-gradient(rgb(158, 157, 157), rgb(56, 55, 55));
     z-index: 2;
@@ -217,8 +217,11 @@
     justify-content: center;
     flex-direction: column;
     border: 2px double rgb(81, 81, 81);
+    box-shadow: 5px 3px 3px black;
 }
-
+.burn-img-text, .regen-img-text, .blood-img-text, .thorns-img-text, .frostbite-img-text, .windswept-img-text {
+    right: 0%;
+}
 .player-frostbite-img:hover + div {
     display: flex;
 }
@@ -279,16 +282,16 @@
     background-image: url("imgs/blacksmith-background2.jpg");
     background-size: cover;
     background-position: 90%;
+    overflow: hidden;
     display: none;
 }
 #blacksmith-cards-list {
     width: 100%;
-    height: 85vh;
     display: flex;
     padding-top: 60px;
     flex-wrap: wrap;
-    align-items:start;
-    overflow: hidden;
+    align-items: start;
+    justify-content: flex-start;
 }
 .blacksmith-upgrade-pair {
     width: 10%;
@@ -357,6 +360,9 @@
 }
 .dim {
     filter: brightness(20%);
+}
+.darken {
+    filter: brightness(80%);
 }
 #player-div {
     position: absolute;
@@ -734,12 +740,10 @@
 .position-left {
     margin-left: 1020px;
     margin-top: 60px;
-    z-index: 3;
 }
 .position-middle {
     margin-left: 1280px;
     margin-top: 60px;
-    z-index: 2;
 }
 .position-right {
     margin-left: 1500px;
@@ -794,8 +798,10 @@
 }
 #current-mana {
     position: absolute;
+    width: 50px;
+    text-align: center;
     margin-top: -65px;
-    margin-left: 123px;
+    margin-left: 108px;
     font-weight: bold;
     font-size: 35px;
     color: black;
@@ -1144,14 +1150,12 @@
     width: 100%;
 }
 .card-element {
-    
     width: 18px;
     height: 18px;
 }
 .card-element-2 {
     position: absolute;
-    margin-left: 118px;
-    margin-top: 2px;
+    margin-left: 140px;
     width: 18px;
     height: 18px;
 }
