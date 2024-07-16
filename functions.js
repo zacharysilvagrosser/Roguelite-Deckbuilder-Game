@@ -61,6 +61,7 @@ function switchArea(block, none) {
         displayBlock(block);
         displayNone(none);
 }
+const mapMusic = new Audio("audio/map-music.mp3");
 function removeELL1() {
                 location1Tiles1.removeEventListener("click", L1T1);
                 location1Tiles2.removeEventListener("click", L1T2);
@@ -360,6 +361,7 @@ function resetArena() {
 }
 let dontRepeatEncounter = [];
 function getRandomEncounter() {
+        new Audio("audio/start-screen-song.mp3").play();
         let randomEncounterNumber = createRandomNumber(1, 10);
         while (dontRepeatEncounter.includes(randomEncounterNumber)) {
                 randomEncounterNumber = createRandomNumber(1, 10);
@@ -693,7 +695,9 @@ function getRelic(min, max) {
 }
 let getEliteRelic = false;
 let dontRepeatEliteEncounter = [];
+const eliteMusic = new Audio("audio/elite-encounter-music.mp3");
 function getRandomEliteEncounter() {
+        eliteMusic.play();
         let randomEliteEncounterNumber = createRandomNumber(1, 4);
         while (dontRepeatEliteEncounter.includes(randomEliteEncounterNumber)) {
                 randomEliteEncounterNumber = createRandomNumber(1, 4);
@@ -764,6 +768,7 @@ function getRandomEliteEncounter() {
 }
 function chooseLocationPath() {
         resetArena();
+        mapMusic.pause();
         switch (chosenLocation) {
                 case "L1T1":
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
@@ -771,7 +776,7 @@ function chooseLocationPath() {
                         removeELL1();
                         location2Tiles1.addEventListener("click", L2T1);
                         location2Tiles2.addEventListener("click", L2T2);
-                        getRandomEncounter();
+                        getRandomEliteEncounter();
                         break;
                 case "L1T2":
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
@@ -1017,6 +1022,13 @@ let exclamationButton6 = document.querySelector(".exclamation-button-6");
 const destroyedCardsContainer = document.querySelector("#destroyed-cards-container");
 let dontRepeatExclamation = [];
 function getRandomExclamation() {
+        const exclamationMusic = new Audio("audio/exclamation-music.mp3");
+        exclamationMusic.play();
+        function switchMusic() {
+                mapMusic.play();
+                exclamationMusic.pause();
+                exclamationMusic.currentTime = 0;
+        }
         let randomExclamationNumber = createRandomNumber(1, 3);
         switchArea(exclamationContainer, map);
         while (dontRepeatExclamation.includes(randomExclamationNumber)) {
@@ -1039,12 +1051,14 @@ function getRandomExclamation() {
                                 createNewCard(51, 0);
                                 playerAether.innerText = parseFloat(playerAether.innerText) + 200;
                                 switchArea(map, exclamationContainer);
+                                switchMusic();
                         });
                         exclamationButton2.addEventListener("click", () => {
                                 playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 10;
                                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 10;
                                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
                                 switchArea(map, exclamationContainer);
+                                switchMusic();
                         });
                         dontRepeatExclamation.push(1);
                         break;
@@ -1091,31 +1105,37 @@ function getRandomExclamation() {
                                 let fire = document.querySelectorAll(".fire");
                                 destroyCards(fire, "fire");
                                 switchArea(map, exclamationContainer);
+                                switchMusic();
                         });
                         exclamationButton2.addEventListener("click", () => {
                                 let lightning = document.querySelectorAll(".lightning");
                                 destroyCards(lightning, "lightning");
                                 switchArea(map, exclamationContainer);
+                                switchMusic();
                         });
                         exclamationButton3.addEventListener("click", () => {
                                 let ice = document.querySelectorAll(".ice");
                                 destroyCards(ice, "ice");
                                 switchArea(map, exclamationContainer);
+                                switchMusic();
                         });
                         exclamationButton4.addEventListener("click", () => {
                                 let air = document.querySelectorAll(".air");
                                 destroyCards(air, "air");
                                 switchArea(map, exclamationContainer);
+                                switchMusic();
                         });
                         exclamationButton5.addEventListener("click", () => {
                                 let water = document.querySelectorAll(".water");
                                 destroyCards(water, "water");
                                 switchArea(map, exclamationContainer);
+                                switchMusic();
                         });
                         exclamationButton6.addEventListener("click", () => {
                                 let earth = document.querySelectorAll(".earth");
                                 destroyCards(earth, "earth");
                                 switchArea(map, exclamationContainer);
+                                switchMusic();
                         });
                         dontRepeatExclamation.push(2);
                         break;
@@ -1150,6 +1170,7 @@ function getRandomExclamation() {
                                                         if (i.classList.contains(j)) {
                                                                 createNewCard(j, 0);
                                                                 switchArea(map, exclamationContainer);
+                                                                switchMusic();
                                                         }
                                                 }
                                                 for (let k = 0; k < cardReference.length; k++) {
@@ -1187,6 +1208,7 @@ function getRandomExclamation() {
                                                                                         destroyedCardsArray = [];
                                                                                         destroyedCardsContainer.innerHTML = ``;
                                                                                         switchArea(map, exclamationContainer);
+                                                                                        switchMusic();
                                                                                 }
                                                                         });
                                                                 }
@@ -1249,10 +1271,13 @@ function getRandomExclamation() {
                                 newOpeningHand.push(newCard);
                         }
                         switchArea(map, exclamationDiv);
+                        switchMusic();
                 });
         }
 }
 function getShop () {
+        let shopMusic = new Audio("audio/shop-music.wav");
+        shopMusic.play();
         const shopContainer = document.querySelector("#shop-container");
         displayNone(map);
         displayFlex(shopContainer);
@@ -1268,6 +1293,9 @@ function getShop () {
         const leaveShopButton = document.querySelector("#leave-shop-button");
         leaveShopButton.addEventListener("click", () => {
                 switchArea(map, shopContainer);
+                mapMusic.play();
+                shopMusic.pause();
+                shopMusic.currentTime = 0;
         });
         // HEALTH BUTTON
         /*const shopHealthButton = document.querySelector("#shop-health-button");
@@ -1514,6 +1542,12 @@ function getShop () {
         }
 }
 function getBlacksmith() {
+        const blacksmithMusic = new Audio("audio/blacksmith-music.mp3");
+        blacksmithMusic.play();
+        blacksmithMusic.loop = true;
+        const blacksmithAmbience = new Audio("audio/blacksmith-ambience.wav");
+        blacksmithAmbience.play();
+        blacksmithAmbience.loop = true;
         const blacksmithContainer = document.querySelector("#blacksmith-container");
         displayFlex(blacksmithContainer);
         displayNone(map);
@@ -1523,6 +1557,7 @@ function getBlacksmith() {
                 blacksmithText.innerHTML = `<p>I can infuse your cards with aether to make them stronger if you've got the materials.<br><br>Come back when you have 75 aether for me.</p>`;
                 blacksmithText.addEventListener("click", () => {
                         switchArea(map, blacksmithContainer);
+                        mapMusic.play();
                 });
         } else {
                 blacksmithText.addEventListener("click", () => {
@@ -1579,7 +1614,7 @@ function getBlacksmith() {
                                                 if (cardReference[i].classList.contains(j) && playerAether.innerText >= 75) {
                                                         upgradeCard(j);
                                                         playerAether.innerText -= 75;
-                                                        displayNone(cardReference[i]);
+                                                        displayNone(cardReference[i], map);
                                                         break;
                                                 }
                                         }
@@ -1607,6 +1642,11 @@ function getBlacksmith() {
                                 clickCount++;
                                 if (clickCount === 2) {
                                         switchArea(map, blacksmithContainer);
+                                        mapMusic.play();
+                                        blacksmithMusic.pause();
+                                        blacksmithMusic.currentTime = 0;
+                                        blacksmithAmbience.pause();
+                                        blacksmithAmbience.currentTime = 0;
                                 }
                         });
                 });
@@ -1891,10 +1931,12 @@ const cardsInformation = [
                                 spendMana(1);
                                 damageEnemy(5, chosenEnemy);
                                 burnEnemy(4, chosenEnemy);
+                                new Audio("audio/fireball.wav").play();
                         },
                         function () {
                                 spendMana(1);
                                 burnEnemy(6, chosenEnemy);
+                                new Audio("audio/fireball.wav").play();
                         }
                 ]
         },
@@ -1914,6 +1956,7 @@ const cardsInformation = [
                                 burnEnemy(8, chosenEnemy);
                                 playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 2;
                                 displayBlock(playerBurnImg, playerBurnNumber);
+                                new Audio("audio/cascadingFlames.wav").play();
                         },
                         function() {
                                 spendMana(2);
@@ -1921,6 +1964,7 @@ const cardsInformation = [
                                 burnEnemy(8, chosenEnemy);
                                 playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 2;
                                 displayBlock(playerBurnImg, playerBurnNumber);
+                                new Audio("audio/cascadingFlames.wav").play();
                         }
                 ]
         },
@@ -1937,10 +1981,12 @@ const cardsInformation = [
                         function() {
                                 spendMana(1);
                                 gainEnergize(2);
+                                new Audio("audio/staticCharge.wav").play();
                         },    
                         function() {
                                 spendMana(1);
                                 gainEnergize(3);
+                                new Audio("audio/staticCharge.wav").play();
                         },    
                 ]
         },
@@ -1956,12 +2002,14 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(2000);
+                                damageAllEnemies(20);
+                                new Audio("audio/chainLightning.wav").play();
                         },
                         function() {
                                 spendMana(3);
                                 damageAllEnemies(20);
                                 gainEnergize(2);
+                                new Audio("audio/chainLightning.wav").play();
                         },
                 ]        
         },
@@ -1979,12 +2027,14 @@ const cardsInformation = [
                                 spendMana(1);
                                 damageEnemy(10, chosenEnemy);
                                 inflictFrostbite(chosenEnemy);
+                                new Audio("audio/frostbolt.wav").play();
                         },
                         function() {
                                 spendMana(0);
                                 damageEnemy(15, chosenEnemy);
                                 inflictFrostbite(chosenEnemy);
-                        },
+                                new Audio("audio/frostbolt.wav").play();
+                        }
                 ]
         },        
         {
@@ -2004,6 +2054,7 @@ const cardsInformation = [
                                 } else {
                                         damageEnemy(15, chosenEnemy);
                                 }
+                                new Audio("audio/frostFingers.wav").play();
                         },
                         function() {
                                 spendMana(2);
@@ -2012,7 +2063,8 @@ const cardsInformation = [
                                 } else {
                                         damageEnemy(15, chosenEnemy);
                                 }
-                        },
+                                new Audio("audio/frostFingers.wav").play();
+                        }
                 ]
         },
         {
@@ -2047,6 +2099,7 @@ const cardsInformation = [
                                         tidalImbuement = false;
                                         displayNone(playerTidalImbuementImg);
                                 }
+                                new Audio("audio/tornado.wav").play();
                         },
                         function() {
                                 spendMana(1);
@@ -2071,6 +2124,7 @@ const cardsInformation = [
                                         tidalImbuement = false;
                                         displayNone(playerTidalImbuementImg);
                                 }
+                                new Audio("audio/tornado.wav").play();
                         },
                 ]
         },
@@ -2088,12 +2142,14 @@ const cardsInformation = [
                                 spendMana(1);
                                 damageEnemy(10, chosenEnemy);
                                 inflictWindswept(chosenEnemy);
+                                new Audio("audio/galeForce.wav").play();
                         },
                         function() {
                                 spendMana(1);
                                 damageEnemy(10, chosenEnemy);
                                 inflictWindswept(chosenEnemy);
                                 windsOfChange += 3;
+                                new Audio("audio/galeForce.wav").play();
                         },
                 ]
         },
@@ -2110,10 +2166,12 @@ const cardsInformation = [
                         function() {
                                 spendMana(1);
                                 gainBloodSiphon(1);
+                                new Audio("audio/bloodCocoon.wav").play();
                         },
                         function() {
                                 spendMana(1);
                                 gainBloodSiphon(2);
+                                new Audio("audio/bloodCocoon.wav").play();
                         },
                 ]
         },
@@ -2131,11 +2189,13 @@ const cardsInformation = [
                                 spendMana(1);
                                 tidalImbuement = true;
                                 displayBlock(playerTidalImbuementImg);
+                                new Audio("audio/tidalEmbuement.wav").play();
                         },
                         function() {
                                 spendMana(0);
                                 tidalImbuement = true;
                                 displayBlock(playerTidalImbuementImg);
+                                new Audio("audio/tidalEmbuement.wav").play();
                         },
                 ]
         },
@@ -2152,10 +2212,12 @@ const cardsInformation = [
                         function() {
                                 spendMana(1);
                                 gainBlock(12);
+                                new Audio("audio/earthBarrier.wav").play();
                         },
                         function() {
                                 spendMana(1);
                                 gainBlock(22);
+                                new Audio("audio/earthBarrier.wav").play();
                         },
                 ]
         },
@@ -2173,11 +2235,13 @@ const cardsInformation = [
                                 spendMana(2);
                                 gainBlock(16);
                                 gainThorns(2);
+                                new Audio("audio/thornShield.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 gainBlock(20);
                                 gainThorns(3);
+                                new Audio("audio/thornShield.wav").play();
                         }
                 ]
         },
@@ -2196,12 +2260,14 @@ const cardsInformation = [
                                 burnAllEnemies(6);
                                 playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 3;
                                 displayBlock(playerBurnImg, playerBurnNumber);
+                                new Audio("audio/firefall.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 burnAllEnemies(8);
                                 playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 4;
                                 displayBlock(playerBurnImg, playerBurnNumber);
+                                new Audio("audio/firefall.wav").play();
                         }
                 ]
         },
@@ -2221,6 +2287,7 @@ const cardsInformation = [
                                 burnEnemy(parseFloat(playerBurnNumber.innerText), chosenEnemy);
                                 playerBurnNumber.innerText = 0;
                                 displayNone(playerBurnImg, playerBurnNumber); 
+                                new Audio("audio/kindredSpirits.wav").play();
                         },
                         function() {
                                 spendMana(1);
@@ -2228,6 +2295,7 @@ const cardsInformation = [
                                 burnAllEnemies(parseFloat(playerBurnNumber.innerText));
                                 playerBurnNumber.innerText = 0;
                                 displayNone(playerBurnImg, playerBurnNumber); 
+                                new Audio("audio/kindredSpirits.wav").play();
                         }
                 ]        
         },
@@ -2244,10 +2312,12 @@ const cardsInformation = [
                         function() {
                                 spendMana(2);
                                 damageEnemy(6 + (parseFloat(enemyBurnNumber[chosenEnemy].innerText) * 2), chosenEnemy);
+                                new Audio("audio/phoenixFire.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 damageEnemy((parseFloat(enemyBurnNumber[chosenEnemy].innerText) * 3), chosenEnemy);
+                                new Audio("audio/phoenixFire.wav").play();
                         }
                 ]
         },
@@ -2263,12 +2333,13 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(1);
-                                
                                 essenceOfEmber.push(true);
+                                new Audio("audio/potion.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 essenceOfEmberUpgrade.push(true);
+                                new Audio("audio/potion.wav").play();
                         }
                 ]
         },
@@ -2358,11 +2429,13 @@ const cardsInformation = [
                                 spendMana(4);  
                                 damageEnemy(40 + (currentMana.innerText * 15), chosenEnemy);
                                 gainEnergize(1);
+                                new Audio("audio/conduit.wav").play();
                         },
                         function() {
                                 spendMana(4);  
                                 damageEnemy(40 + (currentMana.innerText * 20), chosenEnemy);
                                 gainEnergize(1);
+                                new Audio("audio/conduit.wav").play();
                         }
                 ]
         },
@@ -2379,10 +2452,12 @@ const cardsInformation = [
                         function() {
                                 spendMana(2);
                                 liquidLightning.push(true);
+                                new Audio("audio/potion.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 liquidLightningUpgrade.push(true);
+                                new Audio("audio/potion.wav").play();
                         }
                 ]
         },
@@ -2402,6 +2477,7 @@ const cardsInformation = [
                                 inflictAllFrostbite();
                                 displayBlock(playerFrostbiteImg);
                                 playerFrostbite = true;
+                                new Audio("audio/iceNova.wav").play();
                         },
                         function() {
                                 spendMana(2);
@@ -2409,6 +2485,7 @@ const cardsInformation = [
                                 inflictAllFrostbite();
                                 displayBlock(playerFrostbiteImg);
                                 playerFrostbite = true;
+                                new Audio("audio/iceNova.wav").play();
                         }
                 ]
         },
@@ -2427,12 +2504,14 @@ const cardsInformation = [
                                 playerFrostbite = true;
                                 displayBlock(playerFrostbiteImg);
                                 frostbitten = true;
+                                new Audio("audio/frostbitten.wav").play();
                         },
                         function() {
                                 spendMana(0);
                                 playerFrostbite = true;
                                 displayBlock(playerFrostbiteImg);
                                 frostbitten = true;
+                                new Audio("audio/frostbitten.wav").play();
                         }
                 ]
         },
@@ -2450,12 +2529,14 @@ const cardsInformation = [
                                 spendMana(2);
                                 inflictFrostbite(chosenEnemy);
                                 damageEnemy(parseFloat(playerBlockNumber.innerText), chosenEnemy);
+                                new Audio("audio/rayOfIce.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 gainBlock(10);
                                 inflictFrostbite(chosenEnemy);
                                 damageEnemy(parseFloat(playerBlockNumber.innerText), chosenEnemy);
+                                new Audio("audio/rayOfIce.wav").play();
                         }
                 ]
         },
@@ -2472,10 +2553,12 @@ const cardsInformation = [
                         function() {
                                 spendMana(3);
                                 snowfallElixir = true;
+                                new Audio("audio/potion.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 snowfallElixir = true;
+                                new Audio("audio/potion.wav").play();
                         }
                 ]
         },
@@ -2496,6 +2579,7 @@ const cardsInformation = [
                                 } else {
                                         windsOfChange += 3;
                                 }
+                                new Audio("audio/windsOfChange.wav").play();
                         },
                         function() {
                                 damageEnemy(windsOfChange, chosenEnemy);
@@ -2504,6 +2588,7 @@ const cardsInformation = [
                                 } else {
                                         windsOfChange += 4;
                                 }
+                                new Audio("audio/windsOfChange.wav").play();
                         }
                 ]
         },
@@ -2520,6 +2605,7 @@ const cardsInformation = [
                         function() {
                                 spendMana(1);
                                 drawCards(2);
+                                new Audio("audio/windwalk.wav").play();
                         },
                         function() {
                                 spendMana(1);
@@ -2529,6 +2615,7 @@ const cardsInformation = [
                                         randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
                                 }
                                 inflictWindswept(randomEnemy);
+                                new Audio("audio/windwalk.wav").play();
                         }
                 ]
         },
@@ -2572,6 +2659,7 @@ const cardsInformation = [
                                                 //console.log("DISCARD\nDISCARD: ", discardPileArray);
                                         }
                                 }
+                                new Audio("audio/gust.wav").play();
                         },
                         function() {
                                 spendMana(2);
@@ -2605,7 +2693,8 @@ const cardsInformation = [
                                                 //console.log("DISCARD\nDISCARD: ", discardPileArray);
                                         }
                                 }
-                        },
+                                new Audio("audio/gust.wav").play();
+                        }
                 ]
         },
         {
@@ -2621,11 +2710,13 @@ const cardsInformation = [
                         function() {
                                 spendMana(3);
                                 maxHandLength++;
+                                new Audio("audio/potion.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 maxHandLength++;
-                        },
+                                new Audio("audio/potion.wav").play();
+                        }
                 ]
         },
         {
@@ -2645,6 +2736,7 @@ const cardsInformation = [
                                 playerBurnNumber.innerText = 0;
                                 displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber);
                                 gainBloodSiphon(2);
+                                new Audio("audio/sanguineSpring.wav").play();
                         },
                         function() {
                                 spendMana(2);
@@ -2653,7 +2745,8 @@ const cardsInformation = [
                                 playerBurnNumber.innerText = 0;
                                 displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber);
                                 gainBloodSiphon(3);
-                        },
+                                new Audio("audio/sanguineSpring.wav").play();
+                        }
                 ]
         },
         {
@@ -2671,6 +2764,7 @@ const cardsInformation = [
                                 gainBloodSiphon(parseFloat(currentMana.innerText));
                                 playerHeal(parseFloat(currentMana.innerText));
                                 currentMana.innerText = 0;
+                                new Audio("audio/mistborn.wav").play();
                         },
                         function() {
                                 gainRegen(parseFloat(currentMana.innerText));
@@ -2678,7 +2772,8 @@ const cardsInformation = [
                                 gainBlock(parseFloat(currentMana.innerText));
                                 playerHeal(parseFloat(currentMana.innerText));
                                 currentMana.innerText = 0;
-                        },
+                                new Audio("audio/mistborn.wav").play();
+                        }
                 ]
         },
         {
@@ -2694,18 +2789,20 @@ const cardsInformation = [
                         function() {
                                 spendMana(2);
                                 damageEnemy(healthGainedThisFight);
+                                new Audio("audio/tsunami.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 damageAllEnemies(healthGainedThisFight);
-                        },
+                                new Audio("audio/tsunami.wav").play();
+                        }
                 ]
         },
         {
                 manaCost: [2, 2],
                 name: "Spring Water",
                 cardImg: "imgs/spring-water.jpg",
-                cardText: ["[POTION]<br>Permanently gain 5 max health", "[POTION]<br>Permanently gain 6 max health and gain 6 health"],
+                cardText: ["[POTION]<br>Permanently gain 5 max health", "[POTION]<br>Permanently gain 7 max health and gain 5 regeneration"],
                 chooseEnemyCard: false,
                 index: 31,
                 element: "water",
@@ -2714,12 +2811,14 @@ const cardsInformation = [
                         function() {
                                 spendMana(2);
                                 playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 5;
+                                new Audio("audio/potion.wav").play();
                         },
                         function() {
                                 spendMana(2);
-                                playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 6;
-                                playerHeal(6);
-                        },
+                                playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 7;
+                                gainRegen(5);
+                                new Audio("audio/potion.wav").play();
+                        }
                 ]
         },
         {
@@ -2737,6 +2836,7 @@ const cardsInformation = [
                                 damageAllEnemies(playerBlockNumber.innerText);
                                 playerBlockNumber.innerText = 0;
                                 displayNone(playerBlockImg, playerBlockNumber);
+                                new Audio("audio/earthShatter.wav").play();
                         },
                         function() {
                                 spendMana(2);
@@ -2744,12 +2844,13 @@ const cardsInformation = [
                                 let playerBlockRecovery = parseFloat(playerBlockNumber.innerText * .25);
                                 playerBlockNumber.innerText = 0;
                                 gainArmor(playerBlockRecovery);
-                        },
+                                new Audio("audio/earthShatter.wav").play();
+                        }
                 ]
         },
         {
                 manaCost: [2, 2],
-                name: "Weave of Vines",
+                name: "Weave of Thorns",
                 cardImg: "imgs/vine-armor2.jpg",
                 cardText: ["Gain 4 thorns", "Gain 6 thorns"],
                 chooseEnemyCard: false,
@@ -2760,16 +2861,18 @@ const cardsInformation = [
                         function() {
                                 spendMana(2);
                                 gainThorns(4);
+                                new Audio("audio/weaveOfThorns.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 gainThorns(6);
-                        },
+                                new Audio("audio/weaveOfThorns.wav").play();
+                        }
                 ]
         },
         {
                 manaCost: [2, 2],
-                name: "Thorn Whip",
+                name: "Vine Whip",
                 cardImg: "imgs/thorn-whip.jpg",
                 cardText: ["Deal 4 damage plus 3x your thorns", "Gain 2 thorns and deal damage equal to 3x your thorns"],
                 chooseEnemyCard: true,
@@ -2780,12 +2883,14 @@ const cardsInformation = [
                         function() {
                                 spendMana(2);
                                 damageEnemy(4 + (playerThornsNumber.innerText * 3), chosenEnemy);
+                                new Audio("audio/vineWhip.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 gainThorns(2);
                                 damageEnemy((playerThornsNumber.innerText * 3), chosenEnemy);
-                        },
+                                new Audio("audio/vineWhip.wav").play();
+                        }
                 ]
         },
         {
@@ -2801,13 +2906,15 @@ const cardsInformation = [
                         function() {
                                 spendMana(2);
                                 terrasBlessing.push(true);
+                                new Audio("audio/potion.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 gainBlock(10);
                                 gainThorns(2);
                                 terrasBlessing.push(true);
-                        },
+                                new Audio("audio/potion.wav").play();
+                        }
                 ]
         },
         {
@@ -2829,6 +2936,7 @@ const cardsInformation = [
                                                 }
                                         }
                                 }
+                                new Audio("audio/forestFire.wav").play();
                         },
                         function() {
                                 burnAllEnemies(3);
@@ -2839,7 +2947,8 @@ const cardsInformation = [
                                                 }
                                         }
                                 }
-                        },
+                                new Audio("audio/forestFire.wav").play();
+                        }
                 ]
         },
         {
@@ -2858,6 +2967,7 @@ const cardsInformation = [
                                         burnEnemy(6, chosenEnemy);
                                         inflictFrostbite(chosenEnemy);
                                 }
+                                new Audio("audio/frostfireFusion.wav").play();
                         },
                         function() {
                                 spendMana(1);
@@ -2865,7 +2975,8 @@ const cardsInformation = [
                                         burnEnemy(8, chosenEnemy);
                                         inflictFrostbite(chosenEnemy);
                                 }
-                        },
+                                new Audio("audio/frostfireFusion.wav").play();
+                        }
                 ]
         },
         {
@@ -2888,6 +2999,7 @@ const cardsInformation = [
                                                 }
                                         }
                                 }
+                                new Audio("audio/fanTheFlames.wav").play();
                         },
                         function() {
                                 spendMana(2);
@@ -2899,7 +3011,8 @@ const cardsInformation = [
                                                 }
                                         }
                                 }
-                        },
+                                new Audio("audio/fanTheFlames.wav").play();
+                        }
                 ]
         },
         {
@@ -2918,6 +3031,7 @@ const cardsInformation = [
                                 displayBlock(playerBurnImg, playerBurnNumber);
                                 gainBloodSiphon(1);
                                 gainRegen(4);
+                                new Audio("audio/cauterize.wav").play();
                         },
                         function() {
                                 spendMana(1);
@@ -2925,7 +3039,8 @@ const cardsInformation = [
                                 displayBlock(playerBurnImg, playerBurnNumber);
                                 gainBloodSiphon(2);
                                 gainRegen(5);
-                        },
+                                new Audio("audio/cauterize.wav").play();
+                        }
                 ]
         },
         {
@@ -2942,12 +3057,14 @@ const cardsInformation = [
                                 spendMana(3);
                                 burnEnemy(6, chosenEnemy);
                                 gainBlock(parseFloat(enemyBurnNumber[chosenEnemy].innerText));
+                                new Audio("audio/magma.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 burnEnemy(6, chosenEnemy);
                                 gainBlock(parseFloat(enemyBurnNumber[chosenEnemy].innerText));
-                        },
+                                new Audio("audio/magma.wav").play();
+                        }
                 ]
         },
         {
@@ -2967,6 +3084,7 @@ const cardsInformation = [
                                                 damageEnemy(20, i);
                                         }
                                 }
+                                new Audio("audio/deepFreeze.wav").play();
                         },
                         function() {
                                 spendMana(1);
@@ -2975,7 +3093,8 @@ const cardsInformation = [
                                                 damageEnemy(26, i);
                                         }
                                 }
-                        },
+                                new Audio("audio/deepFreeze.wav").play();
+                        }
                 ]
         },
         {
@@ -2999,6 +3118,7 @@ const cardsInformation = [
                                 gainEnergize(1);
                                 drawCards(1);
                                 currentMana.innerText = parseFloat(currentMana.innerText) + 2;
+                                new Audio("audio/hurricane.wav").play();
                         },
                         function() {
                                 spendMana(6);
@@ -3011,7 +3131,8 @@ const cardsInformation = [
                                 drawCards(1);
                                 currentMana.innerText = parseFloat(currentMana.innerText) + 3;
                                 gainEnergize(2);
-                        },
+                                new Audio("audio/hurricane.wav").play();
+                        }
                 ]
         },
         {
@@ -3028,13 +3149,15 @@ const cardsInformation = [
                                 spendMana(2);
                                 gainRegen(3);
                                 damageEnemy(Math.floor(2 * playerCurrentHealth.innerText / 5), chosenEnemy);
+                                new Audio("audio/electricCurrent.wav").play();
                         },
                         function() {
                                 spendMana(2);
                                 gainRegen(3);
                                 playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 2;
                                 damageEnemy(Math.floor(2 * playerCurrentHealth.innerText / 5), chosenEnemy);
-                        },
+                                new Audio("audio/electricCurrent.wav").play();
+                        }
                 ]
         },
         {
@@ -3056,6 +3179,7 @@ const cardsInformation = [
                                                 gainEnergize(1);
                                         }
                                 }
+                                new Audio("audio/quakingJolt.wav").play();
                         },
                         function() {
                                 spendMana(2);
@@ -3067,7 +3191,8 @@ const cardsInformation = [
                                                 gainArmor(4);
                                         }
                                 }
-                        },
+                                new Audio("audio/quakingJolt.wav").play();
+                        }
                 ]
         },
         {
@@ -3085,9 +3210,10 @@ const cardsInformation = [
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false) {
                                                 inflictWindswept(i);
-                                                inflictFrostbite(i);  
+                                                inflictFrostbite(i);
                                         }  
                                 }
+                                new Audio("audio/flurry.wav").play();
                         },
                         function() {
                                 spendMana(0);
@@ -3097,7 +3223,8 @@ const cardsInformation = [
                                                 inflictFrostbite(i);  
                                         }  
                                 }
-                        },
+                                new Audio("audio/flurry.wav").play();
+                        }
                 ]
         },
         {
@@ -3124,6 +3251,7 @@ const cardsInformation = [
                                 }
                                 gainRegen(addFrostbittenEnemies.length);
                                 gainBloodSiphon(addFrostbittenEnemies.length);     
+                                new Audio("audio/liquify.wav").play();
                         },
                         function() {
                                 spendMana(0);
@@ -3138,8 +3266,9 @@ const cardsInformation = [
                                         addFrostbittenEnemies.push(true);
                                 }
                                 gainRegen(addFrostbittenEnemies.length);
-                                gainBloodSiphon(addFrostbittenEnemies.length);     
-                        },
+                                gainBloodSiphon(addFrostbittenEnemies.length);
+                                new Audio("audio/liquify.wav").play();
+                        }
                 ]
         },
         {
@@ -3168,7 +3297,7 @@ const cardsInformation = [
                                         displayBlock(playerFrostbiteImg);
                                         playerFrostbite = true;
                                 }
-                                
+                                new Audio("audio/frozenTundra.wav").play();
                         },
                         function() {
                                 spendMana(2);
@@ -3186,8 +3315,8 @@ const cardsInformation = [
                                         displayBlock(playerFrostbiteImg);
                                         playerFrostbite = true;
                                 }
-                                
-                        },
+                                new Audio("audio/frozenTundra.wav").play();
+                        }
                 ]
         },
         {
@@ -3203,12 +3332,14 @@ const cardsInformation = [
                         function() {
                                 spendMana(1);
                                 airBubble.push(true);
+                                new Audio("audio/airBubbles.wav").play();
                         },
                         function() {
                                 spendMana(1);
                                 drawCards(1);
                                 airBubble.push(true);
-                        },
+                                new Audio("audio/airBubbles.wav").play();
+                        }
                 ]
         },
         {
@@ -3224,10 +3355,12 @@ const cardsInformation = [
                         function() {
                                 gainBlock(4);
                                 drawCards(1);
+                                new Audio("audio/rockOrbit.wav").play();
                         },
                         function() {
                                 gainBlock(7);
                                 drawCards(1);
+                                new Audio("audio/rockOrbit.wav").play();
                         }
                 ]
         },
@@ -3244,11 +3377,13 @@ const cardsInformation = [
                         function() {
                                 spendMana(4);
                                 gaiasEmbrace.push(true);
+                                new Audio("audio/potion.wav").play();
                         },
                         function() {
                                 spendMana(4);
                                 gaiasEmbraceUpgrade.push(true);
-                        },
+                                new Audio("audio/potion.wav").play();
+                        }
                 ]
         },
         {
@@ -3533,6 +3668,7 @@ function createNewCard(newRandomCard, upgradeIndex) {
         handContainer.appendChild(newCardsArray[0]);
         console.log("2 NEWCARDSARRAY[0]", newCardsArray[0]);
         switchArea(map, arena);
+        mapMusic.play();
 }        
 const allCardsReference = document.querySelectorAll(".card-reference");
 const newCardsContainer = document.querySelector("#new-cards-container");
@@ -4594,6 +4730,8 @@ function checkIfEnemyDead() {
                 playerAether.innerText = parseFloat(playerAether.innerText) + Math.ceil(30 + ((enemyLevel + 1) * 2.7));
                 if (getEliteRelic) {
                         getRelic(1, 12);
+                        eliteMusic.pause();
+                        eliteMusic.currentTime = 0;
                 }
                 getRandomNewCards();
                 return;
@@ -4832,4 +4970,3 @@ function endTurn() {
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
-getRelic(8, 8);
