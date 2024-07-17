@@ -22,6 +22,54 @@ dark elf blood nan
 /*
 GENERAL FUNCTIONS
 */
+const beginningScreen = document.querySelector("#beginning-screen-container");
+const startScreen = document.querySelector("#start-screen-container");
+const startGame = document.querySelector("#start-game");
+const tutorial = document.querySelector("#tutorial");
+const options = document.querySelector("#options");
+const quitGame = document.querySelector("#quit-game");
+const bottomAnchor = document.querySelector("#bottom-anchor");
+const arrows = document.querySelectorAll(".arrow");
+const startScreenMusic = new Audio("audio/start-screen-music.mp3");
+window.addEventListener("keydown", () => {
+        displayNone(beginningScreen);
+        displayFlex(startScreen);
+        startScreenMusic.play();
+}, {once: true});
+startGame.addEventListener("click", () => {
+        displayBlock(map);
+        location.href="#bottom-anchor";
+        displayNone(startScreen);
+        mapMusic.play();
+        startScreenMusic.pause();
+});
+startGame.addEventListener("mouseover", () => {
+        displayBlock(arrows[0], arrows[1]);
+});
+startGame.addEventListener("mouseout", () => {
+        displayNone(arrows[0], arrows[1]);
+});
+tutorial.addEventListener("mouseover", () => {
+        displayBlock(arrows[2], arrows[3]);
+});
+tutorial.addEventListener("mouseout", () => {
+        displayNone(arrows[2], arrows[3]);
+});
+options.addEventListener("mouseover", () => {
+        displayBlock(arrows[4], arrows[5]);
+});
+options.addEventListener("mouseout", () => {
+        displayNone(arrows[4], arrows[5]);
+});
+quitGame.addEventListener("click", () => {
+        window.close();
+});
+quitGame.addEventListener("mouseover", () => {
+        displayBlock(arrows[6], arrows[7]);
+});
+quitGame.addEventListener("mouseout", () => {
+        displayNone(arrows[6], arrows[7]);
+});
 function displayNone() {
         for (let i = 0; i < arguments.length; i++) {
                 arguments[i].style.display = "none";
@@ -286,7 +334,7 @@ const L11T1 = () => {
 let numberOfEnemies;
 let enemyIsDead = [false, false, false];
 function resetArena() {
-        arena.classList.remove("darken");
+        arena.classList.remove("dim");
         for (i = 0; i < numberOfEnemies; i++) {
                 enemyIsDead[i] = false;
                 enemyFrostbite[i] = false;
@@ -359,8 +407,10 @@ function resetArena() {
         enemyContainer.innerHTML = "";
 }
 let dontRepeatEncounter = [];
+const encounterMusic = new Audio("audio/encounter-music.mp3")
 function getRandomEncounter() {
-        //new Audio("audio/start-screen-song.mp3").play();
+        encounterMusic.play();
+        mapMusic.pause();
         let randomEncounterNumber = createRandomNumber(1, 10);
         while (dontRepeatEncounter.includes(randomEncounterNumber)) {
                 randomEncounterNumber = createRandomNumber(1, 10);
@@ -1050,6 +1100,7 @@ function getRandomExclamation() {
                                 createNewCard(51, 0);
                                 playerAether.innerText = parseFloat(playerAether.innerText) + 200;
                                 switchArea(map, exclamationContainer);
+                                location.href="#bottom-anchor";
                                 switchMusic();
                         });
                         exclamationButton2.addEventListener("click", () => {
@@ -1057,6 +1108,7 @@ function getRandomExclamation() {
                                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 10;
                                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
                                 switchArea(map, exclamationContainer);
+                                location.href="#bottom-anchor";
                                 switchMusic();
                         });
                         dontRepeatExclamation.push(1);
@@ -1104,36 +1156,42 @@ function getRandomExclamation() {
                                 let fire = document.querySelectorAll(".fire");
                                 destroyCards(fire, "fire");
                                 switchArea(map, exclamationContainer);
+                                location.href="#bottom-anchor";
                                 switchMusic();
                         });
                         exclamationButton2.addEventListener("click", () => {
                                 let lightning = document.querySelectorAll(".lightning");
                                 destroyCards(lightning, "lightning");
                                 switchArea(map, exclamationContainer);
+                                location.href="#bottom-anchor";
                                 switchMusic();
                         });
                         exclamationButton3.addEventListener("click", () => {
                                 let ice = document.querySelectorAll(".ice");
                                 destroyCards(ice, "ice");
                                 switchArea(map, exclamationContainer);
+                                location.href="#bottom-anchor";
                                 switchMusic();
                         });
                         exclamationButton4.addEventListener("click", () => {
                                 let air = document.querySelectorAll(".air");
                                 destroyCards(air, "air");
                                 switchArea(map, exclamationContainer);
+                                location.href="#bottom-anchor";
                                 switchMusic();
                         });
                         exclamationButton5.addEventListener("click", () => {
                                 let water = document.querySelectorAll(".water");
                                 destroyCards(water, "water");
                                 switchArea(map, exclamationContainer);
+                                location.href="#bottom-anchor";
                                 switchMusic();
                         });
                         exclamationButton6.addEventListener("click", () => {
                                 let earth = document.querySelectorAll(".earth");
                                 destroyCards(earth, "earth");
                                 switchArea(map, exclamationContainer);
+                                location.href="#bottom-anchor";
                                 switchMusic();
                         });
                         dontRepeatExclamation.push(2);
@@ -1169,6 +1227,7 @@ function getRandomExclamation() {
                                                         if (i.classList.contains(j)) {
                                                                 createNewCard(j, 0);
                                                                 switchArea(map, exclamationContainer);
+                                                                location.href="#bottom-anchor";
                                                                 switchMusic();
                                                         }
                                                 }
@@ -1207,6 +1266,7 @@ function getRandomExclamation() {
                                                                                         destroyedCardsArray = [];
                                                                                         destroyedCardsContainer.innerHTML = ``;
                                                                                         switchArea(map, exclamationContainer);
+                                                                                        location.href="#bottom-anchor";
                                                                                         switchMusic();
                                                                                 }
                                                                         });
@@ -1270,6 +1330,7 @@ function getRandomExclamation() {
                                 newOpeningHand.push(newCard);
                         }
                         switchArea(map, exclamationDiv);
+                        location.href="#bottom-anchor";
                         switchMusic();
                 });
         }
@@ -1292,6 +1353,7 @@ function getShop () {
         const leaveShopButton = document.querySelector("#leave-shop-button");
         leaveShopButton.addEventListener("click", () => {
                 switchArea(map, shopContainer);
+                location.href="#bottom-anchor";
                 mapMusic.play();
                 shopMusic.pause();
                 shopMusic.currentTime = 0;
@@ -1556,6 +1618,7 @@ function getBlacksmith() {
                 blacksmithText.innerHTML = `<p>I can infuse your cards with aether to make them stronger if you've got the materials.<br><br>Come back when you have 75 aether for me.</p>`;
                 blacksmithText.addEventListener("click", () => {
                         switchArea(map, blacksmithContainer);
+                        location.href="#bottom-anchor";
                         mapMusic.play();
                 });
         } else {
@@ -1641,6 +1704,7 @@ function getBlacksmith() {
                                 clickCount++;
                                 if (clickCount === 2) {
                                         switchArea(map, blacksmithContainer);
+                                        location.href="#bottom-anchor";
                                         mapMusic.play();
                                         blacksmithMusic.pause();
                                         blacksmithMusic.currentTime = 0;
@@ -2001,7 +2065,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(2000);
+                                damageAllEnemies(20);
                                 new Audio("audio/chainLightning.wav").play();
                         },
                         function() {
@@ -2828,7 +2892,7 @@ const cardsInformation = [
                 manaCost: [2, 2],
                 name: "Earth Shatter",
                 cardImg: "imgs/earth-shatter.jpg",
-                cardText: ["Lose all of your armor and deal damage equal to how much was lost", "Lose all of your armor and deal damage equal to how much was lost. Regain 25% of your block."],
+                cardText: ["Lose all of your armor and deal damage to all enemies equal to how much was lost", "Lose all of your armor and deal damage to all enemies equal to how much was lost. Regain 25% of your block."],
                 chooseEnemyCard: false,
                 index: 32,
                 element: "earth",
@@ -3649,17 +3713,18 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
 function createNewCard(newRandomCard, upgradeIndex) {
         console.log("CREATING CARD NEW RANDOM CARD", newRandomCard);
         chooseNewCardDiv.innerHTML = ``;
+        displayNone(chooseNewCardDiv);
         // THIS WONT WORK ANYMORE UPDATE IN CREATECARD
         if (newRandomCard == 24) {
-                createCard(newRandomCard, newCardsContainer, "card winds-of-change", "card-text winds-card-text", upgradeIndex);
+                createCard(newRandomCard, destroyedCardsContainer, "card winds-of-change", "card-text winds-card-text", upgradeIndex);
         } else if (newRandomCard == 43) {
-                createCard(newRandomCard, newCardsContainer, "card", "card-text electric-card-text", upgradeIndex);
+                createCard(newRandomCard, destroyedCardsContainer, "card", "card-text electric-card-text", upgradeIndex);
         } else if (newRandomCard == 16) {
-                createCard(newRandomCard, newCardsContainer, "card", "card-text storm-card-text", upgradeIndex);
+                createCard(newRandomCard, destroyedCardsContainer, "card", "card-text storm-card-text", upgradeIndex);
         } else if (newRandomCard == 30) {
-                createCard(newRandomCard, newCardsContainer, "card", "card-text downpour-card-text", upgradeIndex);
+                createCard(newRandomCard, destroyedCardsContainer, "card", "card-text downpour-card-text", upgradeIndex);
         } else {
-                createCard(newRandomCard, newCardsContainer, "card", "card-text", upgradeIndex);
+                createCard(newRandomCard, destroyedCardsContainer, "card", "card-text", upgradeIndex);
         }
         let newCardsArray = document.querySelectorAll(".card");
         console.log("1 NEWCARDSARRAY[0]", newCardsArray[0]);
@@ -3673,10 +3738,9 @@ function createNewCard(newRandomCard, upgradeIndex) {
         handContainer.appendChild(newCardsArray[0]);
         console.log("2 NEWCARDSARRAY[0]", newCardsArray[0]);
         switchArea(map, arena);
+        location.href="#bottom-anchor";
         mapMusic.play();
 }        
-const allCardsReference = document.querySelectorAll(".card-reference");
-const newCardsContainer = document.querySelector("#new-cards-container");
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
         arena.classList.add("dim");
@@ -3700,13 +3764,13 @@ function getRandomNewCards () {
         createCard(newRandomCard1, chooseNewCardDiv, "card-reference", "card-text", 0);
         createCard(newRandomCard2, chooseNewCardDiv, "card-reference", "card-text", 0);
         createCard(newRandomCard3, chooseNewCardDiv, "card-reference", "card-text", 0);
-        let cardChoices = document.querySelectorAll(".card-reference");
-        console.log("NEW CARD CHOICES", cardChoices);
-        displayFlex(chooseNewCardDiv, cardChoices[0], cardChoices[1], cardChoices[2], cardChoices[3]);
-        cardChoices[0].addEventListener("click", () => {createNewCard(newRandomCard0, 0)});
-        cardChoices[1].addEventListener("click", () => {createNewCard(newRandomCard1, 0)});
-        cardChoices[2].addEventListener("click", () => {createNewCard(newRandomCard2, 0)});
-        cardChoices[3].addEventListener("click", () => {createNewCard(newRandomCard3, 0)});
+        let newCardChoices = document.querySelectorAll(".card-reference");
+        console.log("NEW CARD CHOICES", newCardChoices);
+        displayFlex(chooseNewCardDiv, newCardChoices[0], newCardChoices[1], newCardChoices[2], newCardChoices[3]);
+        newCardChoices[0].addEventListener("click", () => {createNewCard(newRandomCard0, 0)});
+        newCardChoices[1].addEventListener("click", () => {createNewCard(newRandomCard1, 0)});
+        newCardChoices[2].addEventListener("click", () => {createNewCard(newRandomCard2, 0)});
+        newCardChoices[3].addEventListener("click", () => {createNewCard(newRandomCard3, 0)});
         return;
 }
 function removeCardClickedClass() {
@@ -4024,7 +4088,9 @@ function checkHealth() {
         if (parseFloat(playerCurrentHealth.innerText) <= 0)  {
                 const deathScreenContainer = document.querySelector("#death-screen-container");
                 arena.classList.add("dim");
+                arena.style = "position: absolute";
                 displayFlex(deathScreenContainer);
+                displayBlock(arena);
                 displayNone(handContainer);
                 deathScreenContainer.innerHTML = `
                 <div id="death-screen">
@@ -4170,7 +4236,7 @@ function checkRegenHeal() {
                 healthGainedThisFight += parseFloat(playerRegenNumber.innerText);
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + parseFloat(playerRegenNumber.innerText);
                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + parseFloat(playerRegenNumber.innerText);
-                healthRestoredTotal += playerRegenNumber.innerText;
+                healthRestoredTotal += parseFloat(playerRegenNumber.innerText);
                 playerRegenNumber.innerText--;
         }
         if (playerRegenNumber.innerText == 0) {
@@ -4784,9 +4850,12 @@ function checkIfEnemyDead() {
                         elitesKilled++;
                         eliteMusic.pause();
                         eliteMusic.currentTime = 0;
+                } else {
+                        enemiesKilled++
+                        encounterMusic.pause();
+                        encounterMusic.currentTime = 0;
                 }
                 getRandomNewCards();
-                enemiesKilled++;
                 return;
         }
        

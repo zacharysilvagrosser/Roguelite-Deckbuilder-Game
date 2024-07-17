@@ -9,7 +9,7 @@
     width: 100%;
     height: 5vh;
     background-color: rgb(63, 92, 100);
-    display: flex;
+    display: none;
     z-index: 10;
     color: white;
 }
@@ -34,6 +34,69 @@
     width: 48px;
     height: 48px;
     margin-top: -2px;
+}
+#beginning-screen-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("imgs/start-screen2.jpg");
+    opacity: .7;
+    color: white;
+    font-weight: bolder;
+    background-size: cover;
+}
+#beginning-screen-container h1 {
+    font-size: 80px;
+}
+#start-screen-container {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: url("imgs/start-screen3.jpg");
+    background-size: cover;
+    color: rgb(0, 0, 0);
+    font-weight: bolder;
+}
+#start-screen-container h1 {
+    margin: 4rem;
+    font-size: 120px;
+    text-decoration:dashed;
+}
+#start-screen-container h3 {
+    margin: 3rem;
+    cursor: pointer;
+    font-size: 60px;
+}
+#start-game:hover {
+    color:rgb(26, 111, 150);
+}
+#tutorial:hover {
+    color: rgb(253, 253, 253);
+}
+#options:hover {
+    color: #451b04;
+}
+#quit-game:hover {
+    color: #74ccf4;
+}
+#start-screen-container div {
+    width: 60rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.arrow, .arrow-reverse {
+    width: 150px;
+    display: none;
+}
+.arrow-reverse {
+    transform: scaleX(-1);
 }
 #death-screen-container {
     width: 100%;
@@ -101,6 +164,7 @@
     height: 200vh;
     background-image: url("imgs/meadow-path2.jpg");
     background-size: cover;
+    display: none;
 }
 .locations {
     display: flex;
@@ -1139,7 +1203,7 @@
     background-color: #3d3d58;
 }
 .ice .card-text {
-    background-color: rgb(26, 111, 150)
+    background-color: rgb(26, 111, 150);
 }
 .air .card-text {
     background-color: rgb(139, 165, 173)
