@@ -35,7 +35,66 @@
     height: 48px;
     margin-top: -2px;
 }
-
+#death-screen-container {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 12;
+}
+#death-screen {
+    width: 75%;
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#death-screen h1 {
+    color: #3a0000;
+    padding-bottom: 40px;
+}
+#death-screen div {
+    width: 300px;
+}
+#death-screen p, #death-screen span {
+    margin: 15px;
+    font-size: 20px;
+    color: white;
+}
+#death-screen p {
+    width: 210px;
+    text-align: left;
+}
+#death-screen span {
+    text-align: right;
+}
+#death-screen button {
+    margin-top: 50px;
+    width: 400px;
+    padding: 15px;
+    font-size: 20px;
+    font-family: Helvetica, Arial, sans-serif;
+    border-radius: 12px;
+    box-shadow: 5px 5px 10px black;
+    border: 2px solid #202221;
+    background-color:#1f2e21;
+    color: white;
+    font-weight: bold;
+    transition-duration: .1s;
+}
+#death-screen button:hover {
+    background-color: #37513f;
+    transform: translateY(2px);
+    cursor: pointer;
+    box-shadow: 2px 2px 5px black;
+}
+#end-turn-button:active {
+    padding-top: 3px;
+    box-shadow: none;
+    transform: translateY(-2px);
+}
 /* MAP */
 #map {
     width: 100%;
@@ -354,7 +413,7 @@
     height: 100vh;
     background-image: url(imgs/meadow-battleground.jpg);
     background-size: 100%;
-    position: relative;
+    position: absolute;
     overflow: hidden;
     display: none;
 }
@@ -771,7 +830,7 @@
 }
 .enemy-img-centaur {
     width: 400px;
-    margin-top: -290px;
+    margin-top: -295px;
     margin-left: 60px;
     transform: scaleX(-1);
 }
@@ -794,14 +853,14 @@
 #mana-bar-img {
     width: 100px;
     margin-top: 700px;
-    margin-left: 85px;
+    margin-left: 125px;
 }
 #current-mana {
     position: absolute;
     width: 50px;
     text-align: center;
     margin-top: -65px;
-    margin-left: 108px;
+    margin-left: 148px;
     font-weight: bold;
     font-size: 35px;
     color: black;
@@ -809,22 +868,31 @@
 }
 #end-turn-button {
     position: absolute;
-    width: 100px;
-    height: 50px;
+    width: 175px;
+    height: 75px;
     margin-left: 80px;
-    margin-top: 50px;
-    border-radius: 10%;
-    border: 5px double rgb(127, 128, 131);
-    background-color:rgb(11, 28, 83);
+    margin-top: 30px;
+    font-size: 18px;
+    font-family: Helvetica, Arial, sans-serif;
+    border-radius: 12px;
+    box-shadow: 5px 5px 10px black;
+    border: 2px solid #202221;
+    background-color:#1f2e21;
     color: white;
     font-weight: bold;
     transition-duration: .1s;
 }
+#end-turn-button:hover {
+    background-color: #37513f;
+    transform: translateY(2px);
+    cursor: pointer;
+    box-shadow: 2px 2px 5px black;
+
+}
 #end-turn-button:active {
     padding-top: 3px;
-}
-#end-turn-button:hover {
-    background-color: rgb(21, 42, 121);
+  box-shadow: none;
+  transform: translateY(0);
 }
 /* EXCLAMATION */
 .exclamation-div {
@@ -1087,14 +1155,13 @@
     height: 250px;
     margin: auto;
     text-align: center;
-    display: flex;
     flex-direction: column;
     align-items: center;
     border: 2px solid black;
     transition: .5s;
     display: none;
     position: relative;
-    box-shadow: 5px 3px 3px black;
+    box-shadow: 5px 5px 10px black;
     z-index: 3;
 }
 .upgraded {

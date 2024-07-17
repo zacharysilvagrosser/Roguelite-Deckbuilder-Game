@@ -286,7 +286,6 @@ const L11T1 = () => {
 let numberOfEnemies;
 let enemyIsDead = [false, false, false];
 function resetArena() {
-        console.log("REFERENCE: ", document.querySelectorAll(".reference-card"));
         arena.classList.remove("darken");
         for (i = 0; i < numberOfEnemies; i++) {
                 enemyIsDead[i] = false;
@@ -361,7 +360,7 @@ function resetArena() {
 }
 let dontRepeatEncounter = [];
 function getRandomEncounter() {
-        new Audio("audio/start-screen-song.mp3").play();
+        //new Audio("audio/start-screen-song.mp3").play();
         let randomEncounterNumber = createRandomNumber(1, 10);
         while (dontRepeatEncounter.includes(randomEncounterNumber)) {
                 randomEncounterNumber = createRandomNumber(1, 10);
@@ -776,7 +775,7 @@ function chooseLocationPath() {
                         removeELL1();
                         location2Tiles1.addEventListener("click", L2T1);
                         location2Tiles2.addEventListener("click", L2T2);
-                        getRandomEliteEncounter();
+                        getRandomEncounter();
                         break;
                 case "L1T2":
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
@@ -2002,7 +2001,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(20);
+                                damageAllEnemies(2000);
                                 new Audio("audio/chainLightning.wav").play();
                         },
                         function() {
@@ -2477,6 +2476,7 @@ const cardsInformation = [
                                 inflictAllFrostbite();
                                 displayBlock(playerFrostbiteImg);
                                 playerFrostbite = true;
+                                frostbiteTotal++;
                                 new Audio("audio/iceNova.wav").play();
                         },
                         function() {
@@ -2485,6 +2485,7 @@ const cardsInformation = [
                                 inflictAllFrostbite();
                                 displayBlock(playerFrostbiteImg);
                                 playerFrostbite = true;
+                                frostbiteTotal++;
                                 new Audio("audio/iceNova.wav").play();
                         }
                 ]
@@ -2504,6 +2505,7 @@ const cardsInformation = [
                                 playerFrostbite = true;
                                 displayBlock(playerFrostbiteImg);
                                 frostbitten = true;
+                                frostbiteTotal++;
                                 new Audio("audio/frostbitten.wav").play();
                         },
                         function() {
@@ -2511,6 +2513,7 @@ const cardsInformation = [
                                 playerFrostbite = true;
                                 displayBlock(playerFrostbiteImg);
                                 frostbitten = true;
+                                frostbiteTotal++;
                                 new Audio("audio/frostbitten.wav").play();
                         }
                 ]
@@ -3296,6 +3299,7 @@ const cardsInformation = [
                                         }
                                         displayBlock(playerFrostbiteImg);
                                         playerFrostbite = true;
+                                        frostbiteTotal++;
                                 }
                                 new Audio("audio/frozenTundra.wav").play();
                         },
@@ -3314,6 +3318,7 @@ const cardsInformation = [
                                         }
                                         displayBlock(playerFrostbiteImg);
                                         playerFrostbite = true;
+                                        frostbiteTotal++;
                                 }
                                 new Audio("audio/frozenTundra.wav").play();
                         }
@@ -3577,7 +3582,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                 cardsInformation[CIindex].action[upgradeIndex]();
                 addToDiscard();
                 updateCardText();
-                checkHealthIsOverMax();
+                checkHealth();
                 handContainer.style = `width: ${handArray.length- 1}9.5%`;
                 if (airBubble.length > 0) {
                         playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
@@ -3674,7 +3679,7 @@ const allCardsReference = document.querySelectorAll(".card-reference");
 const newCardsContainer = document.querySelector("#new-cards-container");
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
-        arena.classList.add("darken");
+        arena.classList.add("dim");
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
         let newRandomCard0 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
@@ -3691,17 +3696,17 @@ function getRandomNewCards () {
         }
         console.log("REPEAT 0", newRandomCard0, "1", newRandomCard1, "2", newRandomCard2, "3", newRandomCard3);
         // ADD REFERENCE CARDS TO CHOOSE NEW CARD DIV
-        createCard(newRandomCard0, chooseNewCardDiv, "card", "card-text", 0);
-        createCard(newRandomCard1, chooseNewCardDiv, "card", "card-text", 0);
-        createCard(newRandomCard2, chooseNewCardDiv, "card", "card-text", 0);
-        createCard(newRandomCard3, chooseNewCardDiv, "card", "card-text", 0);
-        let newCardChoices = document.querySelectorAll(".card");
-        console.log("NEW CARD CHOICES", newCardChoices);
-        displayFlex(chooseNewCardDiv, newCardChoices[0], newCardChoices[1], newCardChoices[2], newCardChoices[3]);
-        newCardChoices[0].addEventListener("click", () => {createNewCard(newRandomCard0, 0)});
-        newCardChoices[1].addEventListener("click", () => {createNewCard(newRandomCard1, 0)});
-        newCardChoices[2].addEventListener("click", () => {createNewCard(newRandomCard2, 0)});
-        newCardChoices[3].addEventListener("click", () => {createNewCard(newRandomCard3, 0)});
+        createCard(newRandomCard0, chooseNewCardDiv, "card-reference", "card-text", 0);
+        createCard(newRandomCard1, chooseNewCardDiv, "card-reference", "card-text", 0);
+        createCard(newRandomCard2, chooseNewCardDiv, "card-reference", "card-text", 0);
+        createCard(newRandomCard3, chooseNewCardDiv, "card-reference", "card-text", 0);
+        let cardChoices = document.querySelectorAll(".card-reference");
+        console.log("NEW CARD CHOICES", cardChoices);
+        displayFlex(chooseNewCardDiv, cardChoices[0], cardChoices[1], cardChoices[2], cardChoices[3]);
+        cardChoices[0].addEventListener("click", () => {createNewCard(newRandomCard0, 0)});
+        cardChoices[1].addEventListener("click", () => {createNewCard(newRandomCard1, 0)});
+        cardChoices[2].addEventListener("click", () => {createNewCard(newRandomCard2, 0)});
+        cardChoices[3].addEventListener("click", () => {createNewCard(newRandomCard3, 0)});
         return;
 }
 function removeCardClickedClass() {
@@ -3808,6 +3813,7 @@ function damageEnemy(damage, enemy) {
         // DAMGE ALL ENEMIES IF SNOWFALL ELIXER HAS BEEN PLAYED
         if (snowfallElixir) {
                 damageAllEnemies(damage);
+                return;
         }
         if (liquidLightning) {
                 damage += liquidLightning.length * 5;
@@ -3830,6 +3836,7 @@ function damageEnemy(damage, enemy) {
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * .21));
                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * .21));
                 healthGainedThisFight += Math.floor((damage * .21));
+                healthRestoredTotal += Math.floor((damage * .21));
         }
         // TAKE DAMAGE AWAY FROM BLOCK BEFORE HEALTH
         if (enemyBlockNumber[enemy].innerText === 0) {
@@ -3853,7 +3860,7 @@ function damageEnemy(damage, enemy) {
         } else {
                 playerBlockNumber.innerText -= parseFloat(enemyThornsNumber[enemy].innerText);
         }          
-        checkHealthIsOverMax();
+        checkHealth();
         // IF ENEMY IS DEAD, DELETE THEM
         checkIfEnemyDead();
         damageThisTurn += damage;
@@ -3881,6 +3888,7 @@ function damageAllEnemies(damage) {
                                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * .21));
                                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * .21));
                                 healthGainedThisFight += Math.floor((damage * .21));
+                                healthRestoredTotal += Math.floor((damage * .21));
                         }
                         // CHECK ARMOR
                         if (enemyBlockNumber[i].innerText === 0) {
@@ -3905,7 +3913,7 @@ function damageAllEnemies(damage) {
                                 playerBlockNumber.innerText = parseFloat(playerBlockNumber.innerText) - parseFloat(enemyThornsNumber[i].innerText);
                         }          
                 }
-                checkHealthIsOverMax();
+                checkHealth();
                 checkIfEnemyDead();
                 damageThisTurn += damage;
         }
@@ -3921,15 +3929,18 @@ function inflictWindswept(enemy) {
                 }
                 enemyAttackActionNumber[enemy].innerText = Math.floor(enemyAttackActionNumber[enemy].innerText * .50);    
                 enemyBurnActionNumber[enemy].innerText = Math.floor(enemyBurnActionNumber[enemy].innerText * .50);
+                windsweptTotal++;
         }
 }
 function inflictFrostbite(enemy) {
         if (snowfallElixir) {
                 inflictAllFrostbite();
+                return;
         }
         if (enemyFrostbite[enemy] === false) {
                 if (iceEmpower1) {
                         gainBlock(4);
+                        blockTotal += 4;
                 }
                 if (frostHeart) {
                         if (enemyBlockNumber[enemy].innerText > 0) {
@@ -3951,6 +3962,7 @@ function inflictFrostbite(enemy) {
                 enemyBloodActionNumber[enemy].innerText = Math.floor(enemyBloodActionNumber[enemy].innerText * .50);  
                 enemyThornsActionNumber[enemy].innerText = Math.floor(enemyThornsActionNumber[enemy].innerText * .50);  
                 displayBlock(enemyFrostbiteImg[enemy]);
+                frostbiteTotal++;
         }
 }
 function inflictAllFrostbite() {
@@ -3958,6 +3970,7 @@ function inflictAllFrostbite() {
                 if (enemyIsDead[i] === false && enemyFrostbite[i] === false) {
                         if (iceEmpower1) {
                                 gainBlock(4);
+                                blockTotal += 4;
                         }
                         if (frostHeart) {
                                 if (enemyBlockNumber[i].innerText > 0) {
@@ -3991,27 +4004,55 @@ function inflictAllFrostbite() {
                         enemyBloodActionNumber[i].innerText = Math.floor(enemyBloodActionNumber[i].innerText * .50);  
                         enemyThornsActionNumber[i].innerText = Math.floor(enemyThornsActionNumber[i].innerText * .50);  
                         displayBlock(enemyFrostbiteImg[i]);  
+                        frostbiteTotal++;
                 }
         }
 }
-function checkHealthIsOverMax() {
+let [enemiesKilled, elitesKilled, bossesKilled, burnTotal, manaEnergized, frostbiteTotal, windsweptTotal, healthRestoredTotal, blockTotal, thornsTotal] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+function checkHealth() {
         if (parseFloat(playerCurrentHealth.innerText) > parseFloat(playerMaxHealth.innerText))  {
                 playerCurrentHealth.innerText = playerMaxHealth.innerText;
                 topBarHealthNumber.innerText = playerMaxHealth.innerText;
         }
         for (let i = 0; i < numberOfEnemies.length; i++) {
                 if (enemyIsDead[i] === false) {
-                        if (parseFloat(enemyCurrentHealth.innerText) > parseFloat(enemyMaxHealth.innerText))  {
-                                enemyCurrentHealth.innerText = playerMaxHealth.innerText;
+                        if (parseFloat(enemyCurrentHealth[i].innerText) > parseFloat(enemyMaxHealth[i].innerText))  {
+                                enemyCurrentHealth[i].innerText = enemyMaxHealth[i].innerText;
                         }
                 }
+        }
+        if (parseFloat(playerCurrentHealth.innerText) <= 0)  {
+                const deathScreenContainer = document.querySelector("#death-screen-container");
+                arena.classList.add("dim");
+                displayFlex(deathScreenContainer);
+                displayNone(handContainer);
+                deathScreenContainer.innerHTML = `
+                <div id="death-screen">
+                        <h1 style="color: red">You Died!</h1>
+                        <p>Enemies Killed:<span>${enemiesKilled}</span></p>
+                        <p>Elites Killed:<span>${elitesKilled}</span></p>
+                        <p>Bosses Killed:<span>${bossesKilled}</span></p>
+                        <p>Burn Inflicted:<span>${burnTotal}</span></p>
+                        <p>Mana Energized:<span>${manaEnergized}</span></p>
+                        <p>Frostbite Inflicted:<span>${frostbiteTotal}</span></p>
+                        <p>Windswept Inflicted:<span>${windsweptTotal}</span></p>
+                        <p>Health Restored:<span>${healthRestoredTotal}</span></p>
+                        <p>Block Gained:<span>${blockTotal}</span></p>
+                        <p>Thorns Gained:<span>${thornsTotal}</span></p>
+                        <button id="play-again-button">Play Again</button>
+                </div>`
+                const playAgainButton = document.querySelector("#play-again-button");
+                playAgainButton.addEventListener("click", () => {
+                        location.reload();
+                });
         }
 }
 function playerHeal(amount) {
         playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + amount;
         topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + amount;
         healthGainedThisFight += (amount);
-        checkHealthIsOverMax();
+        healthRestoredTotal += amount;
+        checkHealth();
 }
 function gainEnergize (amount) {
         if (playerFrostbite) {
@@ -4019,6 +4060,7 @@ function gainEnergize (amount) {
         }
         playerEnergizeNumber.innerText = parseFloat(playerEnergizeNumber.innerText) + amount;
         displayBlock(playerEnergizeImg, playerEnergizeNumber);
+        manaEnergized += amount;
 }
 function gainBlock(blockAmount) {
         if (terrasBlessing.length > 0) {
@@ -4031,6 +4073,7 @@ function gainBlock(blockAmount) {
         }
         playerBlockNumber.innerText = parseFloat(playerBlockNumber.innerText) + blockAmount;
         displayBlock(playerBlockImg, playerBlockNumber);
+        blockTotal += blockAmount;
 }
 function gainThorns(amount) {
         if (terrasBlessing.length > 0) {
@@ -4041,6 +4084,7 @@ function gainThorns(amount) {
         }
         playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) + amount;
         displayBlock(playerThornsNumber, playerThornsImg);
+        thornsTotal += amount;
 }
 function burnEnemy(burn, enemy) {
         if (essenceOfEmber.length > 0) {
@@ -4069,6 +4113,7 @@ function burnEnemy(burn, enemy) {
         }
         enemyBurnNumber[enemy].innerText = parseFloat(enemyBurnNumber[enemy].innerText) + burn;
         displayBlock(enemyBurnImg[enemy], enemyBurnNumber[enemy]);
+        burnTotal += burn;
 }
 function burnAllEnemies(burn) {
         if (essenceOfEmber) {
@@ -4087,6 +4132,7 @@ function burnAllEnemies(burn) {
                         }
                         enemyBurnNumber[i].innerText = parseFloat(enemyBurnNumber[i].innerText) + burn;
                         displayBlock(enemyBurnImg[i], enemyBurnNumber[i]);  
+                        burnTotal += burn;
                 }      
         }
 }
@@ -4124,12 +4170,13 @@ function checkRegenHeal() {
                 healthGainedThisFight += parseFloat(playerRegenNumber.innerText);
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + parseFloat(playerRegenNumber.innerText);
                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + parseFloat(playerRegenNumber.innerText);
+                healthRestoredTotal += playerRegenNumber.innerText;
                 playerRegenNumber.innerText--;
         }
         if (playerRegenNumber.innerText == 0) {
                 displayNone(playerRegenImg, playerRegenNumber);
         }
-        checkHealthIsOverMax();
+        checkHealth();
 }
 function checkBloodSiphon() {
         if (playerBloodNumber.innerText >= 1) {
@@ -4166,15 +4213,19 @@ function checkGaiasEmbrace() {
         if (gaiasEmbrace.length > 0) {
                 playerHeal(gaiasEmbrace.length * 3);
                 gainBlock(gaiasEmbrace.length * 3);
+                blockTotal += gaiasEmbrace.length * 3;
                 if (playerFrostbite && frostbitten) {
                         gainBlock(gaiasEmbrace.length * 3);
+                        blockTotal += gaiasEmbrace.length * 3;
                 }
         }
         if (gaiasEmbraceUpgrade.length > 0) {
                 playerHeal(gaiasEmbraceUpgrade.length * 5);
                 gainBlock(gaiasEmbraceUpgrade.length * 5);
+                blockTotal += gaiasEmbrace.length * 5;
                 if (playerFrostbite && frostbitten) {
                         gainBlock(gaiasEmbraceUpgrade.length * 5);
+                        blockTotal += gaiasEmbrace.length * 5;
                 }
         }
 }
@@ -4730,10 +4781,12 @@ function checkIfEnemyDead() {
                 playerAether.innerText = parseFloat(playerAether.innerText) + Math.ceil(30 + ((enemyLevel + 1) * 2.7));
                 if (getEliteRelic) {
                         getRelic(1, 12);
+                        elitesKilled++;
                         eliteMusic.pause();
                         eliteMusic.currentTime = 0;
                 }
                 getRandomNewCards();
+                enemiesKilled++;
                 return;
         }
        
@@ -4743,6 +4796,7 @@ function checkIfEnemyDead() {
                         displayNone(enemyBurnImg[i], enemyBurnNumber[i], enemyHealth[i], enemyCurrentHealth[i], enemyBlockDiv[i], enemyActionDiv[i]);
                         enemy[i].classList.add("fade-out");
                         enemyIsDead[i] = true;
+                        enemiesKilled++;
                 }
         }
         enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
@@ -4966,6 +5020,7 @@ function endTurn() {
                 displayBlock(playerBloodImg, playerBloodNumber);
                 bloodAmulet = false;
         }
+        checkHealth();
 }
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
