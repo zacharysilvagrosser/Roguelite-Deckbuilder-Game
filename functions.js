@@ -3,9 +3,7 @@ Talent tree after each fight
 SET UP IMAGES TO SCALE WITH SCREEN SIZE
 BOSS TREASURE: Empower an element and more likely to draw that element type
 Implement animations
-Set up mouseover for topbar relics and windswept and frostbite and thorns ect. keywords
 when viewing inventory have a sorter based on element type
-potions needs functionality to either only be allowed once in deck or be able to use multiple times
 ! DIV
 Personality type quiz that grants buff based on answer of what you value most
 POTIONS: RED POTION: Increase burn by 1
@@ -30,18 +28,20 @@ const options = document.querySelector("#options");
 const quitGame = document.querySelector("#quit-game");
 const bottomAnchor = document.querySelector("#bottom-anchor");
 const arrows = document.querySelectorAll(".arrow");
+const boardHeader = document.querySelector("#board-header");
 const startScreenMusic = new Audio("audio/start-screen-music.mp3");
 window.addEventListener("keydown", () => {
         displayNone(beginningScreen);
         displayFlex(startScreen);
-        startScreenMusic.play();
+        //startScreenMusic.play();
 }, {once: true});
 startGame.addEventListener("click", () => {
         displayBlock(map);
+        displayFlex(boardHeader);
         location.href="#bottom-anchor";
         displayNone(startScreen);
         mapMusic.play();
-        startScreenMusic.pause();
+        //startScreenMusic.pause();
 });
 startGame.addEventListener("mouseover", () => {
         displayBlock(arrows[0], arrows[1]);
@@ -394,11 +394,7 @@ function resetArena() {
         } else {
                 drawCards(maxHandLength);
         }
-        for (let i = 0; i < handArray.length; i++) {
-                if (handArray[i].classList.contains("card-clicked")) {
-                        handArray[i].classList.remove("card-clicked");
-                }
-        }
+        removeCardClicked();
         for (let i = 0; i < drawPileArray.length; i++) {
                 if (drawPileArray[i].classList.contains("card-clicked")) {
                         drawPileArray[i].classList.remove("card-clicked");
@@ -409,8 +405,8 @@ function resetArena() {
 let dontRepeatEncounter = [];
 const encounterMusic = new Audio("audio/encounter-music.mp3")
 function getRandomEncounter() {
-        encounterMusic.play();
-        mapMusic.pause();
+        //encounterMusic.play();
+        //mapMusic.pause();
         let randomEncounterNumber = createRandomNumber(1, 10);
         while (dontRepeatEncounter.includes(randomEncounterNumber)) {
                 randomEncounterNumber = createRandomNumber(1, 10);
@@ -3662,11 +3658,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                                 cardType[index].classList.add("card-clicked");
                                 chooseEnemy();          
                         } else {
-                                for (let i = 0; i < handArray.length; i++) {
-                                        if (handArray[i].classList.contains("card-clicked")) {
-                                                handArray[i].classList.remove("card-clicked");
-                                        }
-                                } 
+                                removeCardClicked();
                                 cardType[index].classList.add("card-clicked");
                                 chosenCard = CIindex;
                                 chooseEnemy();
@@ -3674,6 +3666,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                 });  
         } else {
                 cardType[index].addEventListener("click", () => {
+                        removeCardClicked();
                         if (currentMana.innerText >= cardsInformation[CIindex].manaCost[upgradeIndex]) {
                                 playCard();
                         }
@@ -3697,11 +3690,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                 if (currentMana.innerText >= cardsInformation[chosenCard].manaCost[upgradeIndex] && chosenCard === CIindex) {
                         playCard();
                         cardClicked = false;
-                        for (let i = 0; i < handArray.length; i++) {
-                                if (handArray[i].classList.contains("card-clicked")) {
-                                        handArray[i].classList.remove("card-clicked");
-                                }
-                        }
+                        removeCardClicked();
                         for (let i = 0; i < numberOfEnemies; i++) {
                                 if (enemyIsDead[i] === false) {
                                         enemy[i].removeEventListener("click", clickEnemy);   
@@ -3709,6 +3698,13 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                         }  
                 }
         }
+}
+function removeCardClicked() {
+        for (let i = 0; i < handArray.length; i++) {
+                if (handArray[i].classList.contains("card-clicked")) {
+                        handArray[i].classList.remove("card-clicked");
+                }
+        } 
 }
 function createNewCard(newRandomCard, upgradeIndex) {
         console.log("CREATING CARD NEW RANDOM CARD", newRandomCard);
@@ -3773,23 +3769,6 @@ function getRandomNewCards () {
         newCardChoices[3].addEventListener("click", () => {createNewCard(newRandomCard3, 0)});
         return;
 }
-function removeCardClickedClass() {
-        for (let i = 0; i < drawPileArray.length; i++) {
-                if (drawPileArray[i].classList.contains("card-clicked")) {
-                        drawPileArray[i].classList.remove("card-clicked");
-                }
-        }
-        for (let i = 0; i < handArray.length; i++) {
-                if (handArray[i].classList.contains("card-clicked")) {
-                        handArray[i].classList.remove("card-clicked");
-                }
-        }
-        for (let i = 0; i < discardPileArray.length; i++) {
-                if (discardPileArray[i].classList.contains("card-clicked")) {
-                        discardPileArray[i].classList.remove("card-clicked");
-                }
-        }
-}
 function displayCardPiles(container, pile) {
         displayFlex(container);
         arena.classList.add("dim");
@@ -3851,20 +3830,27 @@ const playerBurnNumber = document.querySelector("#player-burn-number");
 const playerBurnImg = document.querySelector("#player-burn-img");
 const playerWindsweptImg = document.querySelector("#player-windswept-img");
 const playerFrostbiteImg = document.querySelector("#player-frostbite-img");
-const debuffImgText = document.querySelectorAll(".debuff-img-text");
-playerFrostbiteImg.addEventListener("mouseover", () => {
-        displayFlex(debuffImgText[0]);
-});
-playerWindsweptImg.addEventListener("mouseover", () => {
-        displayFlex(debuffImgText[1]);
-});
-playerFrostbiteImg.addEventListener("mouseout", () => {
-        displayNone(debuffImgText[0]);
-});
-playerWindsweptImg.addEventListener("mouseout", () => {
-        displayNone(debuffImgText[1]);
-});
-
+const playerBurnDiv = document.querySelector("#player-burn-div");
+const playerEnergizeDiv = document.querySelector("#player-energize-div");
+const playerRegenDiv = document.querySelector("#player-regen-div");
+const playerBloodDiv = document.querySelector("#player-blood-div");
+const playerThornsDiv = document.querySelector("#player-thorns-div");
+const playerImgText = document.querySelectorAll(".player-img-text");
+function addActionText(div, text) {                
+        div.addEventListener("mouseover", () => {
+                displayFlex(text);
+        });
+        div.addEventListener("mouseout", () => {
+                displayNone(text);
+        });
+}
+addActionText(playerEnergizeDiv, playerImgText[0]);
+addActionText(playerRegenDiv, playerImgText[1]);
+addActionText(playerBloodDiv, playerImgText[2]);
+addActionText(playerThornsDiv, playerImgText[3]);
+addActionText(playerFrostbiteImg, playerImgText[4]);
+addActionText(playerWindsweptImg, playerImgText[5]);
+addActionText(playerBurnDiv, playerImgText[6]);
 
 let frostbitten = false;
 // TRACK WHEN END TURN BUTTON HAS BEEN CLICKED
@@ -4493,14 +4479,26 @@ function createEnemy(baseHealth, img) {
         `<div class="enemy-div">
                 <div class="enemy-action-div">
                     <div class="enemy-attack-action-div">
+                        <div class="attack-img-text">
+                                <h4 class="relic-img-text-h4">Attack</h4>
+                                <p class="relic-img-text-p">Take this much damage at the end of the turn.</p>
+                        </div>
                         <p class="enemy-attack-action-number"></p>
                         <img class="enemy-attack-action-img enemy-action-img" src="imgs/attack-icon.png">                  
                     </div>
                     <div class="enemy-block-action-div">
+                        <div class="block-img-text">
+                                <h4 class="relic-img-text-h4">Block</h4>
+                                <p class="relic-img-text-p">Gain a shield that blocks damage.</p>
+                        </div>
                         <p class="enemy-block-action-number"></p>
                         <img class="enemy-block-action-img enemy-action-img" src="imgs/block-icon.png">
                     </div>
                     <div class="enemy-heal-action-div">
+                        <div class="heal-img-text">
+                                <h4 class="relic-img-text-h4">Heal</h4>
+                                <p class="relic-img-text-p">Regain this much health at the end of the turn.</p>
+                        </div>
                         <p class="enemy-heal-action-number"></p>
                         <img class="enemy-heal-action-img enemy-action-img" src="imgs/heal-icon.png">
                     </div>
@@ -4515,7 +4513,7 @@ function createEnemy(baseHealth, img) {
                     <div class="enemy-regen-action-div">
                         <div class="regen-img-text">
                                 <h4 class="relic-img-text-h4">Regeneration</h4>
-                                <p class="relic-img-text-p">Heal this much at the end of each turn. Decreases by one each turn.</p>
+                                <p class="relic-img-text-p">Heal this much at the end of each turn. Decreases by one at the end of each turn.</p>
                         </div>
                         <p class="enemy-regen-action-number"></p>
                         <img class="enemy-regen-action-img enemy-action-img" src="imgs/regen-icon.png">
@@ -4575,15 +4573,39 @@ function createEnemy(baseHealth, img) {
                 </div>
                 <div class="enemy-debuffs">
                     <div class="enemy-burn-div">
+                        <div class="burn-img-debuff">
+                                <h4 class="relic-img-text-h4">Burn</h4>
+                                <p class="relic-img-text-p">Take this much damage at the end of each turn. Decreases by one each turn.</p>
+                        </div>
                         <img class="enemy-burn-img" src="imgs/burn-icon.png">
                         <p class="enemy-burn-number">0</p>
                     </div>
+                    <div class="enemy-windswept-div">
+                        <div class="windswept-img-debuff">
+                                <h4 class="relic-img-text-h4">Windswept</h4>
+                                <p class="relic-img-text-p">Reduces damage and burn by 50%</p>
+                        </div>
                     <img class="enemy-windswept-img" src="imgs/windswept-icon.png">
-                    <img class="enemy-frostbite-img" src="imgs/frostbite-icon.png"> 
+                    </div>
+                    <div class="enemy-frostbite-div">
+                        <div class="frostbite-img-debuff">
+                                <h4 class="relic-img-text-h4">Frostbite</h4>
+                                <p class="relic-img-text-p">Reduces buffs gained by 50%</p>
+                        </div>
+                        <img class="enemy-frostbite-img" src="imgs/frostbite-icon.png"> 
+                    </div>
                 </div>  
             </div>`
+            const attackImgText = document.querySelectorAll(".attack-img-text");
+            const enemyAttackActionDiv = document.querySelectorAll(".enemy-attack-action-div");
+            const blockImgText = document.querySelectorAll(".block-img-text");
+            const enemyBlockActionDiv = document.querySelectorAll(".enemy-block-action-div");
+            const healImgText = document.querySelectorAll(".heal-img-text");
+            const enemyHealActionDiv = document.querySelectorAll(".enemy-heal-action-div");
             const burnImgText = document.querySelectorAll(".burn-img-text");
+            const burnImgDebuff = document.querySelectorAll(".burn-img-debuff");
             const enemyBurnActionDiv = document.querySelectorAll(".enemy-burn-action-div");
+            const enemyBurnDiv = document.querySelectorAll(".enemy-burn-div");
             const regenImgText = document.querySelectorAll(".regen-img-text");
             const enemyRegenActionDiv = document.querySelectorAll(".enemy-regen-action-div");
             const bloodImgText = document.querySelectorAll(".blood-img-text");
@@ -4591,9 +4613,13 @@ function createEnemy(baseHealth, img) {
             const thornsImgText = document.querySelectorAll(".thorns-img-text");
             const enemyThornsActionDiv = document.querySelectorAll(".enemy-thorns-action-div");
             const frostbiteImgText = document.querySelectorAll(".frostbite-img-text");
+            const frostbiteImgDebuff = document.querySelectorAll(".frostbite-img-debuff");
             const enemyFrostbiteActionDiv = document.querySelectorAll(".enemy-frostbite-action-div");
+            const enemyFrostbiteDiv = document.querySelectorAll(".enemy-frostbite-div");
             const windsweptImgText = document.querySelectorAll(".windswept-img-text");
+            const windsweptImgDebuff = document.querySelectorAll(".windswept-img-debuff");
             const enemyWindsweptActionDiv = document.querySelectorAll(".enemy-windswept-action-div");
+            const enemyWindsweptDiv = document.querySelectorAll(".enemy-windswept-div");
             function addEnemyActionText(actionDiv, text) {
                 for (let i = 0; i < actionDiv.length; i++) {
                             actionDiv[i].addEventListener("mouseover", () => {
@@ -4606,12 +4632,18 @@ function createEnemy(baseHealth, img) {
                             });
                     }
             }
+            addEnemyActionText(enemyAttackActionDiv, attackImgText);
+            addEnemyActionText(enemyBlockActionDiv, blockImgText);
+            addEnemyActionText(enemyHealActionDiv, healImgText);
             addEnemyActionText(enemyBurnActionDiv, burnImgText);
+            addEnemyActionText(enemyBurnDiv, burnImgDebuff);
             addEnemyActionText(enemyRegenActionDiv, regenImgText);
             addEnemyActionText(enemyBloodActionDiv, bloodImgText);
             addEnemyActionText(enemyThornsActionDiv, thornsImgText);
             addEnemyActionText(enemyFrostbiteActionDiv, frostbiteImgText);
+            addEnemyActionText(enemyFrostbiteDiv, frostbiteImgDebuff);
             addEnemyActionText(enemyWindsweptActionDiv, windsweptImgText);
+            addEnemyActionText(enemyWindsweptDiv, windsweptImgDebuff);
 }
 function enemyLevelUp() {
         let enemyCurrentHealth = document.querySelectorAll(".enemy-current-health");
@@ -5067,7 +5099,7 @@ function endTurn() {
                 }
                 eI++     
         });
-        removeCardClickedClass();
+        removeCardClicked();
         checkPlayerEnergize();
         checkRegenHeal();
         checkBloodSiphon();

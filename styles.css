@@ -326,24 +326,29 @@
     width: 120px;
     height: 120px;
 }
-.shop-relic-img-text, .relic-img-text, .burn-img-text, .regen-img-text, .blood-img-text, .thorns-img-text, .frostbite-img-text, .windswept-img-text {
+.shop-relic-img-text, .relic-img-text, .player-img-text, .burn-img-debuff, .frostbite-img-debuff, .windswept-img-debuff, .attack-img-text,
+.block-img-text, .heal-img-text, .burn-img-text, .regen-img-text, .blood-img-text, .thorns-img-text, .frostbite-img-text, .windswept-img-text {
     position: absolute;
     margin-top: 12rem;
+    top: -20%;
+    margin-left: -15rem;
     display: none;
     width: 25rem;
     height: 10rem;
-    background-image: linear-gradient(rgb(158, 157, 157), rgb(56, 55, 55));
-    z-index: 2;
+    background-image: linear-gradient(rgb(140, 161, 141), rgb(40, 56, 36));
+    z-index: 12;
     color: white;
     text-align: center;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     border: 2px double rgb(81, 81, 81);
-    box-shadow: 5px 3px 3px black;
+    border-radius: 20px;
+    box-shadow: 5px 5px 10px black;
 }
-.burn-img-text, .regen-img-text, .blood-img-text, .thorns-img-text, .frostbite-img-text, .windswept-img-text {
-    right: 0%;
+.shop-relic-img-text, .relic-img-text {
+    top: 0%;
+    margin-left: 0px;
 }
 .player-frostbite-img:hover + div {
     display: flex;
@@ -573,21 +578,6 @@
     justify-content: center;
     margin-left: -100px;
 }
-.debuff-img-text {
-    position: absolute;
-    margin-left: -6rem;
-    display: none;
-    width: 16rem;
-    height: 10rem;
-    background-image: linear-gradient(rgb(158, 157, 157), rgb(56, 55, 55));
-    z-index: 9;
-    color: white;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    border: 2px double rgb(81, 81, 81);
-}
 #player-windswept-img, #player-frostbite-img, #player-tidal-imbuement-img {
     width: 60px;
     display: none;
@@ -671,6 +661,7 @@
     height: 100px;
     margin-left: 214px;
     margin-top: -320px;
+    z-index: 4;
 }
 .dragon-action-div {
     margin-left: 160px;
