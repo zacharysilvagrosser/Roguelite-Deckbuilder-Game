@@ -3626,6 +3626,8 @@ function reshuffleCards() {
 let cardClicked = false;
 let potionCards = [];
 let potionCardsContainer = document.querySelector("#potion-cards-container");
+// VARIABLE FOR ENSURING YOU CANT PLAY A CARD AFTER ENDING YOUR TURN
+let turnEnded = false;
 // ADD EVENTLISTENERS TO ALL CARDS, STORE CHOSEN CARD IN VARIABLE, PICK ENEMY WHO WILL RECIEVE CARD ACTION
 function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         function addToDiscard() {
@@ -3639,19 +3641,22 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                 displayNone(cardType[index]);
         }
         function playCard() {
-                cardsInformation[CIindex].action[upgradeIndex]();
-                addToDiscard();
-                updateCardText();
-                checkHealth();
-                handContainer.style = `width: ${handArray.length- 1}9.5%`;
-                if (airBubble.length > 0) {
-                        playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
-                        displayBlock(playerRegenImg, playerRegenNumber);
+                if (turnEnded === false) {
+                        cardsInformation[CIindex].action[upgradeIndex]();
+                        addToDiscard();
+                        updateCardText();
+                        checkHealth();
+                        handContainer.style = `width: ${handArray.length- 1}9.5%`;
+                        if (airBubble.length > 0) {
+                                playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
+                                displayBlock(playerRegenImg, playerRegenNumber);
+                        }
                 }
         }
         // IF CARD REQUIRES YOU TO CLICK ON AN ENEMY
         if (cardsInformation[CIindex].chooseEnemyCard) {
                 cardType[index].addEventListener("click", () => {
+                        turnEnded = false;
                         if (cardClicked === false) {
                                 cardClicked = true;
                                 chosenCard = CIindex;
@@ -3666,6 +3671,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                 });  
         } else {
                 cardType[index].addEventListener("click", () => {
+                        turnEnded = false;
                         removeCardClicked();
                         if (currentMana.innerText >= cardsInformation[CIindex].manaCost[upgradeIndex]) {
                                 playCard();
@@ -3674,28 +3680,28 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         }
         // ADD EVENTLISTENERS TO ALL ENEMIES
         function chooseEnemy() {
-        for (let i = 0; i < numberOfEnemies; i++) {
-                if (enemyIsDead[i] === false) {
-                        // LOG WHICH ENEMY HAS BEEN CLICKED
-                        enemy[i].addEventListener("click", () => {
-                                chosenEnemy = i;
-                        }, { once: true } );
-                        // PERFORM CHOSEN CARD ACTION ON CHOSEN ENEMY
-                        enemy[i].addEventListener("click", clickEnemy);
+                if (currentMana.innerText >= cardsInformation[chosenCard].manaCost[upgradeIndex] && chosenCard === CIindex) {
+                        for (let i = 0; i < numberOfEnemies; i++) {
+                                if (enemyIsDead[i] === false) {
+                                        // LOG WHICH ENEMY HAS BEEN CLICKED
+                                        enemy[i].addEventListener("click", () => {
+                                                chosenEnemy = i;
+                                        }, { once: true } );
+                                        // PERFORM CHOSEN CARD ACTION ON CHOSEN ENEMY
+                                        enemy[i].addEventListener("click", clickEnemy);
+                                }
                         }
                 }
         }
         // SEPERATE FUNCTION WHEN ENEMY IS CLICKED SO EVENTLISTENER CAN BE REMOVED ON EACH ENEMY AFTER CLICKING
         function clickEnemy() {
-                if (currentMana.innerText >= cardsInformation[chosenCard].manaCost[upgradeIndex] && chosenCard === CIindex) {
-                        playCard();
-                        cardClicked = false;
-                        removeCardClicked();
-                        for (let i = 0; i < numberOfEnemies; i++) {
-                                if (enemyIsDead[i] === false) {
-                                        enemy[i].removeEventListener("click", clickEnemy);   
-                                }     
-                        }  
+                playCard();
+                cardClicked = false;
+                removeCardClicked();
+                for (let i = 0; i < numberOfEnemies; i++) {
+                        if (enemyIsDead[i] === false) {
+                                enemy[i].removeEventListener("click", clickEnemy);   
+                        }     
                 }
         }
 }
@@ -5121,6 +5127,7 @@ function endTurn() {
                 displayBlock(playerBloodImg, playerBloodNumber);
                 bloodAmulet = false;
         }
+        turnEnded = true;
         checkHealth();
 }
 for (let i = 0; i < openingCards.length; i++) {
