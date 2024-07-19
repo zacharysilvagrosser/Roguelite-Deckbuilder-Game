@@ -70,7 +70,7 @@ const [startScreenMusic, mapMusic, encounterMusic, eliteMusic, shopMusic, blacks
         new Audio("audio/shop-music.wav"), new Audio("audio/blacksmith-music.mp3"), new Audio("audio/death-music.mp3")];
 const allMusic = [startScreenMusic, mapMusic, encounterMusic, eliteMusic, shopMusic, blacksmithMusic, deathMusic];
 const [sfpotion, sf0, sf1, sf2, sf3, sf4, sf5, sf6, sf7, sf8, sf9, sf10, sf11, sf12, sf13, sf14, sf15, sf16, sf17, sf18, sf19, sf20,
-        sf21, sf22, sf23, sf24, sf25, sf26, sf27, sf28, sf29, sf30, sf31, sf32, sf33, sf34, sf35, sf36, sf37, sf38, sf39, sf40, sf41, sf42, sf43] =
+        sf21, sf22, sf23, sf24, sf25, sf26, sf27, sf28, sf29, sf30, sf31, sf32, sf33, sf34, sf35, sf36, sf37, sf38, sf39, sf40, sf41, sf42, sf43, sfghost] =
         [new Audio("audio/potion.wav"), new Audio("audio/fireball.wav"), new Audio("audio/cascadingFlames.wav"), new Audio("audio/staticCharge.wav"), new Audio("audio/chainLightning.wav"),
         new Audio("audio/frostbolt.wav"), new Audio("audio/frostFingers.wav"), new Audio("audio/tornado.wav"), new Audio("audio/galeForce.wav"), new Audio("audio/bloodCocoon.wav"),
         new Audio("audio/tidalEmbuement.wav"), new Audio("audio/earthBarrier.wav"), new Audio("audio/thornShield.wav"), new Audio("audio/firefall.wav"), new Audio("audio/kindredSpirits.wav"),
@@ -79,9 +79,9 @@ const [sfpotion, sf0, sf1, sf2, sf3, sf4, sf5, sf6, sf7, sf8, sf9, sf10, sf11, s
         new Audio("audio/mistborn.wav"), new Audio("audio/tsunami.wav"), new Audio("audio/earthShatter.wav"), new Audio("audio/weaveOfThorns.wav"), new Audio("audio/vineWhip.wav"),
         new Audio("audio/forestFire.wav"), new Audio("audio/frostfireFusion.wav"), new Audio("audio/fanTheFlames.wav"), new Audio("audio/cauterize.wav"), new Audio("audio/magma.wav"),
         new Audio("audio/deepFreeze.wav"), new Audio("audio/hurricane.wav"), new Audio("audio/electricCurrent.wav"), new Audio("audio/quakingJolt.wav"), new Audio("audio/flurry.wav"),
-        new Audio("audio/liquify.wav"), new Audio("audio/frozenTundra.wav"), new Audio("audio/airBubbles.wav"), new Audio("audio/rockOrbit.wav")];
+        new Audio("audio/liquify.wav"), new Audio("audio/frozenTundra.wav"), new Audio("audio/airBubbles.wav"), new Audio("audio/rockOrbit.wav"), new Audio("audio/ghostAudio.mp3")];
 const allSoundFX = [sfpotion, sf0, sf1, sf2, sf3, sf4, sf5, sf6, sf7, sf8, sf9, sf10, sf11, sf12, sf13, sf14, sf15, sf16, sf17, sf18, sf19, sf20,
-        sf21, sf22, sf23, sf24, sf25, sf26, sf27, sf28, sf29, sf30, sf31, sf32, sf33, sf34, sf35, sf36, sf37, sf38, sf39, sf40, sf41, sf42, sf43];
+        sf21, sf22, sf23, sf24, sf25, sf26, sf27, sf28, sf29, sf30, sf31, sf32, sf33, sf34, sf35, sf36, sf37, sf38, sf39, sf40, sf41, sf42, sf43, sfghost];
 options.addEventListener("click", () => {
         displayFlex(optionsContainer);
         musicSlider.addEventListener("input", () => {
@@ -792,7 +792,7 @@ let getEliteRelic = false;
 let dontRepeatEliteEncounter = [];
 function getRandomEliteEncounter() {
         eliteMusic.play();
-        let randomEliteEncounterNumber = createRandomNumber(6, 5);
+        let randomEliteEncounterNumber = createRandomNumber(6, 6);
         while (dontRepeatEliteEncounter.includes(randomEliteEncounterNumber)) {
                 randomEliteEncounterNumber = createRandomNumber(1, 4);
         }
@@ -802,12 +802,10 @@ function getRandomEliteEncounter() {
                 case 1:
                         createEnemy(enemiesInformation[10].baseHealth, enemiesInformation[10].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-fly");
-                        enemyImg[0].classList.add("elite-enemy-img");
-                        enemyHealth[0].classList.add("dragon-enemy-health");
-                        enemyActionDiv[0].classList.add("dragon-action-div");
-                        enemyBuffDiv[0].classList = ("dragon-enemy-buffs");
-                        enemyDebuffDiv[0].classList = ("dragon-enemy-debuffs");
+                        document.querySelector(".enemy-img").style = "width: 600px";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: 32rem; bottom: 15rem";
+                        document.querySelector(".enemy-action-div").style = "position: absolute; bottom: 30rem";
+                        document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 36rem";
                         numberOfEnemies = 1;
                         enemyLevelUp();
                         enemyAction(10);
@@ -816,14 +814,11 @@ function getRandomEliteEncounter() {
                 case 2:
                         createEnemy(enemiesInformation[11].baseHealth, enemiesInformation[11].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-middle");
-                        enemyImg[0].classList.add("giant-enemy-img");
-                        enemyHealth[0].classList.add("giant-enemy-health");
-                        enemyActionDiv[0].classList.add("giant-action-div");
-                        enemyBlockImg[0].classList.add("giant-block-img");
-                        enemyBlockNumber[0].classList.add("giant-block-number");
-                        enemyBuffDiv[0].classList = ("giant-enemy-buffs");
-                        enemyDebuffDiv[0].classList = ("giant-enemy-debuffs");
+                        document.querySelector(".enemy-img").style = "width: 680px; margin-left: -8rem";
+                        document.querySelector(".enemy-health-bar").style = "margin-top: -3.3rem";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: 42rem; bottom: 50px";
+                        document.querySelector(".enemy-action-div").style = "position: absolute; bottom: 42rem";
+                        document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 47.5rem";
                         numberOfEnemies = 1;
                         enemyLevelUp();
                         enemyAction(11);
@@ -832,13 +827,8 @@ function getRandomEliteEncounter() {
                 case 3:
                         createEnemy(enemiesInformation[12].baseHealth, enemiesInformation[12].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-middle");
-                        enemyImg[0].classList.add("elite-enemy-img");
-                        enemyHealth[0].classList.add("unicorn-enemy-health");
-                        enemyHealth[0].classList.add("elite-enemy-health");
-                        enemyActionDiv[0].classList.add("unicorn-action-div");
-                        enemyBuffDiv[0].classList = ("giant-enemy-buffs");
-                        enemyDebuffDiv[0].classList = ("giant-enemy-debuffs");
+                        document.querySelector(".enemy-img").style = "width: 450px";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: 38rem; bottom: 1rem";
                         numberOfEnemies = 1;
                         enemyLevelUp();
                         enemyAction(12);
@@ -847,12 +837,8 @@ function getRandomEliteEncounter() {
                 case 4:
                         createEnemy(enemiesInformation[13].baseHealth, enemiesInformation[13].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-middle");
-                        enemyImg[0].classList.add("elite-enemy-img");
-                        enemyHealth[0].classList.add("druid-enemy-health");
-                        enemyActionDiv[0].classList.add("druid-action-div");
-                        enemyBuffDiv[0].classList = ("druid-enemy-buffs");
-                        enemyDebuffDiv[0].classList = ("druid-enemy-debuffs");
+                        document.querySelector(".enemy-img").style = "width: 450px";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: 39rem; bottom: 3rem";
                         numberOfEnemies = 1;
                         enemyLevelUp();
                         enemyAction(13);
@@ -861,7 +847,8 @@ function getRandomEliteEncounter() {
                 case 5:
                         createEnemy(enemiesInformation[14].baseHealth, enemiesInformation[14].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-middle");
+                        document.querySelector(".enemy-img").style = "width: 500px";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: 39rem; bottom: 3rem";
                         numberOfEnemies = 1;
                         enemyLevelUp();
                         enemyAction(14);
@@ -870,11 +857,10 @@ function getRandomEliteEncounter() {
                 case 6:
                         createEnemy(enemiesInformation[15].baseHealth, enemiesInformation[15].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-middle");
-                        enemyImg[0].classList.add("elite-enemy-img");
-                        enemyHealth[0].classList.add("druid-enemy-health");
-                        enemyActionDiv[0].classList.add("druid-action-div");
-                        enemyDebuffDiv[0].classList = ("druid-enemy-debuffs");
+                        sfghost.play();
+                        sfghost.loop = true;
+                        document.querySelector(".enemy-img").style = "width: 450px";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: 45rem; bottom: 1rem";
                         numberOfEnemies = 1;
                         enemyLevelUp();
                         enemyAction(15);
@@ -913,7 +899,7 @@ function chooseLocationPath() {
                         addGlow(location3Tiles1);
                         removeELL2();
                         location3Tiles1.addEventListener("click", L3T1);
-                        getRandomEncounter();
+                        getRandomEliteEncounter();
                         break;
                 case "L2T2":
                         removeGlow(location2Tiles1, location2Tiles2);
@@ -3825,16 +3811,16 @@ function createNewCard(newRandomCard, upgradeIndex) {
                 createCard(newRandomCard, destroyedCardsContainer, "card", "card-text", upgradeIndex);
         }
         let newCardsArray = document.querySelectorAll(".card");
-        console.log("1 NEWCARDSARRAY[0]", newCardsArray[0]);
+        console.log("1 NEWCARDSARRAY[0]", newCardsArray[newCardsArray.length - 1]);
         let newCardsText = document.querySelectorAll(".card-text");
         if (upgradeIndex === 1) {
-                newCardsArray[0].classList.add("upgraded");
+                newCardsArray[newCardsArray.length - 1].classList.add("upgraded");
                 newCardsText[0].classList.add("upgraded-text");
         }
         addCardListeners(newCardsArray, 0, newRandomCard, upgradeIndex);
-        drawPileArray.push(newCardsArray[0]);
-        handContainer.appendChild(newCardsArray[0]);
-        console.log("2 NEWCARDSARRAY[0]", newCardsArray[0]);
+        handContainer.appendChild(newCardsArray[newCardsArray.length - 1]);
+        drawPileArray.push(newCardsArray[newCardsArray.length - 1]);
+        console.log("2 NEWCARDSARRAY[newCardsArray.length - 1]", newCardsArray[newCardsArray.length - 1]);
         switchArea(map, arena);
         location.href="#bottom-anchor";
         mapMusic.play();
@@ -4079,9 +4065,11 @@ function inflictWindswept(enemy) {
                 if (stratus) {
                         enemyCurrentHealth[enemy].innerText = parseFloat(enemyCurrentHealth[enemy].innerText) -  Math.floor(enemyAttackActionNumber[enemy].innerText * .25);
                 }
-                enemyAttackActionNumber[enemy].innerText = Math.floor(enemyAttackActionNumber[enemy].innerText * .50);    
-                enemyBurnActionNumber[enemy].innerText = Math.floor(enemyBurnActionNumber[enemy].innerText * .50);
-                windsweptTotal++;
+                if (ghostIndex === 11) {
+                        enemyAttackActionNumber[enemy].innerText = Math.floor(enemyAttackActionNumber[enemy].innerText * .50);    
+                        enemyBurnActionNumber[enemy].innerText = Math.floor(enemyBurnActionNumber[enemy].innerText * .50);
+                        windsweptTotal++;
+                }
         }
 }
 function inflictFrostbite(enemy) {
@@ -4441,7 +4429,7 @@ const enemiesInformation = [
         {
                 name: "Centaur",
                 baseHealth: 35,
-                img: "imgs/enemy-centuar2.png",
+                img: "imgs/enemy-centaur2.png",
                 attackChance: 10,
                 attackDamageLow: 15,
                 attackDamageHigh: 18,
@@ -5010,6 +4998,7 @@ function checkIfEnemyDead() {
         function allEnemiesDead() {
                 playerAether.innerText = parseFloat(playerAether.innerText) + Math.ceil(30 + ((enemyLevel + 1) * 2.7));
                 if (getEliteRelic) {
+                        ghostIndex = 11;
                         getRelic(1, 12);
                         elitesKilled++;
                         eliteMusic.pause();
@@ -5059,7 +5048,7 @@ let enemyFrostbite = [false, false, false];
 let playerWindswept = false;
 let playerFrostbite = false;
 let eI = 0;
-let ghostIndex = 9;
+let ghostIndex = 11;
 // ENEMIES CHOOSE AN ACTION BASED ON RANDOM ACTION CHOICE
 function enemyAction() {
         eI = 0;
@@ -5147,11 +5136,11 @@ function enemyAction() {
                                 displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
                         }
                 } else {
+                        ghostIndex--;
                         enemyAttackActionNumber[eI].innerText = ghostIndex;
                         enemyAttackActionNumber[eI].classList = ("ghost-number");
-                        enemyAttackActionNumber[eI].style = `opacity: ${ghostIndex}0%`
+                        enemyAttackActionNumber[eI].style = `opacity: ${ghostIndex + 2}0%`
                         displayBlock(enemyAttackActionDiv[eI], enemyAttackActionNumber[eI]);
-                        ghostIndex--;
                 }
                 eI++
         });
@@ -5233,6 +5222,11 @@ function endTurn() {
                                         // ATTACK
                                         damagePlayer(enemyRandomDamage[eI], eI);
                                 }   
+                        } else {
+                                if (ghostIndex === 0) {
+                                        playerCurrentHealth.innerText -= 1000;
+                                        topBarHealthNumber.innerText -= 1000;
+                                }
                         }
                         // RESET ACTIONS
                         displayNone(enemyAttackActionDiv[eI], enemyBlockActionDiv[eI], enemyHealActionDiv[eI], enemyBurnActionDiv[eI], enemyThornsActionDiv[eI],
@@ -5271,4 +5265,3 @@ function endTurn() {
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
-getRandomEncounter();
