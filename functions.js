@@ -1,7 +1,5 @@
-/* TO DO
+/* IDEAS
 Talent tree after each fight
-SET UP IMAGES TO SCALE WITH SCREEN SIZE
-BOSS TREASURE: Empower an element and more likely to draw that element type
 Implement animations
 when viewing inventory have a sorter based on element type
 ! DIV
@@ -12,7 +10,13 @@ POTIONS: RED POTION: Increase burn by 1
 
 Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 mana etc.
 
-BUG: can click card then end turn and play card
+TO DO
+SET UP IMAGES TO SCALE WITH SCREEN SIZE
+BOSS TREASURE: Empower an element and more likely to draw that element type
+Settings gear when hitting escape for music and sound volume
+
+BUGS
+clicking on shop cards makes all cards dissapear and starts mapMusic
 transfer burn doing way too much burn
 frostfire fusion too much burn
 dark elf blood nan
@@ -1385,6 +1389,13 @@ function getShop () {
                 mapMusic.play();
                 shopMusic.pause();
                 shopMusic.currentTime = 0;
+                let shopCardsReference = document.querySelectorAll(".card-reference");
+                for (let k = 0; k < shopCardsReference.length; k++) {
+                        destroyedCardsArray.push(shopCardsReference[k]);
+                        destroyedCardsContainer.appendChild(shopCardsReference[k]);
+                        destroyedCardsArray = [];
+                        destroyedCardsContainer.innerHTML = ``;
+                }
         });
         // HEALTH BUTTON
         /*const shopHealthButton = document.querySelector("#shop-health-button");
@@ -1428,13 +1439,9 @@ function getShop () {
                                         createNewCard(j, 0);
                                         playerAether.innerText -= 50;
                                         displayNone(shopCardsCostDiv[i], map);
+                                        mapMusic.pause();
+                                        console.log("yes");
                                 }
-                        }
-                        for (let k = 0; k < shopCardsReference.length; k++) {
-                                destroyedCardsArray.push(shopCardsReference[k]);
-                                destroyedCardsContainer.appendChild(shopCardsReference[k]);
-                                destroyedCardsArray = [];
-                                destroyedCardsContainer.innerHTML = ``;
                         }
                 });
         }
@@ -1617,7 +1624,7 @@ function getShop () {
                         for (let k = 0; k <= 12; k++) {
                                 if (shopRelicImg[i].classList.contains(k) && playerAether.innerText >= 100) {
                                         getRelic(k, k);
-                                        displayNone(shopAetherImg[i + 10], shopAetherCost[i + 10],shopRelicImg[i], map);
+                                        displayNone(shopAetherImg[i + 10], shopAetherCost[i + 10], shopRelicImg[i], map);
                                         playerAether.innerText -= 100;
                                 }
                         }
@@ -1651,6 +1658,7 @@ function getBlacksmith() {
         } else {
                 blacksmithText.addEventListener("click", () => {
                         blacksmithText.innerHTML = `Leave Blacksmith<br>`;
+                        blacksmithText.style = `margin-top: 60px`;
                         blacksmithContainer.innerHTML += `<div id="blacksmith-cards-list"></div>`
                         const blacksmithCardsList = document.querySelector("#blacksmith-cards-list");
                         let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
@@ -1704,6 +1712,7 @@ function getBlacksmith() {
                                                         upgradeCard(j);
                                                         playerAether.innerText -= 75;
                                                         displayNone(cardReference[i], map);
+                                                        cardReferenceUpgraded[i].style = "visibility: collapse";
                                                         break;
                                                 }
                                         }
@@ -1712,7 +1721,8 @@ function getBlacksmith() {
                                         for (let j = 0; j < cardsInformation.length; j++) {
                                                 if (cardReference[i].classList.contains(j)) {
                                                         if (cardReferenceUpgraded[i].classList.contains(j)) {
-                                                                displayFlex(cardReferenceUpgraded[i]);
+                                                                cardReferenceUpgraded[i].style = "visibility: visible";
+                                                                console.log("mouseover" + i);
                                                         }
                                                 }
                                         }
@@ -1721,7 +1731,8 @@ function getBlacksmith() {
                                         for (let j = 0; j < cardsInformation.length; j++) {
                                                 if (cardReference[i].classList.contains(j)) {
                                                         if (cardReferenceUpgraded[i].classList.contains(j)) {
-                                                                displayNone(cardReferenceUpgraded[i]);
+                                                                cardReferenceUpgraded[i].style = "visibility: collapse";
+                                                                console.log("mouseout" + i);
                                                         }
                                                 }
                                         }
@@ -2092,7 +2103,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(20);
+                                damageAllEnemies(2000);
                                 sf3.play();
                         },
                         function() {
@@ -3594,7 +3605,7 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
 }
 arena.classList.remove("darken");
 // LOOP TO CREATE OPENING 12 CARDS
-for (let i = 0; i < 12; i++) {
+for (let i = 0; i < 40; i++) {
         createCard(i, handContainer, "card", "card-text", 0);
 }
 // SET CARDS TO ACTIVATE WHEN CLICKED RATHER THAN WHEN ENEMY IS CLICKED
@@ -3715,28 +3726,28 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         }
         // ADD EVENTLISTENERS TO ALL ENEMIES
         function chooseEnemy() {
-                if (currentMana.innerText >= cardsInformation[chosenCard].manaCost[upgradeIndex] && chosenCard === CIindex) {
-                        for (let i = 0; i < numberOfEnemies; i++) {
-                                if (enemyIsDead[i] === false) {
-                                        // LOG WHICH ENEMY HAS BEEN CLICKED
-                                        enemy[i].addEventListener("click", () => {
-                                                chosenEnemy = i;
-                                        }, { once: true } );
-                                        // PERFORM CHOSEN CARD ACTION ON CHOSEN ENEMY
-                                        enemy[i].addEventListener("click", clickEnemy);
-                                }
+                for (let i = 0; i < numberOfEnemies; i++) {
+                        if (enemyIsDead[i] === false) {
+                                // LOG WHICH ENEMY HAS BEEN CLICKED
+                                enemy[i].addEventListener("click", () => {
+                                        chosenEnemy = i;
+                                }, { once: true } );
+                                // PERFORM CHOSEN CARD ACTION ON CHOSEN ENEMY
+                                enemy[i].addEventListener("click", clickEnemy);
                         }
                 }
         }
         // SEPERATE FUNCTION WHEN ENEMY IS CLICKED SO EVENTLISTENER CAN BE REMOVED ON EACH ENEMY AFTER CLICKING
         function clickEnemy() {
-                playCard();
-                cardClicked = false;
-                removeCardClicked();
-                for (let i = 0; i < numberOfEnemies; i++) {
-                        if (enemyIsDead[i] === false) {
-                                enemy[i].removeEventListener("click", clickEnemy);   
-                        }     
+                if (currentMana.innerText >= cardsInformation[chosenCard].manaCost[upgradeIndex] && chosenCard === CIindex) {
+                        playCard();
+                        cardClicked = false;
+                        removeCardClicked();
+                        for (let i = 0; i < numberOfEnemies; i++) {
+                                if (enemyIsDead[i] === false) {
+                                        enemy[i].removeEventListener("click", clickEnemy);   
+                                }     
+                        }
                 }
         }
 }

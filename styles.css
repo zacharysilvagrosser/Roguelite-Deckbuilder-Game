@@ -98,6 +98,52 @@
 .arrow-reverse {
     transform: scaleX(-1);
 }
+#options-container {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+}
+#options-screen {
+    width: 70%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-direction: column;
+    background-image: linear-gradient(rgb(140, 161, 141), rgb(40, 56, 36));
+}
+#options-screen button {
+    margin-top: 50px;
+    width: 400px;
+    padding: 15px;
+    font-size: 20px;
+    font-family: Helvetica, Arial, sans-serif;
+    border-radius: 12px;
+    box-shadow: 5px 5px 10px black;
+    border: 2px solid #202221;
+    background-color:#1f2e21;
+    color: white;
+    font-weight: bold;
+    transition-duration: .1s;
+}
+#options-screen button:hover {
+    background-color: #37513f;
+    transform: translateY(2px);
+    cursor: pointer;
+    box-shadow: 2px 2px 5px black;
+}
+#options-screen button:active {
+    padding-top: 12px;
+}
+#options-screen h3 {
+    margin-top: 2rem;
+}
+#options-screen input {
+    width: 40%;
+}
 #death-screen-container {
     width: 100%;
     height: 100vh;
@@ -127,7 +173,7 @@
     color: white;
 }
 #death-screen p {
-    width: 210px;
+    width: 230px;
     text-align: left;
 }
 #death-screen span {
@@ -152,11 +198,6 @@
     transform: translateY(2px);
     cursor: pointer;
     box-shadow: 2px 2px 5px black;
-}
-#end-turn-button:active {
-    padding-top: 3px;
-    box-shadow: none;
-    transform: translateY(-2px);
 }
 /* MAP */
 #map {
@@ -410,11 +451,13 @@
     background-image: url("imgs/blacksmith-background2.jpg");
     background-size: cover;
     background-position: 90%;
-    overflow: hidden;
+    position: fixed;
+    overflow: scroll;
     display: none;
 }
 #blacksmith-cards-list {
     width: 100%;
+    height: 100%;
     display: flex;
     padding-top: 60px;
     flex-wrap: wrap;
@@ -464,6 +507,7 @@
     margin-top: 13.5rem;
     width: 400px;
     height: 400px;
+    position: fixed;
 }
 @keyframes speech-bubble {
     0% {
@@ -946,8 +990,8 @@
 }
 #end-turn-button:active {
     padding-top: 3px;
-  box-shadow: none;
-  transform: translateY(0);
+    box-shadow: none;
+    transform: translateY(0);
 }
 /* EXCLAMATION */
 .exclamation-div {
@@ -1288,8 +1332,13 @@ img[src="imgs/undefined-icon.png"] {
     color: rgb(186, 79, 248)
 }
 .upgrade-reference {
-    position: absolute;   
-    display: none;
-    margin-left: 5px;
+    position: relative;
+    display: flex;
+    visibility: collapse;
+    margin-left: 6px;
+    margin-top: 0px;
     z-index: 9;
+}
+.upgrade-reference:hover {
+    transform: translateY(0px);
 }
