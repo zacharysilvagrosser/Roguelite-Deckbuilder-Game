@@ -1,4 +1,5 @@
 /* IDEAS
+Second Map Desert Third Heaven/Hell diablo
 Talent tree after each fight
 Implement animations
 when viewing inventory have a sorter based on element type
@@ -16,7 +17,6 @@ BOSS TREASURE: Empower an element and more likely to draw that element type
 Settings gear when hitting escape for music and sound volume
 
 BUGS
-clicking on shop cards makes all cards dissapear and starts mapMusic
 transfer burn doing way too much burn
 frostfire fusion too much burn
 dark elf blood nan
@@ -56,6 +56,9 @@ startGame.addEventListener("mouseover", () => {
 startGame.addEventListener("mouseout", () => {
         displayNone(arrows[0], arrows[1]);
 });
+tutorial.addEventListener("click", () => {
+        displayBlock(document.querySelector("#tutorial-container"));
+});
 tutorial.addEventListener("mouseover", () => {
         displayBlock(arrows[2], arrows[3]);
 });
@@ -71,7 +74,7 @@ const [sfpotion, sf0, sf1, sf2, sf3, sf4, sf5, sf6, sf7, sf8, sf9, sf10, sf11, s
         [new Audio("audio/potion.wav"), new Audio("audio/fireball.wav"), new Audio("audio/cascadingFlames.wav"), new Audio("audio/staticCharge.wav"), new Audio("audio/chainLightning.wav"),
         new Audio("audio/frostbolt.wav"), new Audio("audio/frostFingers.wav"), new Audio("audio/tornado.wav"), new Audio("audio/galeForce.wav"), new Audio("audio/bloodCocoon.wav"),
         new Audio("audio/tidalEmbuement.wav"), new Audio("audio/earthBarrier.wav"), new Audio("audio/thornShield.wav"), new Audio("audio/firefall.wav"), new Audio("audio/kindredSpirits.wav"),
-        new Audio("audio/phoenixFire.wav"),new Audio("audio/stormblessed.wav"), new Audio("audio/ballLightning.wav"), new Audio("audio/conduit.wav"), new Audio("audio/iceNova.wav"),
+        new Audio("audio/phoenixFire.wav"),new Audio("audio/stormblessed.wav"), new Audio("audio/ballLightning.wav"), new Audio("audio/chainLightning.wav"), new Audio("audio/iceNova.wav"),
         new Audio("audio/frostbitten.wav"), new Audio("audio/rayOfIce.wav"), new Audio("audio/windsOfChange.wav"), new Audio("audio/windwalk.wav"), new Audio("audio/gust.wav"), new Audio("audio/sanguineSpring.wav"),
         new Audio("audio/mistborn.wav"), new Audio("audio/tsunami.wav"), new Audio("audio/earthShatter.wav"), new Audio("audio/weaveOfThorns.wav"), new Audio("audio/vineWhip.wav"),
         new Audio("audio/forestFire.wav"), new Audio("audio/frostfireFusion.wav"), new Audio("audio/fanTheFlames.wav"), new Audio("audio/cauterize.wav"), new Audio("audio/magma.wav"),
@@ -452,15 +455,13 @@ function getRandomEncounter() {
         }
         let enemyImg = document.querySelectorAll(".enemy-img");
         switchArea(arena, map);
+        displayFlex(arena);
         switch (randomEncounterNumber) {
                 case 1:
                         createEnemy(enemiesInformation[1].baseHealth, enemiesInformation[1].img);
                         createEnemy(enemiesInformation[0].baseHealth, enemiesInformation[0].img);
                         createEnemy(enemiesInformation[2].baseHealth, enemiesInformation[2].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-left");
-                        enemy[1].classList.add("position-middle");
-                        enemy[2].classList.add("position-right");
                         enemyImg = document.querySelectorAll(".enemy-img");
                         enemyImg[2].classList.add("enemy-img-centaur");
                         numberOfEnemies = 3;
@@ -473,9 +474,6 @@ function getRandomEncounter() {
                         createEnemy(enemiesInformation[6].baseHealth, enemiesInformation[6].img);
                         createEnemy(enemiesInformation[7].baseHealth, enemiesInformation[7].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-left");
-                        enemy[1].classList.add("position-middle");
-                        enemy[2].classList.add("position-right");
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(5, 6, 7);
@@ -486,9 +484,6 @@ function getRandomEncounter() {
                         createEnemy(enemiesInformation[3].baseHealth, enemiesInformation[3].img);
                         createEnemy(enemiesInformation[4].baseHealth, enemiesInformation[4].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-left");
-                        enemy[1].classList.add("position-middle");
-                        enemy[2].classList.add("position-right");
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(3, 3, 4);
@@ -499,9 +494,6 @@ function getRandomEncounter() {
                         createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
                         createEnemy(enemiesInformation[8].baseHealth, enemiesInformation[8].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-left");
-                        enemy[1].classList.add("position-middle");
-                        enemy[2].classList.add("position-right");
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(1, 9, 8);
@@ -512,9 +504,6 @@ function getRandomEncounter() {
                         createEnemy(enemiesInformation[1].baseHealth, enemiesInformation[1].img);
                         createEnemy(enemiesInformation[7].baseHealth, enemiesInformation[7].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-left");
-                        enemy[1].classList.add("position-middle");
-                        enemy[2].classList.add("position-right");
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(1, 1, 7);
@@ -525,9 +514,6 @@ function getRandomEncounter() {
                         createEnemy(enemiesInformation[0].baseHealth, enemiesInformation[0].img);
                         createEnemy(enemiesInformation[3].baseHealth, enemiesInformation[3].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-left");
-                        enemy[1].classList.add("position-middle");
-                        enemy[2].classList.add("position-right");
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(0, 0, 3);
@@ -538,9 +524,6 @@ function getRandomEncounter() {
                         createEnemy(enemiesInformation[6].baseHealth, enemiesInformation[6].img);
                         createEnemy(enemiesInformation[2].baseHealth, enemiesInformation[2].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-left");
-                        enemy[1].classList.add("position-middle");
-                        enemy[2].classList.add("position-right");
                         enemyImg = document.querySelectorAll(".enemy-img");
                         enemyImg[2].classList.add("enemy-img-centaur");
                         numberOfEnemies = 3;
@@ -553,9 +536,6 @@ function getRandomEncounter() {
                         createEnemy(enemiesInformation[8].baseHealth, enemiesInformation[8].img);
                         createEnemy(enemiesInformation[2].baseHealth, enemiesInformation[2].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-left");
-                        enemy[1].classList.add("position-middle");
-                        enemy[2].classList.add("position-right");
                         enemyImg = document.querySelectorAll(".enemy-img");
                         enemyImg[2].classList.add("enemy-img-centaur");
                         numberOfEnemies = 3;
@@ -564,17 +544,13 @@ function getRandomEncounter() {
                         dontRepeatEncounter.push(8);
                         break;
                 case 9:
+                        createEnemy(enemiesInformation[5].baseHealth, enemiesInformation[5].img);
                         createEnemy(enemiesInformation[4].baseHealth, enemiesInformation[4].img);
-                        createEnemy(enemiesInformation[4].baseHealth, enemiesInformation[4].img);
-                        createEnemy(enemiesInformation[4].baseHealth, enemiesInformation[4].img);
+                        createEnemy(enemiesInformation[8].baseHealth, enemiesInformation[8].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-left");
-                        enemy[1].classList.add("position-middle");
-                        enemy[2].classList.add("position-right");
-                        enemyImg = document.querySelectorAll(".enemy-img");
                         numberOfEnemies = 3;
                         enemyLevelUp();
-                        enemyAction(4, 4, 4);
+                        enemyAction(5, 4, 8);
                         dontRepeatEncounter.push(9);
                         break;
                 case 10:
@@ -582,14 +558,50 @@ function getRandomEncounter() {
                         createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
                         createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
                         initializeEnemyVariables();
-                        enemy[0].classList.add("position-left");
-                        enemy[1].classList.add("position-middle");
-                        enemy[2].classList.add("position-right");
                         enemyImg = document.querySelectorAll(".enemy-img");
                         numberOfEnemies = 3;
                         enemyLevelUp();
                         enemyAction(9, 9, 9);
                         dontRepeatEncounter.push(10);
+                        break;
+        }
+}
+let dontRepeatGoldEncounter = [];
+function getRandomGoldEncounter() {
+        encounterMusic.play();
+        mapMusic.pause();
+        let randomGoldEncounterNumber = createRandomNumber(1, 1);
+        while (dontRepeatGoldEncounter.includes(randomGoldEncounterNumber)) {
+                randomGoldEncounterNumber = createRandomNumber(1, 1);
+                
+        }
+        switchArea(arena, map);
+        switch (randomGoldEncounterNumber) {
+                case 1:
+                        createEnemy(enemiesInformation[4].baseHealth, enemiesInformation[4].img);
+                        createEnemy(enemiesInformation[4].baseHealth, enemiesInformation[4].img);
+                        createEnemy(enemiesInformation[4].baseHealth, enemiesInformation[4].img);
+                        initializeEnemyVariables();
+                        enemy[0].classList.add("position-left");
+                        enemy[1].classList.add("position-middle");
+                        enemy[2].classList.add("position-right");
+                        numberOfEnemies = 3;
+                        enemyLevelUp();
+                        enemyAction(4, 4, 4);
+                        dontRepeatGoldEncounter.push(1);
+                        break;
+                case 2:
+                        createEnemy(enemiesInformation[5].baseHealth, enemiesInformation[5].img);
+                        createEnemy(enemiesInformation[5].baseHealth, enemiesInformation[5].img);
+                        createEnemy(enemiesInformation[5].baseHealth, enemiesInformation[5].img);
+                        initializeEnemyVariables();
+                        enemy[0].classList.add("position-left");
+                        enemy[1].classList.add("position-middle");
+                        enemy[2].classList.add("position-right");
+                        numberOfEnemies = 3;
+                        enemyLevelUp();
+                        enemyAction(5, 5, 5);
+                        dontRepeatGoldEncounter.push(2);
                         break;
         }
 }
@@ -780,7 +792,7 @@ let getEliteRelic = false;
 let dontRepeatEliteEncounter = [];
 function getRandomEliteEncounter() {
         eliteMusic.play();
-        let randomEliteEncounterNumber = createRandomNumber(1, 4);
+        let randomEliteEncounterNumber = createRandomNumber(6, 5);
         while (dontRepeatEliteEncounter.includes(randomEliteEncounterNumber)) {
                 randomEliteEncounterNumber = createRandomNumber(1, 4);
         }
@@ -846,6 +858,28 @@ function getRandomEliteEncounter() {
                         enemyAction(13);
                         dontRepeatEliteEncounter.push(4);
                         break;
+                case 5:
+                        createEnemy(enemiesInformation[14].baseHealth, enemiesInformation[14].img);
+                        initializeEnemyVariables();
+                        enemy[0].classList.add("position-middle");
+                        numberOfEnemies = 1;
+                        enemyLevelUp();
+                        enemyAction(14);
+                        dontRepeatEliteEncounter.push(5);
+                        break;
+                case 6:
+                        createEnemy(enemiesInformation[15].baseHealth, enemiesInformation[15].img);
+                        initializeEnemyVariables();
+                        enemy[0].classList.add("position-middle");
+                        enemyImg[0].classList.add("elite-enemy-img");
+                        enemyHealth[0].classList.add("druid-enemy-health");
+                        enemyActionDiv[0].classList.add("druid-action-div");
+                        enemyDebuffDiv[0].classList = ("druid-enemy-debuffs");
+                        numberOfEnemies = 1;
+                        enemyLevelUp();
+                        enemyAction(15);
+                        dontRepeatEliteEncounter.push(6);
+                        break;
         }
 }
 function chooseLocationPath() {
@@ -886,7 +920,7 @@ function chooseLocationPath() {
                         addGlow(location3Tiles2);
                         removeELL2();
                         location3Tiles2.addEventListener("click", L3T2);
-                        getRandomExclamation();
+                        getRandomEncounter();
                         break;
                 case "L2T3":
                         removeGlow(location2Tiles3);
@@ -900,13 +934,14 @@ function chooseLocationPath() {
                         addGlow(location3Tiles3);
                         removeELL2();
                         location3Tiles3.addEventListener("click", L3T3);
+                        getRandomExclamation();
                         break;
                 case "L3T1":
                         removeGlow(location3Tiles1);
                         addGlow(location4Tiles1);
                         removeELL3();
                         location4Tiles1.addEventListener("click", L4T1);
-                        getRandomExclamation();
+                        getRandomGoldEncounter();
                         break;
                 case "L3T2":
                         removeGlow(location3Tiles2);
@@ -928,7 +963,7 @@ function chooseLocationPath() {
                         addGlow(location5Tiles1);
                         removeELL4();
                         location5Tiles1.addEventListener("click", L5T1);
-                        getRandomEliteEncounter();
+                        getRandomExclamation();
                         break;
                 case "L4T2":
                         removeGlow(location4Tiles2);
@@ -936,7 +971,7 @@ function chooseLocationPath() {
                         removeELL4();
                         location5Tiles1.addEventListener("click", L5T1);
                         location5Tiles2.addEventListener("click", L5T2);
-                        getRandomEncounter();
+                        getRandomEliteEncounter();
                         break;
                 case "L4T3":
                         removeGlow(location4Tiles3, location4Tiles4);
@@ -944,12 +979,14 @@ function chooseLocationPath() {
                         removeELL4();
                         location5Tiles2.addEventListener("click", L5T2);
                         location5Tiles3.addEventListener("click", L5T3);
+                        getRandomExclamation();
                         break;
                 case "L4T4":
                         removeGlow(location4Tiles3, location4Tiles4);
                         addGlow(location5Tiles3);
                         removeELL5();
                         location5Tiles3.addEventListener("click", L5T3);
+                        getShop();
                         break;
                 case "L5T1":
                         removeGlow(location5Tiles1, location5Tiles2, location5Tiles3);
@@ -963,12 +1000,14 @@ function chooseLocationPath() {
                         addGlow(location6Tiles1);
                         removeELL5();
                         location6Tiles1.addEventListener("click", L6T1);
+                        getBlacksmith();
                         break;
                 case "L5T3":
                         removeGlow(location5Tiles2, location5Tiles3);
                         addGlow(location6Tiles1);
                         removeELL5();
                         location6Tiles1.addEventListener("click", L6T1);
+                        getRandomEliteEncounter();
                         break;
                 case "L6T1":
                         removeGlow(location6Tiles1);
@@ -992,6 +1031,7 @@ function chooseLocationPath() {
                         addGlow(location8Tiles2);
                         removeELL7();
                         location8Tiles2.addEventListener("click", L8T2);
+                        getRandomExclamation();
                         break;
                 case "L7T3":
                         removeGlow(location7Tiles1, location7Tiles2, location7Tiles3);
@@ -1007,7 +1047,7 @@ function chooseLocationPath() {
                         removeELL8();
                         location9Tiles1.addEventListener("click", L9T1);
                         location9Tiles2.addEventListener("click", L9T2);
-                        getRandomExclamation();
+                        getRandomEncounter();
                         break;
                 case "L8T2":
                         removeGlow(location8Tiles1, location8Tiles2, location8Tiles3);
@@ -1015,6 +1055,7 @@ function chooseLocationPath() {
                         removeELL8();
                         location9Tiles2.addEventListener("click", L9T2);
                         location9Tiles3.addEventListener("click", L9T3);
+                        getRandomEncounter();
                         break;
                 case "L8T3":
                         removeGlow(location8Tiles2, location8Tiles3);
@@ -1022,45 +1063,49 @@ function chooseLocationPath() {
                         removeELL8();
                         location9Tiles3.addEventListener("click", L9T3);
                         location9Tiles4.addEventListener("click", L9T4);
+                        getRandomEncounter();
                         break;
                 case "L9T1":
                         removeGlow(location9Tiles1, location9Tiles2);
                         addGlow(location10Tiles1);
                         removeELL9();
                         location10Tiles1.addEventListener("click", L10T1);
-                        getRandomEncounter();
+                        getRandomExclamation();
                         break;
                 case "L9T2":
                         removeGlow(location9Tiles1, location9Tiles2, location9Tiles3);
                         addGlow(location10Tiles1);
                         removeELL9();
                         location10Tiles1.addEventListener("click", L10T1);
-                        getRandomEncounter();
+                        getRandomGoldEncounter();
                         break;
                 case "L9T3":
                         removeGlow(location9Tiles2, location9Tiles3, location9Tiles4);
                         addGlow(location10Tiles2);
                         removeELL9();
                         location10Tiles2.addEventListener("click", L10T2);
+                        getRandomEliteEncounter();
                         break;
                 case "L9T4":
                         removeGlow(location9Tiles3, location9Tiles4);
                         addGlow(location10Tiles2);
                         removeELL9();
                         location10Tiles2.addEventListener("click", L10T2);
+                        getRandomExclamation();
                         break;
                 case "L10T1":          
                         removeGlow(location10Tiles1);
                         addGlow(location11Tiles1);
                         removeELL10();
                         location11Tiles1.addEventListener("click", L11T1);
-                        getBlacksmith();
+                        getShop();
                         break;
                 case "L10T2":          
                         removeGlow(location10Tiles2);
                         addGlow(location11Tiles1);
                         removeELL10();
                         location11Tiles1.addEventListener("click", L11T1);
+                        getBlacksmith();
                         break;
                 case "L11T1":
                         removeGlow(location11Tiles1);
@@ -3605,7 +3650,7 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
 }
 arena.classList.remove("darken");
 // LOOP TO CREATE OPENING 12 CARDS
-for (let i = 0; i < 40; i++) {
+for (let i = 0; i < 12; i++) {
         createCard(i, handContainer, "card", "card-text", 0);
 }
 // SET CARDS TO ACTIVATE WHEN CLICKED RATHER THAN WHEN ENEMY IS CLICKED
@@ -3873,8 +3918,8 @@ const playerAether = document.querySelector("#top-bar-aether-number");
 const currentMana = document.querySelector("#current-mana");
 const endTurnButton = document.querySelector("#end-turn-button");
 // BUFFS AND DEBUFFS
-const playerBlockImg = document.querySelector("#block-img");
-const playerBlockNumber = document.querySelector("#block-img-number");
+const playerBlockImg = document.querySelector("#player-block-img");
+const playerBlockNumber = document.querySelector("#player-block-number");
 const playerEnergizeImg = document.querySelector("#player-energize-img");
 const playerEnergizeNumber = document.querySelector("#player-energize-number");
 const playerThornsImg = document.querySelector("#player-thorns-img");
@@ -4263,11 +4308,20 @@ function gainBloodSiphon(amount) {
         displayBlock(playerBloodImg, playerBloodNumber);
 }
 function checkPlayerBurn() {
-        if (playerBurnNumber.innerText >= 1) {
+        if (playerBlockNumber.innerText <= 0) {
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) - parseFloat(playerBurnNumber.innerText);
                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) - parseFloat(playerBurnNumber.innerText);
-                playerBurnNumber.innerText--;
+        } else if (playerBlockNumber.innerText <= parseFloat(playerBurnNumber.innerText)) {
+                topBarHealthNumber.innerText -= parseFloat(playerBurnNumber.innerText) - parseFloat(playerBlockNumber.innerText);
+                playerCurrentHealth.innerText -= parseFloat(playerBurnNumber.innerText) - parseFloat(playerBlockNumber.innerText);
+                displayNone(playerBlockNumber, playerBlockImg);
+                if (vineBracelet) {
+                        playerBlockNumber.innerText = 10
+                }
+        } else {
+                playerBlockNumber.innerText -= parseFloat(playerBurnNumber.innerText); 
         }
+        playerBurnNumber.innerText--;
         if (playerBurnNumber.innerText == 0) {
                 displayNone(playerBurnImg, playerBurnNumber);
         }
@@ -4387,7 +4441,7 @@ const enemiesInformation = [
         {
                 name: "Centaur",
                 baseHealth: 35,
-                img: "imgs/enemy-centaur.png",
+                img: "imgs/enemy-centuar2.png",
                 attackChance: 10,
                 attackDamageLow: 15,
                 attackDamageHigh: 18,
@@ -4456,16 +4510,16 @@ const enemiesInformation = [
         {
                 name: "Water Fae",
                 baseHealth: 65,
-                img: "imgs/enemy-water-fae.png",
+                img: "imgs/enemy-water-fae2.png",
                 attackChance: 2,
                 regenChance: 6,
                 bloodChance: 10,
                 attackDamageLow: 10,
                 attackDamageHigh: 14,
-                regenAmountLow: 3,
-                regenAmountHigh: 5,
-                bloodAmountLow: 3,
-                bloodAmountHigh: 4,
+                regenAmountLow: 8,
+                regenAmountHigh: 10,
+                bloodAmountLow: 5,
+                bloodAmountHigh: 7,
         },
         {
                 name: "Forest Fae",
@@ -4511,14 +4565,14 @@ const enemiesInformation = [
                 baseHealth: 250,
                 img: "imgs/enemy-elite-water-unicorn.png",
                 attackChance: 2,
-                regenChance: 6,
+                regenChance: 7,
                 thornsChance: 10,
                 attackDamageLow: 18,
                 attackDamageHigh: 20,
                 regenAmountLow: 6,
                 regenAmountHigh: 8,
                 thornsAmountLow: 3,
-                thornsAmountHigh: 5,
+                thornsAmountHigh: 4,
         },
         {
                 name: "Druid",
@@ -4532,105 +4586,27 @@ const enemiesInformation = [
                 bloodAmountLow: 3,
                 bloodAmountHigh: 4,
         },
+        {
+                name: "Aztec",
+                baseHealth: 200,
+                img: "imgs/aztec-elite.png",
+                attackChance: 1,
+                bloodChance: 10,
+                attackDamageLow: 24,
+                attackDamageHigh: 26,
+                bloodAmountLow: 3,
+                bloodAmountHigh: 4,
+        },
+        {
+                name: "Ghost",
+                baseHealth: 200,
+                img: "imgs/ghost-elite.png",
+        },
 ]
 const enemyContainer = document.querySelector("#enemy-container");
 function createEnemy(baseHealth, img) {
         enemyContainer.innerHTML+=
         `<div class="enemy-div">
-                <div class="enemy-action-div">
-                    <div class="enemy-attack-action-div">
-                        <div class="attack-img-text">
-                                <h4 class="relic-img-text-h4">Attack</h4>
-                                <p class="relic-img-text-p">Take this much damage at the end of the turn.</p>
-                        </div>
-                        <p class="enemy-attack-action-number"></p>
-                        <img class="enemy-attack-action-img enemy-action-img" src="imgs/attack-icon.png">                  
-                    </div>
-                    <div class="enemy-block-action-div">
-                        <div class="block-img-text">
-                                <h4 class="relic-img-text-h4">Block</h4>
-                                <p class="relic-img-text-p">Gain a shield that blocks damage.</p>
-                        </div>
-                        <p class="enemy-block-action-number"></p>
-                        <img class="enemy-block-action-img enemy-action-img" src="imgs/block-icon.png">
-                    </div>
-                    <div class="enemy-heal-action-div">
-                        <div class="heal-img-text">
-                                <h4 class="relic-img-text-h4">Heal</h4>
-                                <p class="relic-img-text-p">Regain this much health at the end of the turn.</p>
-                        </div>
-                        <p class="enemy-heal-action-number"></p>
-                        <img class="enemy-heal-action-img enemy-action-img" src="imgs/heal-icon.png">
-                    </div>
-                    <div class="enemy-burn-action-div">
-                        <div class="burn-img-text">
-                                <h4 class="relic-img-text-h4">Burn</h4>
-                                <p class="relic-img-text-p">Take this much damage at the end of each turn. Decreases by one each turn.</p>
-                        </div>
-                        <p class="enemy-burn-action-number"></p>
-                        <img class="enemy-burn-action-img enemy-action-img" src="imgs/burn-icon.png">
-                    </div>
-                    <div class="enemy-regen-action-div">
-                        <div class="regen-img-text">
-                                <h4 class="relic-img-text-h4">Regeneration</h4>
-                                <p class="relic-img-text-p">Heal this much at the end of each turn. Decreases by one at the end of each turn.</p>
-                        </div>
-                        <p class="enemy-regen-action-number"></p>
-                        <img class="enemy-regen-action-img enemy-action-img" src="imgs/regen-icon.png">
-                    </div>
-                    <div class="enemy-blood-action-div">
-                        <div class="blood-img-text">
-                                <h4 class="relic-img-text-h4">Blood Siphon</h4>
-                                <p class="relic-img-text-p">Heal for 20% of damage done. Decreases by one at the end of each turn.</p>
-                        </div>
-                        <p class="enemy-blood-action-number"></p>
-                        <img class="enemy-blood-action-img enemy-action-img" src="imgs/blood-icon.png">
-                    </div>
-                    <div class="enemy-thorns-action-div">
-                        <div class="thorns-img-text">
-                                <h4 class="relic-img-text-h4">Thorns</h4>
-                                <p class="relic-img-text-p">Take this much damage when attacking.</p>
-                        </div>
-                        <p class="enemy-thorns-action-number"></p>
-                        <img class="enemy-thorns-action-img enemy-action-img" src="imgs/thorns-icon.png">
-                    </div>
-                    <div class="enemy-frostbite-action-div">
-                        <div class="frostbite-img-text">
-                                <h4 class="relic-img-text-h4">Frostbite</h4>
-                                <p class="relic-img-text-p">Reduce all buffs gained by 50%.</p>
-                        </div>
-                        <img class="enemy-frostbite-action-img enemy-action-img" src="imgs/frostbite-icon.png">
-                   </div>
-                   <div class="enemy-windswept-action-div">
-                        <div class="windswept-img-text">
-                                <h4 class="relic-img-text-h4">Windswept</h4>
-                                <p class="relic-img-text-p">Reduce all attack and burn by 50%.</p>
-                        </div>
-                    <img class="enemy-windswept-action-img enemy-action-img" src="imgs/windswept-icon.png">
-                   </div>
-                </div>
-                <img class="enemy-img" src="${img}">
-                <div class="enemy-block-div">
-                   <p class="enemy-block-number">0</p>
-                   <img class="enemy-block-img" src="imgs/block-icon.png">
-                </div>                
-                <div class="enemy-health-div">
-                    <p class="enemy-health"><span class="enemy-current-health">${baseHealth}</span>/<span class="enemy-max-health">${baseHealth}</span></p>
-                </div>
-                <div class="enemy-buffs">
-                    <div>
-                        <p class="enemy-thorns-number">0</p>
-                        <img class="enemy-thorns-img" src="imgs/thorns-icon.png">
-                    </div>
-                    <div>
-                        <p class="enemy-regen-number">0</p>
-                        <img class="enemy-regen-img" src="imgs/regen-icon.png">
-                    </div> 
-                    <div>
-                        <p class="enemy-blood-number">0</p>
-                        <img class="enemy-blood-img" src="imgs/blood-icon.png">
-                    </div>
-                </div>
                 <div class="enemy-debuffs">
                     <div class="enemy-burn-div">
                         <div class="burn-img-debuff">
@@ -4654,7 +4630,99 @@ function createEnemy(baseHealth, img) {
                         </div>
                         <img class="enemy-frostbite-img" src="imgs/frostbite-icon.png"> 
                     </div>
-                </div>  
+                </div>
+                <div class="enemy-action-div">
+                    <div class="enemy-attack-action-div">
+                        <div class="attack-img-text">
+                                <h4 class="relic-img-text-h4">Attack</h4>
+                                <p class="relic-img-text-p">Take this much damage at the end of the turn.</p>
+                        </div>
+                        <p class="enemy-action-number enemy-attack-action-number"></p>
+                        <img class="enemy-attack-action-img enemy-action-img" src="imgs/attack-icon.png">                  
+                    </div>
+                    <div class="enemy-block-action-div">
+                        <div class="block-img-text">
+                                <h4 class="relic-img-text-h4">Block</h4>
+                                <p class="relic-img-text-p">Gain a shield that blocks damage.</p>
+                        </div>
+                        <p class="enemy-action-number enemy-block-action-number"></p>
+                        <img class="enemy-block-action-img enemy-action-img" src="imgs/block-icon.png">
+                    </div>
+                    <div class="enemy-heal-action-div">
+                        <div class="heal-img-text">
+                                <h4 class="relic-img-text-h4">Heal</h4>
+                                <p class="relic-img-text-p">Regain this much health at the end of the turn.</p>
+                        </div>
+                        <p class="enemy-action-number enemy-heal-action-number"></p>
+                        <img class="enemy-heal-action-img enemy-action-img" src="imgs/heal-icon.png">
+                    </div>
+                    <div class="enemy-burn-action-div">
+                        <div class="burn-img-text">
+                                <h4 class="relic-img-text-h4">Burn</h4>
+                                <p class="relic-img-text-p">Take this much damage at the end of each turn. Decreases by one each turn.</p>
+                        </div>
+                        <p class="enemy-action-number enemy-burn-action-number"></p>
+                        <img class="enemy-burn-action-img enemy-action-img" src="imgs/burn-icon.png">
+                    </div>
+                    <div class="enemy-regen-action-div">
+                        <div class="regen-img-text">
+                                <h4 class="relic-img-text-h4">Regeneration</h4>
+                                <p class="relic-img-text-p">Heal this much at the end of each turn. Decreases by one at the end of each turn.</p>
+                        </div>
+                        <p class="enemy-action-number enemy-regen-action-number"></p>
+                        <img class="enemy-regen-action-img enemy-action-img" src="imgs/regen-icon.png">
+                    </div>
+                    <div class="enemy-blood-action-div">
+                        <div class="blood-img-text">
+                                <h4 class="relic-img-text-h4">Blood Siphon</h4>
+                                <p class="relic-img-text-p">Heal for 20% of damage done. Decreases by one at the end of each turn.</p>
+                        </div>
+                        <p class="enemy-action-number enemy-blood-action-number"></p>
+                        <img class="enemy-blood-action-img enemy-action-img" src="imgs/blood-icon.png">
+                    </div>
+                    <div class="enemy-thorns-action-div">
+                        <div class="thorns-img-text">
+                                <h4 class="relic-img-text-h4">Thorns</h4>
+                                <p class="relic-img-text-p">Take this much damage when attacking.</p>
+                        </div>
+                        <p class="enemy-action-number enemy-thorns-action-number"></p>
+                        <img class="enemy-thorns-action-img enemy-action-img" src="imgs/thorns-icon.png">
+                    </div>
+                    <div class="enemy-frostbite-action-div">
+                        <div class="frostbite-img-text">
+                                <h4 class="relic-img-text-h4">Frostbite</h4>
+                                <p class="relic-img-text-p">Reduce all buffs gained by 50%.</p>
+                        </div>
+                        <img class="enemy-frostbite-action-img enemy-action-img" src="imgs/frostbite-icon.png">
+                   </div>
+                   <div class="enemy-windswept-action-div">
+                        <div class="windswept-img-text">
+                                <h4 class="relic-img-text-h4">Windswept</h4>
+                                <p class="relic-img-text-p">Reduce all attack and burn by 50%.</p>
+                        </div>
+                    <img class="enemy-windswept-action-img enemy-action-img" src="imgs/windswept-icon.png">
+                   </div>
+                </div>
+                <img class="enemy-img" src="${img}">
+                <div class="enemy-health-bar">
+                        <img class="enemy-block-img" src="imgs/block-icon.png">
+                        <p class="enemy-block-number">0</p>
+                        <p class="enemy-health"><span class="enemy-current-health">${baseHealth}</span>/<span class="enemy-max-health">${baseHealth}</span></p>
+                </div>
+                <div class="enemy-buffs">
+                    <div>
+                        <p class="enemy-thorns-number">0</p>
+                        <img class="enemy-thorns-img" src="imgs/thorns-icon.png">
+                    </div>
+                    <div>
+                        <p class="enemy-regen-number">0</p>
+                        <img class="enemy-regen-img" src="imgs/regen-icon.png">
+                    </div> 
+                    <div>
+                        <p class="enemy-blood-number">0</p>
+                        <img class="enemy-blood-img" src="imgs/blood-icon.png">
+                    </div>
+                </div>
             </div>`
             const attackImgText = document.querySelectorAll(".attack-img-text");
             const enemyAttackActionDiv = document.querySelectorAll(".enemy-attack-action-div");
@@ -4746,7 +4814,6 @@ function initializeEnemyVariables() {
         enemyFrostbiteActionImg = document.querySelectorAll(".enemy-frostbite-action-img");
         // BUFFS
         enemyBuffDiv = document.querySelectorAll(".enemy-buffs");
-        enemyBlockDiv = document.querySelectorAll(".enemy-block-div");
         enemyBlockImg = document.querySelectorAll(".enemy-block-img");
         enemyBlockNumber = document.querySelectorAll(".enemy-block-number");
         enemyRegenImg = document.querySelectorAll(".enemy-regen-img");
@@ -4795,7 +4862,6 @@ let enemyWindsweptActionImg = document.querySelectorAll(".enemy-windswept-action
 let enemyFrostbiteActionImg = document.querySelectorAll(".enemy-frostbite-action-img");
 // BUFFS
 let enemyBuffDiv = document.querySelectorAll(".enemy-buffs");
-let enemyBlockDiv = document.querySelectorAll(".enemy-block-div");
 let enemyBlockImg = document.querySelectorAll(".enemy-block-img");
 let enemyBlockNumber = document.querySelectorAll(".enemy-block-number");
 let enemyRegenImg = document.querySelectorAll(".enemy-regen-img");
@@ -4825,11 +4891,9 @@ function damagePlayer(damage, index) {
         } else if (playerBlockNumber.innerText <= damage) {
                 topBarHealthNumber.innerText -= damage - parseFloat(playerBlockNumber.innerText);
                 playerCurrentHealth.innerText -= damage - parseFloat(playerBlockNumber.innerText);
+                displayNone(playerBlockNumber, playerBlockImg);
                 if (vineBracelet) {
                         playerBlockNumber.innerText = 10
-                } else {
-                        playerBlockNumber.innerText = 0;        
-                        displayNone(playerBlockNumber, playerBlockImg);
                 }
         } else {
                 playerBlockNumber.innerText -= damage; 
@@ -4852,7 +4916,7 @@ function enemyGainBlock(blockAmount, index) {
         }
         enemyBlockNumber[index].innerText = parseFloat(enemyBlockNumber[index].innerText) + blockAmount;
         enemyBlockActionNumber[index].innerText += blockAmount;
-        displayBlock(enemyBlockNumber[index], enemyBlockImg[index], enemyBlockDiv[index]);
+        displayBlock(enemyBlockNumber[index], enemyBlockImg[index]);
         displayNone(enemyBlockActionDiv[index]);
         enemyFrostbite[index] = false;
 }
@@ -4898,14 +4962,22 @@ function checkEnemyBurn(index) {
                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.ceil(enemyBurnNumber[index].innerText * .21);
         }
         if (parseFloat(enemyBurnNumber[index].innerText) >= enemyCurrentHealth[index].innerText) {
-                displayNone(enemyBurnImg[index], enemyBurnNumber[index], enemyHealth[index], enemyCurrentHealth[index], enemyBlockDiv[index], enemyActionDiv[index]);
+                displayNone(enemyBurnImg[index], enemyBurnNumber[index], enemyHealth[index], enemyCurrentHealth[index], enemyBlockImg[index], enemyBlockNumber[index], enemyActionDiv[index]);
                 enemy[index].classList.add("fade-out");
                 enemyIsDead[index] = true;
         }
-        if (enemyBurnNumber[index].innerText > 0) {
+        if (enemyBlockNumber[index].innerText <= 0) {
                 enemyCurrentHealth[index].innerText = parseFloat(enemyCurrentHealth[index].innerText) - parseFloat(enemyBurnNumber[index].innerText);
-                enemyBurnNumber[index].innerText--;
+        } else if (enemyBlockNumber[index].innerText <= parseFloat(enemyBurnNumber[index].innerText)) {
+                enemyCurrentHealth[index].innerText -= parseFloat(enemyBurnNumber[index].innerText) - parseFloat(enemyBlockNumber[index].innerText);
+                displayNone(enemyBlockImg[index], enemyBlockNumber[index]);
+                if (vineBracelet) {
+                        enemyBlockNumber[index].innerText = 10
+                }
+        } else {
+                enemyBlockNumber[index].innerText -= parseFloat(enemyBurnNumber[index].innerText); 
         }
+        enemyBurnNumber[index].innerText--;
         if (enemyBurnNumber[index].innerText == 0) {
                 displayNone(enemyBurnImg[index], enemyBurnNumber[index]);
         }
@@ -4954,7 +5026,7 @@ function checkIfEnemyDead() {
         // IF ENEMY  IS DEAD, DELETE THEM
         for (let i = 0; i < numberOfEnemies; i++) {
                 if (enemyIsDead[i] === false && enemyCurrentHealth[i].innerText <= 0) {
-                        displayNone(enemyBurnImg[i], enemyBurnNumber[i], enemyHealth[i], enemyCurrentHealth[i], enemyBlockDiv[i], enemyActionDiv[i]);
+                        displayNone(enemyBurnImg[i], enemyBurnNumber[i], enemyHealth[i], enemyCurrentHealth[i], enemyBlockImg[i], enemyBlockNumber[i], enemyActionDiv[i]);
                         enemy[i].classList.add("fade-out");
                         enemyIsDead[i] = true;
                         enemiesKilled++;
@@ -4987,6 +5059,7 @@ let enemyFrostbite = [false, false, false];
 let playerWindswept = false;
 let playerFrostbite = false;
 let eI = 0;
+let ghostIndex = 9;
 // ENEMIES CHOOSE AN ACTION BASED ON RANDOM ACTION CHOICE
 function enemyAction() {
         eI = 0;
@@ -5073,6 +5146,12 @@ function enemyAction() {
                                 enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
                                 displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
                         }
+                } else {
+                        enemyAttackActionNumber[eI].innerText = ghostIndex;
+                        enemyAttackActionNumber[eI].classList = ("ghost-number");
+                        enemyAttackActionNumber[eI].style = `opacity: ${ghostIndex}0%`
+                        displayBlock(enemyAttackActionDiv[eI], enemyAttackActionNumber[eI]);
+                        ghostIndex--;
                 }
                 eI++
         });
@@ -5192,3 +5271,4 @@ function endTurn() {
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
+getRandomEncounter();
