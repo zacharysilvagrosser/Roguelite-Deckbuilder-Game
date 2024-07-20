@@ -102,9 +102,10 @@
     display: none;
     width: 100%;
     height: 100vh;
-    position: absolute;
+    position: fixed;
     align-items: center;
     justify-content: center;
+    z-index: 14;
 }
 #options-screen, #tutorial-screen {
     width: 70%;
@@ -370,8 +371,7 @@
     width: 120px;
     height: 120px;
 }
-.shop-relic-img-text, .relic-img-text, .player-img-text, .burn-img-debuff, .frostbite-img-debuff, .windswept-img-debuff, .attack-img-text,
-.block-img-text, .heal-img-text, .burn-img-text, .regen-img-text, .blood-img-text, .thorns-img-text, .frostbite-img-text, .windswept-img-text {
+.img-text, .player-img-text {
     position: absolute;
     margin-top: 12rem;
     top: -20%;
@@ -400,10 +400,10 @@
 .player-windswept-img:hover + div {
     display: flex;
 }
-.relic-img-text-h4, .debuff-img-text-h4 {
+.img-text-h4, .debuff-img-text-h4 {
     font-size: 1.3rem;
 }
-.relic-img-text-p, .debuff-img-text-p {
+.img-text-p, .debuff-img-text-p {
     margin: .8rem .5rem ;
     font-size: 1.2rem;
 }

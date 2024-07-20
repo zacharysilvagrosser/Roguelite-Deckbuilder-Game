@@ -37,11 +37,11 @@ const boardHeader = document.querySelector("#board-header");
 const musicSlider = document.querySelector("#music-slider");
 const soundFXSlider = document.querySelector("#soundfx-slider");
 
-window.addEventListener("keydown", () => {
+/*window.addEventListener("keydown", () => {
         displayNone(beginningScreen);
         displayFlex(startScreen);
         startScreenMusic.play();
-}, {once: true});
+}, {once: true});*/
 startGame.addEventListener("click", () => {
         displayBlock(map);
         displayFlex(boardHeader);
@@ -69,8 +69,8 @@ const [startScreenMusic, mapMusic, encounterMusic, eliteMusic, shopMusic, blacks
         [new Audio("audio/start-screen-music.mp3"), new Audio("audio/map-music.mp3"), new Audio("audio/encounter-music.wav"), new Audio("audio/elite-encounter-music.mp3"),
         new Audio("audio/shop-music.wav"), new Audio("audio/blacksmith-music.mp3"), new Audio("audio/death-music.mp3")];
 const allMusic = [startScreenMusic, mapMusic, encounterMusic, eliteMusic, shopMusic, blacksmithMusic, deathMusic];
-const [sfpotion, sf0, sf1, sf2, sf3, sf4, sf5, sf6, sf7, sf8, sf9, sf10, sf11, sf12, sf13, sf14, sf15, sf16, sf17, sf18, sf19, sf20,
-        sf21, sf22, sf23, sf24, sf25, sf26, sf27, sf28, sf29, sf30, sf31, sf32, sf33, sf34, sf35, sf36, sf37, sf38, sf39, sf40, sf41, sf42, sf43, sfghost] =
+const [sfpotion, sf0, sf1, sf2, sf3, sf4, sf5, sf6, sf7, sf8, sf9, sf10, sf11, sf12, sf13, sf14, sf15, sf16, sf17, sf18, sf19, sf20,sf21, sf22, sf23, sf24, sf25, sf26, sf27, sf28,
+        sf29, sf30, sf31, sf32, sf33, sf34, sf35, sf36, sf37, sf38, sf39, sf40, sf41, sf42, sf43, sfghost, sfenemyAttack, sfenemyBlock] =
         [new Audio("audio/potion.wav"), new Audio("audio/fireball.wav"), new Audio("audio/cascadingFlames.wav"), new Audio("audio/staticCharge.wav"), new Audio("audio/chainLightning.wav"),
         new Audio("audio/frostbolt.wav"), new Audio("audio/frostFingers.wav"), new Audio("audio/tornado.wav"), new Audio("audio/galeForce.wav"), new Audio("audio/bloodCocoon.wav"),
         new Audio("audio/tidalEmbuement.wav"), new Audio("audio/earthBarrier.wav"), new Audio("audio/thornShield.wav"), new Audio("audio/firefall.wav"), new Audio("audio/kindredSpirits.wav"),
@@ -79,24 +79,35 @@ const [sfpotion, sf0, sf1, sf2, sf3, sf4, sf5, sf6, sf7, sf8, sf9, sf10, sf11, s
         new Audio("audio/mistborn.wav"), new Audio("audio/tsunami.wav"), new Audio("audio/earthShatter.wav"), new Audio("audio/weaveOfThorns.wav"), new Audio("audio/vineWhip.wav"),
         new Audio("audio/forestFire.wav"), new Audio("audio/frostfireFusion.wav"), new Audio("audio/fanTheFlames.wav"), new Audio("audio/cauterize.wav"), new Audio("audio/magma.wav"),
         new Audio("audio/deepFreeze.wav"), new Audio("audio/hurricane.wav"), new Audio("audio/electricCurrent.wav"), new Audio("audio/quakingJolt.wav"), new Audio("audio/flurry.wav"),
-        new Audio("audio/liquify.wav"), new Audio("audio/frozenTundra.wav"), new Audio("audio/airBubbles.wav"), new Audio("audio/rockOrbit.wav"), new Audio("audio/ghostAudio.mp3")];
+        new Audio("audio/liquify.wav"), new Audio("audio/frozenTundra.wav"), new Audio("audio/airBubbles.wav"), new Audio("audio/rockOrbit.wav"), new Audio("audio/ghostAudio.mp3"),
+        new Audio("audio/enemyAttack.wav"), new Audio("audio/enemyBlock.wav")];
 const allSoundFX = [sfpotion, sf0, sf1, sf2, sf3, sf4, sf5, sf6, sf7, sf8, sf9, sf10, sf11, sf12, sf13, sf14, sf15, sf16, sf17, sf18, sf19, sf20,
-        sf21, sf22, sf23, sf24, sf25, sf26, sf27, sf28, sf29, sf30, sf31, sf32, sf33, sf34, sf35, sf36, sf37, sf38, sf39, sf40, sf41, sf42, sf43, sfghost];
+        sf21, sf22, sf23, sf24, sf25, sf26, sf27, sf28, sf29, sf30, sf31, sf32, sf33, sf34, sf35, sf36, sf37, sf38, sf39, sf40, sf41, sf42, sf43, sfghost, sfenemyAttack, sfenemyBlock];
+musicSlider.addEventListener("input", () => {
+        allMusic.forEach(i => {
+                i.volume = musicSlider.value;
+        });
+});
+soundFXSlider.addEventListener("input", () => {
+        allSoundFX.forEach(i => {
+                i.volume = soundFXSlider.value;
+        });
+});
+document.querySelector("#options-screen-exit-button").addEventListener("click", () => {
+        displayNone(optionsContainer);
+});
+window.addEventListener("keydown", e => {
+        if (e.key === "Escape" && (optionsContainer.style.display == "" || optionsContainer.style.display == "none")) {
+                displayFlex(optionsContainer);
+                return;
+        }
+        if (e.key === "Escape" && optionsContainer.style.display == "flex") {
+                displayNone(optionsContainer);
+                return;
+        }
+});
 options.addEventListener("click", () => {
         displayFlex(optionsContainer);
-        musicSlider.addEventListener("input", () => {
-                allMusic.forEach(i => {
-                        i.volume = musicSlider.value;
-                });
-        });
-        soundFXSlider.addEventListener("input", () => {
-                allSoundFX.forEach(i => {
-                        i.volume = soundFXSlider.value;
-                });
-        });
-        document.querySelector("#options-screen-exit-button").addEventListener("click", () => {
-                displayNone(optionsContainer);
-        });
 });
 options.addEventListener("mouseover", () => {
         displayBlock(arrows[4], arrows[5]);
@@ -632,9 +643,9 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/ring-of-fire.png">
-                                <div class="relic-img-text">
-                                        <h4 class="relic-img-text-h4">Ring Of Fire</h4>
-                                        <p class="relic-img-text-p">Single target burn duplicates half it's burn and spreads it to all enemies</p>
+                                <div class="relic-img-text img-text">
+                                        <h4 class="img-text-h4">Ring Of Fire</h4>
+                                        <p class="img-text-p">Single target burn duplicates half it's burn and spreads it to all enemies</p>
                                 </div>
                         </div>`;                        
                         dontRepeatRelic.push(1);
@@ -644,9 +655,9 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `                        
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/eternal-flame2.png">
-                                <div class="relic-img-text">
-                                        <h4 class="relic-img-text-h4">Eternal Flame</h4>
-                                        <p class="relic-img-text-p">Burning an enemy twice in one turn will increase the second burn by 50%</p>
+                                <div class="relic-img-text img-text">
+                                        <h4 class="img-text-h4">Eternal Flame</h4>
+                                        <p class="img-text-p">Burning an enemy twice in one turn will increase the second burn by 50%</p>
                                 </div>
                         </div>`;
                         dontRepeatRelic.push(2);
@@ -656,9 +667,9 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `                        
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/thunder-talisman2.png">
-                                <div class="relic-img-text">
-                                        <h4 class="relic-img-text-h4">Thunder Talisman</h4>
-                                        <p class="relic-img-text-p">Start each encounter with +2 mana for the first turn</p>
+                                <div class="relic-img-text img-text">
+                                        <h4 class="img-text-h4">Thunder Talisman</h4>
+                                        <p class="img-text-p">Start each encounter with +2 mana for the first turn</p>
                                 </div>
                         </div>`
                         dontRepeatRelic.push(3);
@@ -668,9 +679,9 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `                        
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/lightning-in-a-bottle.png">
-                                <div class="relic-img-text">
-                                        <h4 class="relic-img-text-h4">Lightning in a Bottle</h4>
-                                        <p class="relic-img-text-p">Your unused mana will not be lost</p>
+                                <div class="relic-img-text img-text">
+                                        <h4 class="img-text-h4">Lightning in a Bottle</h4>
+                                        <p class="img-text-p">Your unused mana will not be lost</p>
                                 </div>
                         </div>`;
                         dontRepeatRelic.push(4);
@@ -680,9 +691,9 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `                        
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/ice-spear.png">
-                                <div class="relic-img-text">
-                                        <h4 class="relic-img-text-h4">Ice Spear</h4>
-                                        <p class="relic-img-text-p">Deal 4 more damage to enemies with Frostbite</p>
+                                <div class="relic-img-text img-text">
+                                        <h4 class="img-text-h4">Ice Spear</h4>
+                                        <p class="img-text-p">Deal 4 more damage to enemies with Frostbite</p>
                                 </div>
                         </div>`;
                         dontRepeatRelic.push(5);
@@ -692,9 +703,9 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `                        
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/frostheart.png">
-                                <div class="relic-img-text">
-                                        <h4 class="relic-img-text-h4">Frostheart</h4>
-                                        <p class="relic-img-text-p">Frostbite will reduce each enemy buff by 1</p>
+                                <div class="relic-img-text img-text">
+                                        <h4 class="img-text-h4">Frostheart</h4>
+                                        <p class="img-text-p">Frostbite will reduce each enemy buff by 1</p>
                                 </div>
                         </div>`;
                         dontRepeatRelic.push(6);
@@ -704,9 +715,9 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `                        
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/stratus.png">
-                                <div class="relic-img-text">
-                                        <h4 class="relic-img-text-h4">Stratus</h4>
-                                        <p class="relic-img-text-p">Windswept will now reflect 25% of the damage enemies intend to attack for back to them</p>
+                                <div class="relic-img-text img-text">
+                                        <h4 class="img-text-h4">Stratus</h4>
+                                        <p class="img-text-p">Windswept will now reflect 25% of the damage enemies intend to attack for back to them</p>
                                 </div>
                         </div>`;
                         dontRepeatRelic.push(7);
@@ -716,9 +727,9 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `                        
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/wind-disc.png">
-                                <div class="relic-img-text">
-                                        <h4 class="relic-img-text-h4">Wind Disc</h4>
-                                        <p class="relic-img-text-p">Start each encounter with one extra card for the first turn</p>
+                                <div class="relic-img-text img-text">
+                                        <h4 class="img-text-h4">Wind Disc</h4>
+                                        <p class="img-text-p">Start each encounter with one extra card for the first turn</p>
                                 </div>
                         </div>`;
                         dontRepeatRelic.push(8);
@@ -728,9 +739,9 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `                        
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/blood-amulet2.png">
-                                <div class="relic-img-text">
-                                        <h4 class="relic-img-text-h4">Blood Amulet</h4>
-                                        <p class="relic-img-text-p">Gain 1 blood siphon on your second turn</p>
+                                <div class="relic-img-text img-text">
+                                        <h4 class="img-text-h4">Blood Amulet</h4>
+                                        <p class="img-text-p">Gain 1 blood siphon on your second turn</p>
                                 </div>
                         </div>`;
                         dontRepeatRelic.push(9);
@@ -740,9 +751,9 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `                        
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/caspians-tear2.png">
-                                <div class="relic-img-text">
-                                        <h4 class="relic-img-text-h4">Caspian's Tear</h4>
-                                        <p class="relic-img-text-p">Gain +3 max health when you start a new encounter</p>
+                                <div class="relic-img-text img-text">
+                                        <h4 class="img-text-h4">Caspian's Tear</h4>
+                                        <p class="img-text-p">Gain +3 max health when you start a new encounter</p>
                                 </div>
                         </div>`;
                         dontRepeatRelic.push(10);
@@ -752,9 +763,9 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `                        
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/crown-of-thorns2.png">
-                                <div class="relic-img-text">
-                                        <h4 class="relic-img-text-h4">Crown of Thorns</h4>
-                                        <p class="relic-img-text-p">Start each encounter with 2 thorns</p>
+                                <div class="relic-img-text img-text">
+                                        <h4 class="img-text-h4">Crown of Thorns</h4>
+                                        <p class="img-text-p">Start each encounter with 2 thorns</p>
                                 </div>
                         </div>`;
                         dontRepeatRelic.push(11);
@@ -764,9 +775,9 @@ function getRelic(min, max) {
                         relicContainer.innerHTML += `
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/vine-bracelet.png">
-                                <div class="relic-img-text">
-                                        <h4 class="relic-img-text-h4">Vine Bracelet</h4>
-                                        <p class="relic-img-text-p">When you lose all of your armor gain 10 armor</p>
+                                <div class="relic-img-text img-text">
+                                        <h4 class="img-text-h4">Vine Bracelet</h4>
+                                        <p class="img-text-p">When you lose all of your armor gain 10 armor</p>
                                 </div>
                         </div>`;
                         dontRepeatRelic.push(12);
@@ -778,7 +789,7 @@ function getRelic(min, max) {
                         break;
         }
         let relicImg = document.querySelectorAll(".relic-img");
-        let relicImgText = document.querySelectorAll(".relic-img-text");
+        let relicImgText = document.querySelectorAll(".relic-img-text img-text");
         for (let i = 0; i < relicImg.length; i++) {
                 relicImg[i].addEventListener("mouseover", () => {
                         displayFlex(relicImgText[i]);
@@ -1490,9 +1501,9 @@ function getShop () {
                                         shopRelicContainer.innerHTML += `
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 1" src="imgs/ring-of-fire.png">
-                                                <div class="shop-relic-img-text">
-                                                        <h4 class="relic-img-text-h4">Ring of Fire</h4>
-                                                        <p class="relic-img-text-p">Single target burn duplicates half it's burn and spreads it to all enemies</p>
+                                                <div class="shop-relic-img-text img-text">
+                                                        <h4 class="img-text-h4">Ring of Fire</h4>
+                                                        <p class="img-text-p">Single target burn duplicates half it's burn and spreads it to all enemies</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1503,9 +1514,9 @@ function getShop () {
                                         shopRelicContainer.innerHTML += `
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 2" src="imgs/eternal-flame2.png">
-                                                <div class="shop-relic-img-text">
-                                                        <h4 class="relic-img-text-h4">Eternal Flame</h4>
-                                                        <p class="relic-img-text-p">Burning an enemy twice in one turn will increase the second burn by 50%</p>
+                                                <div class="shop-relic-img-text img-text">
+                                                        <h4 class="img-text-h4">Eternal Flame</h4>
+                                                        <p class="img-text-p">Burning an enemy twice in one turn will increase the second burn by 50%</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1516,9 +1527,9 @@ function getShop () {
                                         shopRelicContainer.innerHTML += `
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 3" src="imgs/thunder-talisman2.png">
-                                                <div class="shop-relic-img-text">
-                                                        <h4 class="relic-img-text-h4">Thunder Talisman</h4>
-                                                        <p class="relic-img-text-p">Start each encounter with +1 mana for the first turn</p>
+                                                <div class="shop-relic-img-text img-text">
+                                                        <h4 class="img-text-h4">Thunder Talisman</h4>
+                                                        <p class="img-text-p">Start each encounter with +1 mana for the first turn</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>;
@@ -1529,9 +1540,9 @@ function getShop () {
                                         shopRelicContainer.innerHTML += `
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 4" src="imgs/lightning-in-a-bottle.png">
-                                                <div class="shop-relic-img-text">
-                                                        <h4 class="relic-img-text-h4">Lightning in a Bottle</h4>
-                                                        <p class="relic-img-text-p">Your unused mana will not be lost</p>
+                                                <div class="shop-relic-img-text img-text">
+                                                        <h4 class="img-text-h4">Lightning in a Bottle</h4>
+                                                        <p class="img-text-p">Your unused mana will not be lost</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1542,9 +1553,9 @@ function getShop () {
                                         shopRelicContainer.innerHTML += `
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 5" src="imgs/ice-spear.png">
-                                                <div class="shop-relic-img-text">
-                                                        <h4 class="relic-img-text-h4">Ice Spear</h4>
-                                                        <p class="relic-img-text-p">Deal 4 more damage to enemies with Frostbite</p>
+                                                <div class="shop-relic-img-text img-text">
+                                                        <h4 class="img-text-h4">Ice Spear</h4>
+                                                        <p class="img-text-p">Deal 4 more damage to enemies with Frostbite</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1555,9 +1566,9 @@ function getShop () {
                                         shopRelicContainer.innerHTML += `
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 6" src="imgs/frostheart.png">
-                                                <div class="shop-relic-img-text">
-                                                        <h4 class="relic-img-text-h4">Frostheart</h4>
-                                                        <p class="relic-img-text-p">Frostbite will reduce each enemy buff by 1</p>
+                                                <div class="shop-relic-img-text img-text">
+                                                        <h4 class="img-text-h4">Frostheart</h4>
+                                                        <p class="img-text-p">Frostbite will reduce each enemy buff by 1</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1568,9 +1579,9 @@ function getShop () {
                                         shopRelicContainer.innerHTML += `
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 7" src="imgs/stratus.png">
-                                                <div class="shop-relic-img-text">
-                                                        <h4 class="relic-img-text-h4">Stratus</h4>
-                                                        <p class="relic-img-text-p">Windswept will now reflect 25% of the damage enemies intend to attack for back to them</p>
+                                                <div class="shop-relic-img-text img-text">
+                                                        <h4 class="img-text-h4">Stratus</h4>
+                                                        <p class="img-text-p">Windswept will now reflect 25% of the damage enemies intend to attack for back to them</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1581,9 +1592,9 @@ function getShop () {
                                         shopRelicContainer.innerHTML += `
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 8" src="imgs/wind-disc.png">
-                                                <div class="shop-relic-img-text">
-                                                        <h4 class="relic-img-text-h4">Wind Disc</h4>
-                                                        <p class="relic-img-text-p">Start each encounter with one extra card for the first turn</p>
+                                                <div class="shop-relic-img-text img-text">
+                                                        <h4 class="img-text-h4">Wind Disc</h4>
+                                                        <p class="img-text-p">Start each encounter with one extra card for the first turn</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1594,9 +1605,9 @@ function getShop () {
                                         shopRelicContainer.innerHTML += `
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 9" src="imgs/blood-amulet2.png">
-                                                <div class="shop-relic-img-text">
-                                                        <h4 class="relic-img-text-h4">Blood Amulet</h4>
-                                                        <p class="relic-img-text-p">Gain 1 blood siphon on your second turn</p>
+                                                <div class="shop-relic-img-text img-text">
+                                                        <h4 class="img-text-h4">Blood Amulet</h4>
+                                                        <p class="img-text-p">Gain 1 blood siphon on your second turn</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1607,9 +1618,9 @@ function getShop () {
                                         shopRelicContainer.innerHTML += `
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 10" src="imgs/caspians-tear2.png">
-                                                <div class="shop-relic-img-text">
-                                                        <h4 class="relic-img-text-h4">Caspian's Tear</h4>
-                                                        <p class="relic-img-text-p">Gain +3 max health when you start a new encounter</p>
+                                                <div class="shop-relic-img-text img-text">
+                                                        <h4 class="img-text-h4">Caspian's Tear</h4>
+                                                        <p class="img-text-p">Gain +3 max health when you start a new encounter</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1620,9 +1631,9 @@ function getShop () {
                                         shopRelicContainer.innerHTML += `
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 11" src="imgs/crown-of-thorns2.png">
-                                                <div class="shop-relic-img-text">
-                                                        <h4 class="relic-img-text-h4">Crown of Thorns</h4>
-                                                        <p class="relic-img-text-p">Start each encounter with 2 thorns</p>
+                                                <div class="shop-relic-img-text img-text">
+                                                        <h4 class="img-text-h4">Crown of Thorns</h4>
+                                                        <p class="img-text-p">Start each encounter with 2 thorns</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1633,9 +1644,9 @@ function getShop () {
                                         shopRelicContainer.innerHTML += `
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 12" src="imgs/vine-bracelet.png">
-                                                <div class="shop-relic-img-text">
-                                                        <h4 class="relic-img-text-h4">Vine Bracelet</h4>
-                                                        <p class="relic-img-text-p">When you lose all of your armor gain 10 armor</p>
+                                                <div class="shop-relic-img-text img-text">
+                                                        <h4 class="img-text-h4">Vine Bracelet</h4>
+                                                        <p class="img-text-p">When you lose all of your armor gain 10 armor</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -1649,7 +1660,7 @@ function getShop () {
         const shopRelicImg = document.querySelectorAll(".shop-relic-img");
         const shopAetherImg = document.querySelectorAll(".shop-aether");
         const shopAetherCost = document.querySelectorAll(".shop-aether-cost");
-        const shopRelicImgText = document.querySelectorAll(".shop-relic-img-text");
+        const shopRelicImgText = document.querySelectorAll(".shop-relic-img-text img-text");
         for (let i = 0; i < shopRelicImg.length; i++) {
                 shopRelicImg[i].addEventListener("click", () => {
                         for (let k = 0; k <= 12; k++) {
@@ -3932,13 +3943,13 @@ function addActionText(div, text) {
                 displayNone(text);
         });
 }
-addActionText(playerEnergizeDiv, playerImgText[0]);
-addActionText(playerRegenDiv, playerImgText[1]);
-addActionText(playerBloodDiv, playerImgText[2]);
-addActionText(playerThornsDiv, playerImgText[3]);
-addActionText(playerFrostbiteImg, playerImgText[4]);
-addActionText(playerWindsweptImg, playerImgText[5]);
-addActionText(playerBurnDiv, playerImgText[6]);
+addActionText(playerFrostbiteImg, playerImgText[0]);
+addActionText(playerWindsweptImg, playerImgText[1]);
+addActionText(playerBurnDiv, playerImgText[2]);
+addActionText(playerEnergizeDiv, playerImgText[3]);
+addActionText(playerRegenDiv, playerImgText[4]);
+addActionText(playerBloodDiv, playerImgText[5]);
+addActionText(playerThornsDiv, playerImgText[6]);
 
 let frostbitten = false;
 // TRACK WHEN END TURN BUTTON HAS BEEN CLICKED
@@ -4579,11 +4590,9 @@ const enemiesInformation = [
                 baseHealth: 200,
                 img: "imgs/aztec-elite.png",
                 attackChance: 1,
-                bloodChance: 10,
-                attackDamageLow: 24,
-                attackDamageHigh: 26,
-                bloodAmountLow: 3,
-                bloodAmountHigh: 4,
+                energizeChance: 10,
+                attackDamageLow: 10,
+                attackDamageHigh: 12
         },
         {
                 name: "Ghost",
@@ -4597,96 +4606,104 @@ function createEnemy(baseHealth, img) {
         `<div class="enemy-div">
                 <div class="enemy-debuffs">
                     <div class="enemy-burn-div">
-                        <div class="burn-img-debuff">
-                                <h4 class="relic-img-text-h4">Burn</h4>
-                                <p class="relic-img-text-p">Take this much damage at the end of each turn. Decreases by one each turn.</p>
+                        <div class="burn-img-debuff img-text">
+                                <h4 class="img-text-h4">Burn</h4>
+                                <p class="img-text-p">Take this much damage at the end of each turn. Decreases by one each turn.</p>
                         </div>
                         <img class="enemy-burn-img" src="imgs/burn-icon.png">
                         <p class="enemy-burn-number">0</p>
                     </div>
                     <div class="enemy-windswept-div">
-                        <div class="windswept-img-debuff">
-                                <h4 class="relic-img-text-h4">Windswept</h4>
-                                <p class="relic-img-text-p">Reduces damage and burn by 50%</p>
+                        <div class="windswept-img-debuff img-text">
+                                <h4 class="img-text-h4">Windswept</h4>
+                                <p class="img-text-p">Reduces damage and burn by 50%</p>
                         </div>
                     <img class="enemy-windswept-img" src="imgs/windswept-icon.png">
                     </div>
                     <div class="enemy-frostbite-div">
-                        <div class="frostbite-img-debuff">
-                                <h4 class="relic-img-text-h4">Frostbite</h4>
-                                <p class="relic-img-text-p">Reduces buffs gained by 50%</p>
+                        <div class="frostbite-img-debuff img-text">
+                                <h4 class="img-text-h4">Frostbite</h4>
+                                <p class="img-text-p">Reduces buffs gained by 50%</p>
                         </div>
                         <img class="enemy-frostbite-img" src="imgs/frostbite-icon.png"> 
                     </div>
                 </div>
                 <div class="enemy-action-div">
                     <div class="enemy-attack-action-div">
-                        <div class="attack-img-text">
-                                <h4 class="relic-img-text-h4">Attack</h4>
-                                <p class="relic-img-text-p">Take this much damage at the end of the turn.</p>
+                        <div class="attack-img-text img-text">
+                                <h4 class="img-text-h4">Attack</h4>
+                                <p class="img-text-p">Take this much damage at the end of the turn.</p>
                         </div>
                         <p class="enemy-action-number enemy-attack-action-number"></p>
                         <img class="enemy-attack-action-img enemy-action-img" src="imgs/attack-icon.png">                  
                     </div>
                     <div class="enemy-block-action-div">
-                        <div class="block-img-text">
-                                <h4 class="relic-img-text-h4">Block</h4>
-                                <p class="relic-img-text-p">Gain a shield that blocks damage.</p>
+                        <div class="block-img-text img-text">
+                                <h4 class="img-text-h4">Block</h4>
+                                <p class="img-text-p">Gain a shield that blocks damage.</p>
                         </div>
                         <p class="enemy-action-number enemy-block-action-number"></p>
                         <img class="enemy-block-action-img enemy-action-img" src="imgs/block-icon.png">
                     </div>
                     <div class="enemy-heal-action-div">
-                        <div class="heal-img-text">
-                                <h4 class="relic-img-text-h4">Heal</h4>
-                                <p class="relic-img-text-p">Regain this much health at the end of the turn.</p>
+                        <div class="heal-img-text img-text">
+                                <h4 class="img-text-h4">Heal</h4>
+                                <p class="img-text-p">Regain this much health at the end of the turn.</p>
                         </div>
                         <p class="enemy-action-number enemy-heal-action-number"></p>
                         <img class="enemy-heal-action-img enemy-action-img" src="imgs/heal-icon.png">
                     </div>
                     <div class="enemy-burn-action-div">
-                        <div class="burn-img-text">
-                                <h4 class="relic-img-text-h4">Burn</h4>
-                                <p class="relic-img-text-p">Take this much damage at the end of each turn. Decreases by one each turn.</p>
+                        <div class="burn-img-text img-text">
+                                <h4 class="img-text-h4">Burn</h4>
+                                <p class="img-text-p">Take this much damage at the end of each turn. Decreases by one each turn.</p>
                         </div>
                         <p class="enemy-action-number enemy-burn-action-number"></p>
                         <img class="enemy-burn-action-img enemy-action-img" src="imgs/burn-icon.png">
                     </div>
+                    <div class="enemy-energize-action-div">
+                        <div class="energize-img-text img-text">
+                                <h4 class="img-text-h4">Energize</h4>
+                                <p class="img-text-p">Enemy gains extra actions next turn.</p>
+                        </div>
+                        <p class="enemy-action-number enemy-energize-action-number"></p>
+                        <img class="enemy-energize-action-img enemy-action-img" src="imgs/energize-icon.png">
+                    </div>
                     <div class="enemy-regen-action-div">
-                        <div class="regen-img-text">
-                                <h4 class="relic-img-text-h4">Regeneration</h4>
-                                <p class="relic-img-text-p">Heal this much at the end of each turn. Decreases by one at the end of each turn.</p>
+                        <div class="regen-img-text img-text">
+                                <h4 class="img-text-h4">Regeneration</h4>
+                                <p class="img-text-p">Heal this much at the end of each turn. Decreases by one at the end of each turn.</p>
                         </div>
                         <p class="enemy-action-number enemy-regen-action-number"></p>
                         <img class="enemy-regen-action-img enemy-action-img" src="imgs/regen-icon.png">
                     </div>
                     <div class="enemy-blood-action-div">
-                        <div class="blood-img-text">
-                                <h4 class="relic-img-text-h4">Blood Siphon</h4>
-                                <p class="relic-img-text-p">Heal for 20% of damage done. Decreases by one at the end of each turn.</p>
+                        <div class="blood-img-text img-text">
+                                <h4 class="img-text-h4">Blood Siphon</h4>
+                                <p class="img-text-p">Heal for 20% of damage done. Decreases by one at the end of each turn.</p>
                         </div>
                         <p class="enemy-action-number enemy-blood-action-number"></p>
                         <img class="enemy-blood-action-img enemy-action-img" src="imgs/blood-icon.png">
                     </div>
                     <div class="enemy-thorns-action-div">
-                        <div class="thorns-img-text">
-                                <h4 class="relic-img-text-h4">Thorns</h4>
-                                <p class="relic-img-text-p">Take this much damage when attacking.</p>
+                        <div class="thorns-img-text img-text">
+                                <h4 class="img-text-h4">Thorns</h4>
+                                <p class="img-text-p">Take this much damage when attacking.</p>
                         </div>
                         <p class="enemy-action-number enemy-thorns-action-number"></p>
                         <img class="enemy-thorns-action-img enemy-action-img" src="imgs/thorns-icon.png">
                     </div>
                     <div class="enemy-frostbite-action-div">
-                        <div class="frostbite-img-text">
-                                <h4 class="relic-img-text-h4">Frostbite</h4>
-                                <p class="relic-img-text-p">Reduce all buffs gained by 50%.</p>
+                        <div class="frostbite-img-text img-text">
+                                <h4 class="img-text-h4">Frostbite</h4>
+                                <p class="img-text-p">Reduce all buffs gained by 50%.</p>
                         </div>
                         <img class="enemy-frostbite-action-img enemy-action-img" src="imgs/frostbite-icon.png">
                    </div>
                    <div class="enemy-windswept-action-div">
-                        <div class="windswept-img-text">
-                                <h4 class="relic-img-text-h4">Windswept</h4>
-                                <p class="relic-img-text-p">Reduce all attack and burn by 50%.</p>
+                        <div class="windswept-img-text img-text">
+                                <h4 class="img-text-h4">Windswept</h4>
+                                <p class="img-text-p">Reduce all attack and burn by 50%.</p>
                         </div>
                     <img class="enemy-windswept-action-img enemy-action-img" src="imgs/windswept-icon.png">
                    </div>
@@ -4719,9 +4736,11 @@ function createEnemy(baseHealth, img) {
             const healImgText = document.querySelectorAll(".heal-img-text");
             const enemyHealActionDiv = document.querySelectorAll(".enemy-heal-action-div");
             const burnImgText = document.querySelectorAll(".burn-img-text");
-            const burnImgDebuff = document.querySelectorAll(".burn-img-debuff");
+            const burnImgDebuff = document.querySelectorAll(".img-text");
             const enemyBurnActionDiv = document.querySelectorAll(".enemy-burn-action-div");
             const enemyBurnDiv = document.querySelectorAll(".enemy-burn-div");
+            const enemyEnergizeActionDiv = document.querySelectorAll(".enemy-energize-action-div");
+            const energizeImgText = document.querySelectorAll(".energize-img-text");
             const regenImgText = document.querySelectorAll(".regen-img-text");
             const enemyRegenActionDiv = document.querySelectorAll(".enemy-regen-action-div");
             const bloodImgText = document.querySelectorAll(".blood-img-text");
@@ -4753,6 +4772,7 @@ function createEnemy(baseHealth, img) {
             addEnemyActionText(enemyHealActionDiv, healImgText);
             addEnemyActionText(enemyBurnActionDiv, burnImgText);
             addEnemyActionText(enemyBurnDiv, burnImgDebuff);
+            addEnemyActionText(enemyEnergizeActionDiv, energizeImgText);
             addEnemyActionText(enemyRegenActionDiv, regenImgText);
             addEnemyActionText(enemyBloodActionDiv, bloodImgText);
             addEnemyActionText(enemyThornsActionDiv, thornsImgText);
@@ -4844,6 +4864,8 @@ let enemyBloodActionDiv = document.querySelectorAll(".enemy-blood-action-div");
 let enemyBloodActionImg = document.querySelectorAll(".enemy-blood-action-img");
 let enemyBloodActionNumber = document.querySelectorAll(".enemy-blood-action-number");
 let enemyBurnActionDiv = document.querySelectorAll(".enemy-burn-action-div");
+let enemyEnergizeActionDiv = document.querySelectorAll(".enemy-energize-action-div");
+let enemyEnergizeActionImg = document.querySelectorAll(".enemy-energize-action-img");
 let enemyBurnActionImg = document.querySelectorAll(".enemy-burn-action-img");
 let enemyBurnActionNumber = document.querySelectorAll(".enemy-burn-action-number");
 let enemyWindsweptActionImg = document.querySelectorAll(".enemy-windswept-action-img");
@@ -4852,6 +4874,7 @@ let enemyFrostbiteActionImg = document.querySelectorAll(".enemy-frostbite-action
 let enemyBuffDiv = document.querySelectorAll(".enemy-buffs");
 let enemyBlockImg = document.querySelectorAll(".enemy-block-img");
 let enemyBlockNumber = document.querySelectorAll(".enemy-block-number");
+let enemyEnergizeImg = document.querySelectorAll(".enemy-energize-img");
 let enemyRegenImg = document.querySelectorAll(".enemy-regen-img");
 let enemyRegenNumber = document.querySelectorAll(".enemy-regen-number");
 let enemyBloodImg = document.querySelectorAll(".enemy-blood-img");
@@ -4867,6 +4890,8 @@ let enemyBurnNumber = document.querySelectorAll(".enemy-burn-number");
 
 // FUNCTION ENEMIES TO ATTACK PLAYER
 function damagePlayer(damage, index) {
+        sfenemyAttack.currentTime = 0;
+        sfenemyAttack.play();
         if (enemyWindswept[index]) {
                 damage = Math.floor(damage *= .50);
         }
@@ -4898,6 +4923,8 @@ function damagePlayer(damage, index) {
         displayNone(enemyAttackActionDiv[index]);
 }
 function enemyGainBlock(blockAmount, index) {
+        sfenemyBlock.currentTime = 0;
+        sfenemyBlock.play();
         // REDUCE BLOCK BY HALF WHEN ENEMY IS DEBUFFED
         if (enemyFrostbite[index]) {
                 blockAmount = Math.floor(blockAmount * .5);
@@ -4913,6 +4940,8 @@ function enemyHeal(healAmount, index) {
         displayNone(enemyHealActionDiv[[index]]);
 }
 function enemyBurnPlayer(amount, index) {
+        sf0.currentTime = 0;
+        sf0.play();
         if (enemyWindswept[index]) {
                 amount = Math.floor(amount * .5);
         }
@@ -4921,6 +4950,8 @@ function enemyBurnPlayer(amount, index) {
         displayNone(enemyBurnActionDiv[index]);
 }
 function enemyGainRegeneration(amount, index) {
+        sf9.currentTime = 0;
+        sf9.play();
         if (enemyFrostbite[index]) {
                 amount = Math.floor(amount * .5);
         }
@@ -4929,6 +4960,8 @@ function enemyGainRegeneration(amount, index) {
         displayNone(enemyRegenActionDiv[index]);
 }
 function enemyGainBloodSiphon(amount, index) {
+        sf8.currentTime = 0;
+        sf8.play();
         if (enemyFrostbite[index]) {
                 amount = Math.floor(amount * .5);
         }
@@ -4937,6 +4970,8 @@ function enemyGainBloodSiphon(amount, index) {
         displayNone(enemyBloodActionDiv[index]);
 }
 function enemyGainThorns(amount, index) {
+        sf28.currentTime = 0;
+        sf28.play();
         if (enemyFrostbite[index]) {
                 amount = Math.floor(amount * .5);
         }
@@ -5048,106 +5083,117 @@ let enemyFrostbite = [false, false, false];
 let playerWindswept = false;
 let playerFrostbite = false;
 let eI = 0;
+//let energizeIndex = 1;
 let ghostIndex = 11;
 // ENEMIES CHOOSE AN ACTION BASED ON RANDOM ACTION CHOICE
 function enemyAction() {
         eI = 0;
+        /*if (energizeIndex === 0) {
+                energizeIndex = 1;
+        }*/
         trackEnemies = [...arguments];
         enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
         trackEnemies.forEach((i) => {
-                // RESET ALL ACTIONS
-                actionChoice[eI] = createRandomNumber(1, 10);
-                console.log(actionChoice[eI]);
-                if (actionChoice[eI] <= enemiesInformation[i].attackChance) {          
-                        // ATTACK
-                        enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
-                        enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
-                        displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
-                } else if (actionChoice[eI] <= enemiesInformation[i].blockChance) {
-                        // BLOCK
-                        enemyRandomBlock[eI] = createRandomNumber(enemiesInformation[i].blockAmountLow, enemiesInformation[i].blockAmountHigh);  
-                        enemyBlockActionNumber[eI].innerText = enemyRandomBlock[eI];
-                        displayBlock(enemyBlockActionDiv[eI], enemyBlockActionImg[eI], enemyBlockActionNumber[eI]);
-                } else if (actionChoice[eI] <= enemiesInformation[i].healChance) {  
-                        if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemiesInformation[i].healAmountHigh) {
-                                // HEAL
-                                enemyRandomHeal[eI] = createRandomNumber(enemiesInformation[i].healAmountLow, enemiesInformation[i].healAmountHigh);
-                                enemyHealActionNumber[eI].innerText = enemyRandomHeal[eI];
-                                displayBlock(enemyHealActionDiv[eI], enemyHealActionImg[eI], enemyHealActionNumber[eI]);
-                        } else {
+                //for (let k = 0; k < energizeIndex; k++) {
+                        // RESET ALL ACTIONS
+                        actionChoice[eI] = createRandomNumber(1, 10);
+                        if (actionChoice[eI] <= enemiesInformation[i].attackChance) {          
                                 // ATTACK
                                 enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
                                 enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
                                 displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
-                        }
-                } else if (actionChoice[eI] <= enemiesInformation[i].burnChance) {
-                        // BURN
-                        enemyRandomBurn[eI] = createRandomNumber(enemiesInformation[i].burnAmountLow, enemiesInformation[i].burnAmountHigh);
-                        enemyBurnActionNumber[eI].innerText = enemyRandomBurn[eI];
-                        displayBlock(enemyBurnActionImg[eI], enemyBurnActionNumber[eI], enemyBurnActionDiv[eI]);
-                } else if (actionChoice[eI] <= enemiesInformation[i].regenChance) {
-                        if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemiesInformation[i].regenAmountHigh) {
-                                // REGEN
-                                enemyRandomRegen[eI] = createRandomNumber(enemiesInformation[i].regenAmountLow, enemiesInformation[i].regenAmountHigh);
-                                enemyRegenActionNumber[eI].innerText = enemyRandomRegen[eI];
-                                displayBlock(enemyRegenActionImg[eI], enemyRegenActionNumber[eI], enemyRegenActionDiv[eI]);
+                        } else if (actionChoice[eI] <= enemiesInformation[i].blockChance) {
+                                // BLOCK
+                                enemyRandomBlock[eI] = createRandomNumber(enemiesInformation[i].blockAmountLow, enemiesInformation[i].blockAmountHigh);  
+                                enemyBlockActionNumber[eI].innerText = enemyRandomBlock[eI];
+                                displayBlock(enemyBlockActionDiv[eI], enemyBlockActionImg[eI], enemyBlockActionNumber[eI]);
+                        } else if (actionChoice[eI] <= enemiesInformation[i].healChance) {  
+                                if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemiesInformation[i].healAmountHigh) {
+                                        // HEAL
+                                        enemyRandomHeal[eI] = createRandomNumber(enemiesInformation[i].healAmountLow, enemiesInformation[i].healAmountHigh);
+                                        enemyHealActionNumber[eI].innerText = enemyRandomHeal[eI];
+                                        displayBlock(enemyHealActionDiv[eI], enemyHealActionImg[eI], enemyHealActionNumber[eI]);
+                                } else {
+                                        // ATTACK
+                                        enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
+                                        enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
+                                        displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
+                                }
+                        } else if (actionChoice[eI] <= enemiesInformation[i].burnChance) {
+                                // BURN
+                                enemyRandomBurn[eI] = createRandomNumber(enemiesInformation[i].burnAmountLow, enemiesInformation[i].burnAmountHigh);
+                                enemyBurnActionNumber[eI].innerText = enemyRandomBurn[eI];
+                                displayBlock(enemyBurnActionImg[eI], enemyBurnActionNumber[eI], enemyBurnActionDiv[eI]);
+                        } else if (actionChoice[eI] <= enemiesInformation[i].energizeChance) {
+                                // ENERGIZE
+                                displayBlock(enemyEnergizeActionImg[eI], enemyEnergizeActionDiv[eI]);
+                        } else if (actionChoice[eI] <= enemiesInformation[i].regenChance) {
+                                if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemiesInformation[i].regenAmountHigh) {
+                                        // REGEN
+                                        enemyRandomRegen[eI] = createRandomNumber(enemiesInformation[i].regenAmountLow, enemiesInformation[i].regenAmountHigh);
+                                        enemyRegenActionNumber[eI].innerText = enemyRandomRegen[eI];
+                                        displayBlock(enemyRegenActionImg[eI], enemyRegenActionNumber[eI], enemyRegenActionDiv[eI]);
+                                } else {
+                                        // ATTACK
+                                        enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
+                                        enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
+                                        displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
+                                }
+                        } else if (actionChoice[eI] <= enemiesInformation[i].bloodChance) {
+                                if (parseFloat(enemyCurrentHealth[eI].innerText) < parseFloat(enemyMaxHealth[eI].innerText) && parseFloat(enemyBloodNumber[eI].innerText) <= 1) {
+                                        // BLOOD
+                                        enemyRandomBlood[eI] = createRandomNumber(enemiesInformation[i].bloodAmountLow, enemiesInformation[i].bloodAmountHigh);
+                                        enemyBloodActionNumber[eI].innerText = enemyRandomBlood[eI];
+                                        displayBlock(enemyBloodActionImg[eI], enemyBloodActionNumber[eI], enemyBloodActionDiv[eI]);
+                                        enemyCanGainBlood = true;
+                                } else {
+                                        // ATTACK
+                                        enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
+                                        enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
+                                        displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
+                                }
+                        } else if (actionChoice[eI] <= enemiesInformation[i].thornsChance) {
+                                // THORNS
+                                enemyRandomThorns[eI] = createRandomNumber(enemiesInformation[i].thornsAmountLow, enemiesInformation[i].thornsAmountHigh);   
+                                enemyThornsActionNumber[eI].innerText = enemyRandomThorns[eI];
+                                displayBlock(enemyThornsActionImg[eI], enemyThornsActionNumber[eI], enemyThornsActionDiv[eI]);
+                        } else if (actionChoice[eI] <= enemiesInformation[i].windsweptChance) {  
+                                if (enemiesAlive > 1) {
+                                        // LOWER ATTACK
+                                        displayBlock(enemyWindsweptActionImg[eI]);        
+                                } else {
+                                        // ATTACK
+                                        enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
+                                        enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
+                                        displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
+                                }
+                        } else if (actionChoice[eI] <= enemiesInformation[i].frostbiteChance) {                        
+                                if (enemiesAlive > 1) {
+                                        // LOWER BLOCK
+                                        displayBlock(enemyFrostbiteActionImg[eI]);        
+                                } else {
+                                        // ATTACK
+                                        enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
+                                        enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
+                                        displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
+                                }
                         } else {
-                                // ATTACK
-                                enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
-                                enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
-                                displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
+                                ghostIndex--;
+                                enemyAttackActionNumber[eI].innerText = ghostIndex;
+                                enemyAttackActionNumber[eI].classList = ("ghost-number");
+                                enemyAttackActionNumber[eI].style = `opacity: ${ghostIndex + 2}0%`
+                                displayBlock(enemyAttackActionDiv[eI], enemyAttackActionNumber[eI]);
                         }
-                } else if (actionChoice[eI] <= enemiesInformation[i].bloodChance) {
-                        if (parseFloat(enemyCurrentHealth[eI].innerText) < parseFloat(enemyMaxHealth[eI].innerText) && parseFloat(enemyBloodNumber[eI].innerText) <= 1) {
-                                // BLOOD
-                                enemyRandomBlood[eI] = createRandomNumber(enemiesInformation[i].bloodAmountLow, enemiesInformation[i].bloodAmountHigh);
-                                enemyBloodActionNumber[eI].innerText = enemyRandomBlood[eI];
-                                displayBlock(enemyBloodActionImg[eI], enemyBloodActionNumber[eI], enemyBloodActionDiv[eI]);
-                                enemyCanGainBlood = true;
-                        } else {
-                                // ATTACK
-                                enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
-                                enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
-                                displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
-                        }
-                } else if (actionChoice[eI] <= enemiesInformation[i].thornsChance) {
-                        // THORNS
-                        enemyRandomThorns[eI] = createRandomNumber(enemiesInformation[i].thornsAmountLow, enemiesInformation[i].thornsAmountHigh);   
-                        enemyThornsActionNumber[eI].innerText = enemyRandomThorns[eI];
-                        displayBlock(enemyThornsActionImg[eI], enemyThornsActionNumber[eI], enemyThornsActionDiv[eI]);
-                } else if (actionChoice[eI] <= enemiesInformation[i].windsweptChance) {  
-                        if (enemiesAlive > 1) {
-                                // LOWER ATTACK
-                                displayBlock(enemyWindsweptActionImg[eI]);        
-                        } else {
-                                // ATTACK
-                                enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
-                                enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
-                                displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
-                        }
-                } else if (actionChoice[eI] <= enemiesInformation[i].frostbiteChance) {                        
-                        if (enemiesAlive > 1) {
-                                // LOWER BLOCK
-                                displayBlock(enemyFrostbiteActionImg[eI]);        
-                        } else {
-                                // ATTACK
-                                enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
-                                enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
-                                displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
-                        }
-                } else {
-                        ghostIndex--;
-                        enemyAttackActionNumber[eI].innerText = ghostIndex;
-                        enemyAttackActionNumber[eI].classList = ("ghost-number");
-                        enemyAttackActionNumber[eI].style = `opacity: ${ghostIndex + 2}0%`
-                        displayBlock(enemyAttackActionDiv[eI], enemyAttackActionNumber[eI]);
-                }
+                        /*if (energizeIndex > 1) {
+                                energizeIndex--;
+                        }*/
+                //}
                 eI++
         });
-}
-// FUNCTIONS TRIGGERS WHEN END TURN BUTTON IS CLICKED
-function endTurn() {
         eI = 0;
+}
+function endTurn() {
+        console.log(eI);
         // RESET MANA AND DEBUFFS
         if (lightningInABottle) {
                 currentMana.innerText = parseFloat(currentMana.innerText) + 4;
@@ -5159,99 +5205,112 @@ function endTurn() {
         playerWindswept = false;
         playerFrostbite = false;
         enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
-        trackEnemies.forEach((i) => {
+        // FUNCTIONS TRIGGERS WHEN END TURN BUTTON IS CLICKED
+        const enemyTurn = () => {
+                console.log(eI);
                 checkEnemyBurn([eI]);
-                console.log(actionChoice[eI]);
-
                 // CHECK IF ENEMY IS DEAD
                 if (enemyIsDead[eI] === false) {
-                        checkEnemyRegenHeal([eI]);
-                        checkEnemyBloodSiphon([eI]);
-                        if (actionChoice[eI] <= enemiesInformation[i].attackChance) {
-                                // ATTACK
-                                damagePlayer(enemyRandomDamage[eI], eI);
-                        } else if (actionChoice[eI] <= enemiesInformation[i].blockChance) {
-                                // BLOCK
-                                enemyGainBlock(enemyRandomBlock[eI], eI);
-                        } else if (actionChoice[eI] <= enemiesInformation[i].healChance) {
-                                if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemyRandomHeal[eI]) {
-                                        // HEAL
-                                        enemyHeal(enemyRandomHeal[eI], eI);
-                                } else {
+                                checkEnemyRegenHeal([eI]);
+                                checkEnemyBloodSiphon([eI]);
+                                if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].attackChance) {
                                         // ATTACK
                                         damagePlayer(enemyRandomDamage[eI], eI);
+                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].blockChance) {
+                                        // BLOCK
+                                        sfenemyBlock.play();
+                                        enemyGainBlock(enemyRandomBlock[eI], eI);
+                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].healChance) {
+                                        if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemyRandomHeal[eI]) {
+                                                // HEAL
+                                                enemyHeal(enemyRandomHeal[eI], eI);
+                                        } else {
+                                                // ATTACK
+                                                damagePlayer(enemyRandomDamage[eI], eI);
+                                        }
+                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].burnChance) {
+                                        // BURN
+                                        enemyBurnPlayer(enemyRandomBurn[eI], eI);
+                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].energizeChance) {
+                                        // ENERGIZE
+                                        //energizeIndex = 3;
+                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].regenChance) {
+                                        if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemyRandomRegen[eI]) {
+                                                // REGEN
+                                                enemyGainRegeneration(enemyRandomRegen[eI], eI);
+                                        } else {
+                                                // ATTACK
+                                                damagePlayer(enemyRandomDamage[eI], eI);
+                                        }
+                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].bloodChance) {
+                                        if (enemyCanGainBlood === true && parseFloat(enemyCurrentHealth[eI].innerText) < parseFloat(enemyMaxHealth[eI].innerText) && parseFloat(enemyBloodNumber[eI].innerText) <= 1) {
+                                                // BLOOD
+                                                enemyGainBloodSiphon(enemyRandomBlood[eI], eI);
+                                                enemyCanGainBlood = false;
+                                        } else {
+                                                // ATTACK
+                                                damagePlayer(enemyRandomDamage[eI], eI);
+                                        }
+                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].thornsChance) {
+                                        // THORNS
+                                        enemyGainThorns(enemyRandomThorns[eI], eI);
+                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].windsweptChance) {
+                                        if (enemiesAlive > 1) {
+                                                // LOWER ATTACK
+                                                sf21.currentTime = 0;
+                                                sf21.play();
+                                                playerWindswept = true;
+                                                displayBlock(playerWindsweptImg);        
+                                        } else {
+                                                // ATTACK
+                                                damagePlayer(enemyRandomDamage[eI], eI);
+                                        }   
+                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].frostbiteChance) {                        
+                                        if (enemiesAlive > 1) {
+                                                // LOWER BLOCK
+                                                sf39.currentTime = 0;
+                                                sf39.play();
+                                                playerFrostbite = true;
+                                                displayBlock(playerFrostbiteImg);        
+                                        } else {
+                                                // ATTACK
+                                                damagePlayer(enemyRandomDamage[eI], eI);
+                                        }   
+                                } else {
+                                        if (ghostIndex === 0) {
+                                                playerCurrentHealth.innerText -= 1000;
+                                                topBarHealthNumber.innerText -= 1000;
+                                        }
                                 }
-                        } else if (actionChoice[eI] <= enemiesInformation[i].burnChance) {
-                                // BURN
-                                enemyBurnPlayer(enemyRandomBurn[eI], eI);
-                        } else if (actionChoice[eI] <= enemiesInformation[i].regenChance) {
-                                if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemyRandomRegen[eI]) {
-                                        // REGEN
-                                        enemyGainRegeneration(enemyRandomRegen[eI], eI);
-                                } else {
-                                        // ATTACK
-                                        damagePlayer(enemyRandomDamage[eI], eI);
-                                }
-                        } else if (actionChoice[eI] <= enemiesInformation[i].bloodChance) {
-                                if (enemyCanGainBlood === true && parseFloat(enemyCurrentHealth[eI].innerText) < parseFloat(enemyMaxHealth[eI].innerText) && parseFloat(enemyBloodNumber[eI].innerText) <= 1) {
-                                        // BLOOD
-                                        enemyGainBloodSiphon(enemyRandomBlood[eI], eI);
-                                        enemyCanGainBlood = false;
-                                } else {
-                                        // ATTACK
-                                        damagePlayer(enemyRandomDamage[eI], eI);
-                                }
-                        } else if (actionChoice[eI] <= enemiesInformation[i].thornsChance) {
-                                // THORNS
-                                enemyGainThorns(enemyRandomThorns[eI], eI);
-                        } else if (actionChoice[eI] <= enemiesInformation[i].windsweptChance) {
-                                if (enemiesAlive > 1) {
-                                        // LOWER ATTACK
-                                        playerWindswept = true;
-                                        displayBlock(playerWindsweptImg);        
-                                } else {
-                                        // ATTACK
-                                        damagePlayer(enemyRandomDamage[eI], eI);
-                                }   
-                        } else if (actionChoice[eI] <= enemiesInformation[i].frostbiteChance) {                        
-                                if (enemiesAlive > 1) {
-                                        // LOWER BLOCK
-                                        playerFrostbite = true;
-                                        displayBlock(playerFrostbiteImg);        
-                                } else {
-                                        // ATTACK
-                                        damagePlayer(enemyRandomDamage[eI], eI);
-                                }   
-                        } else {
-                                if (ghostIndex === 0) {
-                                        playerCurrentHealth.innerText -= 1000;
-                                        topBarHealthNumber.innerText -= 1000;
-                                }
-                        }
-                        // RESET ACTIONS
-                        displayNone(enemyAttackActionDiv[eI], enemyBlockActionDiv[eI], enemyHealActionDiv[eI], enemyBurnActionDiv[eI], enemyThornsActionDiv[eI],
-                                enemyRegenActionDiv[eI], enemyWindsweptActionImg[eI], enemyFrostbiteActionImg[eI], enemyWindsweptImg[eI], enemyFrostbiteImg[eI]);    
-                enemyWindswept[eI] = false;
-                enemyFrostbite[eI] = false;
-                eternalFlameTracking[eI] = false;
+                                // RESET ACTIONS
+                                displayNone(enemyAttackActionDiv[eI], enemyBlockActionDiv[eI], enemyHealActionDiv[eI], enemyBurnActionDiv[eI], enemyThornsActionDiv[eI],
+                                        enemyRegenActionDiv[eI], enemyWindsweptActionImg[eI], enemyFrostbiteActionImg[eI], enemyWindsweptImg[eI], enemyFrostbiteImg[eI]);    
+                        enemyWindswept[eI] = false;
+                        enemyFrostbite[eI] = false;
+                        eternalFlameTracking[eI] = false;
                 }
-                eI++     
-        });
-        removeCardClicked();
-        checkPlayerEnergize();
-        checkRegenHeal();
-        checkBloodSiphon();
-        checkGaiasEmbrace();
-        addCardsToHand();
-        checkIfEnemyDead();
-        updateCardText();
-        if (numberOfEnemies === 1) {
-                enemyAction(trackEnemies[0]);
-        } else if (numberOfEnemies === 2) {
-                enemyAction(trackEnemies[0], trackEnemies[1]);
-        } else {
-                enemyAction(trackEnemies[0], trackEnemies[1], trackEnemies[2]);
+                eI++;
         }
+        enemyTurn();
+        setTimeout(enemyTurn, 400);
+        setTimeout(enemyTurn, 800);
+        setTimeout(function() {
+                removeCardClicked();
+                checkPlayerEnergize();
+                checkRegenHeal();
+                checkBloodSiphon();
+                checkGaiasEmbrace();
+                addCardsToHand();
+                checkIfEnemyDead();
+                updateCardText();
+                if (numberOfEnemies === 1) {
+                        enemyAction(trackEnemies[0]);
+                } else if (numberOfEnemies === 2) {
+                        enemyAction(trackEnemies[0], trackEnemies[1]);
+                } else {
+                        enemyAction(trackEnemies[0], trackEnemies[1], trackEnemies[2]);
+                }
+        }, (numberOfEnemies - 1) * 500);
         damageThisTurn = 0;
         airBubble = [];
         if (bloodAmulet) {
