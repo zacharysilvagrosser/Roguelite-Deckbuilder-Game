@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kill the Tower</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel='icon' href='imgs/favicon-96x96.png' type='image/x-icon'/ >
   </head>
   <body onload='location.href="#bottom-anchor"'>
     <header>
@@ -98,10 +99,20 @@
                                 <p id="player-thorns-number">0</p>
                                 <img id="player-thorns-img" src="imgs/thorns-icon.png">
                             </div>
-                            <img id="player-tidal-imbuement-img" src="imgs/tidal-imbuement-icon.png">
+                            <div id="player-tidal-div">
+                                <div class="player-img-text">
+                                    <h4 class="img-text-h4">Tidal Imbuement</h4>
+                                    <p class="img-text-p">Your next direct damage deals 10 more damage. Does not stack.</p>
+                                </div>  
+                                <img id="player-tidal-imbuement-img" src="imgs/tidal-imbuement-icon.png">
+                            </div>
                         </div>
                     </div> 
                     <div id="mana-bar-div">
+                        <div class="player-img-text">
+                            <h4 class="img-text-h4">Mana</h4>
+                            <p class="img-text-p">Spend mana to cast spells.</p>
+                        </div>  
                         <img id="mana-bar-img" src="imgs/mana-container.png">
                         <p id="current-mana">4</p>          
                     </div>

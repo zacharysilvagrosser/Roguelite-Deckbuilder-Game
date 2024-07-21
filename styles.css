@@ -18,6 +18,7 @@
 }
 #top-bar-health {
     font-size: 20px;
+    cursor: default;
 }
 #relic-container {
     width: 30rem;
@@ -29,6 +30,7 @@
     font-size: 20px;
     display: flex;
     align-items: center;
+    cursor: default;
 }
 .relic-img {
     width: 48px;
@@ -38,7 +40,7 @@
 #beginning-screen-container {
     width: 100%;
     height: 100vh;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     background-image: url("imgs/start-screen2.jpg");
@@ -66,7 +68,7 @@
 #start-screen-container h1 {
     margin: 4rem;
     font-size: 120px;
-    text-decoration:dashed;
+    text-decoration: dashed;
 }
 #start-screen-container h3 {
     margin: 3rem;
@@ -206,7 +208,7 @@
     height: 200vh;
     background-image: url("imgs/meadow-path2.jpg");
     background-size: cover;
-    display: block;
+    display: none;
 }
 .locations {
     display: flex;
@@ -371,14 +373,13 @@
     width: 120px;
     height: 120px;
 }
-.img-text, .player-img-text {
+.img-text, .player-img-text, .shop-relic-img-text, .relic-img-text {
     position: absolute;
-    margin-top: 12rem;
-    top: -20%;
-    margin-left: -15rem;
+    margin-top: 5rem;
+    margin-left: -11rem;
     display: none;
-    width: 25rem;
-    height: 10rem;
+    width: 23rem;
+    height: 9rem;
     background-image: linear-gradient(rgb(140, 161, 141), rgb(40, 56, 36));
     z-index: 12;
     color: white;
@@ -389,10 +390,6 @@
     border: 2px double rgb(81, 81, 81);
     border-radius: 20px;
     box-shadow: 5px 5px 10px black;
-}
-.shop-relic-img-text, .relic-img-text {
-    top: 0%;
-    margin-left: 0px;
 }
 .player-frostbite-img:hover + div {
     display: flex;
@@ -624,6 +621,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: default;
 }
 #player-block-img {
     position: absolute;
@@ -640,6 +638,7 @@
     display: none;
     color: white;
     margin-right: 9rem;
+    cursor: default;
 }
 #player-health-numbers { 
     font-weight: bold;
@@ -655,9 +654,6 @@
 #player-windswept-img, #player-frostbite-img, #player-tidal-imbuement-img {
     width: 60px;
     display: none;
-}
-#player-windswept-img:hover ~ #player-windswept-div {
-    display: block;
 }
 #player-burn-img, #player-energize-img, #player-thorns-img, #player-regen-img, #player-blood-img {
     width: 60px;
@@ -711,12 +707,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: default;
     z-index: 4;
 }
 .enemy-health {
     font-weight: bold;
     font-size: 32px;
     color: rgb(255, 3, 3);
+    cursor: default;
 }
 .ghost-number {
     font-size: 120px;
@@ -760,6 +758,7 @@
     display: none;
     color: white;
     margin-right: 9rem;
+    cursor: default;
 }
 
 .enemy-buffs, .enemy-debuffs {
@@ -767,6 +766,7 @@
     height: 4rem;
     display: flex;
     justify-content: center;
+    cursor: default;
 }
 .dragon-enemy-buffs {
     width: 200px;
@@ -774,39 +774,6 @@
     justify-content: center;
     margin-left: 100px;
     margin-top: 105px;
-}
-.dragon-enemy-debuffs {
-    width: 200px;
-    display: flex;
-    justify-content: center;
-    margin-left: 100px;
-}
-
-.unicorn-enemy-debuffs {
-    width: 200px;
-    display: flex;
-    justify-content: center;
-    margin-left: 160px;
-}
-.unicorn-enemy-buffs {
-    width: 200px;
-    display: flex;
-    justify-content: center;
-    margin-left: 160px;
-    margin-top: 125px;
-}
-.druid-enemy-buffs {
-    width: 200px;
-    display: flex;
-    justify-content: center;
-    margin-left: 115px;
-    margin-top: 145px;
-}
-.druid-enemy-debuffs {
-    width: 200px;
-    display: flex;
-    justify-content: center;
-    margin-left: 115px;
 }
 .enemy-windswept-img, .enemy-frostbite-img {
     width: 60px;
@@ -868,6 +835,7 @@
     font-weight: bold;
     font-size: 35px;
     color: black;
+    cursor:default;
     z-index: 1;
 }
 #end-turn-button {
@@ -1016,7 +984,7 @@
     right: 0;
     bottom: -7rem;
 }
-#opening-cards-container, #all-cards-reference-container, #new-cards-container {
+#opening-cards-container, #all-cards-reference-container, #potion-cards-container {
     display: none;
 }
 .fire {
@@ -1150,7 +1118,7 @@
 .earth .card-text {
     background-color: #1f0c02
 }
-.card, .card-reference, .new-card {
+.card, .card-reference {
     width: 180px;
     height: 250px;
     margin: auto;
@@ -1167,7 +1135,7 @@
 .upgraded {
     border: 2px solid gold;
 }
-.card:hover, .new-card:hover {
+.card:hover {
     transform: translateY(-100px);
     transition-duration: .5s;
 }
@@ -1203,7 +1171,7 @@
     width: 26px;
     height: 26px;
 }
-.card-text, .new-card-text {
+.card-text {
     color: white;
     width: 90%;
     height: 42%;
