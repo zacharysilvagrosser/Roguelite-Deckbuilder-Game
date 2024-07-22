@@ -1118,7 +1118,7 @@
 .earth .card-text {
     background-color: #1f0c02
 }
-.card, .card-reference {
+.card, .card-reference, .upgrade-reference {
     width: 180px;
     height: 250px;
     margin: auto;
