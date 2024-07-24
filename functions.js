@@ -12,16 +12,13 @@ POTIONS: RED POTION: Increase burn by 1
 Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 mana etc.
 
 TO DO
-SET UP IMAGES TO SCALE WITH SCREEN SIZE
 BOSS TREASURE: Empower an element and more likely to draw that element type
 Settings gear when hitting escape for music and sound volume
+blood siphon only works on damaging health not armor?
 
 BUGS
-PAGE WONT LOAD BECAUSE TOO MANY AUDIO FILES. MAKE ASYNC FUNCTION. music is being added everytime it plays when it should only be added once.
-///burnAllEnemies adding +2 burn
-///stormblessed damage text not updating its 0,
-enemy hit 0 health and didnt die,
-phoenix fire swith damageSecond
+upgraded air bubbles text is undefined after buying
+updateText for potion upgrades
 
 */
 /*
@@ -427,6 +424,7 @@ let numberOfEnemies;
 let enemyIsDead = [false, false, false];
 function resetArena() {
         arena.classList.remove("dim");
+        enemiesAreDead = false;
         for (i = 0; i < numberOfEnemies; i++) {
                 enemyIsDead[i] = false;
                 enemyFrostbite[i] = false;
@@ -464,7 +462,7 @@ function resetArena() {
         liquidLightning = [];
         liquidLightningUpgrade = [];
         snowfallElixir = false;
-        windsOfChange = 5;
+        windsOfChange = 8;
         tidalImbuement = false;
         terrasBlessing = [];
         gaiasEmbrace = [];
@@ -616,26 +614,24 @@ function getRandomEncounter() {
                         dontRepeatEncounter.push(9);
                         break;
                 case 10:
-                        createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
-                        createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
-                        createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
+                        createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[5].img);
+                        createEnemy(enemiesInformation[8].baseHealth, enemiesInformation[4].img);
+                        createEnemy(enemiesInformation[7].baseHealth, enemiesInformation[8].img);
                         initializeEnemyVariables();
-                        enemyImg = document.querySelectorAll(".enemy-img");
                         numberOfEnemies = 3;
                         enemyLevelUp();
-                        enemyAction(9, 9, 9);
+                        enemyAction(9, 8, 7);
                         dontRepeatEncounter.push(10);
                         break;
-        }
 }
 let dontRepeatGoldEncounter = [];
 let goldEncounter = false;
 function getRandomGoldEncounter() {
         switchMusic(allMusic[encounterMusicIndex]);
         goldEncounter = true;
-        let randomGoldEncounterNumber = createRandomNumber(1, 2);
+        let randomGoldEncounterNumber = createRandomNumber(1, 3);
         while (dontRepeatGoldEncounter.includes(randomGoldEncounterNumber)) {
-                randomGoldEncounterNumber = createRandomNumber(1, 2);
+                randomGoldEncounterNumber = createRandomNumber(1, 3);
         }
         switchArea(arena, map);
         switch (randomGoldEncounterNumber) {
@@ -657,6 +653,18 @@ function getRandomGoldEncounter() {
                         enemyAction(5, 5, 5);
                         dontRepeatGoldEncounter.push(2);
                         break;
+                case 3:
+                        createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
+                        createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
+                        createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
+                        initializeEnemyVariables();
+                        enemyImg = document.querySelectorAll(".enemy-img");
+                        numberOfEnemies = 3;
+                        enemyLevelUp();
+                        enemyAction(9, 9, 9);
+                        dontRepeatEncounter.push(3);
+                        break;
+        }
         }
 }
 let dontRepeatRelic = [];
@@ -847,7 +855,7 @@ let dontRepeatEliteEncounter = [];
 let eliteEncounterMusicTrigger = false;
 let eliteEncounterMusicIndex;
 function getRandomEliteEncounter() {
-        if (encounterMusicTrigger === false) {
+        if (eliteEncounterMusicTrigger === false) {
                 const eliteEncounterMusic = new Audio("audio/elite-encounter-music.wav");
                 switchMusic(eliteEncounterMusic);
                 eliteEncounterMusicTrigger = true;
@@ -1231,11 +1239,10 @@ function getRandomExclamation() {
                         exclamationButton1 = document.querySelector(".exclamation-button-1");
                         exclamationButton2 = document.querySelector(".exclamation-button-2");
                         exclamationButton1.addEventListener("click", () => {
-                                addCardToDeck(51, 0);
+                                addCardToDeck(51, 0, true);
                                 playerAether.innerText = parseFloat(playerAether.innerText) + 200;
                                 switchArea(map, exclamationContainer);
                                 location.href="#bottom-anchor";
-                                switchMusic(mapMusic);
                         });
                         exclamationButton2.addEventListener("click", () => {
                                 playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 10;
@@ -1359,10 +1366,9 @@ function getRandomExclamation() {
                                         i.addEventListener("click", () => {
                                                 for (let j = 0; j < cardsInformation.length; j++) {
                                                         if (i.classList.contains(j)) {
-                                                                addCardToDeck(j, 0);
+                                                                addCardToDeck(j, 0, true);
                                                                 switchArea(map, exclamationContainer);
                                                                 location.href="#bottom-anchor";
-                                                                switchMusic(mapMusic);
                                                         }
                                                 }
                                                 for (let k = 0; k < cardReference.length; k++) {
@@ -1460,7 +1466,7 @@ function getRandomExclamation() {
                                 while (newOpeningHand.includes(newCard)) {
                                         newCard = createRandomNumber(0, cardsInformation.length - 2);
                                 }
-                                addCardToDeck(newCard, 0);
+                                addCardToDeck(newCard, 0, false);
                                 newOpeningHand.push(newCard);
                         }
                         switchArea(map, exclamationDiv);
@@ -1543,10 +1549,9 @@ function getShop () {
                 shopCardsReference[i].addEventListener("click", () => {       
                         for (let j = 0; j < cardsInformation.length; j++) {
                                 if (shopCardsReference[i].classList.contains(j) && playerAether.innerText >= 50) {
-                                        addCardToDeck(j, 0);
+                                        addCardToDeck(j, 0, false);
                                         playerAether.innerText -= 50;
                                         displayNone(shopCardsCostDiv[i], map);
-                                        switchMusic(shopMusic);
                                 }
                         }
                 });
@@ -1804,8 +1809,7 @@ function getBlacksmith() {
                                                         destroyedCardsContainer.appendChild(spliceCard);
                                                         destroyedCardsArray = [];
                                                         destroyedCardsContainer.innerHTML = ``;
-                                                        addCardToDeck(cardIndex, 1);
-                                                        switchMusic(blacksmithMusic, blacksmithAmbience);
+                                                        addCardToDeck(cardIndex, 1, false);
                                                         break;
                                                 }
                                                 if (handArray.includes(allCurrentCards[k])) {
@@ -1814,8 +1818,7 @@ function getBlacksmith() {
                                                         destroyedCardsContainer.appendChild(spliceCard);
                                                         destroyedCardsArray = [];
                                                         destroyedCardsContainer.innerHTML = ``;
-                                                        addCardToDeck(cardIndex, 1);
-                                                        switchMusic(blacksmithMusic, blacksmithAmbience);
+                                                        addCardToDeck(cardIndex, 1, false);
                                                         break;
                                                 }
                                         }
@@ -1947,7 +1950,7 @@ function getWindsweptDamage() {
 }
 let damageThisTurn = 0;
 let healthGainedThisFight = 0;
-let windsOfChange = 5;
+let windsOfChange = 8;
 const playerThornsNumber = document.querySelector("#player-thorns-number");
 const playerCurrentHealth = document.querySelector("#player-current-health");
 const playerBlockNumber = document.querySelector("#player-block-number");
@@ -2045,7 +2048,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(2000);
+                                damageAllEnemies(20);
                                 fxChainLightning.play();
                         },
                         function() {
@@ -2650,7 +2653,7 @@ const cardsInformation = [
                 manaCost: [0, 0],
                 name: "Winds of Change",
                 cardImg: "imgs/winds-of-change2.jpg",
-                cardText: ["Deal 5 damage. All Winds of Change gain +3 damage or +5 damage if enemy is windswept", "Deal 5 damage. All Winds of Change gain +4 damage or +6 damage if enemy is windswept"],
+                cardText: ["Deal 8 damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept", "Deal 5 damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept"],
                 damage: [5, 5],
                 chooseEnemyCard: true,
                 index: 24,
@@ -2660,7 +2663,7 @@ const cardsInformation = [
                         function() {
                                 damageEnemy(windsOfChange, chosenEnemy);
                                 if (enemyWindswept[chosenEnemy]) {
-                                        windsOfChange += 5;
+                                        windsOfChange += 6;
                                 } else {
                                         windsOfChange += 3;
                                 }
@@ -2669,7 +2672,7 @@ const cardsInformation = [
                         function() {
                                 damageEnemy(windsOfChange, chosenEnemy);
                                 if (enemyWindswept[chosenEnemy]) {
-                                        windsOfChange += 6;
+                                        windsOfChange += 8;
                                 } else {
                                         windsOfChange += 4;
                                 }
@@ -3781,7 +3784,7 @@ function removeCardClicked() {
                 }
         }
 }
-function addCardToDeck(newRandomCard, upgradeIndex) {
+function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
         console.log("CREATING CARD NEW RANDOM CARD", newRandomCard);
         chooseNewCardDiv.innerHTML = ``;
         displayNone(chooseNewCardDiv);
@@ -3811,17 +3814,19 @@ function addCardToDeck(newRandomCard, upgradeIndex) {
         console.log("2 currentCards[currentCards.length - 1 - potionCards.length]", currentCards[currentCards.length - 1 - potionCards.length]);
         switchArea(map, arena);
         location.href="#bottom-anchor";
-        switchMusic(mapMusic);
-        windsOfChange = 5;
+        if (switchMapMusic) {
+                switchMusic(mapMusic);
+        }
+        windsOfChange = 8;
 }        
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
         arena.classList.add("dim");
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = 16;//createRandomNumber(12, cardsInformation.length - 2);
-        let newRandomCard1 = 24;//createRandomNumber(12, cardsInformation.length - 2);
-        let newRandomCard2 = 43;//createRandomNumber(12, cardsInformation.length - 2);
-        let newRandomCard3 = 30;//createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard0 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
         console.log("BEFORE 0", newRandomCard0, "1", newRandomCard1, "2", newRandomCard2, "3", newRandomCard3);
         // CHANGE CARDS IF THEY ARE THE SAME
         while (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3 || 
@@ -3840,10 +3845,10 @@ function getRandomNewCards () {
         let newCardChoices = document.querySelectorAll(".card-reference");
         console.log("NEW CARD CHOICES", newCardChoices);
         displayFlex(chooseNewCardDiv, newCardChoices[0], newCardChoices[1], newCardChoices[2], newCardChoices[3]);
-        newCardChoices[0].addEventListener("click", () => {addCardToDeck(newRandomCard0, 0)});
-        newCardChoices[1].addEventListener("click", () => {addCardToDeck(newRandomCard1, 0)});
-        newCardChoices[2].addEventListener("click", () => {addCardToDeck(newRandomCard2, 0)});
-        newCardChoices[3].addEventListener("click", () => {addCardToDeck(newRandomCard3, 0)});
+        newCardChoices[0].addEventListener("click", () => {addCardToDeck(newRandomCard0, 0, true)});
+        newCardChoices[1].addEventListener("click", () => {addCardToDeck(newRandomCard1, 0, true)});
+        newCardChoices[2].addEventListener("click", () => {addCardToDeck(newRandomCard2, 0, true)});
+        newCardChoices[3].addEventListener("click", () => {addCardToDeck(newRandomCard3, 0, true)});
         return;
 }
 function displayCardPiles(container, pile) {
@@ -4460,7 +4465,6 @@ function updateCardText() {
                 console.log("UPDATE TEXT");
                 updateText(.5);                
         }
-        //phoenix fire windswept will be 1x not 1.5x
         // UPDATE ARRAY WITH NEW CHANGED STATS
         let updateCardTextStats = [
                 [`Deal ${cardsInformation[0].damage[0]} damage and inflict ${cardsInformation[0].burn[0]} burn`, `Inflict ${cardsInformation[1].burn[1]} burn`],
@@ -4487,7 +4491,7 @@ function updateCardText() {
                 ["For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself", "For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself"],
                 [`Inflict frostbite and deal damage equal to your block amount Damage: ${cardsInformation[22].damage[0]}`, `Gain ${cardsInformation[22].block[1]} block, inflict frostbite, and deal damage equal to your block amount Damage: ${cardsInformation[22].damage[1]}`],
                 ["[POTION]<br>Damage and Frostbite now hits every enemy", "[POTION]<br>Damage and Frostbite now hits every enemy"],
-                [`Deal ${windsOfChange} damage. All Winds of Change gain +3 damage or +5 damage if enemy is windswept`, `Deal ${windsOfChange} damage. All Winds of Change gain +4 damage or +6 damage if enemy is windswept`],
+                [`Deal ${windsOfChange} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept`, `Deal ${windsOfChange} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept`],
                 ["Draw two cards", "Draw two cards and inflict windswept on a random enemy"],
                 ["Draw a Winds of Change from your draw pile and discard pile", "Draw a Winds of Change from your draw pile and discard pile. Winds of Change gains +2 damage for each drawn."],
                 ["[POTION]<br>Draw one more card at the end of each turn", "[POTION]<br>Draw one more card at the end of each turn"],
@@ -4539,23 +4543,23 @@ function updateCardText() {
         document.querySelectorAll(".winds-card-text").forEach((i) => {
                 if (i.classList.contains("upgraded-text")) {
                         if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal ${(windsOfChange / 2) + 10} damage. All Winds of Change gain +4 damage or +6 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${(windsOfChange / 2) + 10} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
                         } else if (playerWindswept) {
-                                i.innerText = `Deal ${windsOfChange / 2} damage. All Winds of Change gain +4 damage or +6 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${windsOfChange / 2} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
                         } else if (tidalImbuement) {
-                                i.innerText = `Deal ${windsOfChange + 10} damage. All Winds of Change gain +4 damage or +6 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${windsOfChange + 10} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
                         } else {
-                                i.innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +4 damage or +6 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
                         }
                 } else {
                         if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal ${(windsOfChange / 2) + 10} damage. All Winds of Change gain +3 damage or +5 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${(windsOfChange / 2) + 10} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
                         } else if (playerWindswept) {
-                                i.innerText = `Deal ${windsOfChange / 2} damage. All Winds of Change gain +3 damage or +5 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${windsOfChange / 2} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
                         } else if (tidalImbuement) {
-                                i.innerText = `Deal ${windsOfChange + 10} damage. All Winds of Change gain +3 damage or +5 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${windsOfChange + 10} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
                         } else {
-                                i.innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +3 damage or +5 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
                         }
                 }
         });
@@ -4675,13 +4679,13 @@ const enemiesInformation = [
                 name: "Dwarf",
                 baseHealth: 80,
                 img: "imgs/enemy-dwarf.png",
-                attackChance: 2,
+                attackChance: 3,
                 blockChance: 7,
                 thornsChance: 10,
                 attackDamageLow: 8,
                 attackDamageHigh: 10,
-                blockAmountLow: 27,
-                blockAmountHigh: 30,
+                blockAmountLow: 24,
+                blockAmountHigh: 28,
                 thornsAmountLow: 2,
                 thornsAmountHigh: 3,
         },
@@ -4828,10 +4832,10 @@ const enemiesInformation = [
                 attackChance: 1,
                 //damageincreasechance
                 bloodChance: 10,
-                attackDamageLow: 24,
-                attackDamageHigh: 26,
-                bloodAmountLow: 7,
-                bloodAmountHigh: 9,
+                attackDamageLow: 26,
+                attackDamageHigh: 30,
+                bloodAmountLow: 4,
+                bloodAmountHigh: 4,
         },
         {
                 name: "Aztec",
@@ -5242,7 +5246,7 @@ function enemyGainThorns(amount, index) {
         displayNone(enemyThornsActionDiv[index]);
 }
 function checkEnemyBurn(index) {
-        if (playerBloodNumber.innerText > 0) {
+        if (playerBloodNumber.innerText > 0 && !enemyIsDead[index]) {
                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.ceil(enemyBurnNumber[index].innerText * .21);
                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.ceil(enemyBurnNumber[index].innerText * .21);
         }
@@ -5291,6 +5295,7 @@ function checkEnemyBloodSiphon(index) {
         }
 }
 let enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
+let enemiesAreDead = false;
 function checkIfEnemyDead() {
         // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET AETHER
         function allEnemiesDead() {
@@ -5322,7 +5327,8 @@ function checkIfEnemyDead() {
         if (enemiesAlive > 0) {
                 enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;                
         }
-        if (enemiesAlive == 0) {
+        if (enemiesAlive == 0 && !enemiesAreDead) {
+                enemiesAreDead = true;
                 allEnemiesDead();
         }
 }
