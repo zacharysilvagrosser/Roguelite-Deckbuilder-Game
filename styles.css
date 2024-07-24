@@ -9,7 +9,7 @@
     width: 100%;
     height: 5vh;
     background-color: rgb(63, 92, 100);
-    display: flex;
+    display: none;
     z-index: 10;
     color: white;
 }
@@ -87,6 +87,9 @@
 #quit-game:hover {
     color: #74ccf4;
 }
+#start-game:active, #tutorial:active, #options:active, #quit-game:active {
+    transform: translateY(2px);
+}
 #start-screen-container div {
     width: 60rem;
     display: flex;
@@ -100,26 +103,32 @@
 .arrow-reverse {
     transform: scaleX(-1);
 }
-#options-container, #tutorial-container {
+#options-container {
     display: none;
     width: 100%;
     height: 100vh;
     position: fixed;
     align-items: center;
     justify-content: center;
-    z-index: 14;
+    z-index: 20;
 }
-#options-screen, #tutorial-screen {
+#options-screen {
     width: 70%;
     height: 70%;
     display: flex;
-    flex-direction: column;
     align-items: center;
     flex-direction: column;
-    background-image: linear-gradient(rgb(140, 161, 141), rgb(40, 56, 36));
+    border: 3px solid rgb(62, 71, 61);
+    box-shadow: 10px 10px 15px rgb(0, 0, 0);
+    background-image: linear-gradient(to bottom right, rgb(152, 163, 153), rgb(104, 119, 99), rgb(93, 104, 90));
+}
+#options-screen h1 {
+    font-size: 3rem;
+    margin-top: 1rem;
+    color: white;
 }
 #options-screen button {
-    margin-top: 50px;
+    margin-top: 18rem;
     width: 400px;
     padding: 15px;
     font-size: 20px;
@@ -139,14 +148,116 @@
     box-shadow: 2px 2px 5px black;
 }
 #options-screen button:active {
-    padding-top: 12px;
+    transform: translateY(5px);
 }
 #options-screen h3 {
+    font-size: 1.5rem;
     margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: white;
 }
 #options-screen input {
     width: 40%;
 }
+#tutorial-container {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    z-index: 14;
+}
+#tutorial-screen {
+    width: 90%;
+    height: 95%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-image: linear-gradient(to bottom right,#4c5a80, #7f8599, #6d7385, #7883a1);
+    border: 4px solid rgb(62, 71, 61);
+    box-shadow: 10px 10px 15px rgb(0, 0, 0);
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+#tutorial-exit {
+    position: fixed;
+    font-size: 3rem;
+    right: 7%;
+    opacity: 0.4;
+}
+#tutorial-exit:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+#tutorial-exit:active {
+    transform: translateY(2px);
+}
+.tutorial-icon-div {
+    width: 90%;
+    background-image: linear-gradient(#b0d1b1, #748a74);
+    display: flex;
+    align-items: center;
+    margin: .5rem;
+}
+.tutorial-icon-div p {
+    margin-left: 2rem;
+}
+.tutorial-card-div {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+}
+.tutorial-card-div p {
+    width: 90%;
+    margin-top: 1rem;
+}
+.tutorial-card-types {
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.tutorial-h-color {
+    color: #e7dfd2;
+}
+.tutorial-h2-div {
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.tutorial-h2-div p {
+    color: #FEF3E2;
+    text-align: center;
+    margin: 2rem auto;
+    font-size: 2rem;
+}
+#tutorial-screen h1 {
+    font-size: 5rem;
+}
+#tutorial-screen h2 {
+    margin-top: 3rem;
+    font-size: 4rem;
+}
+#tutorial-screen h3 {
+    margin-top: 2rem;
+    font-size: 3rem;
+}
+#tutorial-screen h4 {
+    margin-top: 2rem;
+    font-size: 2.7rem;
+}
+.tutorial-icon-div p, .tutorial-card-div p {
+    color: #FEF3E2;
+    text-align: center;
+    font-size: 1.7rem;
+}
+.tutorial-icon {
+    width: 70px;
+}
+
 #death-screen-container {
     width: 100%;
     height: 100vh;

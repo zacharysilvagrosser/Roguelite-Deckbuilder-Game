@@ -156,6 +156,7 @@
         </div>
         <div id="options-container">
             <div id="options-screen">
+                <h1>Options</h1>
                 <h3 for="music-slider">Music Volume</h3>
                 <input type="range" min="0" max="1" step="0.01" id="music-slider" />
                 <h3 for="soundfx-slider">Sound Effects Volume</h3>
@@ -165,78 +166,71 @@
         </div>
         <div id="tutorial-container">
             <div id="tutorial-screen">
-                <h2>How to Play</h2>
-                <h3>Map</h3>
-                <p>You will start the game on the map. You will work your way to the top of the map by completing different encounters.
-                    You must choose a path by clicking on the icons that are glowing red and following that path up to the boss.</p>
-                <h4>Icons</h4>
-                <div>
-                    <h5>Normal Encounter</h5>
-                    <img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
-                    <p>The most standard encounter in the game. You will fight three enemies and recieve a card to add to your deck at the end.</p>
+                <span id="tutorial-exit">X</span>
+                <h1 class="tutorial-h-color">How to Play</h1>
+                <div class="tutorial-h2-div">
+                    <h2 class="tutorial-h-color">Map</h2>
+                    <p>You start the game on the map. Work your way to the top of the map by completing different encounters.
+                        You must choose a path by clicking on the icons that are glowing red. Follow that path up to the boss to win.</p>
                 </div>
-                <div>
-                    <h5>Elite Enemy Encounter</h5>
-                    <img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt ="Hard Monster">
-                    <p>A more challenging fight against a single strong enemy. You will recieve a card as well as a powerful relic that will help you become stronger.</p>
+                <h3 class="tutorial-h-color">Icons</h3>
+                <div class="tutorial-icon-div">
+                    <img class="tutorial-icon" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
+                    <p>The most common encounter in the game. You will fight three enemies and recieve a card to add to your deck when you win.</p>
                 </div>
-                <div>
-                    <h5>Boss Encounter</h5>
-                    <img class="boss-monster-img" src="imgs/icons8-monster-50.png" alt="Boss Monster">
+                <div class="tutorial-icon-div">
+                    <img class="tutorial-icon" src="imgs/icons8-monster-80.png" alt ="Hard Monster">
+                    <p>A challenging fight against a strong enemy. You will recieve a powerful relic that will help shape your deck.</p>
+                </div>
+                <div class="tutorial-icon-div">
+                    <img class="tutorial-icon" src="imgs/icons8-monster-50.png" alt="Boss Monster">
                     <p>The final boss of the area. Once you defeat the boss you will gain a powerful upgrade and move to the next zone.</p>
                 </div>
-                <div>
-                    <h5>Gold Rush</h5>
-                    <img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">
-                    <p>A more powerful group of enemies await you, but you will be rewarded with more currency than a normal fight.</p>
+                <div class="tutorial-icon-div">
+                    <img class="tutorial-icon" src="imgs/icons8-gold-bars-64.png" alt="Gold">
+                    <p>A powerful group of enemies await you, but you will be rewarded with more currency than a normal fight.</p>
                 </div>
-                <div>
-                    <h5>Treasure</h5>
-                    <img class="treasure-img" src="imgs/icons8-treasure-chest-50.png" alt="Treasure"> 
-                    <p>A powerful upgrade awaits you in the middle of each stage.</p>
+                <div class="tutorial-icon-div">
+                    <img class="tutorial-icon" src="imgs/icons8-treasure-chest-50.png" alt="Treasure"> 
+                    <p>A powerful upgrade empowers you in the middle of each stage.</p>
                 </div>
-                <div>
-                    <h5>Mystery Zone</h5>
-                    <img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">
-                    <p>Something will happen to you here that will alter your path forward. It's a mystery so you'll have to try it to find out!</p>
+                <div class="tutorial-icon-div">
+                    <img class="tutorial-icon" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">
+                    <p>A mystery zone where you will encounter different characters in the world of Terra Nova.</p>
                 </div>
-                <div>
-                    <h5>Merchant</h5>
-                    <img class="merchant-img" src="imgs/icons8-stand-50.png" alt="Merchant"> 
-                    <p>A merchant is here to offer you a selection of cards and relics to purchase.</p>
+                <div class="tutorial-icon-div">
+                    <img class="tutorial-icon" src="imgs/icons8-stand-50.png" alt="Merchant"> 
+                    <p>The merchant is here to offer you a selection of cards and relics to purchase.</p>
                 </div>
-                <div>
-                    <h5>Blacksmith</h5>
-                    <img class="blacksmith-img" src="imgs/icons8-blacksmith-50.png" alt="Blacksmith">
+                <div class="tutorial-icon-div">
+                    <img class="tutorial-icon" src="imgs/icons8-blacksmith-50.png" alt="Blacksmith">
                     <p>The blacksmith can upgrade your cards to be more powerful for a price.</p>
                 </div>
-                <h3>Cards</h3>
-                <p>You will start with 12 cards to defeat enemies. After each fight you will be rewarded with a choice of four cards to add to your deck.
-                    There are six card types that each have their own unique playstyle.</p>
-                <div>
-                    <h4>Offense Cards</h4>
-                    <h5>Fire</h5>
-                    <p>Most fire cards inflict Burn which deals damage over time at the end of each turn. Burn gets reduced by 1 each turn. 
-                        Fire cards focus on killing enemies slowly over time by adding burn until they die</p>
-                    <h5>Lightning</h5>
-                    <p>Lightning cards deal a ton of direct damage immediately to an enemy. Some lightning cards make you gain Energize which grants you more mana the following turn.
-                        Lightning cards are all about gaining a lot of mana to then turn into damage to unleash upon your enemies.</p>
+                <div class="tutorial-h2-div">
+                    <h2 class="tutorial-h-color">Cards</h2>
+                    <p>You start with 12 cards in your deck. After each fight you will be rewarded with a choice of four cards to add to your deck.
+                    There are six card types that synergize with each other but also have their own unique playstyle.</p>
                 </div>
-                <div>
-                    <h4>Negation Cards</h4>
-                    <h5>Ice</h5>
-                    <p>Ice cards focus on inflicting Frostbite which reduces buffs gained by 50%. There are also ice cards that can help you gain a ton of block which helps negate damage.
-                        Ice cards are best against enemies that try to gain a lot of buffs rather than outright attcking each turn.</p>
-                    <h5>Air</h5>
-                    <p>Air cards focus on inflicting Windswept which reduces attack and burn damage by 50%. These cards mainly focus around drawing cards and the Winds of Change card which grows in damage each time it's played.
-                        Air cards are best against enemies that try to damage you each turn.</p>
-                </div>
-                <div>
-                    <h4>Support Cards</h4>
-                    <h5>Water</h5>
-                    <p>Water cards focus on healing. You can gain Blood Siphon which heals you for 20% of the damage you deal and Regeneration which heals you at the end of each turn.</p>
-                    <h5>Earth</h5>
-                    <p>Earth cards focus on gaining block and thorns. Block prevents damage by shielding your health. Thorns deals damage back to attackers when they directly damage you with an attack.</p>
+                <div class="tutorial-card-div">
+                    <h3 class="tutorial-h-color">Offensive Cards</h3>
+                    <h4 class="tutorial-h-color" style="color: #b23d1a">Fire</h4>
+                    <p>Fire cards focus on inflicting burn which deals damage at the end of each turn. Burn gets reduced by 1 each turn. 
+                        Fire cards kill enemies slowly over time by adding burn until they die.</p>
+                    <h4 class="tutorial-h-color" style="color: #fafba5">Lightning</h4>
+                    <p>Lightning cards focus on dealing direct damage immediately with high cost cards. Lightning cards can activate energize, which grants you more mana the following turn.
+                        Gain a ton of mana, turn it into damage, and unleash it upon your enemies.</p>
+                    <h3 class="tutorial-h-color">Negation Cards</h3>
+                    <h4 class="tutorial-h-color" style="color: #84e8ff">Ice</h4>
+                    <p>Ice cards focus on inflicting frostbite which reduces buffs gained by 50%. Some ice cards can help you gain block which helps negate damage.
+                        Ice cards are best against enemies that try to gain a lot of buffs rather than outright attacking each turn.</p>
+                    <h4 class="tutorial-h-color" style="color: #8ec9eb">Air</h4>
+                    <p>Air cards focus on inflicting windswept which reduces attack and burn damage by 50%. Draw low cost cards like Winds of Change which gains damage each time it's played.
+                        Air cards are best against enemies that have high attack and burn damage.</p>
+                    <h3 class="tutorial-h-color">Support Cards</h3>
+                    <h4 class="tutorial-h-color" style="color: #104b79">Water</h4>
+                    <p>Water cards focus on healing. You can gain blood siphon which heals you for 20% of the damage you deal and regeneration which heals you at the end of each turn.</p>
+                    <h4 class="tutorial-h-color" style="color: #451b04">Earth</h4>
+                    <p style=" padding-bottom: 4rem;">Earth cards focus on blocking and gaining thorns. Block prevents damage by shielding your health. Thorns deals damage back to attackers when they directly damage you with an attack.</p>
                 </div>
             </div>
         </div>

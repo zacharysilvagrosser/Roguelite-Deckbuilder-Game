@@ -19,7 +19,7 @@ Settings gear when hitting escape for music and sound volume
 BUGS
 PAGE WONT LOAD BECAUSE TOO MANY AUDIO FILES. MAKE ASYNC FUNCTION. music is being added everytime it plays when it should only be added once.
 ///burnAllEnemies adding +2 burn
-stormblessed damage text not updating its 0,
+///stormblessed damage text not updating its 0,
 enemy hit 0 health and didnt die,
 phoenix fire swith damageSecond
 
@@ -69,19 +69,19 @@ function switchMusic() {
                 if (!allMusic.includes(arguments[i])) {
                         allMusic.push(arguments[i]);
                 }
-                if (!arguments[i] === mapMusic) {
+                if (arguments[i] !== mapMusic) {
                         arguments[i].currentTime = 0;
                 }
                 arguments[i].play();
                 arguments[i].loop = true;
         }
+        allMusic.forEach(i => {
+                i.volume = musicSlider.value;
+        });
+        allSoundFX.forEach(i => {
+                i.volume = soundFXSlider.value;
+        });
 }
-/*if (fxtrigger === false) {
-        const fxEnemyAttack = new Audio("audio/enemyAttack.wav");
-        playSoundFX(fxEnemyAttack);
-        fxtrigger = true;
-        fxIndex = allSoundFX.indexOf(fxEnemyAttack);
-}*/
 function playSoundFX() {
         for (let i = 0; i < arguments.length; i++) {
                 if (!allSoundFX.includes(arguments[i])) {
@@ -111,23 +111,16 @@ startGame.addEventListener("mouseout", () => {
         displayNone(arrows[0], arrows[1]);
 });
 tutorial.addEventListener("click", () => {
-        displayBlock(document.querySelector("#tutorial-container"));
+        displayFlex(document.querySelector("#tutorial-container"));
+        document.querySelector("#tutorial-exit").addEventListener("click", () => {
+                displayNone(document.querySelector("#tutorial-container"));
+        }, {once: true});
 });
 tutorial.addEventListener("mouseover", () => {
         displayBlock(arrows[2], arrows[3]);
 });
 tutorial.addEventListener("mouseout", () => {
         displayNone(arrows[2], arrows[3]);
-});
-musicSlider.addEventListener("input", () => {
-        allMusic.forEach(i => {
-                i.volume = musicSlider.value;
-        });
-});
-soundFXSlider.addEventListener("input", () => {
-        allSoundFX.forEach(i => {
-                i.volume = soundFXSlider.value;
-        });
 });
 document.querySelector("#options-screen-exit-button").addEventListener("click", () => {
         displayNone(optionsContainer);
@@ -150,6 +143,16 @@ options.addEventListener("mouseover", () => {
 });
 options.addEventListener("mouseout", () => {
         displayNone(arrows[4], arrows[5]);
+});
+musicSlider.addEventListener("input", () => {
+        allMusic.forEach(i => {
+                i.volume = musicSlider.value;
+        });
+});
+soundFXSlider.addEventListener("input", () => {
+        allSoundFX.forEach(i => {
+                i.volume = soundFXSlider.value;
+        });
 });
 quitGame.addEventListener("click", () => {
         window.close();
@@ -498,9 +501,16 @@ function resetArena() {
         enemyContainer.innerHTML = "";
 }
 let dontRepeatEncounter = [];
+let encounterMusicTrigger = false;
+let encounterMusicIndex;
 function getRandomEncounter() {
-        //const encounterMusic = new Audio("audio/encounter-music.wav");
-        //switchMusic(encounterMusic);
+        if (encounterMusicTrigger === false) {
+                const encounterMusic = new Audio("audio/encounter-music.wav");
+                switchMusic(encounterMusic);
+                encounterMusicTrigger = true;
+                encounterMusicIndex = allMusic.indexOf(encounterMusic);
+        }
+        switchMusic(allMusic[encounterMusicIndex]);
         let randomEncounterNumber = createRandomNumber(1, 10);
         while (dontRepeatEncounter.includes(randomEncounterNumber)) {
                 randomEncounterNumber = createRandomNumber(1, 10);        
@@ -621,8 +631,7 @@ function getRandomEncounter() {
 let dontRepeatGoldEncounter = [];
 let goldEncounter = false;
 function getRandomGoldEncounter() {
-        const goldEncounterMusic = new Audio("audio/encounter-music.wav");
-        switchMusic(goldEncounterMusic);
+        switchMusic(allMusic[encounterMusicIndex]);
         goldEncounter = true;
         let randomGoldEncounterNumber = createRandomNumber(1, 2);
         while (dontRepeatGoldEncounter.includes(randomGoldEncounterNumber)) {
@@ -835,9 +844,16 @@ function getRelic(min, max) {
 }
 let getEliteRelic = false;
 let dontRepeatEliteEncounter = [];
+let eliteEncounterMusicTrigger = false;
+let eliteEncounterMusicIndex;
 function getRandomEliteEncounter() {
-        const eliteMusic =  new Audio("audio/elite-encounter-music.wav");
-        switchMusic(eliteMusic);
+        if (encounterMusicTrigger === false) {
+                const eliteEncounterMusic = new Audio("audio/elite-encounter-music.wav");
+                switchMusic(eliteEncounterMusic);
+                eliteEncounterMusicTrigger = true;
+                eliteEncounterMusicIndex = allMusic.indexOf(eliteEncounterMusic);
+        }
+        switchMusic(allMusic[eliteEncounterMusicIndex]);
         let randomEliteEncounterNumber = createRandomNumber(1, 4);
         while (dontRepeatEliteEncounter.includes(randomEliteEncounterNumber)) {
                 randomEliteEncounterNumber = createRandomNumber(1, 4);
@@ -875,7 +891,7 @@ function getRandomEliteEncounter() {
                 case 4:
                         createEnemy(enemiesInformation[15].baseHealth, enemiesInformation[15].img);
                         initializeEnemyVariables();
-                        const ghostAmbience = new Audio("audio/ghostAudio.mp3");
+                        const ghostAmbience = new Audio("audio/ghostAudio.wav");
                         const ghostMusic = new Audio("audio/ghost-music.wav");
                         switchMusic(ghostMusic, ghostAmbience);
                         document.querySelector(".enemy-img").style = "width: 450px";
@@ -1186,9 +1202,16 @@ let exclamationButton5 = document.querySelector(".exclamation-button-5");
 let exclamationButton6 = document.querySelector(".exclamation-button-6");
 const destroyedCardsContainer = document.querySelector("#destroyed-cards-container");
 let dontRepeatExclamation = [];
+let exclamationMusicTrigger = false;
+let exclamationMusicIndex;
 function getRandomExclamation() {
-        const exclamationMusic = new Audio("audio/exclamation-music.mp3");
-        switchMusic(exclamationMusic);
+        if (exclamationMusicTrigger === false) {
+                const exclamationMusic = new Audio("audio/exclamation-music.wav");
+                switchMusic(exclamationMusic);
+                exclamationMusicTrigger = true;
+                exclamationMusicIndex = allMusic.indexOf(exclamationMusic);
+        }
+        switchMusic(allMusic[exclamationMusicIndex]);
         let randomExclamationNumber = createRandomNumber(1, 3);
         switchArea(exclamationContainer, map);
         while (dontRepeatExclamation.includes(randomExclamationNumber)) {
@@ -1446,9 +1469,16 @@ function getRandomExclamation() {
                 });
         }
 }
+let shopMusicTrigger = false;
+let shopMusicIndex;
 function getShop () {
-        const shopMusic = new Audio("audio/shop-music.wav");
-        switchMusic(shopMusic);
+        if (shopMusicTrigger === false) {
+                const shopMusic = new Audio("audio/shop-music.wav");
+                switchMusic(shopMusic);
+                shopMusicTrigger = true;
+                shopMusicIndex = allMusic.indexOf(shopMusic);
+        }
+        switchMusic(allMusic[shopMusicIndex]);
         const shopContainer = document.querySelector("#shop-container");
         displayNone(map);
         displayFlex(shopContainer);
@@ -1717,10 +1747,17 @@ function getShop () {
                 });
         }
 }
+let blacksmithMusicTrigger = false;
+let blacksmithMusicIndex;
 function getBlacksmith() {
-        const blacksmithMusic = new Audio("audio/blacksmith-music.wav");
-        const blacksmithAmbience =  new Audio("audio/blacksmith-ambience.wav");
-        switchMusic(blacksmithMusic, blacksmithAmbience);
+        if (blacksmithMusicTrigger === false) {
+                const blacksmithMusic = new Audio("audio/blacksmith-music.wav");
+                const blacksmithAmbience =  new Audio("audio/blacksmith-ambience.wav");
+                switchMusic(blacksmithMusic, blacksmithAmbience);
+                blacksmithMusicTrigger = true;
+                blacksmithMusicIndex = allMusic.indexOf(blacksmithMusic);
+        }
+        switchMusic(allMusic[blacksmithMusicIndex], allMusic[blacksmithMusicIndex + 1]);
         const blacksmithContainer = document.querySelector("#blacksmith-container");
         displayFlex(blacksmithContainer);
         displayNone(map);
@@ -5144,6 +5181,7 @@ function damagePlayer(damage, index) {
         } else {
                 enemyBlockNumber[index].innerText -= parseFloat(playerThornsNumber.innerText);
         }
+        checkIfEnemyDead();
         displayNone(enemyAttackActionDiv[index]);
 }
 function enemyGainBlock(blockAmount, index) {
