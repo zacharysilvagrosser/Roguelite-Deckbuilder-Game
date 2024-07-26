@@ -40,7 +40,7 @@
 #beginning-screen-container {
     width: 100%;
     height: 100vh;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     background-image: url("imgs/start-screen2.jpg");
@@ -122,7 +122,7 @@
     z-index: 19;
 }
 #difficulty-screen {
-    width: 65%;
+    width: 75%;
     height: 90%;
     display: flex;
     align-items: center;
@@ -675,6 +675,7 @@
     background-position: 90%;
     position: fixed;
     overflow: scroll;
+    font-family: monospace;
     display: none;
 }
 #blacksmith-cards-list {
@@ -1095,6 +1096,7 @@
     position: absolute;
     background-size: cover;
     background-position: 10%;
+    font-family: monospace;
 }
 .exclamation-information-container {
     width: 80%;
@@ -1107,6 +1109,7 @@
     text-align: center;
     font-size: 36px;
     color: white;
+    font-family: fantasy;
 }
 .exclamation-event-img {
     width: 30rem;
@@ -1177,6 +1180,90 @@
     display: inline;
     max-width: 180px;
     
+}
+/* EMPOWER */
+#empower-container {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    background-image: url("imgs/hell-portal2.jpeg");
+    background-size: cover;
+    color: white;
+    font-family: fantasy;
+}
+#empower-container h1 {
+    font-size: 9rem;
+    cursor: default;
+    text-shadow: 4px 4px 12px rgb(34, 34, 34);
+}
+#empower-container h2 {
+    font-size: 3rem;
+    margin-top: 2rem;
+    cursor: default;
+    text-shadow: 4px 4px 12px rgb(34, 34, 34);
+}
+.empower-element-div {
+    width: 32%;
+    height: 34%;
+    background-color: #1f2e21;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 3px solid rgb(62, 71, 61);
+    box-shadow: 10px 10px 15px rgb(0, 0, 0);
+    background-image: linear-gradient(#1b1b1b 0%, #183746 100%);
+    opacity: .95;
+    transition: .3s;
+}
+.empower-element-div:hover {
+    opacity: 1;
+}
+.empower-choice-div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.empower-choices {
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.empower-choices button {
+    width: 90%;
+    padding: 10px;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 12px rgb(43, 43, 43);
+    border-radius: 12px;
+    box-shadow: 5px 5px 10px black;
+    border: 2px solid #202221;
+    font-weight: bold;
+    transition-duration: .1s;
+    background-image: linear-gradient( #3a3a3b 0%, #17171a 100%);
+}
+.empower-choices button:hover {
+    transform: translateY(2px);
+    cursor: pointer;
+    box-shadow: 2px 2px 5px black;
+}
+.empower-choices button:active {
+    transform: translateY(4px);
+}
+.empower-choices p {
+    padding: 10px;
+    font-size: 1.5em;
+    font-weight: bold;
+    font-family: monospace;
+    text-shadow: 2px 2px 12px rgb(20, 20, 20);
+    border-radius: 12px;
+    transition-duration: .1s;
 }
 /* CARDS */
 #draw-pile-img {

@@ -1,5 +1,6 @@
 /* IDEAS
-Second Map Desert Third Heaven/Hell diablo
+Second Map Hell Third Heaven diablo
+Terra searching for two other gods destroying Terra. Search through hell then heaven after they ascend.
 Talent tree after each fight
 Implement animations
 when viewing inventory have a sorter based on element type
@@ -12,14 +13,16 @@ POTIONS: RED POTION: Increase burn by 1
 Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 mana etc.
 
 TO DO
-BOSS TREASURE: Empower an element and more likely to draw that element type
+///BOSS TREASURE: Empower an element
 Settings gear when hitting escape for music and sound volume
-blood siphon only works on damaging health not armor?
+Probably change ice spear so you dont have to change card text
+add thunderclap damage change to updatecardtext
+finish empowerment logic (do ice next)
 
 BUGS
 text not reseting after encounter
 ///winds of change type cards wont react to liquid lightning potions
-replace leprechaun with something else
+///replace leprechaun with forest imp
 ///create difficulty level on game start that affect initial enemy starting stats, scaling, and initial aether
 
 */
@@ -455,8 +458,13 @@ function resetArena() {
         playerBurnNumber.innerText = 0;
         displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber, playerRegenImg, playerRegenNumber, playerThornsImg, playerThornsNumber,
                 playerBloodImg, playerBloodNumber, playerBlockImg, playerBlockNumber);
-        if (thunderTalisman) {
-                currentMana.innerText = 6;
+        if (thunderTalisman || lightningJewel) {
+                if (thunderTalisman) {
+                        currentMana.innerText = parseFloat(currentMana.innerText) + 2;
+                }
+                if (lightningJewel) {
+                        currentMana.innerText = parseFloat(currentMana.innerText) + 1;
+                }
         } else {
                 currentMana.innerText = 4;
         }
@@ -500,11 +508,9 @@ function resetArena() {
                 playerThornsNumber.innerText = 2;
                 displayBlock(playerThornsImg, playerThornsNumber);
         }
-        maxHandLength = 5;
         reshuffleCards();
         if (windDisc) {
-                console.log("WINDDISC");
-                drawCards(6);
+                drawCards(maxHandLength + 1);
         } else {
                 drawCards(maxHandLength);
         }
@@ -677,20 +683,9 @@ function getRandomGoldEncounter() {
         }
 }
 let dontRepeatRelic = [];
-let iceEmpower1 = false;
-let bloodAmulet = false;
-let eternalFlame = false;
-let eternalFlameTracking = [false, false, false];
-let ringOfFire = false;
-let thunderTalisman = false;
-let lightningInABottle = false;
-let crownOfThorns = false;
-let frostHeart = false;
-let iceSpear = false;
-let vineBracelet = false;
-let caspiansTear = false;
-let stratus = false;
-let windDisc = false;
+let [concentratedFire, ringOfFire, thunderTalisman, lightningInABottle, iceSpear, frostheart, stratus, windDisc, bloodAmulet, caspiansTear, crownOfThorns, vineBracelet] = 
+[false, false, false, false, false, false, false, false, false, false, false, false];
+let concentratedFireTracking = [false, false, false];
 function getRelic(min, max) {
         let randomRelicNumber = createRandomNumber(min, max);
         while (dontRepeatRelic.includes(randomRelicNumber)) {
@@ -711,12 +706,12 @@ function getRelic(min, max) {
                         dontRepeatRelic.push(1);
                         break;
                 case 2:
-                        eternalFlame = true;
+                        concentratedFire = true;
                         relicContainer.innerHTML += `                        
                         <div class="relic-div">
                                 <img class="relic-img" src="imgs/eternal-flame2.png">
                                 <div class="relic-img-text img-text">
-                                        <h4 class="img-text-h4">Eternal Flame</h4>
+                                        <h4 class="img-text-h4">Concentrated Fire</h4>
                                         <p class="img-text-p">Burning an enemy twice in one turn will increase the second burn by 50%</p>
                                 </div>
                         </div>`;
@@ -765,7 +760,7 @@ function getRelic(min, max) {
                                 <img class="relic-img" src="imgs/frostheart.png">
                                 <div class="relic-img-text img-text">
                                         <h4 class="img-text-h4">Frostheart</h4>
-                                        <p class="img-text-p">Frostbite will reduce each enemy buff by 1</p>
+                                        <p class="img-text-p">Gain 4 block when inflicting enemy with frostbite</p>
                                 </div>
                         </div>`;
                         dontRepeatRelic.push(6);
@@ -841,11 +836,6 @@ function getRelic(min, max) {
                                 </div>
                         </div>`;
                         dontRepeatRelic.push(12);
-                        break;
-                case 13:
-                        iceEmpower1 = true;
-                        relicContainer.innerHTML += `<img class="relic-img" src="imgs/iceEmpower12.png">`;
-                        dontRepeatRelic.push(1);
                         break;
         }
         let relicImg = document.querySelectorAll(".relic-img");
@@ -1616,7 +1606,7 @@ function getShop () {
                                         <div class="shop-relic-div">
                                                 <img class="shop-relic-img 2" src="imgs/eternal-flame2.png">
                                                 <div class="shop-relic-img-text img-text">
-                                                        <h4 class="img-text-h4">Eternal Flame</h4>
+                                                        <h4 class="img-text-h4">Concentrated Fire</h4>
                                                         <p class="img-text-p">Burning an enemy twice in one turn will increase the second burn by 50%</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
@@ -1669,7 +1659,7 @@ function getShop () {
                                                 <img class="shop-relic-img 6" src="imgs/frostheart.png">
                                                 <div class="shop-relic-img-text img-text">
                                                         <h4 class="img-text-h4">Frostheart</h4>
-                                                        <p class="img-text-p">Frostbite will reduce each enemy buff by 1</p>
+                                                        <p class="img-text-p">Gain 4 block when inflicting enemy with frostbite</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
                                                 <p class="shop-aether-cost">100</p>
@@ -3447,7 +3437,7 @@ const cardsInformation = [
                                 }
                                 if (playerFrostbite === false) {
                                         gainBlock(5);
-                                        if (iceEmpower1) {
+                                        if (frostHeart) {
                                                 gainBlock(4);
                                         }
                                         displayBlock(playerFrostbiteImg);
@@ -3466,7 +3456,7 @@ const cardsInformation = [
                                 }
                                 if (playerFrostbite === false) {
                                         gainBlock(7);
-                                        if (iceEmpower1) {
+                                        if (frostHeart) {
                                                 gainBlock(4);
                                         }
                                         displayBlock(playerFrostbiteImg);
@@ -4045,6 +4035,9 @@ function damageAllEnemies(damage) {
         } else if (liquidLightningUpgrade.length > 0) {
                 damage += 7;
         }
+        if (thunderclap) {
+                damage += parseFloat(currentMana.innerText);
+        }
         if (playerWindswept) {
                 damage = Math.floor(damage * .50);
         }
@@ -4109,22 +4102,42 @@ function inflictFrostbite(enemy) {
                 return;
         }
         if (enemyFrostbite[enemy] === false) {
-                if (iceEmpower1) {
+                if (frostHeart) {
                         gainBlock(4);
                         blockTotal += 4;
                 }
-                if (frostHeart) {
+                if (leechingCold) {
                         if (enemyBlockNumber[enemy].innerText > 0) {
                                 enemyBlockNumber[enemy].innerText = parseFloat(enemyBlockNumber[enemy].innerText) - 1;
+                                playerBlockNumber.innerText = parseFloat(playerBlockNumber.innerText) + 1;
+                                displayBlock(playerBlockImg, playerBlockNumber);
+                                if (enemyBlockNumber[enemy].innerText == 0) {
+                                        displayNone(enemyBlockImg[enemy], enemyBlockNumber[enemy]);
+                                }
                         }
                         if (enemyRegenNumber[enemy].innerText > 0) {
                                 enemyRegenNumber[enemy].innerText = parseFloat(enemyRegenNumber[enemy].innerText) - 1;
+                                playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + 1;
+                                displayBlock(playerRegenImg, playerRegenNumber);
+                                if (enemyRegenNumber[enemy].innerText == 0) {
+                                        displayNone(enemyRegenImg[enemy], enemyRegenNumber[enemy]);
+                                }
                         }
                         if (enemyBloodNumber[enemy].innerText > 0) {
                                 enemyBloodNumber[enemy].innerText = parseFloat(enemyBloodNumber[enemy].innerText) - 1;
+                                playerBloodNumber.innerText = parseFloat(playerBloodNumber.innerText) + 1;
+                                displayBlock(playerBloodImg, playerBloodNumber);
+                                if (enemyBloodNumber[enemy].innerText == 0) {
+                                        displayNone(enemyBloodImg[enemy], enemyBloodNumber[enemy]);
+                                }
                         }
                         if (enemyThornsNumber[enemy].innerText > 0) {
                                 enemyThornsNumber[enemy].innerText = parseFloat(enemyThornsNumber[enemy].innerText) - 1;
+                                playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) + 1;
+                                displayBlock(playerThornsImg, playerThornsNumber);
+                                if (enemyThornsNumber[enemy].innerText == 0) {
+                                        displayNone(enemyThornsImg[enemy], enemyThornsNumber[enemy]);
+                                }
                         }
                 }
                 enemyFrostbite[enemy] = true;
@@ -4139,31 +4152,35 @@ function inflictFrostbite(enemy) {
 function inflictAllFrostbite() {
         for (let i = 0; i < numberOfEnemies; i++) {
                 if (enemyIsDead[i] === false && enemyFrostbite[i] === false) {
-                        if (iceEmpower1) {
+                        if (frostHeart) {
                                 gainBlock(4);
                                 blockTotal += 4;
                         }
-                        if (frostHeart) {
+                        if (leechingCold) {
                                 if (enemyBlockNumber[i].innerText > 0) {
                                         enemyBlockNumber[i].innerText = parseFloat(enemyBlockNumber[i].innerText) - 1;
+                                        playerBurnNumber.innerText = parseFloat(playerNumber.innerText) + 1;
                                         if (enemyBlockNumber[i].innerText == 0) {
                                                 displayNone(enemyBlockImg[i], enemyBlockNumber[i]);
                                         }
                                 }
                                 if (enemyRegenNumber[i].innerText > 0) {
                                         enemyRegenNumber[i].innerText = parseFloat(enemyRegenNumber[i].innerText) - 1;
+                                        playerBurnNumber.innerText = parseFloat(playerNumber.innerText) + 1;
                                         if (enemyRegenNumber[i].innerText == 0) {
                                                 displayNone(enemyRegenImg[i], enemyRegenNumber[i]);
                                         }
                                 }
                                 if (enemyBloodNumber[i].innerText > 0) {
                                         enemyBloodNumber[i].innerText = parseFloat(enemyBloodNumber[i].innerText) - 1;
+                                        playerBurnNumber.innerText = parseFloat(playerNumber.innerText) + 1;
                                         if (enemyBloodNumber[i].innerText == 0) {
                                                 displayNone(enemyBloodImg[i], enemyBloodNumber[i]);
                                         }
                                 }
                                 if (enemyThornsNumber[i].innerText > 0) {
                                         enemyThornsNumber[i].innerText = parseFloat(enemyThornsNumber[i].innerText) - 1;
+                                        playerBurnNumber.innerText = parseFloat(playerNumber.innerText) + 1;
                                         if (enemyThornsNumber[i].innerText == 0) {
                                                 displayNone(enemyThornsImg[i], enemyThornsNumber[i]);
                                         }
@@ -4267,12 +4284,12 @@ function burnEnemy(burn, enemy) {
         } else if (essenceOfEmberUpgrade.length > 0) {
                 burn += essenceOfEmberUpgrade.length * 4;
         }
-        if (eternalFlameTracking[enemy]) {
+        if (concentratedFireTracking[enemy]) {
                 burn = Math.floor(burn * 1.5);
-                eternalFlameTracking[enemy] = false;
+                concentratedFireTracking[enemy] = false;
         }
-        if (eternalFlame) {
-                eternalFlameTracking[enemy] = true;
+        if (concentratedFire) {
+                concentratedFireTracking[enemy] = true;
         }
         if (playerWindswept) {
                 burn *= .5;
@@ -4298,12 +4315,12 @@ function burnAllEnemies(burn) {
         }
         for (let i = 0; i < numberOfEnemies; i++) {
                 if (enemyIsDead[i] === false) {
-                        if (eternalFlameTracking[i]) {
+                        if (concentratedFireTracking[i]) {
                                 burn = Math.floor(burn * 1.5);
-                                eternalFlameTracking[i] = false;
+                                concentratedFireTracking[i] = false;
                         }
-                        if (eternalFlame) {
-                                eternalFlameTracking[i] = true;
+                        if (concentratedFire) {
+                                concentratedFireTracking[i] = true;
                         }
                         enemyBurnNumber[i].innerText = parseFloat(enemyBurnNumber[i].innerText) + burn;
                         displayBlock(enemyBurnImg[i], enemyBurnNumber[i]);  
@@ -5348,7 +5365,9 @@ function checkEnemyBurn(index) {
                 } else {
                         enemyBlockNumber[index].innerText -= parseFloat(enemyBurnNumber[index].innerText); 
                 }
-                enemyBurnNumber[index].innerText--;
+                if (!eternalFlame) {
+                        enemyBurnNumber[index].innerText--;
+                }
         }
         if (enemyBurnNumber[index].innerText == 0) {
                 displayNone(enemyBurnImg[index], enemyBurnNumber[index]);
@@ -5378,6 +5397,8 @@ function checkEnemyBloodSiphon(index) {
 }
 let enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
 let enemiesAreDead = false;
+let [eternalFlame, scorchedEarth, thunderclap, lightningJewel, leechingCold, everlastingWinter, shiftingWinds, windrunner, bloodTransfusion, cleansingCurrents, venomousVines, stonewall] =
+[false, false, false, false, false, false, false, false, false, false, false, false];
 function checkIfEnemyDead() {
         // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET AETHER
         function allEnemiesDead() {
@@ -5395,7 +5416,142 @@ function checkIfEnemyDead() {
                         enemiesKilled++
                 }
                 if (bossDefeated) {
-
+                        displayFlex(exclamationContainer);
+                        exclamationContainer.innerHTML = `
+                        <div id="empower-container">
+                                <h1>Empower an Element</h1>
+                                <div class="empower-element-div">
+                                        <h2 style="color: #b23d1a">Fire</h2>
+                                        <div class="empower-choice-div">
+                                                <div class="empower-choices">
+                                                        <button id="eternal-flame" style="color: #aa4203">Eternal Flame</button>
+                                                        <p>Burn doesn't decrease on enemies</p>
+                                                </div>
+                                                <div class="empower-choices">
+                                                        <button id="scorched-earth" style="color: #ba760f">Scorched Earth</button>
+                                                        <p>Enemies burn twice per turn</p>
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="empower-element-div">
+                                        <h2 style="color: #f0fb3e">Lightning</h2>
+                                        <div class="empower-choice-div">
+                                                <div class="empower-choices">
+                                                        <button id="thunderclap" style="color: #fafba5">Thunderclap</button>
+                                                        <p>Damage is increased by the number of mana you have when playing a card</p>
+                                                </div>
+                                                <div class="empower-choices">
+                                                        <button id="lightning-jewel" style="color: #5e65c5">Lightning Jewel</button>
+                                                        <p>Gain +1 mana</p>
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="empower-element-div">
+                                        <h2 style="color: #2f989c">Ice</h2>
+                                        <div class="empower-choice-div">
+                                                <div class="empower-choices">
+                                                        <button id="leeching-cold" style="color: #51a9ac">Leeching Cold</button>
+                                                        <p>Inflicting frostbite will steal one of each buff</p>
+                                                </div>
+                                                <div class="empower-choices">
+                                                        <button id="everlasting-winter" style="color: #b9e8ea">Everlasting Winter</button>
+                                                        <p>Frostbite lasts for two turns</p>
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="empower-element-div">
+                                        <h2 style="color: #86bfdf">Air</h2>
+                                        <div class="empower-choice-div">
+                                                <div class="empower-choices">
+                                                        <button id="shifting-winds" style="color: #9edafd">Shifting Winds</button>
+                                                        <p>Your cards that draw cards draw one more card</p>
+                                                </div>
+                                                <div class="empower-choices">
+                                                        <button id="windrunner" style="color: white">Windrunner</button>
+                                                        <p>Draw one more card each turn</p>
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="empower-element-div">
+                                        <h2 style="color: #0f5e9c">Water</h2>
+                                        <div class="empower-choice-div">
+                                                <div class="empower-choices">
+                                                        <button id="blood-transfusion" style="color: #be291e">Blood Transfusion</button>
+                                                        <p>Blood siphon now heals for 30% of damage dealt</p>
+                                                </div>
+                                                <div class="empower-choices">
+                                                        <button id="cleansing-currents" style="color: #74ccf4">Cleaning Currents</button>
+                                                        <p>Heal to full health and gain +50 max health</p>
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="empower-element-div">
+                                        <h2 style="color: #7a4b31">Earth</h2>
+                                        <div class="empower-choice-div">
+                                                <div class="empower-choices">
+                                                        <button id="venomous-vines" style="color: #81b14f">Venomous Vines</button>
+                                                        <p>Gain 2 thorns at the end of every turn</p>
+                                                </div>
+                                                <div class="empower-choices">
+                                                        <button id="stonewall" style="color: #757575">Stonewall</button>
+                                                        <p>Start each encounter with 50 block</p>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                        `
+                        function nextStage() {
+                                map.style = "background-image: imgs/hell-map3.jpeg";
+                                switchArea(map, exclamationContainer);
+                        }
+                        document.getElementById("eternal-flame").addEventListener("click", () => {
+                                eternalFlame = true;
+                                nextStage();
+                        });
+                        document.getElementById("scorched-earth").addEventListener("click", () => {
+                                scorchedEarth = true;
+                                nextStage();
+                        });
+                        document.getElementById("thunderclap").addEventListener("click", () => {
+                                thunderclap = true;
+                                nextStage();
+                        });
+                        document.getElementById("lightning-jewel").addEventListener("click", () => {
+                                lightningJewel = true;
+                                nextStage();
+                        });
+                        document.getElementById("leeching-cold").addEventListener("click", () => {
+                                leechingCold = true;
+                                nextStage();
+                        });
+                        document.getElementById("everlasting-winter").addEventListener("click", () => {
+                                everlastingWinter = true;
+                                nextStage();
+                        });
+                        document.getElementById("shifting-winds").addEventListener("click", () => {
+                                shiftingWinds = true;
+                                nextStage();
+                        });
+                        document.getElementById("windrunner").addEventListener("click", () => {
+                                windrunner = true;
+                                nextStage();
+                        });
+                        document.getElementById("blood-transfusion").addEventListener("click", () => {
+                                bloodTransfusion = true;
+                                nextStage();
+                        });
+                        document.getElementById("cleansing-currents").addEventListener("click", () => {
+                                cleansingCurrents = true;
+                                nextStage();
+                        });
+                        document.getElementById("venomous-vines").addEventListener("click", () => {
+                                venomousVines = true;
+                                nextStage();
+                        });
+                        document.getElementById("stonewall").addEventListener("click", () => {
+                                stonewall = true;
+                                nextStage();
+                        });
                 }
                 getRandomNewCards();
                 return;
@@ -5549,10 +5705,18 @@ function enemyAction() {
 }
 function endTurn() {
         // RESET MANA AND DEBUFFS
-        if (lightningInABottle) {
-                currentMana.innerText = parseFloat(currentMana.innerText) + 4;
+        if (lightningInABottle) { 
+                if (lightningJewel) {
+                        currentMana.innerText = parseFloat(currentMana.innerText) + 5;
+                } else {
+                        currentMana.innerText = parseFloat(currentMana.innerText) + 4;                 
+                }
         } else {
-                currentMana.innerText = 4;
+                if (lightningJewel) {
+                        currentMana.innerText = 5;
+                } else {
+                        currentMana.innerText = 4;
+                }
         }
         checkPlayerBurn();
         if (trackEnemies[0] !== 16) {
@@ -5564,6 +5728,9 @@ function endTurn() {
         // FUNCTIONS TRIGGERS WHEN END TURN BUTTON IS CLICKED
         const enemyTurn = () => {
                 checkEnemyBurn([eI]);
+                if (scorchedEarth) {
+                        checkEnemyBurn([eI]);
+                }
                 // CHECK IF ENEMY IS DEAD
                 if (enemyIsDead[eI] === false) {
                                 checkEnemyRegenHeal([eI]);
@@ -5632,7 +5799,7 @@ function endTurn() {
                                         enemyRegenActionDiv[eI], enemyWindsweptActionImg[eI], enemyFrostbiteActionImg[eI], enemyWindsweptImg[eI], enemyFrostbiteImg[eI]);    
                         enemyWindswept[eI] = false;
                         enemyFrostbite[eI] = false;
-                        eternalFlameTracking[eI] = false;
+                        concentratedFireTracking[eI] = false;
                 }
                 eI++;
         }
