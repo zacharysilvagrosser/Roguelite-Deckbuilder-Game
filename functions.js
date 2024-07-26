@@ -17,17 +17,10 @@ Settings gear when hitting escape for music and sound volume
 blood siphon only works on damaging health not armor?
 
 BUGS
-///upgraded text is undefined after buying
-///updateText for potion upgrades
-///lower relic img text 4 rem
-///! justify flex start; gust upgrade text too long
-///tornado tidal 32 damage
-///level scaling too high
-///blacksmith cards need to not show already upgraded cards
 text not reseting after encounter
+///winds of change type cards wont react to liquid lightning potions
 replace leprechaun with something else
-create difficulty level on game start that affect initial enemy starting stats, scaling, and initial aether
-ADD UPDATECARD TEXT TO ADDCARDSTOHAND AND/OR DRAW CARDS FUNCTIONS
+///create difficulty level on game start that affect initial enemy starting stats, scaling, and initial aether
 
 */
 /*
@@ -115,10 +108,12 @@ startGame.addEventListener("click", () => {
         document.querySelector("#easy").addEventListener("click", () => {
                 start();
                 easyDifficulty = true;
+                playerAether.innerText = 200;
         });
         document.querySelector("#normal").addEventListener("click", () => {
                 start();
                 normalDifficulty = true;
+                playerAether.innerText = 100;
         });
         document.querySelector("#hard").addEventListener("click", () => {
                 start();
@@ -629,9 +624,9 @@ function getRandomEncounter() {
                         dontRepeatEncounter.push(9);
                         break;
                 case 10:
-                        createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[5].img);
-                        createEnemy(enemiesInformation[8].baseHealth, enemiesInformation[4].img);
-                        createEnemy(enemiesInformation[7].baseHealth, enemiesInformation[8].img);
+                        createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
+                        createEnemy(enemiesInformation[8].baseHealth, enemiesInformation[8].img);
+                        createEnemy(enemiesInformation[7].baseHealth, enemiesInformation[7].img);
                         initializeEnemyVariables();
                         enemyLevelUp();
                         enemyAction(9, 8, 7);
@@ -943,6 +938,7 @@ function getRandomEliteEncounter() {
                         break;
         }
 }
+let bossDefeated = false;
 function getRandomBossEncounter() {
         const bossMusic = new Audio("audio/boss-music.wav");
         switchMusic(bossMusic);
@@ -962,6 +958,7 @@ function getRandomBossEncounter() {
                         document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 36rem";
                         enemyLevelUp();
                         enemyAction(10);
+                        bossDefeated = true;
                         break;
                 case 2:
                         createEnemy(enemiesInformation[11].baseHealth, enemiesInformation[11].img);
@@ -976,6 +973,7 @@ function getRandomBossEncounter() {
                         document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 47.5rem";
                         enemyLevelUp();
                         enemyAction(11);
+                        bossDefeated = true;
                         break;
         }
 }
@@ -2082,7 +2080,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(20);
+                                damageAllEnemies(2000);
                                 fxChainLightning.play();
                         },
                         function() {
@@ -4558,7 +4556,7 @@ function updateCardText() {
                 ["[POTION]<br>You apply +2 burn damage", "[POTION]<br>You apply +4 burn damage"],
                 [`Deal ${cardsInformation[16].damage[0]}% of the damage you've dealt this turn to an enemy Damage: ${cardsInformation[16].damageSecond[0]}`, `Deal ${cardsInformation[16].damageSecond[1]}% of the damage you've dealt this turn to an enemy Damage: ${cardsInformation[16].damageSecond[1]}`],
                 [`Deal ${cardsInformation[17].damage[0]} damage to a random enemy three times and gain ${cardsInformation[17].energize[0]} Energize for each unique enemy damaged`, `Deal ${cardsInformation[17].damage[0]} damage to a random enemy four times and gain ${cardsInformation[17].energize[1]} Energize for each unique enemy damaged`],
-                [`Deal ${cardsInformation[18].damage[0]} damage plus ${cardsInformation[18].damageSecond[0]} for each mana you have after playing Conduit. Energize ${cardsInformation[18].energize[0]},`, `Deal ${cardsInformation[18].damage[1]} damage plus ${cardsInformation[18].damageSecond[1]} for each mana you have after playing Conduit. Energize ${cardsInformation[17].energize[1]}`],
+                [`Deal ${cardsInformation[18].damage[0]} damage plus ${cardsInformation[18].damageSecond[0]} for each mana you have after playing Conduit. Energize ${cardsInformation[18].energize[0]}`, `Deal ${cardsInformation[18].damage[1]} damage plus ${cardsInformation[18].damageSecond[1]} for each mana you have after playing Conduit. Energize ${cardsInformation[17].energize[1]}`],
                 ["[POTION]<br>All damage is increased by 5", "[POTION]<br>All damage is increased by 7"],
                 [`Deal ${cardsInformation[20].damage[0]} damage to all enemies and inflict frostbite on everyone including yourself`, `Deal ${cardsInformation[20].damage[1]} damage to all enemies and inflict frostbite on everyone including yourself`],
                 ["For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself", "For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself"],
@@ -4614,108 +4612,108 @@ function updateCardText() {
         document.querySelectorAll(".winds-card-text").forEach((i) => {
                 if (i.classList.contains("upgraded-text")) {
                         if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal ${(windsOfChange / 2) + 10} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${(windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2) + 10} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
                         } else if (playerWindswept) {
-                                i.innerText = `Deal ${windsOfChange / 2} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
                         } else if (tidalImbuement) {
-                                i.innerText = `Deal ${windsOfChange + 10} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
                         } else {
-                                i.innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
                         }
                 } else {
                         if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal ${(windsOfChange / 2) + 10} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${(windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2) + 10} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
                         } else if (playerWindswept) {
-                                i.innerText = `Deal ${windsOfChange / 2} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
                         } else if (tidalImbuement) {
-                                i.innerText = `Deal ${windsOfChange + 10} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
                         } else {
-                                i.innerText = `Deal ${windsOfChange} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
+                                i.innerText = `Deal ${windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
                         }
                 }
         });
         document.querySelectorAll(".electric-card-text").forEach((i) => {
                 if (i.classList.contains("upgraded-text")) {
                         if (playerWindswept && tidalImbuement && playerFrostbite) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5)) + 10}`;
+                                i.innerText = `Deal 1 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
                         } else if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5)) + 10}`;
+                                i.innerText = `Deal 1 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
                         } else if (playerWindswept && playerFrostbite) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) / 2)}`;
+                                i.innerText = `Deal 1 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2)}`;
                         } else if (tidalImbuement && playerFrostbite) {
-                                i.innerText = `Deal 2 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5)) + 10}`;
+                                i.innerText = `Deal 2 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
                         } else if (playerWindswept) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5)) / 2}`;
+                                i.innerText = `Deal 1 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) / 2}`;
                         } else if (tidalImbuement) {
-                                i.innerText = `Deal 2 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5)) + 10}`;
+                                i.innerText = `Deal 2 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
                         } else if (playerFrostbite) {
-                                i.innerText = `Deal 2 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5))}`;
+                                i.innerText = `Deal 2 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7))}`;
                         } else {
-                                i.innerText = `Deal 2 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5))}`;
+                                i.innerText = `Deal 2 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7))}`;
                         }
                 } else {
                         if (playerWindswept && tidalImbuement && playerFrostbite) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5)) + 10}`;
+                                i.innerText = `Deal 1 damage per 5 health you currently have and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
                         } else if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5)) + 10}`;
+                                i.innerText = `Deal 1 damage per 5 health you currently have and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
                         } else if (playerWindswept && playerFrostbite) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) / 2)}`;
+                                i.innerText = `Deal 1 damage per 5 health you currently have and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2)}`;
                         } else if (tidalImbuement && playerFrostbite) {
-                                i.innerText = `Deal 2 damage per 5 health you currently have and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5)) + 10}`;
+                                i.innerText = `Deal 2 damage per 5 health you currently have and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
                         } else if (playerWindswept) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) / 2)}`;
+                                i.innerText = `Deal 1 damage per 5 health you currently have and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2)}`;
                         } else if (tidalImbuement) {
-                                i.innerText = `Deal 2 damage per 5 health you currently have and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5)) + 10}`;
+                                i.innerText = `Deal 2 damage per 5 health you currently have and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
                         } else if (playerFrostbite) {
-                                i.innerText = `Deal 2 damage per 5 health you currently have and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5))}`;
+                                i.innerText = `Deal 2 damage per 5 health you currently have and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7))}`;
                         } else {
-                                i.innerText = `Deal 2 damage per 5 health you currently have and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5))}`;
+                                i.innerText = `Deal 2 damage per 5 health you currently have and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7))}`;
                         }
                 }
         });
         document.querySelectorAll(".storm-card-text").forEach((i) => {
                 if (i.classList.contains("upgraded-text")) {
                         if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal 37% of the damage you've dealt this turn to an enemy Damage: ${Math.floor(((damageThisTurn * 75) / 2)) + 10}` ;
+                                i.innerText = `Deal 37% of the damage you've dealt this turn to an enemy Damage: ${Math.floor(((damageThisTurn * 75) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2)) + 10}` ;
                         } else if (playerWindswept) {
-                                i.innerText = `Deal 37% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn * .75) / 2)}` ;
+                                i.innerText = `Deal 37% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn * .75) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2)}` ;
                         } else if (tidalImbuement) {
-                                i.innerText = `Deal 75% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn * .75)) + 10}` ;
+                                i.innerText = `Deal 75% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn * .75)) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10}` ;
                         } else {
-                                i.innerText = `Deal 75% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn * .75))}` ;
+                                i.innerText = `Deal 75% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn * .75)) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)}` ;
                         }
                 } else {
                         if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal 25% of the damage you've dealt this turn to an enemy Damage: ${Math.floor(((damageThisTurn / 4))) + 10}` ;
+                                i.innerText = `Deal 25% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn / 4)) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10}` ;
                         } else if (playerWindswept) {
-                                i.innerText = `Deal 25% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn / 4))}` ;
+                                i.innerText = `Deal 25% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn / 4)) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)}` ;
                         } else if (tidalImbuement) {
-                                i.innerText = `Deal 50% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn / 2)) + 10}` ;
+                                i.innerText = `Deal 50% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn / 2)) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10}` ;
                         } else {
-                                i.innerText = `Deal 50% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn / 2))}` ;
+                                i.innerText = `Deal 50% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn / 2)) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)}` ;
                         }
                 }
         });
         document.querySelectorAll(".downpour-card-text").forEach((i) => {
                 if (i.classList.contains("upgraded-text")) {
                         if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Gain +1 max health for each enemy hit. Damage: ${(healthGainedThisFight / 2) + 10}` ;
+                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Gain +1 max health for each enemy hit. Damage: ${(healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2) + 10}` ;
                         } else if (playerWindswept) {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Gain +1 max health for each enemy hit. Damage: ${healthGainedThisFight / 2}` ;
+                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Gain +1 max health for each enemy hit. Damage: ${healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2}` ;
                         } else if (tidalImbuement) {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Gain +1 max health for each enemy hit. Damage: ${healthGainedThisFight + 10}` ;
+                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Gain +1 max health for each enemy hit. Damage: ${healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10}` ;
                         } else {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Gain +1 max health for each enemy hit. Damage: ${healthGainedThisFight}` ;
+                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Gain +1 max health for each enemy hit. Damage: ${healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)}` ;
                         }
                 } else {
                         if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${(healthGainedThisFight / 2) + 10}` ;
+                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${(healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2) + 10}` ;
                         } else if (playerWindswept) {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight / 2}` ;
+                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2}` ;
                         } else if (tidalImbuement) {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight + 10}` ;
+                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10}` ;
                         } else {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight}` ;
+                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)}` ;
                         }
                 }
         });
@@ -4768,10 +4766,10 @@ const enemiesInformation = [
                 attackDamageHigh: 22,
         },
         {
-                name: "Leprechaun",
+                name: "Imp",
                 baseHealth: 45,
-                img: "imgs/enemy-leprechaun.png",
-                attackChance: 5,
+                img: "imgs/enemy-imp.png",
+                attackChance: 2,
                 healChance: 10,
                 //stealChance: ,
                 attackDamageLow: 8,
@@ -5110,25 +5108,32 @@ function createEnemy(baseHealth, img) {
             addEnemyActionText(enemyWindsweptDiv, windsweptImgDebuff);
 }
 function enemyLevelUp() {
-        let enemyCurrentHealth = document.querySelectorAll(".enemy-current-health");
-        let enemyMaxHealth = document.querySelectorAll(".enemy-max-health");
-        for (let i = 0; i < numberOfEnemies; i++) {
-                enemyCurrentHealth[i].innerText = parseFloat(enemyCurrentHealth[i].innerText) + (Math.ceil(parseFloat(enemyCurrentHealth[i].innerText) * enemyLevel * .05));
-                enemyMaxHealth[i].innerText = parseFloat(enemyMaxHealth[i].innerText) + (Math.ceil(parseFloat(enemyMaxHealth[i].innerText) * enemyLevel * .05));
+        function scaleEnemies(health, attack, block, burn, regen, blood, thorns) {
+                let enemyCurrentHealth = document.querySelectorAll(".enemy-current-health");
+                let enemyMaxHealth = document.querySelectorAll(".enemy-max-health");
+                for (let i = 0; i < numberOfEnemies; i++) {
+                        enemyCurrentHealth[i].innerText = parseFloat(enemyCurrentHealth[i].innerText) + Math.floor((parseFloat(enemyCurrentHealth[i].innerText) * health));
+                        enemyMaxHealth[i].innerText = parseFloat(enemyMaxHealth[i].innerText) + Math.floor((parseFloat(enemyMaxHealth[i].innerText) * health));
+                }
+                for (let i = 0; i < enemiesInformation.length; i++) {
+                        enemiesInformation[i].attackDamageLow = enemiesInformation[i].attackDamageLow + (enemiesInformation[i].attackDamageLow * attack);
+                        enemiesInformation[i].attackDamageHigh = enemiesInformation[i].attackDamageHigh + (enemiesInformation[i].attackDamageHigh * attack);
+                        enemiesInformation[i].blockAmountLow = enemiesInformation[i].blockAmountLow + (enemiesInformation[i].blockAmountLow * block);
+                        enemiesInformation[i].blockAmountHigh = enemiesInformation[i].blockAmountHigh + (enemiesInformation[i].blockAmountHigh * block);
+                        enemiesInformation[i].burnAmountLow = enemiesInformation[i].burnAmountLow + (enemiesInformation[i].burnAmountLow * burn);
+                        enemiesInformation[i].burnAmountHigh = enemiesInformation[i].burnAmountHigh + (enemiesInformation[i].burnAmountHigh * burn);
+                        enemiesInformation[i].regenAmountLow = enemiesInformation[i].regenAmountLow + (enemiesInformation[i].regenAmountLow * regen);
+                        enemiesInformation[i].regenAmountHigh = enemiesInformation[i].regenAmountHigh + (enemiesInformation[i].regenAmountHigh * regen);
+                        enemiesInformation[i].bloodAmountLow = enemiesInformation[i].bloodAmountLow + (enemiesInformation[i].bloodAmountLow * blood);
+                        enemiesInformation[i].bloodAmountHigh = enemiesInformation[i].bloodAmountHigh + (enemiesInformation[i].bloodAmountHigh * blood);
+                        enemiesInformation[i].thornsAmountLow = enemiesInformation[i].thornsAmountLow + (enemiesInformation[i].thornsAmountLow * thorns);
+                        enemiesInformation[i].thornsAmountHigh = enemiesInformation[i].thornsAmountHigh + (enemiesInformation[i].thornsAmountHigh * thorns);
+                }
         }
-        for (let i = 0; i < enemiesInformation.length; i++) {
-                enemiesInformation[i].attackDamageLow = enemiesInformation[i].attackDamageLow + Math.floor((enemiesInformation[i].attackDamageLow * enemyLevel * .015));
-                enemiesInformation[i].attackDamageHigh = enemiesInformation[i].attackDamageHigh + Math.floor((enemiesInformation[i].attackDamageHigh * enemyLevel * .015));
-                enemiesInformation[i].blockAmountLow = enemiesInformation[i].blockAmountLow + Math.floor((enemiesInformation[i].blockAmountLow * enemyLevel * .015));
-                enemiesInformation[i].blockAmountHigh = enemiesInformation[i].blockAmountHigh + Math.floor((enemiesInformation[i].blockAmountHigh * enemyLevel * .015));
-                enemiesInformation[i].burnAmountLow = enemiesInformation[i].burnAmountLow + Math.floor((enemiesInformation[i].burnAmountLow * enemyLevel * .035));
-                enemiesInformation[i].burnAmountHigh = enemiesInformation[i].burnAmountHigh + Math.floor((enemiesInformation[i].burnAmountHigh * enemyLevel * .035));
-                enemiesInformation[i].regenAmountLow = enemiesInformation[i].regenAmountLow + Math.floor((enemiesInformation[i].regenAmountLow * enemyLevel * .045));
-                enemiesInformation[i].regenAmountHigh = enemiesInformation[i].regenAmountHigh + Math.floor((enemiesInformation[i].regenAmountHigh * enemyLevel * .045));
-                enemiesInformation[i].bloodAmountLow = enemiesInformation[i].bloodAmountLow + Math.floor((enemiesInformation[i].bloodAmountLow * enemyLevel * .04));
-                enemiesInformation[i].bloodAmountHigh = enemiesInformation[i].bloodAmountHigh + Math.floor((enemiesInformation[i].bloodAmountHigh * enemyLevel * .04));
-                enemiesInformation[i].thornsAmountLow = enemiesInformation[i].thornsAmountLow + Math.floor((enemiesInformation[i].thornsAmountLow * enemyLevel * .035));
-                enemiesInformation[i].thornsAmountHigh = enemiesInformation[i].thornsAmountHigh + Math.floor((enemiesInformation[i].thornsAmountHigh * enemyLevel * .035));
+        if (normalDifficulty) {
+                scaleEnemies(.075, .02, .02, .015, .03, .03, .02);
+        } else if (hardDifficulty) {
+                scaleEnemies(.1, .03, .03, .025, .04, .04, .035);
         }
 }
 function initializeEnemyVariables() {
@@ -5388,6 +5393,9 @@ function checkIfEnemyDead() {
                         elitesKilled++;
                 } else {
                         enemiesKilled++
+                }
+                if (bossDefeated) {
+
                 }
                 getRandomNewCards();
                 return;
