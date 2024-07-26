@@ -154,6 +154,29 @@
                 <img class="arrow arrow-reverse" src="imgs\water-arrow.png">
             </div>
         </div>
+        <div id="difficulty-container">
+            <div id="difficulty-screen">
+                <h1>Choose Difficulty</h1>
+                <div>
+                    <button id="easy">Gentle Breeze</button>
+                    <p>Start with 200 aether.</p>
+                    <p>Enemies start with lower stats and don't get stronger after each level.</p>
+                    <p>Good choice if you are new to deckbuilder games.</p>
+                </div>
+                <div>
+                    <button id="normal">Rainfall</button>
+                    <p>Start with 100 aether.</p>
+                    <p>Enemies get stronger after each level.</p>
+                    <p>The standard Terra Nova experience.</p>
+                </div>
+                <div>
+                    <button id="hard">Storm</button>
+                    <p>Start with 0 aether.</p>
+                    <p>Enemies get much stronger after each level.</p>
+                    <p>You have deep rooted trauma that makes you seek out pain.</p>
+                </div>
+            </div>
+        </div>
         <div id="options-container">
             <div id="options-screen">
                 <h1>Options</h1>
@@ -176,7 +199,7 @@
                 <h3 class="tutorial-h-color">Icons</h3>
                 <div class="tutorial-icon-div">
                     <img class="tutorial-icon" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">
-                    <p>The most common encounter in the game. You will fight three enemies and recieve a card to add to your deck when you win.</p>
+                    <p>The most common encounter. Fight three enemies and recieve a card to add to your deck when you defeat them.</p>
                 </div>
                 <div class="tutorial-icon-div">
                     <img class="tutorial-icon" src="imgs/icons8-monster-80.png" alt ="Hard Monster">
@@ -213,24 +236,44 @@
                 </div>
                 <div class="tutorial-card-div">
                     <h3 class="tutorial-h-color">Offensive Cards</h3>
-                    <h4 class="tutorial-h-color" style="color: #b23d1a">Fire</h4>
-                    <p>Fire cards focus on inflicting burn which deals damage at the end of each turn. Burn gets reduced by 1 each turn. 
-                        Fire cards kill enemies slowly over time by adding burn until they die.</p>
-                    <h4 class="tutorial-h-color" style="color: #fafba5">Lightning</h4>
-                    <p>Lightning cards focus on dealing direct damage immediately with high cost cards. Lightning cards can activate energize, which grants you more mana the following turn.
-                        Gain a ton of mana, turn it into damage, and unleash it upon your enemies.</p>
+                    <div>
+                        <h4 class="tutorial-h-color" style="color: #b23d1a">Fire</h4>
+                        <p>Fire cards focus on inflicting burn which deals damage at the end of each turn.</p>
+                        <p>Burn gets reduced by 1 each turn.</p>
+                        <p>Fire kills enemies slowly over time by burning them to death.</p>
+                    </div>
+                    <div>
+                        <h4 class="tutorial-h-color" style="color: #fafba5">Lightning</h4>
+                        <p>Lightning cards focus on dealing direct damage immediately with high cost cards.</p>
+                        <p>Some cards can activate energize, which grants you more mana the following turn.</p>
+                        <p>Gain a ton of mana, turn it into damage, and unleash it upon your enemies.</p>
+                    </div>
                     <h3 class="tutorial-h-color">Negation Cards</h3>
-                    <h4 class="tutorial-h-color" style="color: #84e8ff">Ice</h4>
-                    <p>Ice cards focus on inflicting frostbite which reduces buffs gained by 50%. Some ice cards can help you gain block which helps negate damage.
-                        Ice cards are best against enemies that try to gain a lot of buffs rather than outright attacking each turn.</p>
-                    <h4 class="tutorial-h-color" style="color: #8ec9eb">Air</h4>
-                    <p>Air cards focus on inflicting windswept which reduces attack and burn damage by 50%. Draw low cost cards like Winds of Change which gains power each time it's played.
-                        Air cards are best against enemies that have high attack and burn damage.</p>
+                    <div>
+                        <h4 class="tutorial-h-color" style="color: #84e8ff">Ice</h4>
+                        <p>Ice cards focus on inflicting frostbite which reduces buffs gained by 50%.</p>
+                        <p>Some cards can help you gain block which helps negate damage.</p>
+                        <p>Ice cards are best against enemies that try to gain buffs rather than attacking each turn.</p>
+                    </div>
+                    <div>
+                        <h4 class="tutorial-h-color" style="color: #8ec9eb">Air</h4>
+                        <p>Air cards focus on inflicting windswept which reduces attack and burn damage by 50%.</p>
+                        <p>Draw low cost cards like Winds of Change which gains power each time it's played.</p>
+                        <p>Air cards are best against enemies that have high attack and burn damage.</p>
+                    </div>
                     <h3 class="tutorial-h-color">Support Cards</h3>
-                    <h4 class="tutorial-h-color" style="color: #104b79">Water</h4>
-                    <p>Water cards focus on healing. You can gain blood siphon which heals you for 20% of the damage you deal and regeneration which heals you at the end of each turn.</p>
-                    <h4 class="tutorial-h-color" style="color: #451b04">Earth</h4>
-                    <p style=" padding-bottom: 4rem;">Earth cards focus on blocking and gaining thorns. Block prevents damage by shielding your health. Thorns deals damage back to attackers when they directly damage you with an attack.</p>
+                    <div>
+                        <h4 class="tutorial-h-color" style="color: #104b79">Water</h4>
+                        <p>Water cards focus on healing.</p>
+                        <p>Some cards activate blood siphon which heals you for 20% of the damage you deal.</p>
+                        <p>Some cards activate regeneration which heals you at the end of each turn.</p>
+                    </div>
+                    <div>
+                        <h4 class="tutorial-h-color" style="color: #451b04">Earth</h4>
+                        <p>Earth cards focus on blocking and gaining thorns.</p>
+                        <p>Block prevents damage by shielding your health.</p>
+                        <p>Thorns deals damage back to attackers when they directly damage you with an attack.</p>
+                    </div>
                 </div>
             </div>
         </div>

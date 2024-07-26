@@ -45,12 +45,14 @@
     justify-content: center;
     background-image: url("imgs/start-screen2.jpg");
     opacity: .7;
-    color: white;
     font-weight: bolder;
     background-size: cover;
 }
 #beginning-screen-container h1 {
-    font-size: 80px;
+    font-size: 90px;
+    cursor: default;
+    font-family: fantasy;
+    text-shadow: 5px 5px 10px rgb(0, 0, 0);
 }
 #start-screen-container {
     width: 100%;
@@ -64,19 +66,26 @@
     background-size: cover;
     color: rgb(0, 0, 0);
     font-weight: bolder;
+    overflow: hidden;
+    font-family: fantasy;
 }
 #start-screen-container h1 {
     margin: 4rem;
     font-size: 120px;
     text-decoration: dashed;
+    cursor: default;
+    font-family: fantasy;
+    text-shadow: 7px 7px 12px rgb(34, 34, 34);
 }
 #start-screen-container h3 {
     margin: 3rem;
     cursor: pointer;
     font-size: 60px;
+    font-family: fantasy;
+    text-shadow: 5px 5px 12px rgb(36, 36, 36);
 }
 #start-game:hover {
-    color:rgb(26, 111, 150);
+    color:rgb(45, 120, 155);
 }
 #tutorial:hover {
     color: rgb(253, 253, 253);
@@ -103,6 +112,76 @@
 .arrow-reverse {
     transform: scaleX(-1);
 }
+#difficulty-container {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    z-index: 19;
+}
+#difficulty-screen {
+    width: 65%;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border: 3px solid rgb(62, 71, 61);
+    box-shadow: 10px 10px 15px rgb(0, 0, 0);
+    background-image: linear-gradient(135deg, #ecf4ff 0%, #c3cfe2 100%);
+}
+#difficulty-screen div {
+    width: 80%;
+    margin-top: 1rem;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: 5px 5px 10px rgb(0, 0, 0);
+    background-image: linear-gradient(135deg, #cecfcf 0%, #90a1bb 100%);
+}
+#difficulty-screen p {
+    font-size: 1.5rem;
+    margin-top: .9rem;
+    text-shadow: 2px 2px 6px rgb(180, 180, 180);
+    font-family: monospace;
+}
+#difficulty-screen h1 {
+    font-size: 3rem;
+    margin-top: 1.5rem;
+    font-family: fantasy;
+    text-shadow: 2px 2px 5px rgb(100, 100, 100);
+}
+#difficulty-screen button {
+    width: 400px;
+    padding: 15px;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 12px rgb(180, 180, 180);
+    border-radius: 12px;
+    box-shadow: 5px 5px 10px black;
+    border: 2px solid #202221;
+    font-weight: bold;
+    transition-duration: .1s;
+}
+#easy {
+    background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+#normal {
+    background-image: linear-gradient(135deg, #649ff7 0%, #223e9c 100%);
+}
+#hard {
+    background-image: linear-gradient(135deg, #9fa817b6,#fafba5);
+}
+#difficulty-screen button:hover {
+    transform: translateY(2px);
+    cursor: pointer;
+    box-shadow: 2px 2px 5px black;
+}
+#difficulty-screen button:active {
+    transform: translateY(5px);
+}
 #options-container {
     display: none;
     width: 100%;
@@ -120,12 +199,13 @@
     flex-direction: column;
     border: 3px solid rgb(62, 71, 61);
     box-shadow: 10px 10px 15px rgb(0, 0, 0);
-    background-image: linear-gradient(to bottom right, rgb(152, 163, 153), rgb(104, 119, 99), rgb(93, 104, 90));
+    background-image: linear-gradient(135deg, #b6bcc4 0%, #c3cfe2 100%);
 }
 #options-screen h1 {
     font-size: 3rem;
     margin-top: 1rem;
-    color: white;
+    font-family: fantasy;
+    text-shadow: 2px 2px 5px rgb(100, 100, 100);
 }
 #options-screen button {
     margin-top: 18rem;
@@ -136,8 +216,7 @@
     border-radius: 12px;
     box-shadow: 5px 5px 10px black;
     border: 2px solid #202221;
-    background-color:#1f2e21;
-    color: white;
+    background-image: linear-gradient(135deg, #bebebe 0%, #dfe2e6 100%);
     font-weight: bold;
     transition-duration: .1s;
 }
@@ -154,7 +233,8 @@
     font-size: 1.5rem;
     margin-top: 2rem;
     margin-bottom: 1rem;
-    color: white;
+    font-family: fantasy;
+    text-shadow: 2px 2px 5px rgb(100, 100, 100);
 }
 #options-screen input {
     width: 40%;
@@ -175,9 +255,10 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    background-image: linear-gradient(to bottom right,#4c5a80, #7f8599, #6d7385, #7883a1);
+    background-image: linear-gradient(to bottom right,#4c5a80,#7883a1);
     border: 4px solid rgb(62, 71, 61);
     box-shadow: 10px 10px 15px rgb(0, 0, 0);
+    text-shadow: 5px 5px 5px rgb(100, 100, 100);
     overflow-x: hidden;
     overflow-y: scroll;
 }
@@ -200,11 +281,31 @@
     display: flex;
     align-items: center;
     margin: .5rem;
+    box-shadow: 5px 5px 10px black;
+    font-family: fantasy;
 }
-.tutorial-icon-div p {
-    margin-left: 2rem;
+.tutorial-icon-div p, .tutorial-icon-div img {
+    margin-left: 1rem;
 }
 .tutorial-card-div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+    padding-bottom: 4rem;
+}
+.tutorial-card-div div {
+    margin-top: 1rem;
+    padding: 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: 5px 5px 10px rgb(0, 0, 0);
+    background-image: linear-gradient(135deg, #729191 0%, #90a1bb 100%);
+}
+.tutorial-card-div div {
     width: 90%;
     display: flex;
     flex-direction: column;
@@ -213,7 +314,8 @@
 }
 .tutorial-card-div p {
     width: 90%;
-    margin-top: 1rem;
+    margin-top: .5rem;
+    font-family: monospace;
 }
 .tutorial-card-types {
     background-clip: text;
@@ -221,9 +323,11 @@
 }
 .tutorial-h-color {
     color: #e7dfd2;
+    font-family: fantasy;
+    text-shadow: 5px 5px 10px rgb(0, 0, 0);
 }
 .tutorial-h2-div {
-    width: 95%;
+    width: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -236,18 +340,23 @@
 }
 #tutorial-screen h1 {
     font-size: 5rem;
+    margin-top: 2rem;
+    text-shadow: 5px 5px 10px rgb(0, 0, 0);
 }
 #tutorial-screen h2 {
     margin-top: 3rem;
     font-size: 4rem;
+    text-shadow: 5px 5px 10px rgb(0, 0, 0);
 }
 #tutorial-screen h3 {
     margin-top: 2rem;
     font-size: 3rem;
+    text-shadow: 5px 5px 10px rgb(0, 0, 0);
 }
 #tutorial-screen h4 {
-    margin-top: 2rem;
     font-size: 2.7rem;
+    text-shadow: 5px 5px 10px rgb(92, 92, 92);
+
 }
 .tutorial-icon-div p, .tutorial-card-div p {
     color: #FEF3E2;

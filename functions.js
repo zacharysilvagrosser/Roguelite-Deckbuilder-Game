@@ -27,6 +27,7 @@ BUGS
 text not reseting after encounter
 replace leprechaun with something else
 create difficulty level on game start that affect initial enemy starting stats, scaling, and initial aether
+ADD UPDATECARD TEXT TO ADDCARDSTOHAND AND/OR DRAW CARDS FUNCTIONS
 
 */
 /*
@@ -101,12 +102,28 @@ window.addEventListener("keydown", () => {
         const startScreenMusic = new Audio("audio/start-screen-music.wav");
         switchMusic(startScreenMusic);
 }, {once: true});
+let [easyDifficulty, normalDifficulty, hardDifficulty] = [false, false, false];
 startGame.addEventListener("click", () => {
-        displayBlock(map);
-        displayFlex(boardHeader);
-        location.href="#bottom-anchor";
-        displayNone(startScreen);
-        switchMusic(mapMusic);
+        function start() {
+                displayBlock(map);
+                displayFlex(boardHeader);
+                location.href="#bottom-anchor";
+                displayNone(startScreen, document.querySelector("#difficulty-container"));
+                switchMusic(mapMusic);
+        }
+        displayFlex(document.querySelector("#difficulty-container"));
+        document.querySelector("#easy").addEventListener("click", () => {
+                start();
+                easyDifficulty = true;
+        });
+        document.querySelector("#normal").addEventListener("click", () => {
+                start();
+                normalDifficulty = true;
+        });
+        document.querySelector("#hard").addEventListener("click", () => {
+                start();
+                hardDifficulty = true;
+        });
 });
 startGame.addEventListener("mouseover", () => {
         displayBlock(arrows[0], arrows[1]);
@@ -3672,6 +3689,7 @@ function drawCards(numberOfCards) {
                 displayFlex(handArray[0]);
         }
         handContainer.style = `width: ${numberOfCards - 1}7%`;
+        updateCardText();
         console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         console.log(handArray);
 }
@@ -5625,7 +5643,6 @@ function endTurn() {
                 checkGaiasEmbrace();
                 addCardsToHand();
                 checkIfEnemyDead();
-                updateCardText();
                 if (numberOfEnemies === 1) {
                         enemyAction(trackEnemies[0]);
                 } else if (numberOfEnemies === 2) {
