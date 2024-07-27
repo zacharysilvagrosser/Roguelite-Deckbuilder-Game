@@ -15,9 +15,8 @@ Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 m
 TO DO
 Settings gear when hitting escape for music and sound volume
 Probably change ice spear so you dont have to change card text
-add electrify damage change to updatecardtext
-finish empowerment logic (do ice next)
-orb glows after empowering element
+figure out how to crop orb imgs. Orb glow color goes with upgrade chosen. Hover over orb to see what your empower does
+forest encounters vs hell encounter functions
 
 BUGS
 text not reseting after encounter
@@ -5498,38 +5497,48 @@ function checkIfEnemyDead() {
                         }
                         document.getElementById("eternal-flame").addEventListener("click", () => {
                                 eternalFlame = true;
+                                document.getElementById("fire-orb-img").classList.add("fire-glow");
                                 nextStage();
                         });
                         document.getElementById("scorched-earth").addEventListener("click", () => {
                                 scorchedEarth = true;
+                                document.getElementById("fire-orb-img").classList.add("glow");
+                                document.getElementById("fire-orb-img").classList.add("fire-glow");
                                 nextStage();
                         });
                         document.getElementById("electrify").addEventListener("click", () => {
                                 electrify = true;
+                                document.getElementById("lightning-orb-img").classList.add("lightning-glow");
                                 nextStage();
                         });
                         document.getElementById("lightning-jewel").addEventListener("click", () => {
                                 lightningJewel = true;
+                                document.getElementById("lightning-orb-img").classList.add("lightning-glow");
                                 nextStage();
                         });
                         document.getElementById("leeching-cold").addEventListener("click", () => {
                                 leechingCold = true;
+                                document.getElementById("ice-orb-img").classList.add("ice-glow");
                                 nextStage();
                         });
                         document.getElementById("everlasting-winter").addEventListener("click", () => {
                                 everlastingWinter = true;
+                                document.getElementById("ice-orb-img").classList.add("ice-glow");
                                 nextStage();
                         });
                         document.getElementById("shifting-winds").addEventListener("click", () => {
                                 shiftingWinds = true;
+                                document.getElementById("air-orb-img").classList.add("air-glow");
                                 nextStage();
                         });
                         document.getElementById("windrunner").addEventListener("click", () => {
                                 windrunner = true;
+                                document.getElementById("air-orb-img").classList.add("air-glow");
                                 nextStage();
                         });
                         document.getElementById("blood-transfusion").addEventListener("click", () => {
                                 bloodTransfusion = true;
+                                document.getElementById("water-orb-img").classList.add("water-glow");
                                 playerImgText[5].innerHTML = `
                                         <h4 class="img-text-h4">Blood Siphon</h4>
                                         <p class="img-text-p">Heal for 40% of damage done. Decreases by one at the end of each turn.</p>
@@ -5538,6 +5547,7 @@ function checkIfEnemyDead() {
                         });
                         document.getElementById("cleansing-currents").addEventListener("click", () => {
                                 cleansingCurrents = true;
+                                document.getElementById("water-orb-img").classList.add("water-glow");
                                 playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 50;
                                 playerCurrentHealth.innerText = playerMaxHealth.innerText;
                                 topBarHealthNumber.innerText = playerMaxHealth.innerText;
@@ -5545,10 +5555,12 @@ function checkIfEnemyDead() {
                         });
                         document.getElementById("venomous-vines").addEventListener("click", () => {
                                 venomousVines = true;
+                                document.getElementById("earth-orb-img").classList.add("earth-glow");
                                 nextStage();
                         });
                         document.getElementById("stonewall").addEventListener("click", () => {
                                 stonewall = true;
+                                document.getElementById("earth-orb-img").classList.add("earth-glow");
                                 nextStage();
                         });
                 }

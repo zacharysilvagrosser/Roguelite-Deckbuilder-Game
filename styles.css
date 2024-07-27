@@ -486,22 +486,88 @@
 /* INDICATE WHERE YOU CAN GO NEXT */
 @keyframes glow {
     from {
-      box-shadow: 0 0 10px -10px red;
+        box-shadow: 0 0 10px -10px red;
     }
     to {
-      box-shadow: 0 0 10px 10px red;
+        box-shadow: 0 0 10px 10px red;
     }
-  }
+}
+@keyframes fire-glow {
+    from {
+        box-shadow: 0 0 -50px -50px rgb(255, 113, 31);
+    }
+    to {
+        box-shadow: 0 0 50px 50px rgb(255, 51, 0);
+    }
+}
+@keyframes lightning-glow {
+    from {
+        box-shadow: 0 0 -50px -50px #cbd442;
+    }
+    to {
+        box-shadow: 0 0 50px 50px #cbd442;
+    }
+}
+@keyframes ice-glow {
+    from {
+        box-shadow: 0 0 -50px -50px rgb(26, 111, 150);
+    }
+    to {
+        box-shadow: 0 0 50px 50px rgb(26, 111, 150);
+    }
+}
+@keyframes air-glow {
+    from {
+        box-shadow: 0 0 -50px -50px rgb(178, 246, 248);
+    }
+    to {
+        box-shadow: 0 0 50px 50px rgb(178, 246, 248);
+    }
+}
+@keyframes water-glow {
+    from {
+        box-shadow: 0 0 -50px -50px #0f5e9c;
+    }
+    to {
+        box-shadow: 0 0 50px 50px #0f5e9c;
+    }
+}
+@keyframes earth-glow {
+    from {
+        box-shadow: 0 0 -50px -50px #451b04;
+    }
+    to {
+        box-shadow: 0 0 50px 50px #451b04;
+    }
+}
 @keyframes upgraded {
     from {
-      box-shadow: 0 0 15px -15px rgb(186, 79, 248);
+        box-shadow: 0 0 15px -15px rgb(186, 79, 248);
     }
     to {
-      box-shadow: 0 0 15px 15px rgb(121, 1, 190);
+        box-shadow: 0 0 15px 15px rgb(121, 1, 190);
     }
-  }
+}
 .glow {
     animation: glow 1s infinite alternate;
+}
+.fire-glow {
+    animation: fire-glow 2s infinite alternate;
+}
+.lightning-glow {
+    animation: lightning-glow 2s infinite alternate;
+}
+.ice-glow {
+    animation: ice-glow 2s infinite alternate;
+}
+.air-glow {
+    animation: air-glow 2s infinite alternate;
+}
+.water-glow {
+    animation: water-glow 2s infinite alternate;
+}
+.earth-glow {
+    animation: earth-glow 2s infinite alternate;
 }
 .upgraded {
     animation: upgraded 2s infinite alternate;
@@ -808,23 +874,30 @@
     width: 75px;
     margin-left: -125px;
     position: absolute;
+    border-radius: 50%;
+    z-index: 2;
 }
 #lightning-orb-img {
     width: 80px;
     margin-left: -75px;
     position: absolute;
+    border-radius: 50%;
+    z-index: 0;
 }
 #ice-orb-img {
     width: 70px;
     margin-top: 8px;
     margin-left: 70px;
     position: absolute;
+    border-radius: 50%;
+    z-index: 0;
 }
 #air-orb-img {
     width: 70px;
     margin-top: 8px;
     margin-left: 120px;
     position: absolute;
+    border-radius: 50%;
     z-index: 2;
 }
 #water-orb-img {
@@ -832,14 +905,16 @@
     margin-top: 4px;
     margin-left: 35px;
     position: absolute;
-    z-index: 2;
+    border-radius: 50%;
+    z-index: 3;
 }
 #earth-orb-img {
     width: 72px;
     margin-left: -45px;
     margin-top: 8px;
     position: absolute;
-    z-index: 2;
+    border-radius: 50%;
+    z-index: 3;
 }
 #player-health-bar {
     display: flex;
@@ -1428,7 +1503,7 @@
     background-color: rgb(7, 40, 58);
 }
 .earth .card-text {
-    background-color: #1f0c02
+    background-color: #1f0c02;
 }
 .card, .card-reference, .upgrade-reference {
     width: 180px;
