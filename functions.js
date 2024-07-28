@@ -529,7 +529,7 @@ function resetArena() {
 let dontRepeatEncounter = [];
 let encounterMusicTrigger = false;
 let encounterMusicIndex;
-function getRandomEncounter() {
+function forestEncounter() {
         if (encounterMusicTrigger === false) {
                 const encounterMusic = new Audio("audio/encounter-music.wav");
                 switchMusic(encounterMusic);
@@ -646,7 +646,7 @@ function getRandomEncounter() {
 }
 let dontRepeatGoldEncounter = [];
 let goldEncounter = false;
-function getRandomGoldEncounter() {
+function forestGoldEncounter() {
         switchMusic(allMusic[encounterMusicIndex]);
         goldEncounter = true;
         let randomGoldEncounterNumber = createRandomNumber(1, 3);
@@ -857,7 +857,7 @@ let getEliteRelic = false;
 let dontRepeatEliteEncounter = [];
 let eliteEncounterMusicTrigger = false;
 let eliteEncounterMusicIndex;
-function getRandomEliteEncounter() {
+function forestEliteEncounter() {
         if (eliteEncounterMusicTrigger === false) {
                 const eliteEncounterMusic = new Audio("audio/elite-encounter-music.wav");
                 switchMusic(eliteEncounterMusic);
@@ -932,8 +932,8 @@ function getRandomEliteEncounter() {
                         break;
         }
 }
-let bossDefeated = false;
-function getRandomBossEncounter() {
+let bossDefeated = [false, false];
+function forestBoss() {
         const bossMusic = new Audio("audio/boss-music.wav");
         switchMusic(bossMusic);
         let randomBossEncounterNumber = createRandomNumber(1, 2);
@@ -952,7 +952,7 @@ function getRandomBossEncounter() {
                         document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 36rem";
                         enemyLevelUp();
                         enemyAction(10);
-                        bossDefeated = true;
+                        bossDefeated[0] = true;
                         break;
                 case 2:
                         createEnemy(enemiesInformation[11].baseHealth, enemiesInformation[11].img);
@@ -967,12 +967,18 @@ function getRandomBossEncounter() {
                         document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 47.5rem";
                         enemyLevelUp();
                         enemyAction(11);
-                        bossDefeated = true;
+                        bossDefeated[0] = true;
                         break;
+        }
+}
+function spaceEndTurn(e) {
+        if (e.key === " ") {
+                endTurn();
         }
 }
 function chooseLocationPath() {
         resetArena();
+        window.addEventListener("keydown", spaceEndTurn);
         switch (chosenLocation) {
                 case "L1T1":
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
@@ -980,63 +986,87 @@ function chooseLocationPath() {
                         removeELL1();
                         location2Tiles1.addEventListener("click", L2T1);
                         location2Tiles2.addEventListener("click", L2T2);
-                        getRandomEncounter();
+                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                                forestEncounter();
+                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+
+                        }
                         break;
                 case "L1T2":
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
                         addGlow(location2Tiles3);
                         removeELL1();
                         location2Tiles3.addEventListener("click", L2T3);
-                        getRandomEncounter();
+                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                                forestEncounter();
+                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+
+                        }
                         break;
                 case "L1T3":
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
                         addGlow(location2Tiles4);
                         removeELL1();
                         location2Tiles4.addEventListener("click", L2T4);
-                        getRandomEncounter();
+                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                                forestEncounter();
+                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+
+                        }
                         break;
                 case "L2T1":
                         removeGlow(location2Tiles1, location2Tiles2);
                         addGlow(location3Tiles1);
                         removeELL2();
                         location3Tiles1.addEventListener("click", L3T1);
-                        getRandomEncounter();
+                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                                forestEncounter();
+                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+
+                        }
                         break;
                 case "L2T2":
                         removeGlow(location2Tiles1, location2Tiles2);
                         addGlow(location3Tiles2);
                         removeELL2();
                         location3Tiles2.addEventListener("click", L3T2);
-                        getRandomEncounter();
+                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                                forestEncounter();
+                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+
+                        }
                         break;
                 case "L2T3":
                         removeGlow(location2Tiles3);
                         addGlow(location3Tiles3);
                         removeELL2();
                         location3Tiles3.addEventListener("click", L3T3);
-                        getRandomEncounter();
+                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                                forestEncounter();
+                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+
+                        }
                         break;
                 case "L2T4":
                         removeGlow(location2Tiles4);
                         addGlow(location3Tiles3);
                         removeELL2();
                         location3Tiles3.addEventListener("click", L3T3);
-                        getRandomExclamation();
+                        forestMystery();
                         break;
                 case "L3T1":
                         removeGlow(location3Tiles1);
                         addGlow(location4Tiles1);
                         removeELL3();
                         location4Tiles1.addEventListener("click", L4T1);
-                        getRandomGoldEncounter();
+                        forestGoldEncounter();
                         break;
                 case "L3T2":
                         removeGlow(location3Tiles2);
                         addGlow(location4Tiles2);
                         removeELL3();
                         location4Tiles2.addEventListener("click", L4T2);
-                        getRandomExclamation();
+                        forestMystery();
                         break;
                 case "L3T3":
                         removeGlow(location3Tiles3);
@@ -1044,14 +1074,18 @@ function chooseLocationPath() {
                         removeELL3();
                         location4Tiles3.addEventListener("click", L4T3);
                         location4Tiles4.addEventListener("click", L4T4);
-                        getRandomEncounter();
+                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                                forestEncounter();
+                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+
+                        }
                         break;
                 case "L4T1":
                         removeGlow(location4Tiles1);
                         addGlow(location5Tiles1);
                         removeELL4();
                         location5Tiles1.addEventListener("click", L5T1);
-                        getRandomExclamation();
+                        forestMystery();
                         break;
                 case "L4T2":
                         removeGlow(location4Tiles2);
@@ -1059,7 +1093,7 @@ function chooseLocationPath() {
                         removeELL4();
                         location5Tiles1.addEventListener("click", L5T1);
                         location5Tiles2.addEventListener("click", L5T2);
-                        getRandomEliteEncounter();
+                        forestEliteEncounter();
                         break;
                 case "L4T3":
                         removeGlow(location4Tiles3, location4Tiles4);
@@ -1067,35 +1101,35 @@ function chooseLocationPath() {
                         removeELL4();
                         location5Tiles2.addEventListener("click", L5T2);
                         location5Tiles3.addEventListener("click", L5T3);
-                        getRandomExclamation();
+                        forestMystery();
                         break;
                 case "L4T4":
                         removeGlow(location4Tiles3, location4Tiles4);
                         addGlow(location5Tiles3);
                         removeELL5();
                         location5Tiles3.addEventListener("click", L5T3);
-                        getShop();
+                        forestShop();
                         break;
                 case "L5T1":
                         removeGlow(location5Tiles1, location5Tiles2, location5Tiles3);
                         addGlow(location6Tiles1);
                         removeELL5();
                         location6Tiles1.addEventListener("click", L6T1);
-                        getShop();
+                        forestShop();
                         break;
                 case "L5T2":
                         removeGlow(location5Tiles1, location5Tiles2, location5Tiles3);
                         addGlow(location6Tiles1);
                         removeELL5();
                         location6Tiles1.addEventListener("click", L6T1);
-                        getBlacksmith();
+                        forestBlacksmith();
                         break;
                 case "L5T3":
                         removeGlow(location5Tiles2, location5Tiles3);
                         addGlow(location6Tiles1);
                         removeELL5();
                         location6Tiles1.addEventListener("click", L6T1);
-                        getRandomEliteEncounter();
+                        forestEliteEncounter();
                         break;
                 case "L6T1":
                         removeGlow(location6Tiles1);
@@ -1112,14 +1146,18 @@ function chooseLocationPath() {
                         removeELL7();
                         location8Tiles1.addEventListener("click", L8T1);                      
                         location8Tiles2.addEventListener("click", L8T2);
-                        getRandomEncounter();
+                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                                forestEncounter();
+                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+
+                        }
                         break;
                 case "L7T2":
                         removeGlow(location7Tiles1, location7Tiles2, location7Tiles3);
                         addGlow(location8Tiles2);
                         removeELL7();
                         location8Tiles2.addEventListener("click", L8T2);
-                        getRandomExclamation();
+                        forestMystery();
                         break;
                 case "L7T3":
                         removeGlow(location7Tiles1, location7Tiles2, location7Tiles3);
@@ -1127,7 +1165,11 @@ function chooseLocationPath() {
                         removeELL7();
                         location8Tiles2.addEventListener("click", L8T2);
                         location8Tiles3.addEventListener("click", L8T3);
-                        getRandomEncounter();
+                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                                forestEncounter();
+                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+
+                        }
                         break;
                 case "L8T1":
                         removeGlow(location8Tiles1, location8Tiles2);
@@ -1135,7 +1177,11 @@ function chooseLocationPath() {
                         removeELL8();
                         location9Tiles1.addEventListener("click", L9T1);
                         location9Tiles2.addEventListener("click", L9T2);
-                        getRandomEncounter();
+                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                                forestEncounter();
+                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+
+                        }
                         break;
                 case "L8T2":
                         removeGlow(location8Tiles1, location8Tiles2, location8Tiles3);
@@ -1143,7 +1189,11 @@ function chooseLocationPath() {
                         removeELL8();
                         location9Tiles2.addEventListener("click", L9T2);
                         location9Tiles3.addEventListener("click", L9T3);
-                        getRandomEncounter();
+                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                                forestEncounter();
+                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+
+                        }
                         break;
                 case "L8T3":
                         removeGlow(location8Tiles2, location8Tiles3);
@@ -1151,54 +1201,58 @@ function chooseLocationPath() {
                         removeELL8();
                         location9Tiles3.addEventListener("click", L9T3);
                         location9Tiles4.addEventListener("click", L9T4);
-                        getRandomEncounter();
+                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                                forestEncounter();
+                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+
+                        }
                         break;
                 case "L9T1":
                         removeGlow(location9Tiles1, location9Tiles2);
                         addGlow(location10Tiles1);
                         removeELL9();
                         location10Tiles1.addEventListener("click", L10T1);
-                        getRandomExclamation();
+                        forestMystery();
                         break;
                 case "L9T2":
                         removeGlow(location9Tiles1, location9Tiles2, location9Tiles3);
                         addGlow(location10Tiles1);
                         removeELL9();
                         location10Tiles1.addEventListener("click", L10T1);
-                        getRandomGoldEncounter();
+                        forestGoldEncounter();
                         break;
                 case "L9T3":
                         removeGlow(location9Tiles2, location9Tiles3, location9Tiles4);
                         addGlow(location10Tiles2);
                         removeELL9();
                         location10Tiles2.addEventListener("click", L10T2);
-                        getRandomEliteEncounter();
+                        forestEliteEncounter();
                         break;
                 case "L9T4":
                         removeGlow(location9Tiles3, location9Tiles4);
                         addGlow(location10Tiles2);
                         removeELL9();
                         location10Tiles2.addEventListener("click", L10T2);
-                        getRandomExclamation();
+                        forestMystery();
                         break;
                 case "L10T1":          
                         removeGlow(location10Tiles1);
                         addGlow(location11Tiles1);
                         removeELL10();
                         location11Tiles1.addEventListener("click", L11T1);
-                        getShop();
+                        forestShop();
                         break;
                 case "L10T2":          
                         removeGlow(location10Tiles2);
                         addGlow(location11Tiles1);
                         removeELL10();
                         location11Tiles1.addEventListener("click", L11T1);
-                        getBlacksmith();
+                        forestBlacksmith();
                         break;
                 case "L11T1":
                         removeGlow(location11Tiles1);
                         removeELL11();
-                        getRandomBossEncounter();
+                        forestBoss();
                         break;
         }
 }
@@ -1238,7 +1292,7 @@ const destroyedCardsContainer = document.querySelector("#destroyed-cards-contain
 let dontRepeatExclamation = [];
 let exclamationMusicTrigger = false;
 let exclamationMusicIndex;
-function getRandomExclamation() {
+function forestMystery() {
         if (exclamationMusicTrigger === false) {
                 const exclamationMusic = new Audio("audio/exclamation-music.wav");
                 switchMusic(exclamationMusic);
@@ -1253,7 +1307,7 @@ function getRandomExclamation() {
         }
         switch (randomExclamationNumber) {
                 case 1:
-                        createExclamation("King Spookly", "imgs/pixel-forest.jpg", "imgs/ghost.jpg", "A ghost peaks out from a tree up ahead.", 
+                        createExclamation("King Spookly", "imgs/fae-forest-mystery.jpeg", "imgs/king-spookly2.jpeg", "A ghost peaks out from a tree up ahead.", 
                                 "He beckons you closer with his translucent appendage. You approach.",
                                 `"I was once king in this land long ago." His soft whisper echos. "I had all the gold in my possession burried with me. I now realize the arrogance of my actions and would like to make amends for my past mistakes. Please share this amongt the local townsfolk."`);
                         exclamationDiv = document.querySelector(".exclamation-div");
@@ -1281,7 +1335,7 @@ function getRandomExclamation() {
                         dontRepeatExclamation.push(1);
                         break;
                 case 2:
-                        createExclamation("A Goddess's Request", "imgs/pixel-forest.jpg", "imgs/goddess.jpg", "A wise looking woman approaches you with a knowing look.", 
+                        createExclamation("A Goddess's Request", "imgs/fae-forest-mystery.jpeg", "imgs/goddess.jpg", "A wise looking woman approaches you with a knowing look.", 
                                 `I am the Goddess <span style="color: #81b14f">Terra</span>, spiritual guardian of this world. I appear to you now in physical form to ask of you a sacrifice.`,
                                 "This world's natural elemental spirits are slowly withering away due to the dwarves mining operations. I must ask that you lend one of your elemental orbs of power to this land. I would not ask of this if not completely necessary.");
                         exclamationDiv = document.querySelector(".exclamation-div");
@@ -1364,7 +1418,7 @@ function getRandomExclamation() {
                         dontRepeatExclamation.push(2);
                         break;
                 case 3:
-                        createExclamation("The Wizard's Apprentice", "imgs/pixel-forest.jpg", "imgs/clone-mage.jpg", "You see a flustered wizard over the next thicket trying and failing to cast a spell.", 
+                        createExclamation("The Wizard's Apprentice", "imgs/fae-forest-mystery.jpeg", "imgs/clone-mage.jpg", "You see a flustered wizard over the next thicket trying and failing to cast a spell.", 
                                 `"Are you trying to burn down this entire forest?!" You demand indignantly.`,
                                 `"No you damnable fool! I've been trying for days to clone this Terra forsaken thing!" he yells emphatically. "Say...do you think I could get a little bit of practice on one of those spells of yours?"`);
                         exclamationDiv = document.querySelector(".exclamation-div");
@@ -1503,7 +1557,7 @@ function getRandomExclamation() {
 }
 let shopMusicTrigger = false;
 let shopMusicIndex;
-function getShop () {
+function forestShop () {
         if (shopMusicTrigger === false) {
                 const shopMusic = new Audio("audio/shop-music.wav");
                 switchMusic(shopMusic);
@@ -1585,7 +1639,7 @@ function getShop () {
         // SHOP RELICS
         const shopRelicContainer = document.querySelector("#shop-relic-container");
         let dontRepeatShopRelic = [];
-        function getShopRelic(timesToRun) {
+        function forestShopRelic(timesToRun) {
                 for (let i = 0; i < timesToRun; i++) {
                         let randomRelicNumber = createRandomNumber(1, 12);
                         while (dontRepeatRelic.includes(randomRelicNumber) || dontRepeatShopRelic.includes(randomRelicNumber)) {
@@ -1751,7 +1805,7 @@ function getShop () {
                         }
                 }
         }
-        getShopRelic(4);
+        forestShopRelic(4);
         const shopRelicImg = document.querySelectorAll(".shop-relic-img");
         const shopAetherImg = document.querySelectorAll(".shop-aether");
         const shopAetherCost = document.querySelectorAll(".shop-aether-cost");
@@ -1780,7 +1834,7 @@ function getShop () {
 }
 let blacksmithMusicTrigger = false;
 let blacksmithMusicIndex;
-function getBlacksmith() {
+function forestBlacksmith() {
         if (blacksmithMusicTrigger === false) {
                 const blacksmithMusic = new Audio("audio/blacksmith-music.wav");
                 const blacksmithAmbience =  new Audio("audio/blacksmith-ambience.wav");
@@ -5061,32 +5115,6 @@ function createEnemy(baseHealth, img) {
                     </div>
                 </div>
             </div>`
-            const attackImgText = document.querySelectorAll(".attack-img-text");
-            const enemyAttackActionDiv = document.querySelectorAll(".enemy-attack-action-div");
-            const blockImgText = document.querySelectorAll(".block-img-text");
-            const enemyBlockActionDiv = document.querySelectorAll(".enemy-block-action-div");
-            const healImgText = document.querySelectorAll(".heal-img-text");
-            const enemyHealActionDiv = document.querySelectorAll(".enemy-heal-action-div");
-            const burnImgText = document.querySelectorAll(".burn-img-text");
-            const burnImgDebuff = document.querySelectorAll(".img-text");
-            const enemyBurnActionDiv = document.querySelectorAll(".enemy-burn-action-div");
-            const enemyBurnDiv = document.querySelectorAll(".enemy-burn-div");
-            const enemyEnergizeActionDiv = document.querySelectorAll(".enemy-energize-action-div");
-            const energizeImgText = document.querySelectorAll(".energize-img-text");
-            const regenImgText = document.querySelectorAll(".regen-img-text");
-            const enemyRegenActionDiv = document.querySelectorAll(".enemy-regen-action-div");
-            const bloodImgText = document.querySelectorAll(".blood-img-text");
-            const enemyBloodActionDiv = document.querySelectorAll(".enemy-blood-action-div");
-            const thornsImgText = document.querySelectorAll(".thorns-img-text");
-            const enemyThornsActionDiv = document.querySelectorAll(".enemy-thorns-action-div");
-            const frostbiteImgText = document.querySelectorAll(".frostbite-img-text");
-            const frostbiteImgDebuff = document.querySelectorAll(".frostbite-img-debuff");
-            const enemyFrostbiteActionDiv = document.querySelectorAll(".enemy-frostbite-action-div");
-            const enemyFrostbiteDiv = document.querySelectorAll(".enemy-frostbite-div");
-            const windsweptImgText = document.querySelectorAll(".windswept-img-text");
-            const windsweptImgDebuff = document.querySelectorAll(".windswept-img-debuff");
-            const enemyWindsweptActionDiv = document.querySelectorAll(".enemy-windswept-action-div");
-            const enemyWindsweptDiv = document.querySelectorAll(".enemy-windswept-div");
             function addEnemyActionText(actionDiv, text) {
                 for (let i = 0; i < actionDiv.length; i++) {
                             actionDiv[i].addEventListener("mouseover", () => {
@@ -5099,19 +5127,23 @@ function createEnemy(baseHealth, img) {
                             });
                     }
             }
-            addEnemyActionText(enemyAttackActionDiv, attackImgText);
-            addEnemyActionText(enemyBlockActionDiv, blockImgText);
-            addEnemyActionText(enemyHealActionDiv, healImgText);
-            addEnemyActionText(enemyBurnActionDiv, burnImgText);
-            addEnemyActionText(enemyBurnDiv, burnImgDebuff);
-            addEnemyActionText(enemyEnergizeActionDiv, energizeImgText);
-            addEnemyActionText(enemyRegenActionDiv, regenImgText);
-            addEnemyActionText(enemyBloodActionDiv, bloodImgText);
-            addEnemyActionText(enemyThornsActionDiv, thornsImgText);
-            addEnemyActionText(enemyFrostbiteActionDiv, frostbiteImgText);
-            addEnemyActionText(enemyFrostbiteDiv, frostbiteImgDebuff);
-            addEnemyActionText(enemyWindsweptActionDiv, windsweptImgText);
-            addEnemyActionText(enemyWindsweptDiv, windsweptImgDebuff);
+            addEnemyActionText(document.getElementsByClassName("enemy-attack-action-div"), document.getElementsByClassName("attack-img-text"));
+            addEnemyActionText(document.getElementsByClassName("enemy-block-action-div"), document.getElementsByClassName("block-img-text"));
+            addEnemyActionText(document.getElementsByClassName("enemy-heal-action-div"), document.getElementsByClassName("heal-img-text"));
+            addEnemyActionText(document.getElementsByClassName("enemy-burn-action-div"), document.getElementsByClassName("burn-img-text"));
+            addEnemyActionText(document.getElementsByClassName("enemy-burn-div"), document.getElementsByClassName("burn-img-debuff"));
+            addEnemyActionText(document.getElementsByClassName("enemy-regen-action-div"), document.getElementsByClassName("regen-img-text"));
+            addEnemyActionText(document.getElementsByClassName("enemy-blood-action-div"), document.getElementsByClassName("blood-img-text"));
+            addEnemyActionText(document.getElementsByClassName("enemy-thorns-action-div"), document.getElementsByClassName("thorns-img-text"));
+            addEnemyActionText(document.getElementsByClassName("enemy-frostbite-action-div"), document.getElementsByClassName("frostbite-img-text"));
+            addEnemyActionText(document.getElementsByClassName("enemy-frostbite-div"), document.getElementsByClassName("frostbite-img-debuff"));
+            addEnemyActionText(document.getElementsByClassName("enemy-windswept-action-div"), document.getElementsByClassName("windswept-img-text"));
+            addEnemyActionText(document.getElementsByClassName("enemy-windswept-div"), document.getElementsByClassName("windswept-img-debuff"));
+            if (bossDefeated[0] && !bossDefeated[1]) {
+                for (let i = 0; i < document.getElementsByClassName("enemy-health").length; i++) {
+                        document.getElementsByClassName("enemy-health")[i].style = "color: rgb(126, 255, 66)";
+                }
+            }
 }
 function enemyLevelUp() {
         function scaleEnemies(health, attack, block, burn, regen, blood, thorns) {
@@ -5390,9 +5422,11 @@ let enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
 let enemiesAreDead = false;
 let [eternalFlame, scorchedEarth, electrify, lightningJewel, leechingCold, everlastingWinter, shiftingWinds, windrunner, bloodTransfusion, cleansingCurrents, venomousVines, stonewall] =
 [false, false, false, false, false, false, false, false, false, false, false, false];
+checkIfEnemyDead();
 function checkIfEnemyDead() {
         // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET AETHER
         function allEnemiesDead() {
+                window.removeEventListener("keydown", spaceEndTurn);
                 if (goldEncounter) {
                         playerAether.innerText = parseFloat(playerAether.innerText) + Math.ceil(30 + ((enemyLevel + 1) * 5.4));
                         goldEncounter = false;
@@ -5406,7 +5440,7 @@ function checkIfEnemyDead() {
                 } else {
                         enemiesKilled++
                 }
-                if (bossDefeated) {
+                if (bossDefeated[0] && !bossDefeated[1]) {
                         displayFlex(exclamationContainer);
                         exclamationContainer.innerHTML = `
                         <div id="empower-container">
@@ -5492,7 +5526,10 @@ function checkIfEnemyDead() {
                         </div>
                         `
                         function nextStage() {
-                                map.style = "background-image: imgs/hell-map3.jpeg";
+                                map.style = "background-image: url(imgs/hell-arena.jpeg)";
+                                location1Tiles1.addEventListener("click", L1T1);
+                                location1Tiles1.addEventListener("click", L1T2);
+                                location1Tiles1.addEventListener("click", L1T3);
                                 switchArea(map, exclamationContainer);
                         }
                         document.getElementById("eternal-flame").addEventListener("click", () => {
@@ -5582,6 +5619,7 @@ function checkIfEnemyDead() {
         if (enemiesAlive == 0 && !enemiesAreDead) {
                 enemiesAreDead = true;
                 allEnemiesDead();
+                console.log("what");
         }
 }
 // TRACK WHICH CARD AND ENEMY HAS BEEN CLICKED ON
