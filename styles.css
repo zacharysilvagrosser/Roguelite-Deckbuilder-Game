@@ -40,7 +40,7 @@
 #beginning-screen-container {
     width: 100%;
     height: 100vh;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     background-image: url("imgs/start-screen2.jpeg");
@@ -871,40 +871,40 @@
     width: 20rem;
     height: 5rem;
     left: 16rem;
-    top: 9rem;
+    top: 9.5rem;
 }
 #fire-orb-img {
-    width: 75px;
-    margin-left: -125px;
+    width: 85px;
+    margin-left: -130px;
     position: absolute;
     border-radius: 50%;
     z-index: 2;
 }
 #lightning-orb-img {
-    width: 80px;
-    margin-left: -75px;
+    width: 90px;
+    margin-left: -85px;
     position: absolute;
     border-radius: 50%;
-    z-index: 0;
+    z-index: 1;
 }
 #ice-orb-img {
-    width: 70px;
+    width: 80px;
     margin-top: 8px;
-    margin-left: 70px;
+    margin-left: 80px;
     position: absolute;
     border-radius: 50%;
     z-index: 0;
 }
 #air-orb-img {
-    width: 70px;
+    width: 80px;
     margin-top: 8px;
-    margin-left: 120px;
+    margin-left: 130px;
     position: absolute;
     border-radius: 50%;
     z-index: 2;
 }
 #water-orb-img {
-    width: 72px;
+    width: 82px;
     margin-top: 4px;
     margin-left: 35px;
     position: absolute;
@@ -912,7 +912,7 @@
     z-index: 3;
 }
 #earth-orb-img {
-    width: 72px;
+    width: 82px;
     margin-left: -45px;
     margin-top: 8px;
     position: absolute;
@@ -989,7 +989,7 @@
 /* ENEMY */
 #enemy-container {
     width: 35%;
-    height: 92%;
+    height: 93%;
     padding-right: 17rem;
     display: flex;
     align-items: flex-end;
@@ -1111,7 +1111,7 @@
 .enemy-img {
     width: 290px;
 }
-.enemy-img-centaur {
+.enemy-img-flip {
     transform: scaleX(-1);
 }
 .enemy-health-bar {
