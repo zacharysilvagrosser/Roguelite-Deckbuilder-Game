@@ -20,6 +20,14 @@ forest encounters vs hell encounter functions
 
 BUGS
 text not reseting after encounter
+replace unicorn
+dryad needs to move action div down
+///ball lightning text smaller
+liquid lightning card text doubling each turn and not reseting each encounter
+boss music not playing
+///conduit updrade text has curly bracer
+giant too big header blocking
+forest-ambience not looping
 
 */
 /*
@@ -39,6 +47,7 @@ const musicSlider = document.querySelector("#music-slider");
 const soundFXSlider = document.querySelector("#soundfx-slider");
 const mapMusic = new Audio("audio/map-music.wav");
 const allMusic = [mapMusic];
+const allAmbience = [];
 const [fxPotion, fxFireball, fxCascadingFlames, fxStaticCharge, fxChainLightning, fxFrostbolt, fxFrostFingers, fxTornado, fxGaleForce, fxBloodCocoon, fxTidalImbuement, fxEarthBarrier, fxThornShield,
         fxFirefall, fxKindredSpirits, fxPhoenixFire, fxStormblessed, fxBallLightning, fxConduit, fxIceNova, fxFrostbitten, fxRayOfIce, fxWindsOfChange, fxWindwalk, fxGust, fxSanguineSpring, fxMistborn, fxTsunami,
         fxEarthShatter, fxWeaveOfThorns, fxVineWhip, fxForestFire, fxFrostfireFusion, fxFanTheFlames, fxCauterize, fxMagma, fxDeepFreeze, fxHurricane, fxElectricCurrent, fxQuakingJolt, fxFlurry, fxLiquify,
@@ -102,6 +111,8 @@ startGame.addEventListener("click", () => {
                 location.href="#bottom-anchor";
                 displayNone(startScreen, document.querySelector("#difficulty-container"));
                 switchMusic(mapMusic);
+                const forestAmbience = new Audio ("audio/forest-ambience.wav").play();
+                forestAmbience.loop = true;
         }
         displayFlex(document.querySelector("#difficulty-container"));
         document.querySelector("#easy").addEventListener("click", () => {
@@ -449,6 +460,15 @@ function resetArena() {
                 enemyWindswept[i] = false;
         }
         enemyLevel++;
+        if (waterGift) {
+                waterGiftTrigger = true;
+                document.getElementById("water-orb-img").classList.add("water-glow");
+        }
+        if (earthGift) {
+                console.log("earht gift?", earthGift);
+                earthGiftTrigger = true;
+                document.getElementById("earth-orb-img").classList.add("earth-glow");
+        }
         playerWindswept = false;
         playerFrostbite = false;
         playerBurnNumber.innerText = 0;
@@ -531,13 +551,13 @@ let encounterMusicTrigger = false;
 let encounterMusicIndex;
 function forestEncounter() {
         if (encounterMusicTrigger === false) {
-                const encounterMusic = new Audio("audio/encounter-music.wav");
+                const encounterMusic = new Audio("audio/forest-encounter-music.wav");
                 switchMusic(encounterMusic);
                 encounterMusicTrigger = true;
                 encounterMusicIndex = allMusic.indexOf(encounterMusic);
         }
         switchMusic(allMusic[encounterMusicIndex]);
-        let randomEncounterNumber = createRandomNumber(1, 1);
+        let randomEncounterNumber = createRandomNumber(1, 9);
         while (dontRepeatEncounter.includes(randomEncounterNumber)) {
                 randomEncounterNumber = createRandomNumber(1, 9);        
         }
@@ -889,7 +909,7 @@ function forestEliteEncounter() {
 }
 let bossDefeated = [false, false];
 function forestBoss() {
-        const bossMusic = new Audio("audio/boss-music.wav");
+        const bossMusic = new Audio("audio/forest-boss-music.wav");
         switchMusic(bossMusic);
         let randomBossEncounterNumber = createRandomNumber(1, 2);
         switchArea(arena, map);
@@ -925,6 +945,61 @@ function forestBoss() {
                         bossDefeated[0] = true;
                         break;
         }
+}
+let [fireGift, lightningGift, iceGift, airGift, waterGift, earthGift, empowerBloodSiphon] = [false, false, false, false, false, false, false];
+function forestTreasure() {
+        displayNone(map);
+        displayFlex(exclamationContainer);
+        exclamationContainer.innerHTML = `
+        <div id="treasure-container">
+                <div style="text-align: center">
+                        <h1>Choose a Blessing</h1>
+                        <h2>Gain a gift you can use once per battle</h2>
+                </div>
+                <div class="treasure-element-div">
+                        <h2 style="color: #74ccf4">Aquatas' Gift</h2>
+                        <div class="treasure-choice-div">
+                                <div class="treasure-choices">
+                                        <p>Empower your blood siphon this turn to heal for 40% more health</p>
+                                        <button id="water-gift" style="color: #74ccf4">Aquatas' Gift</button>
+                                </div>
+                        </div>
+                </div>
+                <div class="treasure-element-div">
+                        <h2 style="color: #81b14f">Gaia's Gift</h2>
+                        <div class="treasure-choice-div">
+                                <div class="treasure-choices">
+                                        <p>Double your armor</p>
+                                        <button id="earth-gift" style="color: #81b14f">Gaia's Gift</button>
+                                </div>
+                        </div>
+                </div>
+        </div>
+        `
+        document.getElementById("water-gift").addEventListener("click", () => {
+                waterGift = true;
+                waterGiftTrigger = true;
+                document.getElementById("water-orb-img").classList.add("water-glow");
+                document.getElementById("water-orb-img").addEventListener("click", () => {
+                        if (waterGift && waterGiftTrigger && playerBloodNumber.innerText > 0) {
+                                empowerBloodSiphon = true;
+                                waterGiftTrigger = false;
+                                document.getElementById("water-orb-img").classList.remove("water-glow");
+                        }
+                });
+                switchArea(map, exclamationContainer);
+        });
+        document.getElementById("earth-gift").addEventListener("click", () => {
+                earthGift = true;
+                document.getElementById("earth-orb-img").classList.add("earth-glow");
+                document.getElementById("earth-orb-img").addEventListener("click", () => {
+                        if (earthGift) {
+                                playerBlockNumber.innerText *= 2;
+                                document.getElementById("earth-orb-img").classList.remove("earth-glow");
+                        }
+                });
+                switchArea(map, exclamationContainer);
+        });
 }
 function spaceEndTurn(e) {
         if (e.key === " ") {
@@ -1093,7 +1168,7 @@ function chooseLocationPath() {
                         location7Tiles1.addEventListener("click", L7T1);
                         location7Tiles2.addEventListener("click", L7T2);
                         location7Tiles3.addEventListener("click", L7T3);
-                        getRelic(1, 12);
+                        forestTreasure();
                         break;
                 case "L7T1":
                         removeGlow(location7Tiles1, location7Tiles2, location7Tiles3);
@@ -2083,7 +2158,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(2000);
+                                damageAllEnemies(20);
                                 fxChainLightning.play();
                         },
                         function() {
@@ -2478,8 +2553,8 @@ const cardsInformation = [
                 manaCost: [3, 3],
                 name: "Ball Lightning",
                 cardImg: "imgs/static-electricity.jpg",
-                cardText: ["Deal 10 damage to a random enemy three times and gain Energize for each unique enemy damaged",
-                        "Deal 10 damage to a random enemy four times and gain Energize for each unique enemy damaged"],
+                cardText: ["Deal 10 damage to a random enemy three times and Energize 1 for each enemy damaged",
+                        "Deal 10 damage to a random enemy four times and Energize 1 for each enemy damaged"],
                 damage: [10, 10],
                 energize: [1, 1],
                 chooseEnemyCard: false,
@@ -3775,6 +3850,10 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         }
         function playCard() {
                 if (turnEnded === false) {
+                        if (cleansingCurrents && cardsInformation[CIindex].element.includes("water")) {
+                                gainRegen(1);
+                                playerMaxHealth.innerText++;
+                        }
                         cardsInformation[CIindex].action[upgradeIndex]();
                         addToDiscard();
                         checkHealth();
@@ -3890,10 +3969,10 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
 function getRandomNewCards () {
         arena.classList.add("dim");
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = 49;//createRandomNumber(12, cardsInformation.length - 2);
-        let newRandomCard1 = 24;//createRandomNumber(12, cardsInformation.length - 2);
-        let newRandomCard2 = 30;//createRandomNumber(12, cardsInformation.length - 2);
-        let newRandomCard3 = 43;//createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard0 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
         console.log("BEFORE 0", newRandomCard0, "1", newRandomCard1, "2", newRandomCard2, "3", newRandomCard3);
         // CHANGE CARDS IF THEY ARE THE SAME
         while (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3 || 
@@ -4036,17 +4115,18 @@ function damageEnemy(damage, enemy) {
                         displayNone(playerTidalImbuementImg);
                 }
                 if (playerBloodNumber.innerText > 0) {
-                        if (!bloodTransfusion) {
-                                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * .2));
-                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * .2));
-                                healthGainedThisFight += Math.floor((damage * .2));
-                                healthRestoredTotal += Math.floor((damage * .2));
-                        } else {
-                                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * .4));
-                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * .4));
-                                healthGainedThisFight += Math.floor((damage * .4));
-                                healthRestoredTotal += Math.floor((damage * .4));
+                        let healPercentage = .2;
+                        if (bloodTransfusion) {
+                                healPercentage = .4;
                         }
+                        if (empowerBloodSiphon) {
+                                healPercentage += .4;
+                                empowerBloodSiphon = false;
+                        }
+                        playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * healPercentage));
+                        topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * healPercentage));
+                        healthGainedThisFight += Math.floor((damage * healPercentage));
+                        healthRestoredTotal += Math.floor((damage * healPercentage));
                 }
                 // TAKE DAMAGE AWAY FROM BLOCK BEFORE HEALTH
                 if (enemyBlockNumber[enemy].innerText === 0) {
@@ -4097,17 +4177,18 @@ function damageAllEnemies(damage) {
         for (let i = 0; i < numberOfEnemies; i++) {
                 if (enemyIsDead[i] === false) {
                         if (playerBloodNumber.innerText > 0) {
-                                if (!bloodTransfusion) {
-                                        playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * .2));
-                                        topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * .2));
-                                        healthGainedThisFight += Math.floor((damage * .2));
-                                        healthRestoredTotal += Math.floor((damage * .2));
-                                } else {
-                                        playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * .4));
-                                        topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * .4));
-                                        healthGainedThisFight += Math.floor((damage * .4));
-                                        healthRestoredTotal += Math.floor((damage * .4));
+                                let healPercentage = .2;
+                                if (bloodTransfusion) {
+                                        healPercentage = .4;
                                 }
+                                if (empowerBloodSiphon) {
+                                        healPercentage += .4;
+                                        empowerBloodSiphon = false;
+                                }
+                                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * healPercentage));
+                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * healPercentage));
+                                healthGainedThisFight += Math.floor((damage * healPercentage));
+                                healthRestoredTotal += Math.floor((damage * healPercentage));
                         }
                         // CHECK block
                         if (enemyBlockNumber[i].innerText === 0) {
@@ -4570,8 +4651,8 @@ function updateCardText() {
                 [`Deal damage equal to ${cardsInformation[14].damage[0]}x the amount of burn on the enemy`, `Deal damage equal to ${cardsInformation[14].damage[1]}x the amount of burn on the enemy`],
                 ["[POTION]<br>You apply +2 burn damage", "[POTION]<br>You apply +4 burn damage"],
                 [`Deal 50% of the damage you've dealt this turn to an enemy<br>Damage: ${cardsInformation[16].damage[0]}`, `Deal 50% of the damage you've dealt this turn to an enemy<br>Damage: ${cardsInformation[16].damage[1]}`],
-                [`Deal ${cardsInformation[17].damage[0]} damage to a random enemy three times and gain ${cardsInformation[17].energize[0]} Energize for each unique enemy damaged`, `Deal ${cardsInformation[17].damage[0]} damage to a random enemy four times and gain ${cardsInformation[17].energize[1]} Energize for each unique enemy damaged`],
-                [`Deal ${cardsInformation[18].damage[0]} damage plus ${cardsInformation[18].damageSecond[0]} for each mana you have after playing Conduit. Energize ${cardsInformation[18].energize[0]}`, `Deal ${cardsInformation[18].damage[1]} damage plus ${cardsInformation[18].damageSecond[1]}} for each mana you have after playing Conduit. Energize ${cardsInformation[17].energize[1]}`],
+                [`Deal ${cardsInformation[17].damage[0]} damage to a random enemy three times and Energize ${cardsInformation[17].energize[0]} for each enemy damaged`, `Deal ${cardsInformation[17].damage[0]} damage to a random enemy four times and Energize ${cardsInformation[17].energize[1]} for each enemy damaged`],
+                [`Deal ${cardsInformation[18].damage[0]} damage plus ${cardsInformation[18].damageSecond[0]} for each mana you have after playing Conduit. Energize ${cardsInformation[18].energize[0]}`, `Deal ${cardsInformation[18].damage[1]} damage plus ${cardsInformation[18].damageSecond[1]} for each mana you have after playing Conduit. Energize ${cardsInformation[17].energize[1]}`],
                 ["[POTION]<br>All damage is increased by 5", "[POTION]<br>All damage is increased by 7"],
                 [`Deal ${cardsInformation[20].damage[0]} damage to all enemies and inflict frostbite on everyone including yourself`, `Deal ${cardsInformation[20].damage[1]} damage to all enemies and inflict frostbite on everyone including yourself`],
                 ["For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself", "For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself"],
@@ -5427,11 +5508,11 @@ function checkIfEnemyDead() {
                                         <h2 style="color: #b23d1a">Fire</h2>
                                         <div class="empower-choice-div">
                                                 <div class="empower-choices">
-                                                        <button id="eternal-flame" style="color: #aa4203">Eternal Flame</button>
+                                                        <button id="eternal-flame" style="color: #aa4203">Flame Warden</button>
                                                         <p>Burn increases by one each turn</p>
                                                 </div>
                                                 <div class="empower-choices">
-                                                        <button id="scorched-earth" style="color: #ba760f">Scorched Earth</button>
+                                                        <button id="scorched-earth" style="color: #ba760f">Pyromancer</button>
                                                         <p>Enemies burn twice per turn</p>
                                                 </div>
                                         </div>
@@ -5440,11 +5521,11 @@ function checkIfEnemyDead() {
                                         <h2 style="color: #f0fb3e">Lightning</h2>
                                         <div class="empower-choice-div">
                                                 <div class="empower-choices">
-                                                        <button id="electrify" style="color: #fafba5">Electrify</button>
+                                                        <button id="electrify" style="color: #fafba5">Surgebinder</button>
                                                         <p>Double all energize</p>
                                                 </div>
                                                 <div class="empower-choices">
-                                                        <button id="lightning-jewel" style="color: #5e65c5">Lightning Jewel</button>
+                                                        <button id="lightning-jewel" style="color: #5e65c5">Stormchaser</button>
                                                         <p>Gain +1 mana</p>
                                                 </div>
                                         </div>
@@ -5453,11 +5534,11 @@ function checkIfEnemyDead() {
                                         <h2 style="color: #2f989c">Ice</h2>
                                         <div class="empower-choice-div">
                                                 <div class="empower-choices">
-                                                        <button id="leeching-cold" style="color: #51a9ac">Leeching Cold</button>
+                                                        <button id="leeching-cold" style="color: #51a9ac">Cryofreezer</button>
                                                         <p>Inflicting frostbite will steal two of each buff</p>
                                                 </div>
                                                 <div class="empower-choices">
-                                                        <button id="everlasting-winter" style="color: #b9e8ea">Everlasting Winter</button>
+                                                        <button id="everlasting-winter" style="color: #b9e8ea">Winter Warrior</button>
                                                         <p>Frostbite lasts for two turns</p>
                                                 </div>
                                         </div>
@@ -5466,11 +5547,11 @@ function checkIfEnemyDead() {
                                         <h2 style="color: #86bfdf">Air</h2>
                                         <div class="empower-choice-div">
                                                 <div class="empower-choices">
-                                                        <button id="shifting-winds" style="color: #9edafd">Shifting Winds</button>
+                                                        <button id="shifting-winds" style="color: #9edafd">Aeroshift</button>
                                                         <p>Your cards that draw cards draw one more card</p>
                                                 </div>
                                                 <div class="empower-choices">
-                                                        <button id="windrunner" style="color: white">Windrunner</button>
+                                                        <button id="windrunner" style="color: white">Windwalker</button>
                                                         <p>Draw one more card each turn</p>
                                                 </div>
                                         </div>
@@ -5479,12 +5560,12 @@ function checkIfEnemyDead() {
                                         <h2 style="color: #0f5e9c">Water</h2>
                                         <div class="empower-choice-div">
                                                 <div class="empower-choices">
-                                                        <button id="blood-transfusion" style="color: #be291e">Blood Transfusion</button>
+                                                        <button id="blood-transfusion" style="color: #be291e">Bloodbender</button>
                                                         <p>Blood siphon now heals for 30% of damage dealt</p>
                                                 </div>
                                                 <div class="empower-choices">
-                                                        <button id="cleansing-currents" style="color: #74ccf4">Cleaning Currents</button>
-                                                        <p>Heal to full health and gain +50 max health</p>
+                                                        <button id="cleansing-currents" style="color: #74ccf4">Waterweaver</button>
+                                                        <p>Heal to full health and gain +1 max health and regen when you play water cards</p>
                                                 </div>
                                         </div>
                                 </div>
@@ -5492,11 +5573,11 @@ function checkIfEnemyDead() {
                                         <h2 style="color: #7a4b31">Earth</h2>
                                         <div class="empower-choice-div">
                                                 <div class="empower-choices">
-                                                        <button id="venomous-vines" style="color: #81b14f">Venomous Vines</button>
+                                                        <button id="venomous-vines" style="color: #81b14f">Grovetender</button>
                                                         <p>Gain 2 thorns at the end of every turn</p>
                                                 </div>
                                                 <div class="empower-choices">
-                                                        <button id="stonewall" style="color: #757575">Stonewall</button>
+                                                        <button id="stonewall" style="color: #757575">Stoneforger</button>
                                                         <p>Start each encounter with 50 block</p>
                                                 </div>
                                         </div>
@@ -5563,19 +5644,16 @@ function checkIfEnemyDead() {
                         document.getElementById("cleansing-currents").addEventListener("click", () => {
                                 cleansingCurrents = true;
                                 document.getElementById("water-orb-img").classList.add("water-glow");
-                                playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 50;
                                 playerCurrentHealth.innerText = playerMaxHealth.innerText;
                                 topBarHealthNumber.innerText = playerMaxHealth.innerText;
                                 nextStage();
                         });
                         document.getElementById("venomous-vines").addEventListener("click", () => {
                                 venomousVines = true;
-                                document.getElementById("earth-orb-img").classList.add("earth-glow");
                                 nextStage();
                         });
                         document.getElementById("stonewall").addEventListener("click", () => {
                                 stonewall = true;
-                                document.getElementById("earth-orb-img").classList.add("earth-glow");
                                 nextStage();
                         });
                 }
