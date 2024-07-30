@@ -537,9 +537,9 @@ function forestEncounter() {
                 encounterMusicIndex = allMusic.indexOf(encounterMusic);
         }
         switchMusic(allMusic[encounterMusicIndex]);
-        let randomEncounterNumber = createRandomNumber(6, 6);
+        let randomEncounterNumber = createRandomNumber(1, 1);
         while (dontRepeatEncounter.includes(randomEncounterNumber)) {
-                randomEncounterNumber = createRandomNumber(1, 10);        
+                randomEncounterNumber = createRandomNumber(1, 9);        
         }
         let enemyImg = document.querySelectorAll(".enemy-img");
         switchArea(arena, map);
@@ -547,91 +547,82 @@ function forestEncounter() {
         numberOfEnemies = 3;
         switch (randomEncounterNumber) {
                 case 1:
-                        createEnemy(enemiesInformation[2].baseHealth, enemiesInformation[2].img);
-                        createEnemy(enemiesInformation[1].baseHealth, enemiesInformation[1].img);
-                        createEnemy(enemiesInformation[3].baseHealth, enemiesInformation[3].img);
+                        createEnemy("Mushroom");
+                        createEnemy("Dwarf");
+                        createEnemy("Will-o-the-Wisp");
                         initializeEnemyVariables();
                         enemyLevelUp();
-                        enemyAction(2, 1, 3);
+                        enemyAction(1, 2, 3);
                         dontRepeatEncounter.push(1);
                         break;
                 case 2:
-                        createEnemy(enemiesInformation[2].baseHealth, enemiesInformation[2].img);
-                        createEnemy(enemiesInformation[5].baseHealth, enemiesInformation[5].img);
-                        createEnemy(enemiesInformation[4].baseHealth, enemiesInformation[4].img);
+                        createEnemy("Dwarf");
+                        createEnemy("Stag");
+                        createEnemy("Centaur");
                         initializeEnemyVariables();
-                        document.querySelectorAll(".enemy-img")[2].classList.add("enemy-img-flip");
                         enemyLevelUp();
                         enemyAction(2, 5, 4);
                         dontRepeatEncounter.push(2);
                         break;
                 case 3:
-                        createEnemy(enemiesInformation[0].baseHealth, enemiesInformation[0].img);
-                        createEnemy(enemiesInformation[3].baseHealth, enemiesInformation[3].img);
-                        createEnemy(enemiesInformation[6].baseHealth, enemiesInformation[6].img);
+                        createEnemy("Dark Elf");
+                        createEnemy("Will-o-the-Wisp");
+                        createEnemy("Water Wolf");
                         initializeEnemyVariables();
-                        document.querySelectorAll(".enemy-img")[2].classList.add("enemy-img-flip");
-                        document.querySelectorAll(".enemy-div")[2].style = "padding-top: 26rem";
                         enemyLevelUp();
                         enemyAction(0, 3, 6);
                         dontRepeatEncounter.push(3);
                         break;
                 case 4:
-                        createEnemy(enemiesInformation[1].baseHealth, enemiesInformation[1].img);
-                        createEnemy(enemiesInformation[8].baseHealth, enemiesInformation[8].img);
-                        createEnemy(enemiesInformation[6].baseHealth, enemiesInformation[6].img);
+                        createEnemy("Mushroom");
+                        createEnemy("Unicorn");
+                        createEnemy("Water Wolf");
                         initializeEnemyVariables();
-                        document.querySelectorAll(".enemy-img")[2].classList.add("enemy-img-flip");
-                        document.querySelectorAll(".enemy-div")[2].style = "padding-top: 26rem";
                         enemyLevelUp();
                         enemyAction(1, 8, 6);
                         dontRepeatEncounter.push(4);
                         break;
                 case 5:
-                        createEnemy(enemiesInformation[5].baseHealth, enemiesInformation[5].img);
-                        createEnemy(enemiesInformation[7].baseHealth, enemiesInformation[7].img);
-                        createEnemy(enemiesInformation[8].baseHealth, enemiesInformation[8].img);
+                        createEnemy("Stag");
+                        createEnemy("Unicorn");
+                        createEnemy("Fairy");
                         initializeEnemyVariables();
                         enemyLevelUp();
-                        enemyAction(5, 7, 8);
+                        enemyAction(5, 8, 7);
                         dontRepeatEncounter.push(5);
                         break;
                 case 6:
-                        createEnemy(enemiesInformation[0].baseHealth, enemiesInformation[0].img);
-                        createEnemy(enemiesInformation[7].baseHealth, enemiesInformation[7].img);
-                        createEnemy(enemiesInformation[6].baseHealth, enemiesInformation[6].img);
+                        createEnemy("Dark Elf");
+                        createEnemy("Stag");
+                        createEnemy("Fairy");
                         initializeEnemyVariables();
-                        document.querySelectorAll(".enemy-img")[2].classList.add("enemy-img-flip");
-                        document.querySelectorAll(".enemy-div")[2].style = "padding-top: 26rem";
                         enemyLevelUp();
-                        enemyAction(0, 7, 6);
+                        enemyAction(0, 6, 7);
                         dontRepeatEncounter.push(6);
                         break;
                 case 7:
-                        createEnemy(enemiesInformation[2].baseHealth, enemiesInformation[2].img);
-                        createEnemy(enemiesInformation[0].baseHealth, enemiesInformation[0].img);
-                        createEnemy(enemiesInformation[5].baseHealth, enemiesInformation[5].img);
+                        createEnemy("Dwarf");
+                        createEnemy("Dark Elf");
+                        createEnemy("Centaur");
                         initializeEnemyVariables();
                         enemyLevelUp();
-                        enemyAction(2, 0, 5);
+                        enemyAction(2, 0, 4);
                         dontRepeatEncounter.push(7);
                         break;
                 case 8:
-                        createEnemy(enemiesInformation[3].baseHealth, enemiesInformation[3].img);
-                        createEnemy(enemiesInformation[7].baseHealth, enemiesInformation[7].img);
-                        createEnemy(enemiesInformation[4].baseHealth, enemiesInformation[4].img);
+                        createEnemy("Will-o-the-Wisp");
+                        createEnemy("Stag");
+                        createEnemy("Fairy");
                         initializeEnemyVariables();
-                        document.querySelectorAll(".enemy-img")[2].classList.add("enemy-img-flip");
                         enemyLevelUp();
-                        enemyAction(3, 7, 4);
+                        enemyAction(3, 5, 7);
                         dontRepeatEncounter.push(8);
                         break;
                 case 9:
-                        createEnemy(enemiesInformation[1].baseHealth, enemiesInformation[1].img);
-                        createEnemy(enemiesInformation[8].baseHealth, enemiesInformation[8].img);
-                        createEnemy(enemiesInformation[4].baseHealth, enemiesInformation[4].img);
+                        createEnemy("Mushroom");
+                        createEnemy("Unicorn");
+                        createEnemy("Centaur");
                         initializeEnemyVariables();
-                        document.querySelectorAll(".enemy-img")[2].classList.add("enemy-img-flip");
                         enemyLevelUp();
                         enemyAction(1, 8, 4);
                         dontRepeatEncounter.push(9);
@@ -651,32 +642,29 @@ function forestGoldEncounter() {
         numberOfEnemies = 3;
         switch (randomGoldEncounterNumber) {
                 case 1:
-                        createEnemy(enemiesInformation[3].baseHealth + 10, enemiesInformation[3].img);
-                        createEnemy(enemiesInformation[3].baseHealth + 10, enemiesInformation[3].img);
-                        createEnemy(enemiesInformation[3].baseHealth + 10, enemiesInformation[3].img);
+                        createEnemy("Will-o-the-Wisp");
+                        createEnemy("Will-o-the-Wisp");
+                        createEnemy("Will-o-the-Wisp");
                         initializeEnemyVariables();
                         enemyLevelUp();
                         enemyAction(3, 3, 3);
                         dontRepeatGoldEncounter.push(1);
                         break;
                 case 2:
-                        createEnemy(enemiesInformation[5].baseHealth + 10, enemiesInformation[5].img);
-                        createEnemy(enemiesInformation[5].baseHealth + 10, enemiesInformation[5].img);
-                        createEnemy(enemiesInformation[5].baseHealth + 10, enemiesInformation[5].img);
+                        createEnemy("Stag");
+                        createEnemy("Stag");
+                        createEnemy("Stag");
                         initializeEnemyVariables();
                         enemyLevelUp();
                         enemyAction(5, 5, 5);
                         dontRepeatGoldEncounter.push(2);
                         break;
                 case 3:
-                        createEnemy(enemiesInformation[4].baseHealth + 10, enemiesInformation[4].img);
-                        createEnemy(enemiesInformation[4].baseHealth + 10, enemiesInformation[4].img);
-                        createEnemy(enemiesInformation[4].baseHealth + 10, enemiesInformation[4].img);
+                        createEnemy("Centaur");
+                        createEnemy("Centaur");
+                        createEnemy("Centaur");
                         initializeEnemyVariables();
                         enemyImg = document.querySelectorAll(".enemy-img");
-                        document.querySelectorAll(".enemy-img")[0].classList.add("enemy-img-flip");
-                        document.querySelectorAll(".enemy-img")[1].classList.add("enemy-img-flip");
-                        document.querySelectorAll(".enemy-img")[2].classList.add("enemy-img-flip");
                         enemyLevelUp();
                         enemyAction(4, 4, 4);
                         dontRepeatEncounter.push(3);
@@ -862,16 +850,16 @@ function forestEliteEncounter() {
                 eliteEncounterMusicIndex = allMusic.indexOf(eliteEncounterMusic);
         }
         switchMusic(allMusic[eliteEncounterMusicIndex]);
-        let randomEliteEncounterNumber = createRandomNumber(3, 3);
+        let randomEliteEncounterNumber = createRandomNumber(1, 3);
         while (dontRepeatEliteEncounter.includes(randomEliteEncounterNumber)) {
-                randomEliteEncounterNumber = createRandomNumber(1, 6);
+                randomEliteEncounterNumber = createRandomNumber(1, 3);
         }
         getEliteRelic = true;
         switchArea(arena, map);
         numberOfEnemies = 1;
         switch (randomEliteEncounterNumber) {
                 case 1:
-                        createEnemy(enemiesInformation[9].baseHealth, enemiesInformation[9].img);
+                        createEnemy("Fae Fox");
                         initializeEnemyVariables();
                         document.querySelector(".enemy-img").style = "width: 500px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: 1rem; bottom: 9rem";
@@ -880,7 +868,7 @@ function forestEliteEncounter() {
                         dontRepeatEliteEncounter.push(1);
                         break;
                 case 2:
-                        createEnemy(enemiesInformation[10].baseHealth, enemiesInformation[10].img);
+                        createEnemy("Dryad");
                         initializeEnemyVariables();
                         document.querySelector(".enemy-img").style = "width: 500px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
@@ -889,7 +877,7 @@ function forestEliteEncounter() {
                         dontRepeatEliteEncounter.push(2);
                         break;
                 case 3:
-                        createEnemy(enemiesInformation[11].baseHealth, enemiesInformation[11].img);
+                        createEnemy("Frost Sprite");
                         initializeEnemyVariables();
                         document.querySelector(".enemy-img").style = "width: 550px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
@@ -903,12 +891,12 @@ let bossDefeated = [false, false];
 function forestBoss() {
         const bossMusic = new Audio("audio/boss-music.wav");
         switchMusic(bossMusic);
-        let randomBossEncounterNumber = createRandomNumber(2, 2);
+        let randomBossEncounterNumber = createRandomNumber(1, 2);
         switchArea(arena, map);
         numberOfEnemies = 1;
         switch (randomBossEncounterNumber) {
                 case 1:
-                        createEnemy(enemiesInformation[12].baseHealth, enemiesInformation[12].img);
+                        createEnemy("Fae Dragon");
                         initializeEnemyVariables();
                         fxDragonRoar.play();
                         fxDragonGrowls.play();
@@ -922,7 +910,7 @@ function forestBoss() {
                         bossDefeated[0] = true;
                         break;
                 case 2:
-                        createEnemy(enemiesInformation[13].baseHealth, enemiesInformation[13].img);
+                        createEnemy("Forest Giant");
                         initializeEnemyVariables();
                         fxGiantFootsteps.play();
                         fxGiantGroans.play();
@@ -4939,167 +4927,197 @@ const enemiesInformation = [
         },
 ]
 const enemyContainer = document.querySelector("#enemy-container");
-function createEnemy(baseHealth, img) {
+function createEnemy(name) {
+        let index;
+        for (let i = 0; i < enemiesInformation.length; i++) {
+                if (enemiesInformation[i].name === name) {
+                        index = enemiesInformation[i];
+                }
+        }
+        console.log(index);
         enemyContainer.innerHTML+=
         `<div class="enemy-div">
                 <div class="enemy-debuffs">
-                    <div class="enemy-burn-div">
+                        <div class="enemy-burn-div">
                         <div class="burn-img-debuff img-text">
                                 <h4 class="img-text-h4">Burn</h4>
                                 <p class="img-text-p">Take this much damage at the end of each turn. Decreases by one each turn.</p>
                         </div>
                         <img class="enemy-burn-img" src="imgs/burn-icon.png">
                         <p class="enemy-burn-number">0</p>
-                    </div>
-                    <div class="enemy-windswept-div">
+                        </div>
+                        <div class="enemy-windswept-div">
                         <div class="windswept-img-debuff img-text">
                                 <h4 class="img-text-h4">Windswept</h4>
                                 <p class="img-text-p">Reduces damage and burn by 50%</p>
                         </div>
-                    <img class="enemy-windswept-img" src="imgs/windswept-icon.png">
-                    </div>
-                    <div class="enemy-frostbite-div">
+                        <img class="enemy-windswept-img" src="imgs/windswept-icon.png">
+                        </div>
+                        <div class="enemy-frostbite-div">
                         <div class="frostbite-img-debuff img-text">
                                 <h4 class="img-text-h4">Frostbite</h4>
                                 <p class="img-text-p">Reduces buffs gained by 50%</p>
                         </div>
                         <img class="enemy-frostbite-img" src="imgs/frostbite-icon.png"> 
-                    </div>
+                        </div>
                 </div>
                 <div class="enemy-action-div">
-                    <div class="enemy-attack-action-div">
+                        <div class="enemy-attack-action-div">
                         <div class="attack-img-text img-text">
                                 <h4 class="img-text-h4">Attack</h4>
                                 <p class="img-text-p">Take this much damage at the end of the turn.</p>
                         </div>
                         <p class="enemy-action-number enemy-attack-action-number"></p>
                         <img class="enemy-attack-action-img enemy-action-img" src="imgs/attack-icon.png">                  
-                    </div>
-                    <div class="enemy-block-action-div">
+                        </div>
+                        <div class="enemy-block-action-div">
                         <div class="block-img-text img-text">
                                 <h4 class="img-text-h4">Block</h4>
                                 <p class="img-text-p">Gain a shield that blocks damage.</p>
                         </div>
                         <p class="enemy-action-number enemy-block-action-number"></p>
                         <img class="enemy-block-action-img enemy-action-img" src="imgs/block-icon.png">
-                    </div>
-                    <div class="enemy-heal-action-div">
+                        </div>
+                        <div class="enemy-heal-action-div">
                         <div class="heal-img-text img-text">
                                 <h4 class="img-text-h4">Heal</h4>
                                 <p class="img-text-p">Regain this much health at the end of the turn.</p>
                         </div>
                         <p class="enemy-action-number enemy-heal-action-number"></p>
                         <img class="enemy-heal-action-img enemy-action-img" src="imgs/heal-icon.png">
-                    </div>
-                    <div class="enemy-burn-action-div">
+                        </div>
+                        <div class="enemy-burn-action-div">
                         <div class="burn-img-text img-text">
                                 <h4 class="img-text-h4">Burn</h4>
                                 <p class="img-text-p">Take this much damage at the end of each turn. Decreases by one each turn.</p>
                         </div>
                         <p class="enemy-action-number enemy-burn-action-number"></p>
                         <img class="enemy-burn-action-img enemy-action-img" src="imgs/burn-icon.png">
-                    </div>
-                    <div class="enemy-energize-action-div">
+                        </div>
+                        <div class="enemy-energize-action-div">
                         <div class="energize-img-text img-text">
                                 <h4 class="img-text-h4">Energize</h4>
                                 <p class="img-text-p">Enemy gains extra actions next turn.</p>
                         </div>
                         <p class="enemy-action-number enemy-energize-action-number"></p>
                         <img class="enemy-energize-action-img enemy-action-img" src="imgs/energize-icon.png">
-                    </div>
-                    <div class="enemy-regen-action-div">
+                        </div>
+                        <div class="enemy-regen-action-div">
                         <div class="regen-img-text img-text">
                                 <h4 class="img-text-h4">Regeneration</h4>
                                 <p class="img-text-p">Heal this much at the end of each turn. Decreases by one at the end of each turn.</p>
                         </div>
                         <p class="enemy-action-number enemy-regen-action-number"></p>
                         <img class="enemy-regen-action-img enemy-action-img" src="imgs/regen-icon.png">
-                    </div>
-                    <div class="enemy-blood-action-div">
+                        </div>
+                        <div class="enemy-blood-action-div">
                         <div class="blood-img-text img-text">
                                 <h4 class="img-text-h4">Blood Siphon</h4>
                                 <p class="img-text-p">Heal for 20% of damage done. Decreases by one at the end of each turn.</p>
                         </div>
                         <p class="enemy-action-number enemy-blood-action-number"></p>
                         <img class="enemy-blood-action-img enemy-action-img" src="imgs/blood-icon.png">
-                    </div>
-                    <div class="enemy-thorns-action-div">
+                        </div>
+                        <div class="enemy-thorns-action-div">
                         <div class="thorns-img-text img-text">
                                 <h4 class="img-text-h4">Thorns</h4>
                                 <p class="img-text-p">Take this much damage when attacking.</p>
                         </div>
                         <p class="enemy-action-number enemy-thorns-action-number"></p>
                         <img class="enemy-thorns-action-img enemy-action-img" src="imgs/thorns-icon.png">
-                    </div>
-                    <div class="enemy-frostbite-action-div">
+                        </div>
+                        <div class="enemy-frostbite-action-div">
                         <div class="frostbite-img-text img-text">
                                 <h4 class="img-text-h4">Frostbite</h4>
                                 <p class="img-text-p">Reduce all buffs gained by 50%.</p>
                         </div>
                         <img class="enemy-frostbite-action-img enemy-action-img" src="imgs/frostbite-icon.png">
-                   </div>
-                   <div class="enemy-windswept-action-div">
+                        </div>
+                        <div class="enemy-windswept-action-div">
                         <div class="windswept-img-text img-text">
                                 <h4 class="img-text-h4">Windswept</h4>
                                 <p class="img-text-p">Reduce all attack and burn by 50%.</p>
                         </div>
-                    <img class="enemy-windswept-action-img enemy-action-img" src="imgs/windswept-icon.png">
-                   </div>
+                        <img class="enemy-windswept-action-img enemy-action-img" src="imgs/windswept-icon.png">
+                        </div>
                 </div>
-                <img class="enemy-img" src="${img}">
+                <img class="enemy-img" src="${index.img}">
                 <div class="enemy-health-bar">
                         <img class="enemy-block-img" src="imgs/block-icon.png">
                         <p class="enemy-block-number">0</p>
-                        <p class="enemy-health"><span class="enemy-current-health">${baseHealth}</span>/<span class="enemy-max-health">${baseHealth}</span></p>
+                        <p class="enemy-health"><span class="enemy-current-health">${index.baseHealth}</span>/<span class="enemy-max-health">${index.baseHealth}</span></p>
                 </div>
                 <div class="enemy-buffs">
-                    <div>
+                        <div>
                         <p class="enemy-thorns-number">0</p>
                         <img class="enemy-thorns-img" src="imgs/thorns-icon.png">
-                    </div>
-                    <div>
+                        </div>
+                        <div>
                         <p class="enemy-regen-number">0</p>
                         <img class="enemy-regen-img" src="imgs/regen-icon.png">
-                    </div> 
-                    <div>
+                        </div> 
+                        <div>
                         <p class="enemy-blood-number">0</p>
                         <img class="enemy-blood-img" src="imgs/blood-icon.png">
-                    </div>
+                        </div>
                 </div>
-            </div>`
-            function addEnemyActionText(actionDiv, text) {
+                </div>`
+        function addEnemyActionText(actionDiv, text) {
+        for (let i = 0; i < actionDiv.length; i++) {
+                        actionDiv[i].addEventListener("mouseover", () => {
+                                displayFlex(text[i]);
+                        });
+                }
                 for (let i = 0; i < actionDiv.length; i++) {
-                            actionDiv[i].addEventListener("mouseover", () => {
-                                    displayFlex(text[i]);
-                            });
-                    }
-                    for (let i = 0; i < actionDiv.length; i++) {
-                            actionDiv[i].addEventListener("mouseout", () => {
-                                    displayNone(text[i]);
-                            });
-                    }
-            }
-            addEnemyActionText(document.getElementsByClassName("enemy-attack-action-div"), document.getElementsByClassName("attack-img-text"));
-            addEnemyActionText(document.getElementsByClassName("enemy-block-action-div"), document.getElementsByClassName("block-img-text"));
-            addEnemyActionText(document.getElementsByClassName("enemy-heal-action-div"), document.getElementsByClassName("heal-img-text"));
-            addEnemyActionText(document.getElementsByClassName("enemy-burn-action-div"), document.getElementsByClassName("burn-img-text"));
-            addEnemyActionText(document.getElementsByClassName("enemy-burn-div"), document.getElementsByClassName("burn-img-debuff"));
-            addEnemyActionText(document.getElementsByClassName("enemy-regen-action-div"), document.getElementsByClassName("regen-img-text"));
-            addEnemyActionText(document.getElementsByClassName("enemy-blood-action-div"), document.getElementsByClassName("blood-img-text"));
-            addEnemyActionText(document.getElementsByClassName("enemy-thorns-action-div"), document.getElementsByClassName("thorns-img-text"));
-            addEnemyActionText(document.getElementsByClassName("enemy-frostbite-action-div"), document.getElementsByClassName("frostbite-img-text"));
-            addEnemyActionText(document.getElementsByClassName("enemy-frostbite-div"), document.getElementsByClassName("frostbite-img-debuff"));
-            addEnemyActionText(document.getElementsByClassName("enemy-windswept-action-div"), document.getElementsByClassName("windswept-img-text"));
-            addEnemyActionText(document.getElementsByClassName("enemy-windswept-div"), document.getElementsByClassName("windswept-img-debuff"));
-            if (document.querySelector(".enemy-max-health").innerText > 99) {
-                    document.querySelector(".enemy-block-img").style = "margin-right: 11rem";
-                    document.querySelector(".enemy-block-number").style = "margin-right: 11rem";
-            }
-            if (bossDefeated[0] && !bossDefeated[1]) {
+                        actionDiv[i].addEventListener("mouseout", () => {
+                                displayNone(text[i]);
+                        });
+                }
+        }
+        addEnemyActionText(document.getElementsByClassName("enemy-attack-action-div"), document.getElementsByClassName("attack-img-text"));
+        addEnemyActionText(document.getElementsByClassName("enemy-block-action-div"), document.getElementsByClassName("block-img-text"));
+        addEnemyActionText(document.getElementsByClassName("enemy-heal-action-div"), document.getElementsByClassName("heal-img-text"));
+        addEnemyActionText(document.getElementsByClassName("enemy-burn-action-div"), document.getElementsByClassName("burn-img-text"));
+        addEnemyActionText(document.getElementsByClassName("enemy-burn-div"), document.getElementsByClassName("burn-img-debuff"));
+        addEnemyActionText(document.getElementsByClassName("enemy-regen-action-div"), document.getElementsByClassName("regen-img-text"));
+        addEnemyActionText(document.getElementsByClassName("enemy-blood-action-div"), document.getElementsByClassName("blood-img-text"));
+        addEnemyActionText(document.getElementsByClassName("enemy-thorns-action-div"), document.getElementsByClassName("thorns-img-text"));
+        addEnemyActionText(document.getElementsByClassName("enemy-frostbite-action-div"), document.getElementsByClassName("frostbite-img-text"));
+        addEnemyActionText(document.getElementsByClassName("enemy-frostbite-div"), document.getElementsByClassName("frostbite-img-debuff"));
+        addEnemyActionText(document.getElementsByClassName("enemy-windswept-action-div"), document.getElementsByClassName("windswept-img-text"));
+        addEnemyActionText(document.getElementsByClassName("enemy-windswept-div"), document.getElementsByClassName("windswept-img-debuff"));
+        const enemyDiv = document.querySelectorAll(".enemy-div");
+        const enemyImg = document.querySelectorAll(".enemy-img");
+        switch (index.name) {
+                case "Dark Elf":
+                        enemyDiv[enemyDiv.length - 1].style = "animation: 3s ease-in-out 0s 1 stealthAppear";
+                        break;
+                case "Water Wolf":
+                        enemyImg[enemyDiv.length - 1].classList.add("enemy-img-flip");
+                        enemyDiv[enemyDiv.length - 1].style = "animation: 2s ease-out 0s 1 slideInTop";
+                        break;
+                case "Centaur":
+                        enemyImg[enemyDiv.length - 1].classList.add("enemy-img-flip");
+                        enemyDiv[enemyDiv.length - 1].style = `animation: ${((enemyDiv.length - 1) * .25) + 1}s ease-out 0s 1 slideInRight`;
+                        break;
+                case "Fairy":
+                        enemyDiv[enemyDiv.length - 1].style = "animation: 2.3s ease-out 0s 1 slideInTop; margin-bottom: 2rem;";
+                        break;
+                case "Mushroom":
+                        enemyImg[enemyDiv.length - 1].style = "animation: 3.5s ease-in-out 0s 1 grow";
+                        break;
+                default:
+                        enemyDiv[enemyDiv.length - 1].style = `animation: ${((enemyDiv.length - 1) * .25) + 1}s ease-out 0s 1 slideInRight`;
+        }
+        if (document.querySelector(".enemy-max-health").innerText > 99) {
+                document.querySelector(".enemy-block-img").style = "margin-right: 11rem";
+                document.querySelector(".enemy-block-number").style = "margin-right: 11rem";
+        }
+        if (bossDefeated[0] && !bossDefeated[1]) {
                 for (let i = 0; i < document.getElementsByClassName("enemy-health").length; i++) {
                         document.getElementsByClassName("enemy-health")[i].style = "color: rgb(126, 255, 66)";
                 }
-            }
+        }
 }
 function enemyLevelUp() {
         function scaleEnemies(health, attack, block, burn, regen, blood, thorns) {
@@ -5331,6 +5349,7 @@ function checkEnemyBurn(index) {
                 enemyIsDead[index] = true;
         }
         if (parseFloat(enemyBurnNumber[index].innerText) > 0) {
+                enemyHealth[index].style = "animation: burn 1.5s linear infinite alternate;";
                 if (enemyBlockNumber[index].innerText <= 0) {
                         enemyCurrentHealth[index].innerText = parseFloat(enemyCurrentHealth[index].innerText) - parseFloat(enemyBurnNumber[index].innerText);
                 } else if (enemyBlockNumber[index].innerText <= parseFloat(enemyBurnNumber[index].innerText)) {
@@ -5349,6 +5368,7 @@ function checkEnemyBurn(index) {
                 }
         }
         if (enemyBurnNumber[index].innerText == 0) {
+                enemyHealth[index].style = "animation: burn 0s linear infinite alternate;";
                 displayNone(enemyBurnImg[index], enemyBurnNumber[index]);
         }
 }
@@ -5383,6 +5403,7 @@ function checkIfEnemyDead() {
         // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET AETHER
         function allEnemiesDead() {
                 window.removeEventListener("keydown", spaceEndTurn);
+                getRandomNewCards();
                 if (goldEncounter) {
                         playerAether.innerText = parseFloat(playerAether.innerText) + Math.ceil(30 + ((enemyLevel + 1) * 5.4));
                         goldEncounter = false;
@@ -5398,6 +5419,7 @@ function checkIfEnemyDead() {
                 }
                 if (bossDefeated[0] && !bossDefeated[1]) {
                         displayFlex(exclamationContainer);
+                        displayNone(chooseNewCardDiv);
                         exclamationContainer.innerHTML = `
                         <div id="empower-container">
                                 <h1>Empower an Element</h1>
@@ -5432,7 +5454,7 @@ function checkIfEnemyDead() {
                                         <div class="empower-choice-div">
                                                 <div class="empower-choices">
                                                         <button id="leeching-cold" style="color: #51a9ac">Leeching Cold</button>
-                                                        <p>Inflicting frostbite will steal one of each buff</p>
+                                                        <p>Inflicting frostbite will steal two of each buff</p>
                                                 </div>
                                                 <div class="empower-choices">
                                                         <button id="everlasting-winter" style="color: #b9e8ea">Everlasting Winter</button>
@@ -5482,7 +5504,7 @@ function checkIfEnemyDead() {
                         </div>
                         `
                         function nextStage() {
-                                map.style = "background-image: url(imgs/hell-arena.jpeg)";
+                                map.style = "background-image: url(imgs/hell-map.jpeg)";
                                 location1Tiles1.addEventListener("click", L1T1);
                                 location1Tiles1.addEventListener("click", L1T2);
                                 location1Tiles1.addEventListener("click", L1T3);
@@ -5557,7 +5579,6 @@ function checkIfEnemyDead() {
                                 nextStage();
                         });
                 }
-                getRandomNewCards();
                 return;
         }
        
@@ -5868,5 +5889,3 @@ function endTurn() {
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
-forestBoss();
-drawCards(5);
