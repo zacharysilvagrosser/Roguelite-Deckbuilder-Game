@@ -16,17 +16,18 @@ TO DO
 Settings gear when hitting escape for music and sound volume
 Probably change ice spear so you dont have to change card text
 figure out how to crop orb imgs. Orb glow color goes with upgrade chosen. Hover over orb to see what your empower does
-forest encounters vs hell encounter functions
+forest encounters vs darkmoor encounter functions
+AIR GIFT: draw cards until you have 6
 
 BUGS
 text not reseting after encounter
-replace unicorn
-dryad needs to move action div down
+///replace unicorn
+///dryad needs to move action div down
 ///ball lightning text smaller
-liquid lightning card text doubling each turn and not reseting each encounter
-boss music not playing
+///liquid lightning card text doubling each turn and not reseting each encounter
+///boss music not playing
 ///conduit updrade text has curly bracer
-giant too big header blocking
+///giant too big header blocking
 forest-ambience not looping
 
 */
@@ -44,6 +45,7 @@ const bottomAnchor = document.querySelector("#bottom-anchor");
 const arrows = document.querySelectorAll(".arrow");
 const boardHeader = document.querySelector("#board-header");
 const musicSlider = document.querySelector("#music-slider");
+const ambienceSlider = document.querySelector("#ambience-slider");
 const soundFXSlider = document.querySelector("#soundfx-slider");
 const mapMusic = new Audio("audio/map-music.wav");
 const allMusic = [mapMusic];
@@ -88,6 +90,21 @@ function switchMusic() {
                 i.volume = soundFXSlider.value;
         });
 }
+function switchAmbience() {
+        allAmbience.forEach(i => {
+                i.pause();
+        });
+        for (let i = 0; i < arguments.length; i++) {
+                if (!allAmbience.includes(arguments[i])) {
+                        allAmbience.push(arguments[i]);
+                }
+                arguments[i].play();
+                arguments[i].loop = true;
+        }
+        allAmbience.forEach(i => {
+                i.volume = ambienceSlider.value;
+        });
+}
 function playSoundFX() {
         for (let i = 0; i < arguments.length; i++) {
                 if (!allSoundFX.includes(arguments[i])) {
@@ -104,6 +121,8 @@ window.addEventListener("keydown", () => {
         switchMusic(startScreenMusic);
 }, {once: true});
 let [easyDifficulty, normalDifficulty, hardDifficulty] = [false, false, false];
+let forestAmbienceTrigger = false;
+let forestAmbienceIndex;
 startGame.addEventListener("click", () => {
         function start() {
                 displayBlock(map);
@@ -111,8 +130,13 @@ startGame.addEventListener("click", () => {
                 location.href="#bottom-anchor";
                 displayNone(startScreen, document.querySelector("#difficulty-container"));
                 switchMusic(mapMusic);
-                const forestAmbience = new Audio ("audio/forest-ambience.wav").play();
-                forestAmbience.loop = true;
+                if (forestAmbienceTrigger === false) {
+                        const forestAmbience = new Audio("audio/forest-ambience.wav");
+                        switchMusic(forestAmbience);
+                        forestAmbienceTrigger = true;
+                        forestAmbienceIndex = allMusic.indexOf(forestAmbience);
+                }
+                switchAmbience(allMusic[forestAmbienceIndex]);
         }
         displayFlex(document.querySelector("#difficulty-container"));
         document.querySelector("#easy").addEventListener("click", () => {
@@ -173,6 +197,11 @@ options.addEventListener("mouseout", () => {
 musicSlider.addEventListener("input", () => {
         allMusic.forEach(i => {
                 i.volume = musicSlider.value;
+        });
+});
+ambienceSlider.addEventListener("input", () => {
+        allAmbience.forEach(i => {
+                i.volume = ambienceSlider.value;
         });
 });
 soundFXSlider.addEventListener("input", () => {
@@ -557,7 +586,7 @@ function forestEncounter() {
                 encounterMusicIndex = allMusic.indexOf(encounterMusic);
         }
         switchMusic(allMusic[encounterMusicIndex]);
-        let randomEncounterNumber = createRandomNumber(1, 9);
+        let randomEncounterNumber = createRandomNumber(4, 4);
         while (dontRepeatEncounter.includes(randomEncounterNumber)) {
                 randomEncounterNumber = createRandomNumber(1, 9);        
         }
@@ -595,7 +624,7 @@ function forestEncounter() {
                         break;
                 case 4:
                         createEnemy("Mushroom");
-                        createEnemy("Unicorn");
+                        createEnemy("Frost Dragon");
                         createEnemy("Water Wolf");
                         initializeEnemyVariables();
                         enemyLevelUp();
@@ -604,7 +633,7 @@ function forestEncounter() {
                         break;
                 case 5:
                         createEnemy("Stag");
-                        createEnemy("Unicorn");
+                        createEnemy("Frost Dragon");
                         createEnemy("Fairy");
                         initializeEnemyVariables();
                         enemyLevelUp();
@@ -640,7 +669,7 @@ function forestEncounter() {
                         break;
                 case 9:
                         createEnemy("Mushroom");
-                        createEnemy("Unicorn");
+                        createEnemy("Frost Dragon");
                         createEnemy("Centaur");
                         initializeEnemyVariables();
                         enemyLevelUp();
@@ -892,6 +921,8 @@ function forestEliteEncounter() {
                         initializeEnemyVariables();
                         document.querySelector(".enemy-img").style = "width: 500px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        document.querySelector(".enemy-action-div").style = "margin-bottom: -3rem";
+                        document.querySelector(".enemy-debuffs").style = "margin-bottom: -1rem";
                         enemyLevelUp();
                         enemyAction(10);
                         dontRepeatEliteEncounter.push(2);
@@ -899,7 +930,7 @@ function forestEliteEncounter() {
                 case 3:
                         createEnemy("Frost Sprite");
                         initializeEnemyVariables();
-                        document.querySelector(".enemy-img").style = "width: 550px";
+                        document.querySelector(".enemy-img").style = "width: 450px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         enemyLevelUp();
                         enemyAction(11);
@@ -935,11 +966,11 @@ function forestBoss() {
                         fxGiantFootsteps.play();
                         fxGiantGroans.play();
                         fxGiantGroans.loop = true;
-                        document.querySelector(".enemy-img").style = "width: 630px; margin-left: -8rem";
-                        document.querySelector(".enemy-health-bar").style = "margin-top: -3.3rem";
-                        document.querySelector(".enemy-div").style = "position: absloute;";
-                        document.querySelector(".enemy-action-div").style = "position: absolute; bottom: 48.5rem";
-                        document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 54rem";
+                        document.querySelector(".enemy-img").style = "width: 600px; margin-left: -8rem";
+                        document.querySelector(".enemy-health-bar").style = "margin-top: -2.5rem";
+                        document.querySelector(".enemy-div").style = "margin-bottom: -2rem";
+                        document.querySelector(".enemy-action-div").style = "position: absolute; bottom: 45.5rem";
+                        document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 51.1rem";
                         enemyLevelUp();
                         enemyAction(13);
                         bossDefeated[0] = true;
@@ -2158,7 +2189,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(20);
+                                damageAllEnemies(2000);
                                 fxChainLightning.play();
                         },
                         function() {
@@ -2207,31 +2238,25 @@ const cardsInformation = [
                 [       
                         function() {
                                 spendMana(2);
+                                damageEnemy(15, chosenEnemy);
                                 if (playerFrostbite || enemyFrostbite[chosenEnemy]) {
-                                        if (tidalImbuement && playerWindswept) {
-                                                damageEnemy(34, chosenEnemy);
-                                        } else if (tidalImbuement) {
-                                                damageEnemy(50, chosenEnemy);
+                                        if (tidalImbuement) {
+                                                damageEnemy(35, chosenEnemy);
                                         } else {
-                                                damageEnemy(30, chosenEnemy);
+                                                damageEnemy(15, chosenEnemy);
                                         }
-                                } else {
-                                        damageEnemy(15, chosenEnemy);
                                 }
                                 fxFrostFingers.play();
                         },
                         function() {
                                 spendMana(2);
+                                damageEnemy(15, chosenEnemy);
                                 if (playerFrostbite || enemyFrostbite[chosenEnemy]) {
-                                        if (tidalImbuement && playerWindswept) {
-                                                damageEnemy(51, chosenEnemy);
-                                        } else if (tidalImbuement) {
-                                                damageEnemy(75, chosenEnemy);
+                                        if (tidalImbuement) {
+                                                damageEnemy(60, chosenEnemy);
                                         } else {
-                                                damageEnemy(45, chosenEnemy);
+                                                damageEnemy(30, chosenEnemy);
                                         }
-                                } else {
-                                        damageEnemy(15, chosenEnemy);
                                 }
                                 fxFrostFingers.play();
                         }
@@ -3969,7 +3994,7 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
 function getRandomNewCards () {
         arena.classList.add("dim");
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard0 = 19;//createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
         let newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
@@ -4531,7 +4556,7 @@ function updateCardText() {
                 oddBlock[i] = false;
                 oddThorns[i] = false;
         }
-        function updateText(debuff, energized, frostbit, tidal) {
+        function updateText(debuff, energized, frostbit, tidal, ember, emberUpgrade, liquid, liquidUpgrade, terraBlock, terraThorns) {
                 for (let i = 0; i < handArray.length; i++) {
                         for (let j = 0; j < cardsInformation.length; j++) {
                                 if (handArray[i].classList.contains(j)) {
@@ -4564,20 +4589,20 @@ function updateCardText() {
                                                                         oddType[i] = true;
                                                                 }
                                                                 if (type === cardsInformation[j].burn && (essenceOfEmber.length > 0 || essenceOfEmberUpgrade.length > 0)) {
-                                                                        type[upgradeIndex] += (essenceOfEmber.length * 2) + (essenceOfEmberUpgrade * 4);
+                                                                        type[upgradeIndex] += (essenceOfEmber.length * ember) + (essenceOfEmberUpgrade * emberUpgrade);
                                                                 }
                                                                 if (type === cardsInformation[j].damage && (liquidLightning.length > 0 || liquidLightningUpgrade.length > 0)) {
-                                                                        type[upgradeIndex] += (liquidLightning.length * 5) + (liquidLightningUpgrade * 7);
+                                                                        type[upgradeIndex] += (liquidLightning.length * liquid) + (liquidLightningUpgrade * liquidUpgrade);
                                                                 }
                                                                 if (type === cardsInformation[j].energize && electrify) {
                                                                         type[upgradeIndex] *= energized;
                                                                 }
                                                                 if (terrasBlessing.length > 0) {
                                                                         if (type === cardsInformation[j].block) {
-                                                                                type[upgradeIndex] += terrasBlessing.length * 5;
+                                                                                type[upgradeIndex] += terrasBlessing.length * terraBlock;
                                                                         }
                                                                         if (type === cardsInformation[j].block) {
-                                                                                type[upgradeIndex] += terrasBlessing.length;
+                                                                                type[upgradeIndex] += terrasBlessing.length * terraThorns;
                                                                         }
                                                                 }
                                                                 if (playerFrostbite && (type === cardsInformation[j].block || type === cardsInformation[j].regen || type === cardsInformation[j].blood || type === cardsInformation[j].thorns)) {
@@ -4631,7 +4656,7 @@ function updateCardText() {
                 }
         }
         console.log("UPDATE TEXT");
-        updateText(.5, 2, 4, 10);
+        updateText(.5, 2, 4, 10, 2, 4, 5, 7, 5, 1);
         // UPDATE ARRAY WITH NEW CHANGED STATS
         let updateCardTextStats = [
                 [`Deal ${cardsInformation[0].damage[0]} damage and inflict ${cardsInformation[0].burn[0]} burn`, `Inflict ${cardsInformation[1].burn[1]} burn`],
@@ -4704,7 +4729,7 @@ function updateCardText() {
                 }
         }
         // CHANGE CARD BACK TO ORIGINAL STATS
-        updateText(2, .5, .25, -10);
+        updateText(2, .5, .25, -10, -2, -4, -5, -7, -5, -1);
         /*document.querySelectorAll(".winds-card-text").forEach((i) => {
                 if (i.classList.contains("upgraded-text")) {
                         if (playerWindswept && tidalImbuement) {
@@ -4915,9 +4940,9 @@ const enemiesInformation = [
                 attackDamageHigh: 12,
         },
         {
-                name: "Unicorn",
+                name: "Frost Dragon",
                 baseHealth: 55,
-                img: "imgs/enemy-unicorn.png",
+                img: "imgs/enemy-baby-dragon.png",
                 attackChance: 1,
                 blockChance: 3,
                 frostbiteChance: 10,
@@ -5015,7 +5040,6 @@ function createEnemy(name) {
                         index = enemiesInformation[i];
                 }
         }
-        console.log(index);
         enemyContainer.innerHTML+=
         `<div class="enemy-div">
                 <div class="enemy-debuffs">
