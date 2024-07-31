@@ -17,18 +17,15 @@ Settings gear when hitting escape for music and sound volume
 Probably change ice spear so you dont have to change card text
 figure out how to crop orb imgs. Orb glow color goes with upgrade chosen. Hover over orb to see what your empower does
 forest encounters vs darkmoor encounter functions
-AIR GIFT: draw cards until you have 6
+AIR GIFT: draw cards until you have 6 or redraw hand?
+ghost elite becomes opacity: .5 and unable to be attacked
 
 BUGS
 text not reseting after encounter
-///replace unicorn
-///dryad needs to move action div down
-///ball lightning text smaller
-///liquid lightning card text doubling each turn and not reseting each encounter
-///boss music not playing
-///conduit updrade text has curly bracer
-///giant too big header blocking
-forest-ambience not looping
+///can play cards and end turn after enemies are dead
+cardclicked probably not being reset on second blackmsith causing cards to respawn instead of leave
+///dragon roars still not stopping
+death screen brings you to fae forest arena??
 
 */
 /*
@@ -349,133 +346,102 @@ const location10Tiles1 = document.querySelector("#location10-tiles1");
 const location10Tiles2 = document.querySelector("#location10-tiles2");
 const location11Tiles1 = document.querySelector("#location11-tiles1");
 // VARIABLE TO TRACK MAP LOCATION CLICK
-let chosenLocation;
 const L1T1 = () => {
-        chosenLocation = "L1T1";
-        chooseLocationPath();
+        chooseLocationPath("L1T1");
+        console.log("l1t1");
 };
 location1Tiles1.addEventListener("click", L1T1);
 const L1T2 = () => {
-        chosenLocation = "L1T2";
-        chooseLocationPath();
+        chooseLocationPath("L1T2");
 };
 location1Tiles2.addEventListener("click", L1T2);
 const L1T3 = () => {
-        chosenLocation = "L1T3";
-        chooseLocationPath();
+        chooseLocationPath("L1T3");
 };
 location1Tiles3.addEventListener("click", L1T3);
 const L2T1 = () => {
-        chosenLocation = "L2T1";
-        chooseLocationPath();
+        chooseLocationPath("L2T1");
 };
 const L2T2 = () => {
-        chosenLocation = "L2T2";
-        chooseLocationPath();
+        chooseLocationPath("L2T2");
 };
 const L2T3 = () => {
-        chosenLocation = "L2T3";
-        chooseLocationPath();
+        chooseLocationPath("L2T3");
 };
 const L2T4 = () => {
-        chosenLocation = "L2T4";
-        chooseLocationPath();
+        chooseLocationPath("L2T4");
 };
 const L3T1 = () => {
-        chosenLocation = "L3T1";
-        chooseLocationPath();
+        chooseLocationPath("L3T1");
 };
 const L3T2 = () => {
-        chosenLocation = "L3T2";
-        chooseLocationPath();
+        chooseLocationPath("L3T2");
 };
 const L3T3 = () => {
-        chosenLocation = "L3T3";
-        chooseLocationPath();
+        chooseLocationPath("L3T3");
 };
 const L4T1 = () => {
-        chosenLocation = "L4T1";
-        chooseLocationPath();
+        chooseLocationPath("L4T1");
 };
 const L4T2 = () => {
-        chosenLocation = "L4T2";
-        chooseLocationPath();
+        chooseLocationPath("L4T2");
 };
 const L4T3 = () => {
-        chosenLocation = "L4T3";
-        chooseLocationPath();
+        chooseLocationPath("L4T3");
 };
 const L4T4 = () => {
-        chosenLocation = "L4T4";
-        chooseLocationPath();
+        chooseLocationPath("L4T4");
 };
 const L5T1 = () => {
-        chosenLocation = "L5T1";
-        chooseLocationPath();
+        chooseLocationPath("L5T1");
 };
 const L5T2 = () => {
-        chosenLocation = "L5T2";
-        chooseLocationPath();
+        chooseLocationPath("L5T2");
 };
 const L5T3 = () => {
-        chosenLocation = "L5T3";
-        chooseLocationPath();
+        chooseLocationPath("L5T3");
 };
 const L6T1 = () => {
-        chosenLocation = "L6T1";
-        chooseLocationPath();
+        chooseLocationPath("L6T1");
 };
 const L7T1 = () => {
-        chosenLocation = "L7T1";
-        chooseLocationPath();
+        chooseLocationPath("L7T1");
 };
 const L7T2 = () => {
-        chosenLocation = "L7T2";
-        chooseLocationPath();
+        chooseLocationPath("L7T2");
 };
 const L7T3 = () => {
-        chosenLocation = "L7T3";
-        chooseLocationPath();
+        chooseLocationPath("L7T3");
 };
 const L8T1 = () => {
-        chosenLocation = "L8T1";
-        chooseLocationPath();
+        chooseLocationPath("L8T1");
 };
 const L8T2 = () => {
-        chosenLocation = "L8T2";
-        chooseLocationPath();
+        chooseLocationPath("L8T2");
 };
 const L8T3 = () => {
-        chosenLocation = "L8T3";
-        chooseLocationPath();
+        chooseLocationPath("L8T3");
 };
 const L9T1 = () => {
-        chosenLocation = "L9T1";
-        chooseLocationPath();
+        chooseLocationPath("L9T1");
 };
 const L9T2 = () => {
-        chosenLocation = "L9T2";
-        chooseLocationPath();
+        chooseLocationPath("L9T2");
 };
 const L9T3 = () => {
-        chosenLocation = "L9T3";
-        chooseLocationPath();
+        chooseLocationPath("L9T3");
 };
 const L9T4 = () => {
-        chosenLocation = "L9T3";
-        chooseLocationPath();
+        chooseLocationPath("L9T3");
 };
 const L10T1 = () => {
-        chosenLocation = "L10T1";
-        chooseLocationPath();
+        chooseLocationPath("L10T1");
 };
 const L10T2 = () => {
-        chosenLocation = "L10T2";
-        chooseLocationPath();
+        chooseLocationPath("L10T2");
 };
 const L11T1 = () => {
-        chosenLocation = "L11T1";
-        chooseLocationPath();
+        chooseLocationPath("L11T1");
 };
 
 let numberOfEnemies;
@@ -579,102 +545,71 @@ let dontRepeatEncounter = [];
 let encounterMusicTrigger = false;
 let encounterMusicIndex;
 function forestEncounter() {
-        if (encounterMusicTrigger === false) {
-                const encounterMusic = new Audio("audio/forest-encounter-music.wav");
-                switchMusic(encounterMusic);
-                encounterMusicTrigger = true;
-                encounterMusicIndex = allMusic.indexOf(encounterMusic);
+        if (!encounterMusicTrigger) {
+                if (faeForest) {
+                        const encounterMusic = new Audio("audio/forest-encounter-music.wav");
+                        switchMusic(encounterMusic);
+                        encounterMusicTrigger = true;
+                        encounterMusicIndex = allMusic.indexOf(encounterMusic);
+                } else if (hallowwood) {
+                        const hallowwoodEncounterMusic = new Audio("audio/hallowwood-encounter-music.wav");
+                        switchMusic(hallowwoodEncounterMusic);
+                        encounterMusicTrigger = true;
+                        encounterMusicIndex = allMusic.indexOf(hallowwoodEncounterMusic);
+                }
         }
         switchMusic(allMusic[encounterMusicIndex]);
-        let randomEncounterNumber = createRandomNumber(4, 4);
+        let randomEncounterNumber;
+        if (faeForest) {
+                randomEncounterNumber = createRandomNumber(1, 9);
+        } else if (hallowwood) {
+                randomEncounterNumber = createRandomNumber(10, 10);
+        }
         while (dontRepeatEncounter.includes(randomEncounterNumber)) {
                 randomEncounterNumber = createRandomNumber(1, 9);        
         }
-        let enemyImg = document.querySelectorAll(".enemy-img");
         switchArea(arena, map);
         displayFlex(arena);
         numberOfEnemies = 3;
+        function createEncounterEnemies(name0, name1, name2, action0, action1, action2, repeat) {
+                createEnemy(`${name0}`);
+                createEnemy(`${name1}`);
+                createEnemy(`${name2}`);
+                initializeEnemyVariables();
+                enemyLevelUp();
+                enemyAction(action0, action1, action2);
+                dontRepeatEncounter.push(repeat);
+        }
         switch (randomEncounterNumber) {
                 case 1:
-                        createEnemy("Mushroom");
-                        createEnemy("Dwarf");
-                        createEnemy("Will-o-the-Wisp");
-                        initializeEnemyVariables();
-                        enemyLevelUp();
-                        enemyAction(1, 2, 3);
-                        dontRepeatEncounter.push(1);
+                        createEncounterEnemies("Mushroom", "Dwarf", "Will-o-the-Wisp", 1, 2, 3, 1);
                         break;
                 case 2:
-                        createEnemy("Dwarf");
-                        createEnemy("Stag");
-                        createEnemy("Centaur");
-                        initializeEnemyVariables();
-                        enemyLevelUp();
-                        enemyAction(2, 5, 4);
-                        dontRepeatEncounter.push(2);
+                        createEncounterEnemies("Dwarf", "Stag", "Centaur", 2, 5, 4, 2);
                         break;
                 case 3:
-                        createEnemy("Dark Elf");
-                        createEnemy("Will-o-the-Wisp");
-                        createEnemy("Water Wolf");
-                        initializeEnemyVariables();
-                        enemyLevelUp();
-                        enemyAction(0, 3, 6);
-                        dontRepeatEncounter.push(3);
+                        createEncounterEnemies("Dark Elf", "Will-o-the-Wisp", "Water Wolf", 0, 3, 6, 3);
                         break;
                 case 4:
-                        createEnemy("Mushroom");
-                        createEnemy("Frost Dragon");
-                        createEnemy("Water Wolf");
-                        initializeEnemyVariables();
-                        enemyLevelUp();
-                        enemyAction(1, 8, 6);
-                        dontRepeatEncounter.push(4);
+                        createEncounterEnemies("Mushroom", "Frost Dragon", "Water Wolf", 1, 8, 6, 4);
                         break;
                 case 5:
-                        createEnemy("Stag");
-                        createEnemy("Frost Dragon");
-                        createEnemy("Fairy");
-                        initializeEnemyVariables();
-                        enemyLevelUp();
-                        enemyAction(5, 8, 7);
-                        dontRepeatEncounter.push(5);
+                        createEncounterEnemies("Stag", "Frost Dragon", "Fairy", 5, 8, 7, 5);
                         break;
                 case 6:
-                        createEnemy("Dark Elf");
-                        createEnemy("Stag");
-                        createEnemy("Fairy");
-                        initializeEnemyVariables();
-                        enemyLevelUp();
-                        enemyAction(0, 6, 7);
-                        dontRepeatEncounter.push(6);
+                        createEncounterEnemies("Dark Elf", "Stag", "Fairy", 0, 6, 7, 6);
                         break;
                 case 7:
-                        createEnemy("Dwarf");
-                        createEnemy("Dark Elf");
-                        createEnemy("Centaur");
-                        initializeEnemyVariables();
-                        enemyLevelUp();
-                        enemyAction(2, 0, 4);
-                        dontRepeatEncounter.push(7);
+                        createEncounterEnemies("Dwarf", "Dark Elf", "Centaur", 2, 0, 4, 7);
                         break;
                 case 8:
-                        createEnemy("Will-o-the-Wisp");
-                        createEnemy("Stag");
-                        createEnemy("Fairy");
-                        initializeEnemyVariables();
-                        enemyLevelUp();
-                        enemyAction(3, 5, 7);
-                        dontRepeatEncounter.push(8);
+                        createEncounterEnemies("Will-o-the-Wisp", "Stag", "Fairy", 3, 5, 7, 8);
                         break;
                 case 9:
-                        createEnemy("Mushroom");
-                        createEnemy("Frost Dragon");
-                        createEnemy("Centaur");
-                        initializeEnemyVariables();
-                        enemyLevelUp();
-                        enemyAction(1, 8, 4);
-                        dontRepeatEncounter.push(9);
+                        createEncounterEnemies("Mushroom", "Frost Dragon", "Centaur", 1, 8, 4, 9);
+                        break;
+                case 10:
+                        createEncounterEnemies("Pumpkinhead", "Skeleton", "Werewolf", 9, 9, 10, 10);
                         break;
         }
 }
@@ -892,21 +827,33 @@ let dontRepeatEliteEncounter = [];
 let eliteEncounterMusicTrigger = false;
 let eliteEncounterMusicIndex;
 function forestEliteEncounter() {
-        if (eliteEncounterMusicTrigger === false) {
-                const eliteEncounterMusic = new Audio("audio/elite-encounter-music.wav");
-                switchMusic(eliteEncounterMusic);
-                eliteEncounterMusicTrigger = true;
-                eliteEncounterMusicIndex = allMusic.indexOf(eliteEncounterMusic);
+        if (!eliteEncounterMusicTrigger) {
+                if (faeForest) {
+                        const eliteEncounterMusic = new Audio("audio/elite-encounter-music.wav");
+                        switchMusic(eliteEncounterMusic);
+                        eliteEncounterMusicTrigger = true;
+                        eliteEncounterMusicIndex = allMusic.indexOf(eliteEncounterMusic);
+                } else if (hallowwood) {
+                        const hallowwoodEliteMusic = new Audio("audio/hallowwood-elite-music.wav");
+                        switchMusic(hallowwoodEliteMusic);
+                        eliteEncounterMusicTrigger = true;
+                        eliteEncounterMusicIndex = allMusic.indexOf(hallowwoodEliteMusic);
+                }
         }
         switchMusic(allMusic[eliteEncounterMusicIndex]);
-        let randomEliteEncounterNumber = createRandomNumber(1, 3);
-        while (dontRepeatEliteEncounter.includes(randomEliteEncounterNumber)) {
-                randomEliteEncounterNumber = createRandomNumber(1, 3);
+        let randomEliteNumber;
+        if (faeForest) {
+                randomEliteNumber = createRandomNumber(1, 3);
+        } else if (hallowwood) {
+                randomEliteNumber = createRandomNumber(6, 6);
+        }
+        while (dontRepeatEncounter.includes(randomEliteNumber)) {
+                randomEliteNumber = createRandomNumber(1, 5);        
         }
         getEliteRelic = true;
         switchArea(arena, map);
         numberOfEnemies = 1;
-        switch (randomEliteEncounterNumber) {
+        switch (randomEliteNumber) {
                 case 1:
                         createEnemy("Fae Fox");
                         initializeEnemyVariables();
@@ -935,6 +882,33 @@ function forestEliteEncounter() {
                         enemyLevelUp();
                         enemyAction(11);
                         dontRepeatEliteEncounter.push(3);
+                        break;
+                case 4:
+                        createEnemy("Reaper");
+                        initializeEnemyVariables();
+                        document.querySelector(".enemy-img").style = "width: 550px";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        enemyLevelUp();
+                        enemyAction(23);
+                        dontRepeatEliteEncounter.push(4);
+                        break;
+                case 5:
+                        createEnemy("Vampire");
+                        initializeEnemyVariables();
+                        document.querySelector(".enemy-img").style = "width: 510px";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        enemyLevelUp();
+                        enemyAction(24);
+                        dontRepeatEliteEncounter.push(5);
+                        break;
+                case 6:
+                        createEnemy("Ghost");
+                        initializeEnemyVariables();
+                        document.querySelector(".enemy-img").style = "width: 450px";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        enemyLevelUp();
+                        enemyAction(25);
+                        dontRepeatEliteEncounter.push(6);
                         break;
         }
 }
@@ -1037,20 +1011,20 @@ function spaceEndTurn(e) {
                 endTurn();
         }
 }
-function chooseLocationPath() {
+function chooseLocationPath(location) {
         resetArena();
         window.addEventListener("keydown", spaceEndTurn);
-        switch (chosenLocation) {
+        switch (location) {
                 case "L1T1":
                         removeGlow(location1Tiles1, location1Tiles2, location1Tiles3);
                         addGlow(location2Tiles1, location2Tiles2);
                         removeELL1();
                         location2Tiles1.addEventListener("click", L2T1);
                         location2Tiles2.addEventListener("click", L2T2);
-                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                        if (!hallowwood) {
                                 forestEncounter();
-                        } else if (bossDefeated[0] && !bossDefeated[1]) {
-
+                        } else if (hallowwood) {
+                                forestEncounter();
                         }
                         break;
                 case "L1T2":
@@ -1058,9 +1032,9 @@ function chooseLocationPath() {
                         addGlow(location2Tiles3);
                         removeELL1();
                         location2Tiles3.addEventListener("click", L2T3);
-                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                        if (!hallowwood) {
                                 forestEncounter();
-                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+                        } else if (hallowwood) {
 
                         }
                         break;
@@ -1069,9 +1043,9 @@ function chooseLocationPath() {
                         addGlow(location2Tiles4);
                         removeELL1();
                         location2Tiles4.addEventListener("click", L2T4);
-                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                        if (!hallowwood) {
                                 forestEncounter();
-                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+                        } else if (hallowwood) {
 
                         }
                         break;
@@ -3874,7 +3848,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                 displayNone(cardType[index]);
         }
         function playCard() {
-                if (turnEnded === false) {
+                if (!turnEnded && !enemiesAreDead) {
                         if (cleansingCurrents && cardsInformation[CIindex].element.includes("water")) {
                                 gainRegen(1);
                                 playerMaxHealth.innerText++;
@@ -4846,6 +4820,7 @@ let enemyLevel = 0;
 const enemiesInformation = [
         {
                 name: "Dark Elf",
+                index: 0,
                 baseHealth: 50,
                 img: "imgs/enemy-dark-elf.png",
                 attackChance: 4,
@@ -4860,6 +4835,7 @@ const enemiesInformation = [
         },
         {
                 name: "Mushroom",
+                index: 1,
                 baseHealth: 75,
                 img: "imgs/enemy-mushroom.png",
                 attackChance: 2,
@@ -4874,6 +4850,7 @@ const enemiesInformation = [
         },
         {
                 name: "Dwarf",
+                index: 2,
                 baseHealth: 80,
                 img: "imgs/enemy-dwarf.png",
                 attackChance: 2,
@@ -4888,6 +4865,7 @@ const enemiesInformation = [
         },
         {
                 name: "Will-o-the-Wisp",
+                index: 3,
                 baseHealth: 40,
                 img: "imgs/enemy-will-o-the-wisp.png",
                 attackChance: 2,
@@ -4899,6 +4877,7 @@ const enemiesInformation = [
         },
         {
                 name: "Centaur",
+                index: 4,
                 baseHealth: 35,
                 img: "imgs/enemy-centaur3.png",
                 attackChance: 10,
@@ -4907,6 +4886,7 @@ const enemiesInformation = [
         },
         {
                 name: "Stag",
+                index: 5,
                 baseHealth: 65,
                 img: "imgs/enemy-deer.png",
                 attackChance: 1,
@@ -4921,6 +4901,7 @@ const enemiesInformation = [
         },
         {
                 name: "Water Wolf",
+                index: 6,
                 baseHealth: 60,
                 img: "imgs/enemy-wolf.png",
                 attackChance: 4,
@@ -4932,6 +4913,7 @@ const enemiesInformation = [
         },
         {
                 name: "Fairy",
+                index: 7,
                 baseHealth: 45,
                 img: "imgs/enemy-fairy.png",
                 attackChance: 3,
@@ -4941,6 +4923,7 @@ const enemiesInformation = [
         },
         {
                 name: "Frost Dragon",
+                index: 8,
                 baseHealth: 55,
                 img: "imgs/enemy-baby-dragon.png",
                 attackChance: 1,
@@ -4953,6 +4936,7 @@ const enemiesInformation = [
         },
         {
                 name: "Fae Fox",
+                index: 9,
                 baseHealth: 200,
                 img: "imgs/elite-fae-fox.png",
                 attackChance: 5,
@@ -4964,6 +4948,7 @@ const enemiesInformation = [
         },
         {
                 name: "Dryad",
+                index: 10,
                 baseHealth: 150,
                 img: "imgs/enemy-elite-dryad.png",
                 thornsChance: 10,
@@ -4972,6 +4957,7 @@ const enemiesInformation = [
         },
         {
                 name: "Frost Sprite",
+                index: 11,
                 baseHealth: 220,
                 img: "imgs/elite-frost-sprite.png",
                 attackChance: 5,
@@ -4983,6 +4969,7 @@ const enemiesInformation = [
         },
         {
                 name: "Fae Dragon",
+                index: 12,
                 baseHealth: 150,
                 img: "imgs/boss-fae-dragon.png",
                 attackChance: 3,
@@ -4994,6 +4981,7 @@ const enemiesInformation = [
         },
         {
                 name: "Forest Giant",
+                index: 13,
                 baseHealth: 300,
                 img: "imgs/enemy-elite-giant.png",
                 attackChance: 2,
@@ -5007,7 +4995,158 @@ const enemiesInformation = [
                 thornsAmountHigh: 7,
         },
         {
+                name: "Pumpkinhead",
+                index: 14,
+                baseHealth: 50,
+                img: "imgs/enemy-pumpkinhead2.png",
+                attackChance: 6,
+                thornsChance: 10,
+                attackDamageLow: 10,
+                attackDamageHigh: 14,
+                thornsAmountLow: 3,
+                thornsAmountHigh: 4,
+        },
+        {
+                name: "Witch",
+                index: 15,
+                baseHealth: 60,
+                img: "imgs/enemy-witch2.png",
+                attackChance: 1,
+                burnChance: 7,
+                regenChance: 10,
+                attackDamageLow: 8,
+                attackDamageHigh: 10,
+                burnAmountLow: 4,
+                burnAmountHigh: 5,
+                regenAmountLow: 10,
+                regenAmountHigh: 12,
+        },
+        {
+                name: "Skeleton",
+                index: 16,
+                baseHealth: 60,
+                img: "imgs/enemy-skeleton2.png",
+                attackChance: 5,
+                blockChance: 10,
+                attackDamageLow: 10,
+                attackDamageHigh: 12,
+                blockAmountLow: 24,
+                blockAmountHigh: 28,
+        },
+        {
+                name: "Mummy",
+                index: 17,
+                baseHealth: 80,
+                img: "imgs/enemy-mummy.png",
+                attackChance: 1,
+                blockChance: 5,
+                thornsChance: 10,
+                attackDamageLow: 8,
+                attackDamageHigh: 10,
+                blockAmountLow: 20,
+                blockAmountHigh: 22,
+                thornsAmountLow: 3,
+                thornsAmountHigh: 4,
+        },
+        {
+                name: "Werewolf",
+                index: 18,
+                baseHealth: 45,
+                img: "imgs/enemy-werewolf.png",
+                attackChance: 1,
+                bloodChance: 10,
+                attackDamageLow: 15,
+                attackDamageHigh: 25,
+                bloodAmountLow: 8,
+                bloodAmountHigh: 10,
+        },
+        {
+                name: "Little Ghost",
+                index: 19,
+                baseHealth: 80,
+                img: "imgs/enemy-mummy.png",
+                attackChance: 1,
+                blockChance: 5,
+                thornsChance: 10,
+                attackDamageLow: 8,
+                attackDamageHigh: 10,
+                blockAmountLow: 20,
+                blockAmountHigh: 22,
+                thornsAmountLow: 3,
+                thornsAmountHigh: 4,
+        },
+        {
+                name: "Bat",
+                index: 20,
+                baseHealth: 80,
+                img: "imgs/enemy-mummy.png",
+                attackChance: 1,
+                blockChance: 5,
+                thornsChance: 10,
+                attackDamageLow: 8,
+                attackDamageHigh: 10,
+                blockAmountLow: 20,
+                blockAmountHigh: 22,
+                thornsAmountLow: 3,
+                thornsAmountHigh: 4,
+        },
+        {
+                name: "Black Cat",
+                index: 21,
+                baseHealth: 80,
+                img: "imgs/enemy-mummy.png",
+                attackChance: 1,
+                blockChance: 5,
+                thornsChance: 10,
+                attackDamageLow: 8,
+                attackDamageHigh: 10,
+                blockAmountLow: 20,
+                blockAmountHigh: 22,
+                thornsAmountLow: 3,
+                thornsAmountHigh: 4,
+        },
+        {
+                name: "Monster",
+                index: 22,
+                baseHealth: 80,
+                img: "imgs/enemy-mummy.png",
+                attackChance: 1,
+                blockChance: 5,
+                thornsChance: 10,
+                attackDamageLow: 8,
+                attackDamageHigh: 10,
+                blockAmountLow: 20,
+                blockAmountHigh: 22,
+                thornsAmountLow: 3,
+                thornsAmountHigh: 4,
+        },
+        {
+                name: "Reaper",
+                index: 23,
+                baseHealth: 350,
+                img: "imgs/elite-reaper.png",
+        },
+        {
+                name: "Vampire",
+                index: 24,
+                baseHealth: 300,
+                img: "imgs/elite-vampire.png",
+                attackChance: 1,
+                bloodChance: 10,
+                attackDamageLow: 40,
+                attackDamageHigh: 50,
+                bloodAmountLow: 2,
+                bloodAmountHigh: 2
+        },
+        {
+                name: "Ghost",
+                index: 25,
+                baseHealth: 240,
+                img: "imgs/ghost-elite.png",
+        },
+        {
                 name: "Blood Queen",
+                index: 26,
                 baseHealth: 200,
                 img: "imgs/enemy-elite-druid.png",
                 attackChance: 1,
@@ -5019,18 +5158,14 @@ const enemiesInformation = [
                 bloodAmountHigh: 4,
         },
         {
-                name: "Ghost",
-                baseHealth: 240,
-                img: "imgs/ghost-elite.png",
-        },
-        {
                 name: "Wind God",
+                index: 27,
                 baseHealth: 275,
                 img: "imgs/enemy-elite-wind-god.png",
                 attackChance: 10,
                 attackDamageLow: 10,
                 attackDamageHigh: 10,
-        },
+        }
 ]
 const enemyContainer = document.querySelector("#enemy-container");
 function createEnemy(name) {
@@ -5040,7 +5175,7 @@ function createEnemy(name) {
                         index = enemiesInformation[i];
                 }
         }
-        enemyContainer.innerHTML+=
+        enemyContainer.innerHTML +=
         `<div class="enemy-div">
                 <div class="enemy-debuffs">
                         <div class="enemy-burn-div">
@@ -5218,11 +5353,12 @@ function createEnemy(name) {
                 document.querySelector(".enemy-block-img").style = "margin-right: 11rem";
                 document.querySelector(".enemy-block-number").style = "margin-right: 11rem";
         }
-        if (bossDefeated[0] && !bossDefeated[1]) {
+        if (hallowwood) {
                 for (let i = 0; i < document.getElementsByClassName("enemy-health").length; i++) {
                         document.getElementsByClassName("enemy-health")[i].style = "color: rgb(126, 255, 66)";
                 }
         }
+        console.log("CREATING ENEMY: ", name);
 }
 function enemyLevelUp() {
         function scaleEnemies(health, attack, block, burn, regen, blood, thorns) {
@@ -5503,12 +5639,17 @@ let enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
 let enemiesAreDead = false;
 let [eternalFlame, scorchedEarth, electrify, lightningJewel, leechingCold, everlastingWinter, shiftingWinds, windrunner, bloodTransfusion, cleansingCurrents, venomousVines, stonewall] =
 [false, false, false, false, false, false, false, false, false, false, false, false];
+let [faeForest, hallowwood] = [true, false];
 checkIfEnemyDead();
 function checkIfEnemyDead() {
         // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET AETHER
         function allEnemiesDead() {
+                if (!bossDefeated[0] && !bossDefeated[1] && !hallowwood) {
+                        getRandomNewCards();
+                } else if (bossDefeated[0] && !bossDefeated[1] && hallowwood) {
+                        getRandomNewCards();
+                }
                 window.removeEventListener("keydown", spaceEndTurn);
-                getRandomNewCards();
                 if (goldEncounter) {
                         playerAether.innerText = parseFloat(playerAether.innerText) + Math.ceil(30 + ((enemyLevel + 1) * 5.4));
                         goldEncounter = false;
@@ -5518,13 +5659,18 @@ function checkIfEnemyDead() {
                 if (getEliteRelic) {
                         ghostIndex = 11;
                         getRelic(1, 12);
-                        elitesKilled++;
-                } else {
-                        enemiesKilled++
                 }
-                if (bossDefeated[0] && !bossDefeated[1]) {
+                enemiesKilled++
+                if (bossDefeated[0] && !bossDefeated[1] && !hallowwood) {
+                        console.log("HOLLOW");
+                        faeForest = false;
+                        fxDragonGrowls.pause();
+                        fxGiantGroans.pause();
+                        const hallowwoodMapMusic = new Audio("audio/hallowwood-map-music.wav");
+                        switchMusic(hallowwoodMapMusic);
+                        encounterMusicTrigger = false;
                         displayFlex(exclamationContainer);
-                        displayNone(chooseNewCardDiv);
+                        displayNone(arena);
                         exclamationContainer.innerHTML = `
                         <div id="empower-container">
                                 <h1>Empower an Element</h1>
@@ -5558,7 +5704,7 @@ function checkIfEnemyDead() {
                                         <h2 style="color: #2f989c">Ice</h2>
                                         <div class="empower-choice-div">
                                                 <div class="empower-choices">
-                                                        <button id="leeching-cold" style="color: #51a9ac">Cryofreezer</button>
+                                                        <button id="leeching-cold" style="color: #51a9ac">Cryocast</button>
                                                         <p>Inflicting frostbite will steal two of each buff</p>
                                                 </div>
                                                 <div class="empower-choices">
@@ -5609,10 +5755,12 @@ function checkIfEnemyDead() {
                         </div>
                         `
                         function nextStage() {
-                                map.style = "background-image: url(imgs/hell-map.jpeg)";
+                                map.style = "background-image: url(imgs/hallowwood-map3.jpeg); background-position: 1%;";
+                                arena.style = "background-image: url(imgs/hallowwood-arena4.jpeg)";
                                 location1Tiles1.addEventListener("click", L1T1);
-                                location1Tiles1.addEventListener("click", L1T2);
-                                location1Tiles1.addEventListener("click", L1T3);
+                                location1Tiles2.addEventListener("click", L1T2);
+                                location1Tiles3.addEventListener("click", L1T3);
+                                hallowwood = true;
                                 switchArea(map, exclamationContainer);
                         }
                         document.getElementById("eternal-flame").addEventListener("click", () => {
@@ -5683,7 +5831,6 @@ function checkIfEnemyDead() {
                 }
                 return;
         }
-       
         // IF ENEMY  IS DEAD, DELETE THEM
         for (let i = 0; i < numberOfEnemies; i++) {
                 if (enemyIsDead[i] === false && enemyCurrentHealth[i].innerText <= 0) {
@@ -5698,7 +5845,6 @@ function checkIfEnemyDead() {
         if (enemiesAlive == 0 && !enemiesAreDead) {
                 enemiesAreDead = true;
                 allEnemiesDead();
-                console.log("what");
         }
 }
 // TRACK WHICH CARD AND ENEMY HAS BEEN CLICKED ON
@@ -5808,6 +5954,15 @@ function enemyAction() {
                                         enemyBloodActionNumber[eI].innerText = enemyRandomBlood[eI];
                                         displayBlock(enemyBloodActionImg[eI], enemyBloodActionNumber[eI], enemyBloodActionDiv[eI]);
                                         enemyCanGainBlood = true;
+                                } else if (trackEnemies[eI] === 24 && enemyBloodNumber[eI].innerText <= 1) {
+                                        // BLOOD
+                                        enemyRandomBlood[eI] = createRandomNumber(enemiesInformation[i].bloodAmountLow, enemiesInformation[i].bloodAmountHigh);
+                                        if (everlastingWinterTracking[eI] === true) {
+                                                enemyRandomBlood[eI] = Math.floor(enemyRandomBlood[eI] / 2);
+                                        }
+                                        enemyBloodActionNumber[eI].innerText = enemyRandomBlood[eI];
+                                        displayBlock(enemyBloodActionImg[eI], enemyBloodActionNumber[eI], enemyBloodActionDiv[eI]);
+                                        enemyCanGainBlood = true;
                                 } else {
                                         // ATTACK
                                         enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
@@ -5845,149 +6000,158 @@ function enemyAction() {
 }
 let everlastingWinterTracking = [false, false, false];
 function endTurn() {
-        // RESET MANA AND DEBUFFS
-        if (lightningInABottle) { 
-                if (lightningJewel) {
-                        currentMana.innerText = parseFloat(currentMana.innerText) + 5;
-                } else {
-                        currentMana.innerText = parseFloat(currentMana.innerText) + 4;                 
-                }
-        } else {
-                if (lightningJewel) {
-                        currentMana.innerText = 5;
-                } else {
-                        currentMana.innerText = 4;
-                }
-        }
-        checkPlayerBurn();
-        if (trackEnemies[0] !== 11) {
-                playerWindswept = false;
-                playerFrostbite = false;
-                displayNone(playerWindsweptImg, playerFrostbiteImg);
-        }
-        console.log(trackEnemies[0]);
-        enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
-        // FUNCTIONS TRIGGERS WHEN END TURN BUTTON IS CLICKED
-        const enemyTurn = () => {
-                checkEnemyBurn([eI]);
-                if (scorchedEarth) {
-                        checkEnemyBurn([eI]);
-                }
-                // CHECK IF ENEMY IS DEAD
-                if (enemyIsDead[eI] === false) {
-                                checkEnemyRegenHeal([eI]);
-                                checkEnemyBloodSiphon([eI]);
-                                if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].attackChance) {
-                                        // ATTACK
-                                        damagePlayer(enemyRandomDamage[eI], eI);
-                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].blockChance) {
-                                        // BLOCK
-                                        fxEnemyBlock.play();
-                                        enemyGainBlock(enemyRandomBlock[eI], eI);
-                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].healChance) {
-                                        if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemyRandomHeal[eI]) {
-                                                // HEAL
-                                                enemyHeal(enemyRandomHeal[eI], eI);
-                                        } else {
-                                                // ATTACK
-                                                damagePlayer(enemyRandomDamage[eI], eI);
-                                        }
-                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].burnChance) {
-                                        // BURN
-                                        enemyBurnPlayer(enemyRandomBurn[eI], eI);
-                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].energizeChance) {
-                                        // ENERGIZE
-                                        //energizeIndex = 3;
-                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].regenChance) {
-                                        if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemyRandomRegen[eI]) {
-                                                // REGEN
-                                                enemyGainRegeneration(enemyRandomRegen[eI], eI);
-                                        } else {
-                                                // ATTACK
-                                                damagePlayer(enemyRandomDamage[eI], eI);
-                                        }
-                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].bloodChance) {
-                                        if (enemyCanGainBlood === true && parseFloat(enemyCurrentHealth[eI].innerText) < parseFloat(enemyMaxHealth[eI].innerText) && parseFloat(enemyBloodNumber[eI].innerText) <= 1) {
-                                                // BLOOD
-                                                enemyGainBloodSiphon(enemyRandomBlood[eI], eI);
-                                                enemyCanGainBlood = false;
-                                        } else {
-                                                // ATTACK
-                                                damagePlayer(enemyRandomDamage[eI], eI);
-                                        }
-                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].thornsChance) {
-                                        // THORNS
-                                        enemyGainThorns(enemyRandomThorns[eI], eI);
-                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].windsweptChance) {
-                                        // LOWER ATTACK
-                                        fxWindsOfChange.currentTime = 0;
-                                        fxWindsOfChange.play();
-                                        playerWindswept = true;
-                                        displayBlock(playerWindsweptImg);
-                                } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].frostbiteChance) {                        
-                                        // LOWER BLOCK
-                                        fxFlurry.currentTime = 0;
-                                        fxFlurry.play();
-                                        playerFrostbite = true;
-                                        displayBlock(playerFrostbiteImg);        
-                                } else {
-                                        if (ghostIndex === 0) {
-                                                playerCurrentHealth.innerText -= 1000;
-                                                topBarHealthNumber.innerText -= 1000;
-                                        }
-                                }
-                        // RESET ACTIONS
-                        displayNone(enemyAttackActionDiv[eI], enemyBlockActionDiv[eI], enemyHealActionDiv[eI], enemyBurnActionDiv[eI], enemyThornsActionDiv[eI],
-                                enemyRegenActionDiv[eI], enemyWindsweptActionImg[eI], enemyFrostbiteActionImg[eI], enemyWindsweptImg[eI]);
-                        if (everlastingWinter && !everlastingWinterTracking[eI] && enemyFrostbite[eI]) {
-                                everlastingWinterTracking[eI] = true;
+        if (!enemiesAreDead) {
+                // RESET MANA AND DEBUFFS
+                if (lightningInABottle) { 
+                        if (lightningJewel) {
+                                currentMana.innerText = parseFloat(currentMana.innerText) + 5;
                         } else {
-                                enemyWindswept[eI] = false;
-                                enemyFrostbite[eI] = false;
-                                everlastingWinterTracking[eI] = false;
-                                displayNone(enemyFrostbiteImg[eI]);
+                                currentMana.innerText = parseFloat(currentMana.innerText) + 4;                 
                         }
-                        concentratedFireTracking[eI] = false;
-                }
-                eI++;
-        }
-        enemyTurn();
-        if (numberOfEnemies > 1) {
-                setTimeout(enemyTurn, 400);
-        }
-        if (numberOfEnemies === 3) {
-                setTimeout(enemyTurn, 800);
-        }
-        setTimeout(function() {
-                removeCardClicked();
-                checkPlayerEnergize();
-                checkRegenHeal();
-                checkBloodSiphon();
-                checkGaiasEmbrace();
-                addCardsToHand();
-                checkIfEnemyDead();
-                if (numberOfEnemies === 1) {
-                        enemyAction(trackEnemies[0]);
-                } else if (numberOfEnemies === 2) {
-                        enemyAction(trackEnemies[0], trackEnemies[1]);
                 } else {
-                        enemyAction(trackEnemies[0], trackEnemies[1], trackEnemies[2]);
+                        if (lightningJewel) {
+                                currentMana.innerText = 5;
+                        } else {
+                                currentMana.innerText = 4;
+                        }
                 }
-        }, (numberOfEnemies - 1) * 500);
-        damageThisTurn = 0;
-        airBubble = [];
-        if (bloodAmulet) {
-                playerBloodNumber.innerText = parseFloat(playerBloodNumber.innerText) + 1;
-                displayBlock(playerBloodImg, playerBloodNumber);
-                bloodAmulet = false;
+                checkPlayerBurn();
+                if (trackEnemies[0] !== 11) {
+                        playerWindswept = false;
+                        playerFrostbite = false;
+                        displayNone(playerWindsweptImg, playerFrostbiteImg);
+                }
+                enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
+                // FUNCTIONS TRIGGERS WHEN END TURN BUTTON IS CLICKED
+                const enemyTurn = () => {
+                        checkEnemyBurn([eI]);
+                        if (scorchedEarth) {
+                                checkEnemyBurn([eI]);
+                        }
+                        // CHECK IF ENEMY IS DEAD
+                        if (enemyIsDead[eI] === false) {
+                                        checkEnemyRegenHeal([eI]);
+                                        checkEnemyBloodSiphon([eI]);
+                                        if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].attackChance) {
+                                                // ATTACK
+                                                damagePlayer(enemyRandomDamage[eI], eI);
+                                        } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].blockChance) {
+                                                // BLOCK
+                                                fxEnemyBlock.play();
+                                                enemyGainBlock(enemyRandomBlock[eI], eI);
+                                        } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].healChance) {
+                                                if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemyRandomHeal[eI]) {
+                                                        // HEAL
+                                                        enemyHeal(enemyRandomHeal[eI], eI);
+                                                } else {
+                                                        // ATTACK
+                                                        damagePlayer(enemyRandomDamage[eI], eI);
+                                                }
+                                        } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].burnChance) {
+                                                // BURN
+                                                enemyBurnPlayer(enemyRandomBurn[eI], eI);
+                                        } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].energizeChance) {
+                                                // ENERGIZE
+                                                //energizeIndex = 3;
+                                        } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].regenChance) {
+                                                if (enemyCurrentHealth[eI].innerText < enemyMaxHealth[eI].innerText - enemyRandomRegen[eI]) {
+                                                        // REGEN
+                                                        enemyGainRegeneration(enemyRandomRegen[eI], eI);
+                                                } else {
+                                                        // ATTACK
+                                                        damagePlayer(enemyRandomDamage[eI], eI);
+                                                }
+                                        } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].bloodChance) {
+                                                if (enemyCanGainBlood === true && parseFloat(enemyCurrentHealth[eI].innerText) < parseFloat(enemyMaxHealth[eI].innerText) && parseFloat(enemyBloodNumber[eI].innerText) <= 1) {
+                                                        // BLOOD
+                                                        enemyGainBloodSiphon(enemyRandomBlood[eI], eI);
+                                                        enemyCanGainBlood = false;
+                                                } else if (trackEnemies[eI] === 24 && enemyBloodNumber[eI].innerText == 0) {
+                                                        // BLOOD
+                                                        enemyGainBloodSiphon(enemyRandomBlood[eI], eI);
+                                                        enemyCanGainBlood = false;
+                                                } else {
+                                                        // ATTACK
+                                                        damagePlayer(enemyRandomDamage[eI], eI);
+                                                }
+                                        } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].thornsChance) {
+                                                // THORNS
+                                                enemyGainThorns(enemyRandomThorns[eI], eI);
+                                        } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].windsweptChance) {
+                                                // LOWER ATTACK
+                                                fxWindsOfChange.currentTime = 0;
+                                                fxWindsOfChange.play();
+                                                playerWindswept = true;
+                                                displayBlock(playerWindsweptImg);
+                                        } else if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].frostbiteChance) {                        
+                                                // LOWER BLOCK
+                                                fxFlurry.currentTime = 0;
+                                                fxFlurry.play();
+                                                playerFrostbite = true;
+                                                displayBlock(playerFrostbiteImg);        
+                                        } else {
+                                                if (ghostIndex === 1) {
+                                                        playerCurrentHealth.innerText -= 1000;
+                                                        topBarHealthNumber.innerText -= 1000;
+                                                }
+                                        }
+                                // RESET ACTIONS
+                                displayNone(enemyAttackActionDiv[eI], enemyBlockActionDiv[eI], enemyHealActionDiv[eI], enemyBurnActionDiv[eI], enemyThornsActionDiv[eI],
+                                        enemyRegenActionDiv[eI], enemyWindsweptActionImg[eI], enemyFrostbiteActionImg[eI], enemyWindsweptImg[eI]);
+                                if (everlastingWinter && !everlastingWinterTracking[eI] && enemyFrostbite[eI]) {
+                                        everlastingWinterTracking[eI] = true;
+                                } else {
+                                        enemyWindswept[eI] = false;
+                                        enemyFrostbite[eI] = false;
+                                        everlastingWinterTracking[eI] = false;
+                                        displayNone(enemyFrostbiteImg[eI]);
+                                }
+                                concentratedFireTracking[eI] = false;
+                        }
+                        eI++;
+                }
+                enemyTurn();
+                if (numberOfEnemies > 1) {
+                        setTimeout(enemyTurn, 400);
+                }
+                if (numberOfEnemies === 3) {
+                        setTimeout(enemyTurn, 800);
+                }
+                setTimeout(function() {
+                        removeCardClicked();
+                        checkPlayerEnergize();
+                        checkRegenHeal();
+                        checkBloodSiphon();
+                        checkGaiasEmbrace();
+                        addCardsToHand();
+                        checkIfEnemyDead();
+                        if (numberOfEnemies === 1) {
+                                enemyAction(trackEnemies[0]);
+                        } else if (numberOfEnemies === 2) {
+                                enemyAction(trackEnemies[0], trackEnemies[1]);
+                        } else {
+                                enemyAction(trackEnemies[0], trackEnemies[1], trackEnemies[2]);
+                        }
+                }, (numberOfEnemies - 1) * 500);
+                damageThisTurn = 0;
+                airBubble = [];
+                if (bloodAmulet) {
+                        playerBloodNumber.innerText = parseFloat(playerBloodNumber.innerText) + 1;
+                        displayBlock(playerBloodImg, playerBloodNumber);
+                        bloodAmulet = false;
+                }
+                turnEnded = true;
+                if (venomousVines) {
+                        playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) + 2;
+                        displayBlock(playerThornsImg, playerThornsNumber);
+                }
+                checkHealth();
         }
-        turnEnded = true;
-        if (venomousVines) {
-                playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) + 2;
-                displayBlock(playerThornsImg, playerThornsNumber);
-        }
-        checkHealth();
 }
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
+faeForest = false;
+hallowwood = true;
+map.style = "background-image: url(imgs/hallowwood-map3.jpeg)";
+arena.style = "background-image: url(imgs/hallowwood-arena4.jpeg)";
