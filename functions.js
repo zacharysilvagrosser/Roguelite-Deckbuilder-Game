@@ -22,9 +22,7 @@ ghost elite becomes opacity: .5 and unable to be attacked
 
 BUGS
 text not reseting after encounter
-///can play cards and end turn after enemies are dead
 cardclicked probably not being reset on second blackmsith causing cards to respawn instead of leave
-///dragon roars still not stopping
 death screen brings you to fae forest arena??
 
 */
@@ -460,9 +458,16 @@ function resetArena() {
                 document.getElementById("water-orb-img").classList.add("water-glow");
         }
         if (earthGift) {
-                console.log("earht gift?", earthGift);
                 earthGiftTrigger = true;
                 document.getElementById("earth-orb-img").classList.add("earth-glow");
+        }
+        if (iceGift) {
+                iceGiftTrigger = true;
+                document.getElementById("ice-orb-img").classList.add("ice-glow");
+        }
+        if (airGift) {
+                airGiftTrigger = true;
+                document.getElementById("air-orb-img").classList.add("air-glow");
         }
         playerWindswept = false;
         playerFrostbite = false;
@@ -562,11 +567,14 @@ function forestEncounter() {
         let randomEncounterNumber;
         if (faeForest) {
                 randomEncounterNumber = createRandomNumber(1, 9);
+                while (dontRepeatEncounter.includes(randomEncounterNumber)) {
+                        randomEncounterNumber = createRandomNumber(1, 9);        
+                }
         } else if (hallowwood) {
                 randomEncounterNumber = createRandomNumber(10, 10);
-        }
-        while (dontRepeatEncounter.includes(randomEncounterNumber)) {
-                randomEncounterNumber = createRandomNumber(1, 9);        
+                while (dontRepeatEncounter.includes(randomEncounterNumber)) {
+                        randomEncounterNumber = createRandomNumber(10, 18);        
+                }
         }
         switchArea(arena, map);
         displayFlex(arena);
@@ -609,14 +617,14 @@ function forestEncounter() {
                         createEncounterEnemies("Mushroom", "Frost Dragon", "Centaur", 1, 8, 4, 9);
                         break;
                 case 10:
-                        createEncounterEnemies("Pumpkinhead", "Skeleton", "Werewolf", 9, 9, 10, 10);
+                        createEncounterEnemies("Bat", "Zombie", "Spirit", 9, 9, 10, 10);
                         break;
         }
 }
 let dontRepeatGoldEncounter = [];
 let goldEncounter = false;
 function forestGoldEncounter() {
-        //switchMusic(allMusic[encounterMusicIndex]);
+        switchMusic(allMusic[encounterMusicIndex]);
         goldEncounter = true;
         let randomGoldEncounterNumber = createRandomNumber(1, 3);
         while (dontRepeatGoldEncounter.includes(randomGoldEncounterNumber)) {
@@ -844,85 +852,88 @@ function forestEliteEncounter() {
         let randomEliteNumber;
         if (faeForest) {
                 randomEliteNumber = createRandomNumber(1, 3);
+                while (dontRepeatEncounter.includes(randomEliteNumber)) {
+                        randomEliteNumber = createRandomNumber(1, 3);        
+                }
         } else if (hallowwood) {
-                randomEliteNumber = createRandomNumber(6, 6);
-        }
-        while (dontRepeatEncounter.includes(randomEliteNumber)) {
-                randomEliteNumber = createRandomNumber(1, 5);        
+                randomEliteNumber = createRandomNumber(4, 6);
+                while (dontRepeatEncounter.includes(randomEliteNumber)) {
+                        randomEliteNumber = createRandomNumber(4, 6);        
+                }
         }
         getEliteRelic = true;
         switchArea(arena, map);
         numberOfEnemies = 1;
+        function createEliteEnemy(name, action, repeat) {
+                createEnemy(`${name}`);
+                initializeEnemyVariables();
+                enemyLevelUp();
+                enemyAction(action);
+                dontRepeatEncounter.push(repeat);
+        }
         switch (randomEliteNumber) {
                 case 1:
-                        createEnemy("Fae Fox");
-                        initializeEnemyVariables();
+                        createEliteEnemy("Fae Fox", 9 , 1);
                         document.querySelector(".enemy-img").style = "width: 500px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: 1rem; bottom: 9rem";
-                        enemyLevelUp();
-                        enemyAction(9);
-                        dontRepeatEliteEncounter.push(1);
                         break;
                 case 2:
-                        createEnemy("Dryad");
-                        initializeEnemyVariables();
+                        createEliteEnemy("Dryad", 10, 2);
                         document.querySelector(".enemy-img").style = "width: 500px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         document.querySelector(".enemy-action-div").style = "margin-bottom: -3rem";
                         document.querySelector(".enemy-debuffs").style = "margin-bottom: -1rem";
-                        enemyLevelUp();
-                        enemyAction(10);
-                        dontRepeatEliteEncounter.push(2);
                         break;
                 case 3:
-                        createEnemy("Frost Sprite");
-                        initializeEnemyVariables();
+                        createEliteEnemy("Frost Sprite", 11, 3);
                         document.querySelector(".enemy-img").style = "width: 450px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
-                        enemyLevelUp();
-                        enemyAction(11);
-                        dontRepeatEliteEncounter.push(3);
                         break;
                 case 4:
-                        createEnemy("Reaper");
-                        initializeEnemyVariables();
+                        createEliteEnemy("Reaper", 23, 4);
                         document.querySelector(".enemy-img").style = "width: 550px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
-                        enemyLevelUp();
-                        enemyAction(23);
-                        dontRepeatEliteEncounter.push(4);
                         break;
                 case 5:
-                        createEnemy("Vampire");
-                        initializeEnemyVariables();
+                        createEliteEnemy("Spectre", 24, 5);
                         document.querySelector(".enemy-img").style = "width: 510px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
-                        enemyLevelUp();
-                        enemyAction(24);
-                        dontRepeatEliteEncounter.push(5);
                         break;
                 case 6:
-                        createEnemy("Ghost");
-                        initializeEnemyVariables();
+                        createEliteEnemy("Gargoyle", 25, 6);
                         document.querySelector(".enemy-img").style = "width: 450px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
-                        enemyLevelUp();
-                        enemyAction(25);
-                        dontRepeatEliteEncounter.push(6);
                         break;
         }
 }
 let bossDefeated = [false, false];
 function forestBoss() {
-        const bossMusic = new Audio("audio/forest-boss-music.wav");
-        switchMusic(bossMusic);
-        let randomBossEncounterNumber = createRandomNumber(1, 2);
+        if (faeForest) {
+                const bossMusic = new Audio("audio/forest-boss-music.wav");
+                switchMusic(bossMusic);
+        } else if (hallowwood) {
+                const hallowwoodBossMusic = new Audio("audio/hallowwood-boss-music.wav");
+                switchMusic(hallowwoodBossMusic);
+        }
+        let randomBossNumber;
+        if (faeForest) {
+                randomBossNumber = createRandomNumber(1, 2);
+        } else if (hallowwood) {
+                randomBossNumber = createRandomNumber(3, 4);
+        }
         switchArea(arena, map);
         numberOfEnemies = 1;
-        switch (randomBossEncounterNumber) {
+        function createBossEnemy(name, action, repeat, boss) {
+                createEnemy(`${name}`);
+                initializeEnemyVariables();
+                enemyLevelUp();
+                enemyAction(action);
+                bossDefeated[boss] = true;
+                dontRepeatEncounter.push(repeat);
+        }
+        switch (randomBossNumber) {
                 case 1:
-                        createEnemy("Fae Dragon");
-                        initializeEnemyVariables();
+                        createBossEnemy("Fae Dragon", 12, 1, 0);
                         fxDragonRoar.play();
                         fxDragonGrowls.play();
                         fxDragonGrowls.loop = true;
@@ -930,13 +941,9 @@ function forestBoss() {
                         document.querySelector(".enemy-div").style = "position: absolute; left: 32rem; bottom: 15rem";
                         document.querySelector(".enemy-action-div").style = "position: absolute; bottom: 30rem";
                         document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 36rem";
-                        enemyLevelUp();
-                        enemyAction(12);
-                        bossDefeated[0] = true;
                         break;
                 case 2:
-                        createEnemy("Forest Giant");
-                        initializeEnemyVariables();
+                        createBossEnemy("Forest Giant", 13, 2, 0);
                         fxGiantFootsteps.play();
                         fxGiantGroans.play();
                         fxGiantGroans.loop = true;
@@ -945,66 +952,147 @@ function forestBoss() {
                         document.querySelector(".enemy-div").style = "margin-bottom: -2rem";
                         document.querySelector(".enemy-action-div").style = "position: absolute; bottom: 45.5rem";
                         document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 51.1rem";
-                        enemyLevelUp();
-                        enemyAction(13);
-                        bossDefeated[0] = true;
+                        break;
+                case 3:
+                        createBossEnemy("Vampire", 26, 3, 1);
+                        document.querySelector(".enemy-img").style = "width: 600px; margin-left: -8rem";
+                        document.querySelector(".enemy-health-bar").style = "margin-top: -2.5rem";
+                        document.querySelector(".enemy-div").style = "margin-bottom: -2rem";
+                        document.querySelector(".enemy-action-div").style = "position: absolute; bottom: 45.5rem";
+                        document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 51.1rem";
+                        break;
+                case 4:
+                        createBossEnemy("Werewolf", 27, 4, 1);
+                        document.querySelector(".enemy-img").style = "width: 600px; margin-left: -8rem";
+                        document.querySelector(".enemy-health-bar").style = "margin-top: -2.5rem";
+                        document.querySelector(".enemy-div").style = "margin-bottom: -2rem";
+                        document.querySelector(".enemy-action-div").style = "position: absolute; bottom: 45.5rem";
+                        document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 51.1rem";
                         break;
         }
 }
-let [fireGift, lightningGift, iceGift, airGift, waterGift, earthGift, empowerBloodSiphon] = [false, false, false, false, false, false, false];
+let [fireGift, lightningGift, iceGift, iceGiftTrigger, airGift, airGiftTrigger, waterGift, waterGiftTrigger, earthGift, earthGiftTrigger, empowerBloodSiphon, stealBuffs, reduceAllAttack] =
+[false, false, false, false, false, false, false, false, false, false, false, false, false];
 function forestTreasure() {
         displayNone(map);
         displayFlex(exclamationContainer);
-        exclamationContainer.innerHTML = `
-        <div id="treasure-container">
-                <div style="text-align: center">
-                        <h1>Choose a Blessing</h1>
-                        <h2>Gain a gift you can use once per battle</h2>
-                </div>
-                <div class="treasure-element-div">
-                        <h2 style="color: #74ccf4">Aquatas' Gift</h2>
-                        <div class="treasure-choice-div">
-                                <div class="treasure-choices">
-                                        <p>Empower your blood siphon this turn to heal for 40% more health</p>
-                                        <button id="water-gift" style="color: #74ccf4">Aquatas' Gift</button>
+        if (faeForest) {
+                exclamationContainer.innerHTML = `
+                <div id="treasure-container">
+                        <div style="text-align: center">
+                                <h1>Choose a Blessing</h1>
+                                <h2>Gain a gift you can use once per battle</h2>
+                        </div>
+                        <div class="treasure-element-div">
+                                <h2 style="color: #74ccf4">Aquatas' Gift</h2>
+                                <div class="treasure-choice-div">
+                                        <div class="treasure-choices">
+                                                <p>Empower your blood siphon this turn to heal for 40% more health</p>
+                                                <button id="water-gift" style="color: #74ccf4">Aquatas' Gift</button>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="treasure-element-div">
+                                <h2 style="color: #81b14f">Gaia's Gift</h2>
+                                <div class="treasure-choice-div">
+                                        <div class="treasure-choices">
+                                                <p>Double your armor</p>
+                                                <button id="earth-gift" style="color: #81b14f">Gaia's Gift</button>
+                                        </div>
                                 </div>
                         </div>
                 </div>
-                <div class="treasure-element-div">
-                        <h2 style="color: #81b14f">Gaia's Gift</h2>
-                        <div class="treasure-choice-div">
-                                <div class="treasure-choices">
-                                        <p>Double your armor</p>
-                                        <button id="earth-gift" style="color: #81b14f">Gaia's Gift</button>
+                `
+                document.getElementById("water-gift").addEventListener("click", () => {
+                        waterGift = true;
+                        waterGiftTrigger = true;
+                        document.getElementById("water-orb-img").classList.add("water-glow");
+                        document.getElementById("water-orb-img").addEventListener("click", () => {
+                                if (waterGift && waterGiftTrigger && playerBloodNumber.innerText > 0) {
+                                        empowerBloodSiphon = true;
+                                        waterGiftTrigger = false;
+                                        document.getElementById("water-orb-img").classList.remove("water-glow");
+                                }
+                        });
+                        switchArea(map, exclamationContainer);
+                });
+                document.getElementById("earth-gift").addEventListener("click", () => {
+                        earthGift = true;
+                        earthGiftTrigger = true;
+                        document.getElementById("earth-orb-img").classList.add("earth-glow");
+                        document.getElementById("earth-orb-img").addEventListener("click", () => {
+                                if (earthGift && earthGiftTrigger) {
+                                        playerBlockNumber.innerText *= 2;
+                                        document.getElementById("earth-orb-img").classList.remove("earth-glow");
+                                        earthGiftTrigger = false;
+                                }
+                        });
+                        switchArea(map, exclamationContainer);
+                });
+        } else if (hallowwood) {
+                exclamationContainer.innerHTML = `
+                <div id="treasure-container">
+                        <div style="text-align: center">
+                                <h1>Choose a Blessing</h1>
+                                <h2>Gain a gift you can use once per battle</h2>
+                        </div>
+                        <div class="treasure-element-div">
+                                <h2 style="color: #2f989c">Glacia's Gift</h2>
+                                <div class="treasure-choice-div">
+                                        <div class="treasure-choices">
+                                                <p>The next enemies you frostbite will steal all of their buffs</p>
+                                                <button id="ice-gift" style="color: #2f989c">Glacia's Gift</button>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="treasure-element-div">
+                                <h2 style="color: #86bfdf">Tempia's Gift</h2>
+                                <div class="treasure-choice-div">
+                                        <div class="treasure-choices">
+                                                <p>Windswept reduces attack to 0 this turn</p>
+                                                <button id="air-gift" style="color: #86bfdf">Tempia's Gift</button>
+                                        </div>
                                 </div>
                         </div>
                 </div>
-        </div>
-        `
-        document.getElementById("water-gift").addEventListener("click", () => {
-                waterGift = true;
-                waterGiftTrigger = true;
-                document.getElementById("water-orb-img").classList.add("water-glow");
-                document.getElementById("water-orb-img").addEventListener("click", () => {
-                        if (waterGift && waterGiftTrigger && playerBloodNumber.innerText > 0) {
-                                empowerBloodSiphon = true;
-                                waterGiftTrigger = false;
-                                document.getElementById("water-orb-img").classList.remove("water-glow");
-                        }
+                `
+                document.getElementById("treasure-container").style = "background-image: url(imgs/hallowwood-treasure.jpeg)"
+                document.getElementById("ice-gift").addEventListener("click", () => {
+                        iceGift = true;
+                        iceGiftTrigger = true;
+                        document.getElementById("air-orb-img").style = "margin-left: 80px; z-index: 0;"
+                        document.getElementById("ice-orb-img").style = "margin-left: 130px; z-index: 2;"
+                        document.getElementById("ice-orb-img").classList.add("ice-glow");
+                        document.getElementById("ice-orb-img").addEventListener("click", () => {
+                                if (iceGift && iceGiftTrigger) {
+                                        stealBuffs = true;
+                                        iceGiftTrigger = false;
+                                        document.getElementById("ice-orb-img").classList.remove("ice-glow");
+                                }
+                        });
+                        switchArea(map, exclamationContainer);
                 });
-                switchArea(map, exclamationContainer);
-        });
-        document.getElementById("earth-gift").addEventListener("click", () => {
-                earthGift = true;
-                document.getElementById("earth-orb-img").classList.add("earth-glow");
-                document.getElementById("earth-orb-img").addEventListener("click", () => {
-                        if (earthGift) {
-                                playerBlockNumber.innerText *= 2;
-                                document.getElementById("earth-orb-img").classList.remove("earth-glow");
-                        }
+                document.getElementById("air-gift").addEventListener("click", () => {
+                        airGift = true;
+                        airGiftTrigger = true;
+                        reduceAllAttack = true;
+                        document.getElementById("air-orb-img").classList.add("air-glow");
+                        document.getElementById("air-orb-img").addEventListener("click", () => {
+                                if (airGift && airGiftTrigger) {
+                                        for (let i = 0; i < numberOfEnemies; i++) {
+                                                if (!enemyIsDead[i]) {
+                                                        inflictWindswept(i);
+                                                        enemyAttackActionNumber[i].innerText = 0;
+                                                }
+                                        }
+                                        document.getElementById("air-orb-img").classList.remove("air-glow");
+                                        airGiftTrigger = false;
+                                        reduceAllAttack = true;
+                                }
+                        });
+                        switchArea(map, exclamationContainer);
                 });
-                switchArea(map, exclamationContainer);
-        });
+        }
 }
 function spaceEndTurn(e) {
         if (e.key === " ") {
@@ -1021,10 +1109,10 @@ function chooseLocationPath(location) {
                         removeELL1();
                         location2Tiles1.addEventListener("click", L2T1);
                         location2Tiles2.addEventListener("click", L2T2);
-                        if (!hallowwood) {
+                        if (faeForest) {
                                 forestEncounter();
                         } else if (hallowwood) {
-                                forestEncounter();
+                                forestTreasure();
                         }
                         break;
                 case "L1T2":
@@ -1032,7 +1120,7 @@ function chooseLocationPath(location) {
                         addGlow(location2Tiles3);
                         removeELL1();
                         location2Tiles3.addEventListener("click", L2T3);
-                        if (!hallowwood) {
+                        if (faeForest) {
                                 forestEncounter();
                         } else if (hallowwood) {
 
@@ -1043,7 +1131,7 @@ function chooseLocationPath(location) {
                         addGlow(location2Tiles4);
                         removeELL1();
                         location2Tiles4.addEventListener("click", L2T4);
-                        if (!hallowwood) {
+                        if (faeForest) {
                                 forestEncounter();
                         } else if (hallowwood) {
 
@@ -1054,10 +1142,10 @@ function chooseLocationPath(location) {
                         addGlow(location3Tiles1);
                         removeELL2();
                         location3Tiles1.addEventListener("click", L3T1);
-                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                        if (faeForest) {
                                 forestEncounter();
-                        } else if (bossDefeated[0] && !bossDefeated[1]) {
-
+                        } else if (hallowwood) {
+                                forestEncounter();
                         }
                         break;
                 case "L2T2":
@@ -1065,9 +1153,9 @@ function chooseLocationPath(location) {
                         addGlow(location3Tiles2);
                         removeELL2();
                         location3Tiles2.addEventListener("click", L3T2);
-                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                        if (faeForest) {
                                 forestEncounter();
-                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+                        } else if (hallowwood) {
 
                         }
                         break;
@@ -1076,9 +1164,9 @@ function chooseLocationPath(location) {
                         addGlow(location3Tiles3);
                         removeELL2();
                         location3Tiles3.addEventListener("click", L3T3);
-                        if (!bossDefeated[0] && !bossDefeated[1]) {
+                        if (faeForest) {
                                 forestEncounter();
-                        } else if (bossDefeated[0] && !bossDefeated[1]) {
+                        } else if (hallowwood) {
 
                         }
                         break;
@@ -4233,33 +4321,55 @@ function inflictWindswept(enemy) {
                 }
         }
 }
-function leechBuffs(enemy) {
-        function checkBuffs(buff, enemyImg, playerImg, playerNumber, total) {
-                console.log("BLOCK NUMBER: ", playerBlockNumber.innerText);
-                if (buff[enemy].innerText > 0) {
-                        if (buff[enemy].innerText > 1) {
-                                buff[enemy].innerText = parseFloat(buff[enemy].innerText) - 2;
-                                playerNumber.innerText = parseFloat(playerNumber.innerText) + 2;
-                                total += 2;
-                                console.log("BLOCK NUMBER AFTER: ", playerBlockNumber.innerText);
-                        } else {
-                                buff[enemy].innerText = parseFloat(buff[enemy].innerText) - 1;
-                                playerNumber.innerText = parseFloat(playerNumber.innerText) + 1;
-                                total++;
-                        }
-                        displayBlock(playerImg, playerNumber);
-                        if (buff[enemy].innerText == 0) {
-                                displayNone(enemyImg[enemy], buff[enemy]);
+function leechBuffs(enemy, leech) {
+        if (leech) {
+                function checkBuffs(buff, enemyImg, playerImg, playerNumber, total) {
+                        if (buff[enemy].innerText > 0) {
+                                if (buff[enemy].innerText > 1) {
+                                        buff[enemy].innerText = parseFloat(buff[enemy].innerText) - 2;
+                                        playerNumber.innerText = parseFloat(playerNumber.innerText) + 2;
+                                        total += 2;
+                                } else {
+                                        buff[enemy].innerText = parseFloat(buff[enemy].innerText) - 1;
+                                        playerNumber.innerText = parseFloat(playerNumber.innerText) + 1;
+                                        total++;
+                                }
+                                if (playerNumber.innerText > 0) {
+                                        displayBlock(playerImg, playerNumber);
+                                }
+                                if (buff[enemy].innerText == 0) {
+                                        displayNone(enemyImg[enemy], buff[enemy]);
+                                }
                         }
                 }
+                checkBuffs(enemyBlockNumber, enemyBlockImg, playerBlockImg, playerBlockNumber, blockTotal);
+                checkBuffs(enemyRegenNumber, enemyRegenImg, playerRegenImg, playerRegenNumber, null);
+                checkBuffs(enemyBloodNumber, enemyBloodImg, playerBloodImg, playerBloodNumber, null);
+                checkBuffs(enemyThornsNumber, enemyThornsImg, playerThornsImg, playerThornsNumber, thornsTotal);
+        } else {
+                function checkBuffs(buff, enemyImg, playerImg, playerNumber, total) {
+                        if (buff[enemy].innerText > 0) {
+                                if (buff[enemy].innerText > 0) {
+                                        playerNumber.innerText = parseFloat(playerNumber.innerText) + parseFloat(buff[enemy].innerText);
+                                        total += buff[enemy].innerText;
+                                        buff[enemy].innerText = parseFloat(buff[enemy].innerText) - (buff[enemy].innerText);
+                                }
+                                if (playerNumber.innerText > 0) {
+                                        displayBlock(playerImg, playerNumber);
+                                }
+                                if (buff[enemy].innerText == 0) {
+                                        displayNone(enemyImg[enemy], buff[enemy]);
+                                }
+                        }
+                }
+                checkBuffs(enemyBlockNumber, enemyBlockImg, playerBlockImg, playerBlockNumber, blockTotal);
+                checkBuffs(enemyRegenNumber, enemyRegenImg, playerRegenImg, playerRegenNumber, null);
+                checkBuffs(enemyBloodNumber, enemyBloodImg, playerBloodImg, playerBloodNumber, null);
+                checkBuffs(enemyThornsNumber, enemyThornsImg, playerThornsImg, playerThornsNumber, thornsTotal);
+                stealBuffs = false;
         }
-        checkBuffs(enemyBlockNumber, enemyBlockImg, playerBlockImg, playerBlockNumber, blockTotal);
-        checkBuffs(enemyRegenNumber, enemyRegenImg, playerRegenImg, playerRegenNumber, null);
-        checkBuffs(enemyBloodNumber, enemyBloodImg, playerBloodImg, playerBloodNumber, null);
-        checkBuffs(enemyThornsNumber, enemyThornsImg, playerThornsImg, playerThornsNumber, thornsTotal);
 }
 function inflictFrostbite(enemy) {
-        console.log("BLOCK NUMBER BEFORE: ", playerBlockNumber.innerText);
         if (snowfallElixir) {
                 inflictAllFrostbite();
         } else {
@@ -4269,7 +4379,10 @@ function inflictFrostbite(enemy) {
                                 blockTotal += 4;
                         }
                         if (leechingCold) {
-                                leechBuffs(enemy);
+                                leechBuffs(enemy, true);
+                        }
+                        if (stealBuffs) {
+                                leechBuffs(enemy, false);
                         }
                         enemyFrostbite[enemy] = true;
                         enemyBlockActionNumber[enemy].innerText = Math.floor(enemyBlockActionNumber[enemy].innerText * .50);  
@@ -4289,7 +4402,10 @@ function inflictAllFrostbite() {
                                 blockTotal += 4;
                         }
                         if (leechingCold) {
-                                leechBuffs(i);
+                                leechBuffs(i, true);
+                        }
+                        if (stealBuffs) {
+                                leechBuffs(i, false);
                         }
                         enemyFrostbite[i] = true;
                         enemyBlockActionNumber[i].innerText = Math.floor(enemyBlockActionNumber[i].innerText * .50);  
@@ -5007,29 +5123,29 @@ const enemiesInformation = [
                 thornsAmountHigh: 4,
         },
         {
-                name: "Witch",
+                name: "White Witch",
                 index: 15,
                 baseHealth: 60,
                 img: "imgs/enemy-witch2.png",
-                attackChance: 1,
-                burnChance: 7,
+                attackChance: 0,
+                burnChance: 5,
                 regenChance: 10,
-                attackDamageLow: 8,
-                attackDamageHigh: 10,
+                attackDamageLow: 10,
+                attackDamageHigh: 12,
                 burnAmountLow: 4,
-                burnAmountHigh: 5,
-                regenAmountLow: 10,
-                regenAmountHigh: 12,
+                burnAmountHigh: 4,
+                regenAmountLow: 8,
+                regenAmountHigh: 10,
         },
         {
                 name: "Skeleton",
                 index: 16,
-                baseHealth: 60,
+                baseHealth: 70,
                 img: "imgs/enemy-skeleton2.png",
                 attackChance: 5,
                 blockChance: 10,
-                attackDamageLow: 10,
-                attackDamageHigh: 12,
+                attackDamageLow: 14,
+                attackDamageHigh: 18,
                 blockAmountLow: 24,
                 blockAmountHigh: 28,
         },
@@ -5043,82 +5159,65 @@ const enemiesInformation = [
                 thornsChance: 10,
                 attackDamageLow: 8,
                 attackDamageHigh: 10,
-                blockAmountLow: 20,
-                blockAmountHigh: 22,
+                blockAmountLow: 24,
+                blockAmountHigh: 28,
                 thornsAmountLow: 3,
                 thornsAmountHigh: 4,
         },
         {
-                name: "Werewolf",
+                name: "Spirit",
                 index: 18,
                 baseHealth: 45,
-                img: "imgs/enemy-werewolf.png",
-                attackChance: 1,
-                bloodChance: 10,
-                attackDamageLow: 15,
-                attackDamageHigh: 25,
-                bloodAmountLow: 8,
-                bloodAmountHigh: 10,
+                img: "imgs/enemy-spirit.png",
+                attackChance: 3,
+                frostbiteChance: 10,
+                attackDamageLow: 10,
+                attackDamageHigh: 12,
         },
         {
-                name: "Little Ghost",
+                name: "Black Witch",
                 index: 19,
-                baseHealth: 80,
-                img: "imgs/enemy-mummy.png",
-                attackChance: 1,
-                blockChance: 5,
-                thornsChance: 10,
+                baseHealth: 40,
+                img: "imgs/enemy-black-witch.png",
+                attackChance: 0,
+                burnChance: 4,
+                frostbiteChance: 7,
+                windsweptChanceChance: 10,
                 attackDamageLow: 8,
                 attackDamageHigh: 10,
-                blockAmountLow: 20,
-                blockAmountHigh: 22,
-                thornsAmountLow: 3,
-                thornsAmountHigh: 4,
+                burnAmountLow: 5,
+                burnAmountHigh: 5,
         },
         {
                 name: "Bat",
                 index: 20,
-                baseHealth: 80,
-                img: "imgs/enemy-mummy.png",
-                attackChance: 1,
-                blockChance: 5,
-                thornsChance: 10,
-                attackDamageLow: 8,
-                attackDamageHigh: 10,
-                blockAmountLow: 20,
-                blockAmountHigh: 22,
-                thornsAmountLow: 3,
-                thornsAmountHigh: 4,
+                baseHealth: 45,
+                img: "imgs/enemy-bat2.png",
+                attackChance: 3,
+                windsweptChance: 10,
+                attackDamageLow: 10,
+                attackDamageHigh: 12,
         },
         {
-                name: "Black Cat",
+                name: "Zombie",
                 index: 21,
                 baseHealth: 80,
-                img: "imgs/enemy-mummy.png",
+                img: "imgs/enemy-zombie.png",
                 attackChance: 1,
-                blockChance: 5,
-                thornsChance: 10,
+                bloodChance: 10,
                 attackDamageLow: 8,
                 attackDamageHigh: 10,
-                blockAmountLow: 20,
-                blockAmountHigh: 22,
-                thornsAmountLow: 3,
-                thornsAmountHigh: 4,
+                bloodAmountLow: 6,
+                bloodAmountHigh: 7,
         },
         {
-                name: "Monster",
+                name: "Horseman",
                 index: 22,
-                baseHealth: 80,
-                img: "imgs/enemy-mummy.png",
-                attackChance: 1,
-                blockChance: 5,
-                thornsChance: 10,
-                attackDamageLow: 8,
-                attackDamageHigh: 10,
-                blockAmountLow: 20,
-                blockAmountHigh: 22,
-                thornsAmountLow: 3,
-                thornsAmountHigh: 4,
+                baseHealth: 40,
+                img: "imgs/enemy-horseman.png",
+                attackChance: 10,
+                attackDamageLow: 18,
+                attackDamageHigh: 20,
         },
         {
                 name: "Reaper",
@@ -5127,10 +5226,10 @@ const enemiesInformation = [
                 img: "imgs/elite-reaper.png",
         },
         {
-                name: "Vampire",
+                name: "Spectre",
                 index: 24,
                 baseHealth: 300,
-                img: "imgs/elite-vampire.png",
+                img: "imgs/boss-spectre.png",
                 attackChance: 1,
                 bloodChance: 10,
                 attackDamageLow: 40,
@@ -5139,14 +5238,57 @@ const enemiesInformation = [
                 bloodAmountHigh: 2
         },
         {
-                name: "Ghost",
+                name: "Gargoyle",
                 index: 25,
                 baseHealth: 240,
-                img: "imgs/ghost-elite.png",
+                img: "imgs/elite-gargoyle.png",
+                blockChance: 6,
+                burnChance: 10,
+                blockAmountLow: 30,
+                blockAmountHigh: 40,
+                burnAmountLow: 5,
+                burnAmountHigh: 7
+        },
+        {
+                name: "Vampire",
+                index: 26,
+                baseHealth: 300,
+                img: "imgs/elite-vampire.png",
+                attackChance: 0,
+                bloodChance: 10,
+                attackDamageLow: 30,
+                attackDamageHigh: 40,
+                bloodAmountLow: 2,
+                bloodAmountHigh: 2
+        },
+        {
+                name: "Werewolf",
+                index: 27,
+                baseHealth: 300,
+                img: "imgs/enemy-werewolf.png",
+                attackChance: 0,
+                bloodChance: 10,
+                attackDamageLow: 20,
+                attackDamageHigh: 20,
+                bloodAmountLow: 99,
+                bloodAmountHigh: 99
+        },
+        {
+                name: "Frost Gargoyle",
+                index: 28,
+                baseHealth: 80,
+                img: "imgs/enemy-frost-gargoyle.png",
+                attackChance: 1,
+                blockChance: 5,
+                frostbiteChance: 10,
+                attackDamageLow: 8,
+                attackDamageHigh: 10,
+                blockAmountLow: 26,
+                blockAmountHigh: 30,
         },
         {
                 name: "Blood Queen",
-                index: 26,
+                index: 29,
                 baseHealth: 200,
                 img: "imgs/enemy-elite-druid.png",
                 attackChance: 1,
@@ -5159,7 +5301,7 @@ const enemiesInformation = [
         },
         {
                 name: "Wind God",
-                index: 27,
+                index: 30,
                 baseHealth: 275,
                 img: "imgs/enemy-elite-wind-god.png",
                 attackChance: 10,
@@ -5168,6 +5310,7 @@ const enemiesInformation = [
         }
 ]
 const enemyContainer = document.querySelector("#enemy-container");
+let siphonAll = false;
 function createEnemy(name) {
         let index;
         for (let i = 0; i < enemiesInformation.length; i++) {
@@ -5358,7 +5501,9 @@ function createEnemy(name) {
                         document.getElementsByClassName("enemy-health")[i].style = "color: rgb(126, 255, 66)";
                 }
         }
-        console.log("CREATING ENEMY: ", name);
+        if (name === "Vampire") {
+                siphonAll = true;
+        }
 }
 function enemyLevelUp() {
         function scaleEnemies(health, attack, block, burn, regen, blood, thorns) {
@@ -5492,11 +5637,18 @@ let enemyBurnNumber = document.querySelectorAll(".enemy-burn-number");
 function damagePlayer(damage, index) {
         fxEnemyAttack.currentTime = 0;
         fxEnemyAttack.play();
+        if (airGift && !airGiftTrigger && reduceAllAttack) {
+                damage = 0;
+        }
         if (enemyWindswept[index]) {
                 damage = Math.floor(damage *= .50);
         }
         if (enemyBloodNumber[index].innerText > 0) {
-                enemyCurrentHealth[index].innerText = parseFloat(enemyCurrentHealth[index].innerText) + Math.floor((damage * .2));                        
+                let siphonAmount = .2;
+                if (siphonAll) {
+                        siphonAmount = 1;
+                }
+                enemyCurrentHealth[index].innerText = parseFloat(enemyCurrentHealth[index].innerText) + Math.floor((damage * siphonAmount));                        
         }
         if (playerBlockNumber.innerText <= 0) {
                 topBarHealthNumber.innerText -= damage;
@@ -5644,7 +5796,7 @@ checkIfEnemyDead();
 function checkIfEnemyDead() {
         // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET AETHER
         function allEnemiesDead() {
-                if (!bossDefeated[0] && !bossDefeated[1] && !hallowwood) {
+                if (!bossDefeated[0] && !bossDefeated[1] && faeForest) {
                         getRandomNewCards();
                 } else if (bossDefeated[0] && !bossDefeated[1] && hallowwood) {
                         getRandomNewCards();
@@ -5661,6 +5813,7 @@ function checkIfEnemyDead() {
                         getRelic(1, 12);
                 }
                 enemiesKilled++
+                siphonAll = false;
                 if (bossDefeated[0] && !bossDefeated[1] && !hallowwood) {
                         console.log("HOLLOW");
                         faeForest = false;
@@ -5895,10 +6048,6 @@ function enemyAction() {
                                 if (numberOfEnemies === 3 && enemiesAlive === 1) {
                                         enemyRandomDamage[eI] += 7;
                                 }
-                                if (trackEnemies[0] == 17) {
-                                        enemiesInformation[17].attackDamageLow += 4;
-                                        enemiesInformation[17].attackDamageHigh += 4;
-                                }
                                 enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
                                 displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
                         } else if (actionChoice[eI] <= enemiesInformation[i].blockChance) {
@@ -5954,7 +6103,7 @@ function enemyAction() {
                                         enemyBloodActionNumber[eI].innerText = enemyRandomBlood[eI];
                                         displayBlock(enemyBloodActionImg[eI], enemyBloodActionNumber[eI], enemyBloodActionDiv[eI]);
                                         enemyCanGainBlood = true;
-                                } else if (trackEnemies[eI] === 24 && enemyBloodNumber[eI].innerText <= 1) {
+                                } else if ((trackEnemies[eI] === 26 || trackEnemies[eI] === 27) && enemyBloodNumber[eI].innerText <= 1) {
                                         // BLOOD
                                         enemyRandomBlood[eI] = createRandomNumber(enemiesInformation[i].bloodAmountLow, enemiesInformation[i].bloodAmountHigh);
                                         if (everlastingWinterTracking[eI] === true) {
@@ -5965,6 +6114,10 @@ function enemyAction() {
                                         enemyCanGainBlood = true;
                                 } else {
                                         // ATTACK
+                                        if (trackEnemies[0] == 27) {
+                                                enemiesInformation[27].attackDamageLow += 2;
+                                                enemiesInformation[27].attackDamageHigh += 2;
+                                        }
                                         enemyRandomDamage[eI] = createRandomNumber(enemiesInformation[i].attackDamageLow, enemiesInformation[i].attackDamageHigh);
                                         enemyAttackActionNumber[eI].innerText = enemyRandomDamage[eI];
                                         displayBlock(enemyAttackActionDiv[eI], enemyAttackActionImg[eI], enemyAttackActionNumber[eI]);
@@ -6066,7 +6219,7 @@ function endTurn() {
                                                         // BLOOD
                                                         enemyGainBloodSiphon(enemyRandomBlood[eI], eI);
                                                         enemyCanGainBlood = false;
-                                                } else if (trackEnemies[eI] === 24 && enemyBloodNumber[eI].innerText == 0) {
+                                                } else if ((trackEnemies[eI] === 26 || trackEnemies[eI] === 27) && enemyBloodNumber[eI].innerText == 0) {
                                                         // BLOOD
                                                         enemyGainBloodSiphon(enemyRandomBlood[eI], eI);
                                                         enemyCanGainBlood = false;
@@ -6132,6 +6285,7 @@ function endTurn() {
                         } else {
                                 enemyAction(trackEnemies[0], trackEnemies[1], trackEnemies[2]);
                         }
+                        reduceAllAttack = false;
                 }, (numberOfEnemies - 1) * 500);
                 damageThisTurn = 0;
                 airBubble = [];
