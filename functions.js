@@ -141,7 +141,7 @@ startGame.addEventListener("click", () => {
                         forestAmbienceTrigger = true;
                         forestAmbienceIndex = allMusic.indexOf(forestAmbience);
                 }
-                switchAmbience(allMusic[forestAmbienceIndex]);
+                //switchAmbience(allMusic[forestAmbienceIndex]);
         }
         displayFlex(document.querySelector("#difficulty-container"));
         document.querySelector("#easy").addEventListener("click", () => {
@@ -598,14 +598,26 @@ function encounter() {
         }
         switchArea(arena, map);
         displayFlex(arena);
-        numberOfEnemies = 3;
         function createEncounterEnemies(name0, name1, name2, action0, action1, action2, repeat) {
+                numberOfEnemies = 3;
+                if (name2 === "") {
+                        numberOfEnemies = 2;
+                }
                 createEnemy(`${name0}`);
                 createEnemy(`${name1}`);
-                createEnemy(`${name2}`);
+                if (name2 !== "") {
+                        createEnemy(`${name2}`);
+                }
                 initializeEnemyVariables();
                 enemyLevelUp();
-                enemyAction(action0, action1, action2);
+                if (name2 !== "") {
+                        enemyAction(action0, action1, action2);
+                } else {
+                        enemyAction(action0, action1);
+                        enemyImg.forEach(i => {
+                                i.style = "width: 500px";
+                        });
+                }
                 dontRepeatEncounter.push(repeat);
         }
         switch (randomEncounterNumber) {
@@ -662,6 +674,33 @@ function encounter() {
                         break;
                 case 18:
                         createEncounterEnemies("Zombie", "Horseman", "Black Witch", 21, 22, 19, 18);
+                        break;
+                case 19:
+                        createEncounterEnemies("Athena", "Artemis", "", 36, 37, 0, 19);
+                        break;
+                case 20:
+                        createEncounterEnemies("Poseidon", "Artemis", "", 35, 37, 0, 22);
+                        break;
+                case 21:
+                        createEncounterEnemies("Athena", "Demeter", "", 36, 34, 0, 19);
+                        break;
+                case 22:
+                        createEncounterEnemies("Thor", "Loki", "", 31, 32, 0, 20);
+                        break;
+                case 23:
+                        createEncounterEnemies("Thor", "Fenrir", "", 31, 33, 0, 20);
+                        break;
+                case 24:
+                        createEncounterEnemies("Anubis", "Ra", "", 28, 30, 0, 21);
+                        break;
+                case 25:
+                        createEncounterEnemies("Bastet", "Ra", "", 29, 30, 0, 21);
+                        break;
+                case 26:
+                        createEncounterEnemies("Ganesha", "Brahma", "", 38, 39, 0, 23);
+                        break;
+                case 27:
+                        createEncounterEnemies("Sun Wukong", "Hebo", "", 40, 41, 0, 24);
                         break;
         }
 }
@@ -911,6 +950,11 @@ function eliteEncounter() {
                 while (dontRepeatEncounter.includes(randomEliteNumber)) {
                         randomEliteNumber = createRandomNumber(4, 6);        
                 }
+        } else {
+                randomEliteNumber = createRandomNumber(7, 9);
+                while (dontRepeatEncounter.includes(randomEliteNumber)) {
+                        randomEliteNumber = createRandomNumber(7, 9);        
+                }
         }
         getEliteRelic = true;
         switchArea(arena, map);
@@ -955,6 +999,21 @@ function eliteEncounter() {
                         document.querySelector(".enemy-img").style = "width: 450px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
+                case 7:
+                        createEliteEnemy("Zeus", 42, 7);
+                        document.querySelector(".enemy-img").style = "width: 450px";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        break;
+                case 8:
+                        createEliteEnemy("Odin", 43, 8);
+                        document.querySelector(".enemy-img").style = "width: 450px";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        break;
+                case 9:
+                        createEliteEnemy("Jesus", 44, 9);
+                        document.querySelector(".enemy-img").style = "width: 450px";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        break;
         }
 }
 let bossDefeated = [false, false];
@@ -966,25 +1025,26 @@ function boss() {
                 const hallowwoodBossMusic = new Audio("audio/hallowwood-boss-music.wav");
                 //switchMusic(hallowwoodBossMusic);
         }*/
+        numberOfEnemies = 1;
         let randomBossNumber;
         if (faeForest) {
                 randomBossNumber = createRandomNumber(1, 2);
         } else if (hallowwood) {
                 randomBossNumber = createRandomNumber(3, 4);
+        } else {
+                randomBossNumber = createRandomNumber(5, 6);
         }
         switchArea(arena, map);
-        numberOfEnemies = 1;
-        function createBossEnemy(name, action, repeat, boss) {
+        function createBossEnemy(name, action, boss) {
                 createEnemy(`${name}`);
                 initializeEnemyVariables();
                 enemyLevelUp();
                 enemyAction(action);
                 bossDefeated[boss] = true;
-                dontRepeatEncounter.push(repeat);
         }
         switch (randomBossNumber) {
                 case 1:
-                        createBossEnemy("Fae Dragon", 12, 1, 0);
+                        createBossEnemy("Fae Dragon", 12, 0);
                         fxDragonRoar.play();
                         fxDragonGrowls.play();
                         fxDragonGrowls.loop = true;
@@ -994,7 +1054,7 @@ function boss() {
                         document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 36rem";
                         break;
                 case 2:
-                        createBossEnemy("Forest Giant", 13, 2, 0);
+                        createBossEnemy("Forest Giant", 13, 0);
                         fxGiantFootsteps.play();
                         fxGiantGroans.play();
                         fxGiantGroans.loop = true;
@@ -1005,17 +1065,25 @@ function boss() {
                         document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 51.1rem";
                         break;
                 case 3:
-                        createBossEnemy("Vampire", 26, 3, 1);
+                        createBossEnemy("Vampire", 26, 1);
                         document.querySelector(".enemy-img").style = "width: 500px";
                         break;
                 case 4:
-                        createBossEnemy("Werewolf", 27, 4, 1);
+                        createBossEnemy("Werewolf", 27, 1);
+                        document.querySelector(".enemy-img").style = "width: 500px";
+                        break;
+                case 5:
+                        createBossEnemy("Life", 45, 1);
+                        document.querySelector(".enemy-img").style = "width: 500px";
+                        break;
+                case 6:
+                        createBossEnemy("Death", 46, 1);
                         document.querySelector(".enemy-img").style = "width: 500px";
                         break;
         }
 }
-let [fireGift, fireGiftTrigger, lightningGift, lightningGiftTrigger, iceGift, iceGiftTrigger, airGift, airGiftTrigger, waterGift, waterGiftTrigger, earthGift, earthGiftTrigger, empowerBloodSiphon, stealBuffs, reduceAllAttack] =
-[false, false, false, false, false, false, false, false, false, false, false, false, false];
+let [fireGift, fireGiftTrigger, lightningGift, lightningGiftTrigger, iceGift, iceGiftTrigger, airGift, airGiftTrigger, waterGift, waterGiftTrigger, earthGift, earthGiftTrigger, empowerBloodSiphon, stealBuffs, reduceAllAttack, doubleMana] =
+[false, false, false, false, false, false, false, false, false, false, false, false, false, false];
 function treasure() {
         displayNone(map);
         displayFlex(exclamationContainer);
@@ -1146,7 +1214,7 @@ function treasure() {
                                 <h2 style="color: #2f989c">Ember's Gift</h2>
                                 <div class="treasure-choice-div">
                                         <div class="treasure-choices">
-                                                <p>Enemies explode dealing their burn amount to all enemies</p>
+                                                <p>Consume all burn dealing double it's damage</p>
                                                 <button id="fire-gift" style="color: #2f989c">Ember's Gift</button>
                                         </div>
                                 </div>
@@ -1155,7 +1223,7 @@ function treasure() {
                                 <h2 style="color: #86bfdf">Lectra's Gift</h2>
                                 <div class="treasure-choice-div">
                                         <div class="treasure-choices">
-                                                <p>Doulbe your mana next turn</p>
+                                                <p>Double your mana next turn</p>
                                                 <button id="lightning-gift" style="color: #86bfdf">Lectra's Gift</button>
                                         </div>
                                 </div>
@@ -1169,6 +1237,13 @@ function treasure() {
                         document.getElementById("fire-orb-img").classList.add("fire-glow");
                         document.getElementById("fire-orb-img").addEventListener("click", () => {
                                 if (fireGift && fireGiftTrigger) {
+                                        for (let i = 0; i < numberOfEnemies; i++) {
+                                                if (!enemyIsDead[i]) {
+                                                        enemyCurrentHealth[i].innerText -= (enemyBurnNumber[i].innerText * 2);
+                                                        enemyBurnNumber[i].innerText = 0;
+                                                        displayNone(enemyBurnActionDiv[i]);
+                                                }
+                                        }
                                         fireGiftTrigger = false;
                                         document.getElementById("fire-orb-img").classList.remove("fire-glow");
                                 }
@@ -1184,9 +1259,9 @@ function treasure() {
                         document.getElementById("lightning-orb-img").classList.add("lightning-glow");
                         document.getElementById("lightning-orb-img").addEventListener("click", () => {
                                 if (lightningGift && lightningGiftTrigger) {
-                                        document.getElementById("lightning-orb-img").classList.remove("lightning-glow");
                                         lightningGiftTrigger = false;
                                         doubleMana = true;
+                                        document.getElementById("lightning-orb-img").classList.remove("lightning-glow");
                                 }
                         });
                         switchArea(map, exclamationContainer);
@@ -1196,6 +1271,50 @@ function treasure() {
 function spaceEndTurn(e) {
         if (e.key === " ") {
                 endTurn();
+        }
+}
+function randomizeLocations() {
+        function getLocations(location) {
+                let randomLocation = createRandomNumber(1, 100);
+                if (randomLocation <= 50) {
+                        location.innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`;
+                } else if (randomLocation <= 70) {
+                        location.innerHTML = `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`;
+                } else if (randomLocation <= 80) {
+                        location.innerHTML = `<img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt="Hard Monster">`;
+                } else if (randomLocation <= 90) {
+                        location.innerHTML = `<img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">`;
+                } else if (randomLocation <= 95) {
+                        location.innerHTML = `<img class="blacksmith-img" src="imgs/icons8-blacksmith-50.png" alt="Blacksmith">`;
+                } else {
+                        location.innerHTML = `<img class="merchant-img" src="imgs/icons8-stand-50.png" alt="Merchant">`;
+                }
+        }
+        document.querySelectorAll(".location-tiles").forEach(i => {
+                getLocations(i);
+        });
+        location1Tiles1.innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`;
+        location1Tiles2.innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`;
+        location1Tiles3.innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`;
+        location6Tiles1.innerHTML = `<img class="treasure-img" src="imgs/icons8-treasure-chest-50.png" alt="Treasure">`;
+        location11Tiles1.innerHTML = `<img class="boss-monster-img" src="imgs/icons8-monster-50.png" alt="Boss Monster">`;
+}
+randomizeLocations();
+function matchEncounter(locationTile) {
+        console.log(locationTile.innerHTML);
+        if (locationTile.innerHTML == `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`) {
+                console.log(locationTile.innerHTML === `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`);
+                mystery();
+        } else if (locationTile.innerHTML == `<img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">`) {
+                goldEncounter();
+        } else if (locationTile.innerHTML == `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`) {
+                encounter();
+        } else if (locationTile.innerHTML == `<img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt="Hard Monster">`) {
+                eliteEncounter();
+        } else if (locationTile.innerHTML == `<img class="blacksmith-img" src="imgs/icons8-blacksmith-50.png" alt="Blacksmith">`) {
+                blacksmith();
+        } else if (locationTile.innerHTML == `<img class="merchant-img" src="imgs/icons8-stand-50.png" alt="Merchant">`) {
+                shop();
         }
 }
 function chooseLocationPath(location) {
@@ -1229,66 +1348,42 @@ function chooseLocationPath(location) {
                         addGlow(location3Tiles1);
                         removeELL2();
                         location3Tiles1.addEventListener("click", L3T1);
-                        if (faeForest) {
-                                encounter();
-                        } else if (hallowwood) {
-                                mystery();
-                        }
+                        matchEncounter(location2Tiles1);
                         break;
                 case "L2T2":
                         removeGlow(location2Tiles1, location2Tiles2);
                         addGlow(location3Tiles2);
                         removeELL2();
                         location3Tiles2.addEventListener("click", L3T2);
-                        if (faeForest) {
-                                encounter();
-                        } else if (hallowwood) {
-                                encounter();
-                        }
+                        matchEncounter(location2Tiles2);
                         break;
                 case "L2T3":
                         removeGlow(location2Tiles3);
                         addGlow(location3Tiles3);
                         removeELL2();
                         location3Tiles3.addEventListener("click", L3T3);
-                        if (faeForest) {
-                                encounter();
-                        } else if (hallowwood) {
-                                goldEncounter();
-                        }
+                        matchEncounter(location2Tiles3);
                         break;
                 case "L2T4":
                         removeGlow(location2Tiles4);
                         addGlow(location3Tiles3);
                         removeELL2();
                         location3Tiles3.addEventListener("click", L3T3);
-                        if (faeForest) {
-                                mystery();
-                        } else if (hallowwood) {
-                                mystery();
-                        }
+                        matchEncounter(location2Tiles4);
                         break;
                 case "L3T1":
                         removeGlow(location3Tiles1);
                         addGlow(location4Tiles1);
                         removeELL3();
                         location4Tiles1.addEventListener("click", L4T1);
-                        if (faeForest) {
-                                goldEncounter();
-                        } else if (hallowwood) {
-                                encounter();
-                        }
+                        matchEncounter(location3Tiles1);
                         break;
                 case "L3T2":
                         removeGlow(location3Tiles2);
                         addGlow(location4Tiles2);
                         removeELL3();
                         location4Tiles2.addEventListener("click", L4T2);
-                        if (faeForest) {
-                                mystery();
-                        } else if (hallowwood) {
-                                eliteEncounter();
-                        }
+                        matchEncounter(location3Tiles2);
                         break;
                 case "L3T3":
                         removeGlow(location3Tiles3);
@@ -1296,22 +1391,14 @@ function chooseLocationPath(location) {
                         removeELL3();
                         location4Tiles3.addEventListener("click", L4T3);
                         location4Tiles4.addEventListener("click", L4T4);
-                        if (faeForest) {
-                                encounter();
-                        } else if (hallowwood) {
-                                eliteEncounter();
-                        }
+                        matchEncounter(location3Tiles3);
                         break;
                 case "L4T1":
                         removeGlow(location4Tiles1);
                         addGlow(location5Tiles1);
                         removeELL4();
                         location5Tiles1.addEventListener("click", L5T1);
-                        if (faeForest) {
-                                mystery();
-                        } else if (hallowwood) {
-                                encounter();
-                        }
+                        matchEncounter(location4Tiles1);
                         break;
                 case "L4T2":
                         removeGlow(location4Tiles2);
@@ -1319,11 +1406,7 @@ function chooseLocationPath(location) {
                         removeELL4();
                         location5Tiles1.addEventListener("click", L5T1);
                         location5Tiles2.addEventListener("click", L5T2);
-                        if (faeForest) {
-                                eliteEncounter();
-                        } else if (hallowwood) {
-                                mystery();
-                        }
+                        matchEncounter(location4Tiles2);
                         break;
                 case "L4T3":
                         removeGlow(location4Tiles3, location4Tiles4);
@@ -1331,55 +1414,34 @@ function chooseLocationPath(location) {
                         removeELL4();
                         location5Tiles2.addEventListener("click", L5T2);
                         location5Tiles3.addEventListener("click", L5T3);
-                        if (faeForest) {
-                                mystery();
-                        } else if (hallowwood) {
-                                mystery();
-                        }
+                        matchEncounter(location4Tiles3);
                         break;
                 case "L4T4":
                         removeGlow(location4Tiles3, location4Tiles4);
                         addGlow(location5Tiles3);
                         removeELL5();
-                        location5Tiles3.addEventListener("click", L5T3);
-                        if (faeForest) {
-                                shop();
-                        } else if (hallowwood) {
-                                blacksmith();
-                        }
+                        matchEncounter(location4Tiles4);
                         break;
                 case "L5T1":
                         removeGlow(location5Tiles1, location5Tiles2, location5Tiles3);
                         addGlow(location6Tiles1);
                         removeELL5();
                         location6Tiles1.addEventListener("click", L6T1);
-                        if (faeForest) {
-                                shop();
-                        } else if (hallowwood) {
-                                goldEncounter();
-                        }
+                        matchEncounter(location5Tiles1);
                         break;
                 case "L5T2":
                         removeGlow(location5Tiles1, location5Tiles2, location5Tiles3);
                         addGlow(location6Tiles1);
                         removeELL5();
                         location6Tiles1.addEventListener("click", L6T1);
-                        if (faeForest) {
-                                blacksmith();
-                        } else if (hallowwood) {
-                                shop();
-                        }
+                        matchEncounter(location5Tiles2);
                         break;
                 case "L5T3":
                         removeGlow(location5Tiles2, location5Tiles3);
                         addGlow(location6Tiles1);
                         removeELL5();
                         location6Tiles1.addEventListener("click", L6T1);
-                        if (faeForest) {
-                                eliteEncounter();
-                        } else if (hallowwood) {
-                                encounter();
-                        }
+                        matchEncounter(location5Tiles3);
                         break;
                 case "L6T1":
                         removeGlow(location6Tiles1);
@@ -1396,22 +1458,14 @@ function chooseLocationPath(location) {
                         removeELL7();
                         location8Tiles1.addEventListener("click", L8T1);                      
                         location8Tiles2.addEventListener("click", L8T2);
-                        if (faeForest) {
-                                encounter();
-                        } else if (hallowwood) {
-                                encounter();
-                        }
+                        matchEncounter(location7Tiles1);
                         break;
                 case "L7T2":
                         removeGlow(location7Tiles1, location7Tiles2, location7Tiles3);
                         addGlow(location8Tiles2);
                         removeELL7();
                         location8Tiles2.addEventListener("click", L8T2);
-                        if (faeForest) {
-                                mystery();
-                        } else if (hallowwood) {
-                                eliteEncounter();
-                        }
+                        matchEncounter(location7Tiles2);
                         break;
                 case "L7T3":
                         removeGlow(location7Tiles1, location7Tiles2, location7Tiles3);
@@ -1419,11 +1473,7 @@ function chooseLocationPath(location) {
                         removeELL7();
                         location8Tiles2.addEventListener("click", L8T2);
                         location8Tiles3.addEventListener("click", L8T3);
-                        if (faeForest) {
-                                encounter();
-                        } else if (hallowwood) {
-                                encounter();
-                        }
+                        matchEncounter(location7Tiles3);
                         break;
                 case "L8T1":
                         removeGlow(location8Tiles1, location8Tiles2);
@@ -1431,11 +1481,7 @@ function chooseLocationPath(location) {
                         removeELL8();
                         location9Tiles1.addEventListener("click", L9T1);
                         location9Tiles2.addEventListener("click", L9T2);
-                        if (faeForest) {
-                                encounter();
-                        } else if (hallowwood) {
-                                mystery();
-                        }
+                        matchEncounter(location8Tiles1);
                         break;
                 case "L8T2":
                         removeGlow(location8Tiles1, location8Tiles2, location8Tiles3);
@@ -1443,11 +1489,7 @@ function chooseLocationPath(location) {
                         removeELL8();
                         location9Tiles2.addEventListener("click", L9T2);
                         location9Tiles3.addEventListener("click", L9T3);
-                        if (faeForest) {
-                                encounter();
-                        } else if (hallowwood) {
-                                encounter();
-                        }
+                        matchEncounter(location8Tiles2);
                         break;
                 case "L8T3":
                         removeGlow(location8Tiles2, location8Tiles3);
@@ -1455,77 +1497,49 @@ function chooseLocationPath(location) {
                         removeELL8();
                         location9Tiles3.addEventListener("click", L9T3);
                         location9Tiles4.addEventListener("click", L9T4);
-                        if (faeForest) {
-                                encounter();
-                        } else if (hallowwood) {
-                                encounter();
-                        }
+                        matchEncounter(location8Tiles3);
                         break;
                 case "L9T1":
                         removeGlow(location9Tiles1, location9Tiles2);
                         addGlow(location10Tiles1);
                         removeELL9();
                         location10Tiles1.addEventListener("click", L10T1);
-                        if (faeForest) {
-                                mystery();
-                        } else if (hallowwood) {
-                                encounter();
-                        }
+                        matchEncounter(location9Tiles1);
                         break;
                 case "L9T2":
                         removeGlow(location9Tiles1, location9Tiles2, location9Tiles3);
                         addGlow(location10Tiles1);
                         removeELL9();
                         location10Tiles1.addEventListener("click", L10T1);
-                        if (faeForest) {
-                                goldEncounter();
-                        } else if (hallowwood) {
-                                blacksmith();
-                        }
+                        matchEncounter(location9Tiles2);
                         break;
                 case "L9T3":
                         removeGlow(location9Tiles2, location9Tiles3, location9Tiles4);
                         addGlow(location10Tiles2);
                         removeELL9();
                         location10Tiles2.addEventListener("click", L10T2);
-                        if (faeForest) {
-                                eliteEncounter();
-                        } else if (hallowwood) {
-                                shop();
-                        }
+                        matchEncounter(location9Tiles3);
                         break;
                 case "L9T4":
                         removeGlow(location9Tiles3, location9Tiles4);
                         addGlow(location10Tiles2);
                         removeELL9();
                         location10Tiles2.addEventListener("click", L10T2);
-                        if (faeForest) {
-                                mystery();
-                        } else if (hallowwood) {
-                                goldEncounter();
-                        }
+                        matchEncounter(location9Tiles4);
                         break;
                 case "L10T1":          
                         removeGlow(location10Tiles1);
                         addGlow(location11Tiles1);
                         removeELL10();
                         location11Tiles1.addEventListener("click", L11T1);
-                        if (faeForest) {
-                                shop();
-                        } else if (hallowwood) {
-                                mystery();
-                        }
+                        matchEncounter(location10Tiles1);
                         break;
                 case "L10T2":          
                         removeGlow(location10Tiles2);
                         addGlow(location11Tiles1);
                         removeELL10();
                         location11Tiles1.addEventListener("click", L11T1);
-                        if (faeForest) {
-                                blacksmith();
-                        } else if (hallowwood) {
-                                eliteEncounter();
-                        }
+                        matchEncounter(location10Tiles2);
                         break;
                 case "L11T1":
                         removeGlow(location11Tiles1);
@@ -5492,131 +5506,218 @@ const enemiesInformation = [
         {
                 name: "Anubis",
                 index: 28,
-                baseHealth: 80,
+                baseHealth: 130,
                 img: "imgs/enemy-anubis.png",
-                attackChance: 1,
-                blockChance: 5,
-                frostbiteChance: 10,
-                attackDamageLow: 8,
-                attackDamageHigh: 10,
-                blockAmountLow: 26,
-                blockAmountHigh: 30,
+                attackChance: 4,
+                blockChance: 8,
+                windsweptChance: 10,
+                attackDamageLow: 18,
+                attackDamageHigh: 22,
+                blockAmountLow: 36,
+                blockAmountHigh: 40,
+        },
+        {
+                name: "Bastet",
+                index: 29,
+                baseHealth: 80,
+                img: "imgs/enemy-bastet.png",
+                attackChance: 5,
+                bloodChance: 10,
+                attackDamageLow: 25,
+                attackDamageHigh: 30,
+                bloodAmountLow: 9,
+                bloodAmountHigh: 9
         },
         {
                 name: "Ra",
-                index: 29,
-                baseHealth: 40,
+                index: 30,
+                baseHealth: 85,
                 img: "imgs/enemy-ra.png",
-                attackChance: 1,
-                burnChance: 5,
-                burnAmountLow: 6,
-                burnAmountHigh: 7
+                burnChance: 10,
+                burnAmountLow: 10,
+                burnAmountHigh: 11
         },
         {
                 name: "Thor",
-                index: 30,
-                baseHealth: 80,
-                img: "imgs/imgs/enemy-thor.png",
-                attackChance: 1,
-                blockChance: 5,
-                frostbiteChance: 10,
-                attackDamageLow: 8,
-                attackDamageHigh: 10,
-                blockAmountLow: 26,
-                blockAmountHigh: 30,
+                index: 31,
+                baseHealth: 150,
+                img: "imgs/enemy-thor.png",
+                attackChance: 10,
+                attackDamageLow: 18,
+                attackDamageHigh: 25,
         },
         {
                 name: "Loki",
-                index: 31,
-                baseHealth: 80,
+                index: 32,
+                baseHealth: 120,
                 img: "imgs/enemy-loki.png",
-                attackChance: 1,
-                blockChance: 5,
-                frostbiteChance: 10,
-                attackDamageLow: 8,
-                attackDamageHigh: 10,
-                blockAmountLow: 26,
-                blockAmountHigh: 30,
+                attackChance: 10,
+                attackDamageLow: 22,
+                attackDamageHigh: 28,
+        },
+        {
+                name: "Fenrir",
+                index: 33,
+                baseHealth: 100,
+                img: "imgs/enemy-fenrir.png",
+                attackChance: 2,
+                bloodChance: 10,
+                attackDamageLow: 24,
+                attackDamageHigh: 30,
+                bloodAmountLow: 8,
+                bloodAmountHigh: 10
         },
         {
                 name: "Demeter",
-                index: 32,
-                baseHealth: 80,
-                img: "imgs/enemy-demeter.png",
+                index: 34,
+                baseHealth: 105,
+                img: "imgs/enemy-demeter2.png",
                 attackChance: 1,
                 blockChance: 5,
                 frostbiteChance: 10,
+                attackDamageLow: 16,
+                attackDamageHigh: 20,
+                blockAmountLow: 36,
+                blockAmountHigh: 40,
         },
         {
                 name: "Poseidon",
-                index: 33,
-                baseHealth: 80,
+                index: 35,
+                baseHealth: 120,
                 img: "imgs/enemy-poseidon.png",
-                attackChance: 1,
-                regenChance: 5,
-                frostbiteChance: 10,
-                attackDamageLow: 8,
-                attackDamageHigh: 10,
-                regenAmountLow: 26,
-                regenAmountHigh: 30,
+                attackChance: 5,
+                regenChance: 10,
+                attackDamageLow: 19,
+                attackDamageHigh: 23,
+                regenAmountLow: 15,
+                regenAmountHigh: 20,
         },
         {
                 name: "Athena",
-                index: 34,
-                baseHealth: 80,
+                index: 36,
+                baseHealth: 200,
                 img: "imgs/enemy-athena.png",
                 attackChance: 1,
-                blockChance: 5,
+                blockChance: 7,
                 thornsChance: 10,
-                attackDamageLow: 8,
-                attackDamageHigh: 10,
-                blockAmountLow: 26,
-                blockAmountHigh: 30,
+                attackDamageLow: 16,
+                attackDamageHigh: 18,
+                blockAmountLow: 50,
+                blockAmountHigh: 55,
+                thornsAmountLow: 4,
+                thornsAmountHigh: 5
         },
         {
                 name: "Artemis",
-                index: 35,
-                baseHealth: 30,
+                index: 37,
+                baseHealth: 90,
                 img: "imgs/enemy-artemis.png",
                 attackChance: 10,
-                attackDamageLow: 18,
-                attackDamageHigh: 20,
+                attackDamageLow: 38,
+                attackDamageHigh: 40,
         },
         {
                 name: "Ganesha",
-                index: 36,
-                baseHealth: 80,
-                img: "imgs/enemy-ganesha2.png",
-                attackChance: 1,
-                blockChance: 5,
-                frostbiteChance: 10,
-                attackDamageLow: 8,
-                attackDamageHigh: 10,
-                blockAmountLow: 26,
-                blockAmountHigh: 30,
-        },
-        {
-                name: "Blood Queen",
-                index: 37,
-                baseHealth: 200,
-                img: "imgs/enemy-elite-druid.png",
-                attackChance: 1,
-                //damageincreasechance
-                bloodChance: 10,
-                attackDamageLow: 26,
-                attackDamageHigh: 30,
-                bloodAmountLow: 4,
-                bloodAmountHigh: 4,
-        },
-        {
-                name: "Wind God",
                 index: 38,
-                baseHealth: 275,
-                img: "imgs/enemy-elite-wind-god.png",
+                baseHealth: 160,
+                img: "imgs/enemy-ganesha2.png",
+                attackChance: 4,
+                healChance: 10,
+                attackDamageLow: 24,
+                attackDamageHigh: 26,
+                healAmountLow: 40,
+                healAmountHigh: 50,
+        },
+        {
+                name: "Brahma",
+                index: 39,
+                baseHealth: 160,
+                img: "imgs/enemy-brahma.png",
+                attackChance: 4,
+                blockChance: 10,
+                frostbiteChance: 10,
+                attackDamageLow: 24,
+                attackDamageHigh: 26,
+                blockAmountLow: 40,
+                blockAmountHigh: 50,
+        },
+        {
+                name: "Sun Wukong",
+                index: 40,
+                baseHealth: 125,
+                img: "imgs/enemy-wukong.png",
+                attackChance: 3,
+                blockChance: 7,
+                windsweptChance: 10,
+                attackDamageLow: 25,
+                attackDamageHigh: 28,
+                blockAmountLow: 36,
+                blockAmountHigh: 40,
+        },
+        {
+                name: "Hebo",
+                index: 41,
+                baseHealth: 140,
+                img: "imgs/enemy-hebo.png",
+                attackChance: 3,
+                blockChance: 5,
+                regenChance: 10,
+                attackDamageLow: 25,
+                attackDamageHigh: 28,
+                regenAmountLow: 16,
+                regenAmountHigh: 17,
+        },
+        {
+                name: "Zeus",
+                index: 42,
+                baseHealth: 300,
+                img: "imgs/elite-zeus.png",
                 attackChance: 10,
-                attackDamageLow: 10,
-                attackDamageHigh: 10,
-        }
+                attackDamageLow: 45,
+                attackDamageHigh: 50,
+        },
+        {
+                name: "Odin",
+                index: 43,
+                baseHealth: 300,
+                img: "imgs/elite-odin.png",
+                attackChance: 10,
+                attackDamageLow: 45,
+                attackDamageHigh: 50,
+        },
+        {
+                name: "Jesus",//when you kill him he resurrects off the cross lol
+                index: 44,
+                baseHealth: 300,
+                img: "imgs/elite-jesus.png",
+                attackChance: 10,
+                attackDamageLow: 45,
+                attackDamageHigh: 50,
+        },
+        {
+                name: "Life",
+                index: 45,
+                baseHealth: 500,
+                img: "imgs/boss-life.png",
+                attackChance: 4,
+                healChance: 8,
+                regenChance: 10,
+                attackDamageLow: 45,
+                attackDamageHigh: 50,
+                healAmountLow: 50,
+                healAmountHigh: 75,
+                regenAmountLow: 20,
+                regenAmountHigh: 25
+        },
+        {
+                name: "Death",
+                index: 46,
+                baseHealth: 500,
+                img: "imgs/boss-death2.png",
+                attackChance: 10,
+                attackDamageLow: 45,
+                attackDamageHigh: 50,
+        },
 ]
 const enemyContainer = document.querySelector("#enemy-container");
 let siphonAll = false;
@@ -5788,15 +5889,15 @@ function createEnemy(name) {
                         enemyImg[enemyDiv.length - 1].classList.add("enemy-img-flip");
                         enemyDiv[enemyDiv.length - 1].style = "animation: 2s ease-out 0s 1 slideInTop";
                         break;
-                case "Centaur":
-                        enemyImg[enemyDiv.length - 1].classList.add("enemy-img-flip");
-                        enemyDiv[enemyDiv.length - 1].style = `animation: ${((enemyDiv.length - 1) * .25) + 1}s ease-out 0s 1 slideInRight`;
-                        break;
                 case "Fairy":
                         enemyDiv[enemyDiv.length - 1].style = "animation: 2.3s ease-out 0s 1 slideInTop; margin-bottom: 2rem;";
                         break;
                 case "Mushroom":
                         enemyImg[enemyDiv.length - 1].style = "animation: 3.5s ease-in-out 0s 1 grow";
+                        break;
+                case "Artemis": case "Athena": case "Centaur": case "Fenrir":
+                        enemyImg[enemyDiv.length - 1].classList.add("enemy-img-flip");
+                        enemyDiv[enemyDiv.length - 1].style = `animation: ${((enemyDiv.length - 1) * .25) + 1}s ease-out 0s 1 slideInRight`;
                         break;
                 default:
                         enemyDiv[enemyDiv.length - 1].style = `animation: ${((enemyDiv.length - 1) * .25) + 1}s ease-out 0s 1 slideInRight`;
@@ -6102,6 +6203,27 @@ function checkEnemyBloodSiphon(index) {
                 displayNone(enemyBloodImg[index], enemyBloodNumber[index]);
         }
 }
+function createEncounters() {
+        document.getElementById("location2-tiles1").innerHTML = `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`
+        document.getElementById("location2-tiles3").innerHTML = `<img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">`
+        document.getElementById("location3-tiles1").innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`
+        document.getElementById("location3-tiles2").innerHTML = `<img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt = "Hard Monster">`
+        document.getElementById("location3-tiles3").innerHTML = `<img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt = "Hard Monster">`
+        document.getElementById("location4-tiles1").innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`
+        document.getElementById("location4-tiles2").innerHTML = `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`
+        document.getElementById("location4-tiles4").innerHTML = `<img class="blacksmith-img" src="imgs/icons8-blacksmith-50.png" alt="Blacksmith">`
+        document.getElementById("location5-tiles1").innerHTML = `<img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">`
+        document.getElementById("location5-tiles2").innerHTML = `<img class="merchant-img" src="imgs/icons8-stand-50.png" alt="Merchant">`
+        document.getElementById("location5-tiles3").innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`
+        document.getElementById("location7-tiles2").innerHTML = `<img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt = "Hard Monster">`
+        document.getElementById("location8-tiles1").innerHTML = `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`
+        document.getElementById("location9-tiles1").innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`
+        document.getElementById("location9-tiles2").innerHTML = `<img class="blacksmith-img" src="imgs/icons8-blacksmith-50.png" alt="Blacksmith">`
+        document.getElementById("location9-tiles3").innerHTML = `<img class="merchant-img" src="imgs/icons8-stand-50.png" alt="Merchant">`
+        document.getElementById("location9-tiles4").innerHTML = `<img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">`
+        document.getElementById("location10-tiles1").innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`
+        document.getElementById("location10-tiles2").innerHTML = `<img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt = "Hard Monster">`
+}
 let enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
 let enemiesAreDead = false;
 let [flameWarden, pyromancer, surgebinder, stormchaser, cryocast, winterWarrior, aeroshift, windrunner, bloodbender, waterweaver, grovertender, stoneshaper] =
@@ -6114,6 +6236,8 @@ function checkIfEnemyDead() {
                 if (!bossDefeated[0] && !bossDefeated[1] && faeForest) {
                         getRandomNewCards();
                 } else if (bossDefeated[0] && !bossDefeated[1] && hallowwood) {
+                        getRandomNewCards();
+                } else if (bossDefeated[0] && bossDefeated[1] && !hallowwood) {
                         getRandomNewCards();
                 }
                 window.removeEventListener("keydown", spaceEndTurn);
@@ -6241,6 +6365,7 @@ function checkIfEnemyDead() {
                                 exclamationMusicTrigger = false;
                                 shopMusicTrigger = false;
                                 switchArea(map, empowerContainer);
+                                randomizeLocations();
                         }
                         document.getElementById("eternal-flame").addEventListener("click", () => {
                                 flameWarden = true;
@@ -6667,10 +6792,10 @@ function endTurn() {
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
-faeForest = false;
+/*faeForest = false;
 hallowwood = false;
 bossDefeated[0] = true;
 bossDefeated[1] = true;
 arena.style.backgroundImage = "url(imgs/heaven-arena.jpeg)";
 map.style.backgroundImage = "url(imgs/heaven-map.jpeg)";
-exclamationContainer.style.backgroundImage = "url(imgs/heaven-mystery.jpeg)";
+exclamationContainer.style.backgroundImage = "url(imgs/heaven-mystery.jpeg)";*/
