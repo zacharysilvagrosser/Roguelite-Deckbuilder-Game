@@ -16,24 +16,18 @@ Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 m
 TO DO
 Settings gear when hitting escape for music and sound volume
 Probably change ice spear so you dont have to change card text
-figure out how to crop orb imgs. Orb glow color goes with upgrade chosen. Hover over orb to see what your empower does
-forest encounters vs darkmoor encounter functions
-AIR GIFT: draw cards until you have 6 or redraw hand?
+crop orbs in paint. Hover over orb to see what your gift does; add soundfx
 ghost elite becomes opacity: .5 and unable to be attacked
 King Spookly becomes hallowwood encounter, replace starting hand becomes heaven encounter
 
 BUGS
 text not reseting after encounter
-cardclicked probably not being reset on second blackmsith causing cards to respawn instead of leave
+blacksmith loads back to cards not his original text
 death screen brings you to fae forest arena??
-///add heal to enemy
-///shop cat
-///fixed card text with potions
-///ray of ice damage wrong
-///terras b upgrade text too long
-///switch map music in hallowood goes back to fae music
-///lowr reaper number
 3 elites in hallow inifinit loop
+///blacksmith music will be deleted with each new stage
+ball lightning had tidal and windswept text said 17 card did 15 damage then it returned to 11 damage
+///mana and end turn button need high z index because of hand container; when hovering over card increase card z index
 
 */
 /*
@@ -52,9 +46,8 @@ const boardHeader = document.querySelector("#board-header");
 const musicSlider = document.querySelector("#music-slider");
 const ambienceSlider = document.querySelector("#ambience-slider");
 const soundFXSlider = document.querySelector("#soundfx-slider");
-const mapMusic = new Audio("audio/map-music.wav");
-const allMusic = [mapMusic];
-const allAmbience = [];
+let allMusic = [];
+let allAmbience = [];
 const [fxPotion, fxFireball, fxCascadingFlames, fxStaticCharge, fxChainLightning, fxFrostbolt, fxFrostFingers, fxTornado, fxGaleForce, fxBloodCocoon, fxTidalImbuement, fxEarthBarrier, fxThornShield,
         fxFirefall, fxKindredSpirits, fxPhoenixFire, fxStormblessed, fxBallLightning, fxConduit, fxIceNova, fxFrostbitten, fxRayOfIce, fxWindsOfChange, fxWindwalk, fxGust, fxSanguineSpring, fxMistborn, fxTsunami,
         fxEarthShatter, fxWeaveOfThorns, fxVineWhip, fxForestFire, fxFrostfireFusion, fxFanTheFlames, fxCauterize, fxMagma, fxDeepFreeze, fxHurricane, fxElectricCurrent, fxQuakingJolt, fxFlurry, fxLiquify,
@@ -82,8 +75,12 @@ function switchMusic() {
                 if (!allMusic.includes(arguments[i])) {
                         allMusic.push(arguments[i]);
                 }
-                if (arguments[i] !== mapMusic) {
+                if (arguments[i] !== allMusic[mapMusicIndex]) {
                         arguments[i].currentTime = 0;
+                } else {
+                        if ((faeForest && (!waterGift || !earthGift)) || (hallowwood && (!iceGift || !airGift)) || (!faeForest && !hallowwood && (!fireGift || !lightningGift))) {
+                                location.href = "#bottom-anchor";
+                        }
                 }
                 arguments[i].play();
                 arguments[i].loop = true;
@@ -123,25 +120,21 @@ window.addEventListener("keydown", () => {
         displayNone(beginningScreen);
         displayFlex(startScreen);
         const startScreenMusic = new Audio("audio/start-screen-music.wav");
-        //switchMusic(startScreenMusic);
+        switchMusic(startScreenMusic);
 }, {once: true});
 let [easyDifficulty, normalDifficulty, hardDifficulty] = [false, false, false];
-let forestAmbienceTrigger = false;
-let forestAmbienceIndex;
+let mapMusicIndex;
 startGame.addEventListener("click", () => {
         function start() {
                 displayBlock(map);
                 displayFlex(boardHeader);
-                location.href="#bottom-anchor";
                 displayNone(startScreen, document.querySelector("#difficulty-container"));
-                //switchMusic(mapMusic);
-                if (forestAmbienceTrigger === false) {
-                        const forestAmbience = new Audio("audio/forest-ambience.wav");
-                        //switchMusic(forestAmbience);
-                        forestAmbienceTrigger = true;
-                        forestAmbienceIndex = allMusic.indexOf(forestAmbience);
-                }
-                //switchAmbience(allMusic[forestAmbienceIndex]);
+                const mapMusic = new Audio("audio/map-music.wav");
+                switchMusic(mapMusic);
+                mapMusicIndex = allMusic.indexOf(mapMusic);
+                const forestAmbience = new Audio("audio/forest-ambience.wav");
+                switchAmbience(forestAmbience);
+                location.href = "#bottom-anchor";
         }
         displayFlex(document.querySelector("#difficulty-container"));
         document.querySelector("#easy").addEventListener("click", () => {
@@ -568,17 +561,22 @@ function encounter() {
         if (!encounterMusicTrigger) {
                 if (faeForest) {
                         const encounterMusic = new Audio("audio/forest-encounter-music.wav");
-                        //switchMusic(encounterMusic);
+                        switchMusic(encounterMusic);
                         encounterMusicTrigger = true;
                         encounterMusicIndex = allMusic.indexOf(encounterMusic);
                 } else if (hallowwood) {
                         const hallowwoodEncounterMusic = new Audio("audio/hallowwood-encounter-music.wav");
-                        //switchMusic(hallowwoodEncounterMusic);
+                        switchMusic(hallowwoodEncounterMusic);
                         encounterMusicTrigger = true;
                         encounterMusicIndex = allMusic.indexOf(hallowwoodEncounterMusic);
+                } else {
+                        const heavenEncounterMusic = new Audio("audio/heaven-encounter-music.wav");
+                        switchMusic(heavenEncounterMusic);
+                        encounterMusicTrigger = true;
+                        encounterMusicIndex = allMusic.indexOf(heavenEncounterMusic);
                 }
         }
-        //switchMusic(allMusic[encounterMusicIndex]);
+        switchMusic(allMusic[encounterMusicIndex]);
         let randomEncounterNumber;
         if (faeForest) {
                 randomEncounterNumber = createRandomNumber(1, 9);
@@ -615,7 +613,7 @@ function encounter() {
                 } else {
                         enemyAction(action0, action1);
                         enemyImg.forEach(i => {
-                                i.style = "width: 500px";
+                                i.style = "width: 458px";
                         });
                 }
                 dontRepeatEncounter.push(repeat);
@@ -707,7 +705,7 @@ function encounter() {
 let dontRepeatGoldEncounter = [];
 let goldEncounterGold = false;
 function goldEncounter() {
-        //switchMusic(allMusic[encounterMusicIndex]);
+        switchMusic(allMusic[encounterMusicIndex]);
         goldEncounterGold = true;
         let randomGoldEncounterNumber;
         if (faeForest) {
@@ -750,6 +748,15 @@ function goldEncounter() {
                         break;
                 case 6:
                         createGoldEnemies("Horseman", 22, 6);
+                        break;
+                case 7:
+                        createGoldEnemies("Ra", 30, 7);
+                        break;
+                case 8:
+                        createGoldEnemies("Artemis", 37, 8);
+                        break;
+                case 9:
+                        createGoldEnemies("Thor", 31, 9);
                         break;
         }
 }
@@ -928,17 +935,22 @@ function eliteEncounter() {
         if (!eliteEncounterMusicTrigger) {
                 if (faeForest) {
                         const eliteEncounterMusic = new Audio("audio/elite-encounter-music.wav");
-                        //switchMusic(eliteEncounterMusic);
+                        switchMusic(eliteEncounterMusic);
                         eliteEncounterMusicTrigger = true;
                         eliteEncounterMusicIndex = allMusic.indexOf(eliteEncounterMusic);
                 } else if (hallowwood) {
                         const hallowwoodEliteMusic = new Audio("audio/hallowwood-elite-music.wav");
-                        //switchMusic(hallowwoodEliteMusic);
+                        switchMusic(hallowwoodEliteMusic);
                         eliteEncounterMusicTrigger = true;
                         eliteEncounterMusicIndex = allMusic.indexOf(hallowwoodEliteMusic);
+                } else {
+                        const heavenEliteMusic = new Audio("audio/heaven-elite-music.wav");
+                        switchMusic(heavenEliteMusic);
+                        eliteEncounterMusicTrigger = true;
+                        eliteEncounterMusicIndex = allMusic.indexOf(heavenEliteMusic);
                 }
         }
-        //switchMusic(allMusic[eliteEncounterMusicIndex]);
+        switchMusic(allMusic[eliteEncounterMusicIndex]);
         let randomEliteNumber;
         if (faeForest) {
                 randomEliteNumber = createRandomNumber(1, 3);
@@ -1018,13 +1030,13 @@ function eliteEncounter() {
 }
 let bossDefeated = [false, false];
 function boss() {
-        /*if (faeForest) {
+        if (faeForest) {
                 const bossMusic = new Audio("audio/forest-boss-music.wav");
-                //switchMusic(bossMusic);
+                switchMusic(bossMusic);
         } else if (hallowwood) {
                 const hallowwoodBossMusic = new Audio("audio/hallowwood-boss-music.wav");
-                //switchMusic(hallowwoodBossMusic);
-        }*/
+                switchMusic(hallowwoodBossMusic);
+        }
         numberOfEnemies = 1;
         let randomBossNumber;
         if (faeForest) {
@@ -1071,6 +1083,8 @@ function boss() {
                 case 4:
                         createBossEnemy("Werewolf", 27, 1);
                         document.querySelector(".enemy-img").style = "width: 500px";
+                        document.querySelector(".enemy-action-div").style = "position: absolute; bottom: 45.5rem";
+                        document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 51.1rem";
                         break;
                 case 5:
                         createBossEnemy("Life", 45, 1);
@@ -1420,6 +1434,7 @@ function chooseLocationPath(location) {
                         removeGlow(location4Tiles3, location4Tiles4);
                         addGlow(location5Tiles3);
                         removeELL5();
+                        location5Tiles3.addEventListener("click", L6T1);
                         matchEncounter(location4Tiles4);
                         break;
                 case "L5T1":
@@ -1586,12 +1601,24 @@ let exclamationMusicTrigger = false;
 let exclamationMusicIndex;
 function mystery() {
         if (exclamationMusicTrigger === false) {
-                const exclamationMusic = new Audio("audio/exclamation-music.wav");
-                //switchMusic(exclamationMusic);
-                exclamationMusicTrigger = true;
-                exclamationMusicIndex = allMusic.indexOf(exclamationMusic);
+                if (faeForest) {
+                        const exclamationMusic = new Audio("audio/exclamation-music.wav");
+                        switchMusic(exclamationMusic);
+                        exclamationMusicTrigger = true;
+                        exclamationMusicIndex = allMusic.indexOf(exclamationMusic);
+                } else if (hallowwood) {
+                        const hallowwoodMysteryMusic = new Audio("audio/hallowwood-mystery-music.wav");
+                        switchMusic(hallowwoodMysteryMusic);
+                        exclamationMusicTrigger = true;
+                        exclamationMusicIndex = allMusic.indexOf(hallowwoodMysteryMusic);
+                } else {
+                        const heavenMysteryMusic = new Audio("audio/heaven-mystery-music.wav");
+                        switchMusic(heavenMysteryMusic);
+                        exclamationMusicTrigger = true;
+                        exclamationMusicIndex = allMusic.indexOf(heavenMysteryMusic);
+                }
         }
-        //switchMusic(allMusic[exclamationMusicIndex]);
+        switchMusic(allMusic[exclamationMusicIndex]);
         let randomExclamationNumber = createRandomNumber(1, 3);
         switchArea(exclamationContainer, map);
         while (dontRepeatExclamation.includes(randomExclamationNumber)) {
@@ -1614,15 +1641,14 @@ function mystery() {
                                 addCardToDeck(51, 0, true);
                                 playerAether.innerText = parseFloat(playerAether.innerText) + 200;
                                 switchArea(map, exclamationContainer);
-                                location.href="#bottom-anchor";
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton2.addEventListener("click", () => {
                                 playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 10;
                                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 10;
                                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
                                 switchArea(map, exclamationContainer);
-                                location.href="#bottom-anchor";
-                                //switchMusic(allMusic[hallowoodMapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(1);
                         break;
@@ -1669,43 +1695,37 @@ function mystery() {
                                 let fire = document.querySelectorAll(".fire");
                                 destroyCards(fire, "fire");
                                 switchArea(map, exclamationContainer);
-                                location.href="#bottom-anchor";
-                                //switchMusic(mapMusic);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton2.addEventListener("click", () => {
                                 let lightning = document.querySelectorAll(".lightning");
                                 destroyCards(lightning, "lightning");
                                 switchArea(map, exclamationContainer);
-                                location.href="#bottom-anchor";
-                                //switchMusic(mapMusic);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton3.addEventListener("click", () => {
                                 let ice = document.querySelectorAll(".ice");
                                 destroyCards(ice, "ice");
                                 switchArea(map, exclamationContainer);
-                                location.href="#bottom-anchor";
-                                //switchMusic(mapMusic);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton4.addEventListener("click", () => {
                                 let air = document.querySelectorAll(".air");
                                 destroyCards(air, "air");
                                 switchArea(map, exclamationContainer);
-                                location.href="#bottom-anchor";
-                                //switchMusic(mapMusic);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton5.addEventListener("click", () => {
                                 let water = document.querySelectorAll(".water");
                                 destroyCards(water, "water");
                                 switchArea(map, exclamationContainer);
-                                location.href="#bottom-anchor";
-                                //switchMusic(mapMusic);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton6.addEventListener("click", () => {
                                 let earth = document.querySelectorAll(".earth");
                                 destroyCards(earth, "earth");
                                 switchArea(map, exclamationContainer);
-                                location.href="#bottom-anchor";
-                                //switchMusic(mapMusic);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(2);
                         break;
@@ -1740,7 +1760,6 @@ function mystery() {
                                                         if (i.classList.contains(j)) {
                                                                 addCardToDeck(j, 0, true);
                                                                 switchArea(map, exclamationContainer);
-                                                                location.href="#bottom-anchor";
                                                         }
                                                 }
                                                 for (let k = 0; k < cardReference.length; k++) {
@@ -1778,8 +1797,7 @@ function mystery() {
                                                                                         destroyedCardsArray = [];
                                                                                         destroyedCardsContainer.innerHTML = ``;
                                                                                         switchArea(map, exclamationContainer);
-                                                                                        location.href="#bottom-anchor";
-                                                                                        //switchMusic(mapMusic);
+                                                                                        switchMusic(allMusic[mapMusicIndex]);
                                                                                 }
                                                                         });
                                                                 }
@@ -1842,28 +1860,27 @@ function mystery() {
                                 newOpeningHand.push(newCard);
                         }
                         switchArea(map, exclamationDiv);
-                        location.href="#bottom-anchor";
-                        //switchMusic(mapMusic);
+                        switchMusic(allMusic[mapMusicIndex]);
                 });
         }
 }
 let shopMusicTrigger = false;
 let shopMusicIndex;
 function shop() {
-        /*if (!shopMusicTrigger) {
+        if (!shopMusicTrigger) {
                 if (faeForest) {
                         const shopMusic = new Audio("audio/shop-music.wav");
-                        //switchMusic(shopMusic);
+                        switchMusic(shopMusic);
                         shopMusicTrigger = true;
                         shopMusicIndex = allMusic.indexOf(shopMusic);
                 } else if (hallowwood) {
                         const hallowwoodShopMusic = new Audio("audio/hallowwood-shop-music.wav");
-                        //switchMusic(hallowwoodShopMusic);
+                        switchMusic(hallowwoodShopMusic);
                         shopMusicTrigger = true;
                         shopMusicIndex = allMusic.indexOf(hallowwoodShopMusic);
                 }
         }
-        //switchMusic(allMusic[shopMusicIndex]);*/
+        switchMusic(allMusic[shopMusicIndex]);
         const shopContainer = document.querySelector("#shop-container");
         displayNone(map);
         displayFlex(shopContainer);
@@ -1876,7 +1893,7 @@ function shop() {
         <img id="shopkeeper" src="imgs/gnome-shopkeeper.png">
         `;
         if (hallowwood) {
-                document.getElementById("shop-container").style.backgroundImage = "url(imgs/hallowwood-shop.jpeg)"
+                document.getElementById("shop-container").style.backgroundImage = "url(imgs/hallowwood-shop2.jpeg)"
                 document.getElementById("shopkeeper").src = "imgs/hallowwood-shopkeeper2.png";
                 document.getElementById("shopkeeper").style = "margin-top: 0rem";
         } else if (!faeForest && !hallowwood) {
@@ -1888,12 +1905,7 @@ function shop() {
         const leaveShopButton = document.querySelector("#leave-shop-button");
         leaveShopButton.addEventListener("click", () => {
                 switchArea(map, shopContainer);
-                location.href="#bottom-anchor";
-                if (faeForest) {
-                        //switchMusic(mapMusic);
-                } else if (hallowwood) {
-                        //switchMusic(allMusic[hallowoodMapMusicIndex]);
-                }
+                switchMusic(allMusic[mapMusicIndex]);
                 let shopCardsReference = document.querySelectorAll(".card-reference");
                 for (let k = 0; k < shopCardsReference.length; k++) {
                         destroyedCardsArray.push(shopCardsReference[k]);
@@ -2150,11 +2162,11 @@ function blacksmith() {
         if (blacksmithMusicTrigger === false) {
                 const blacksmithMusic = new Audio("audio/blacksmith-music.wav");
                 const blacksmithAmbience =  new Audio("audio/blacksmith-ambience.wav");
-                //switchMusic(blacksmithMusic, blacksmithAmbience);
+                switchMusic(blacksmithMusic, blacksmithAmbience);
                 blacksmithMusicTrigger = true;
                 blacksmithMusicIndex = allMusic.indexOf(blacksmithMusic);
         }
-        //switchMusic(allMusic[blacksmithMusicIndex], allMusic[blacksmithMusicIndex + 1]);
+        switchMusic(allMusic[blacksmithMusicIndex], allMusic[blacksmithMusicIndex + 1]);
         const blacksmithContainer = document.querySelector("#blacksmith-container");
         displayFlex(blacksmithContainer);
         displayNone(map);
@@ -2164,11 +2176,10 @@ function blacksmith() {
                 blacksmithText.innerHTML = `<p>I can infuse your cards with aether to make them stronger if you've got the materials.<br><br>Come back when you have 75 aether for me.</p>`;
                 blacksmithText.addEventListener("click", () => {
                         switchArea(map, blacksmithContainer);
-                        location.href="#bottom-anchor";
                         if (faeForest) {
-                                //switchMusic(mapMusic);
+                                switchMusic(allMusic[mapMusicIndex]);
                         } else if (hallowwood) {
-                                //switchMusic(allMusic[hallowoodMapMusicIndex]);
+                                switchMusic(allMusic[hallowoodMapMusicIndex]);
                         }
                 });
         } else {
@@ -2258,12 +2269,7 @@ function blacksmith() {
                                 clickCount++;
                                 if (clickCount === 2) {
                                         switchArea(map, blacksmithContainer);
-                                        location.href="#bottom-anchor";
-                                        if (faeForest) {
-                                                //switchMusic(mapMusic);
-                                        } else if (hallowwood) {
-                                                //switchMusic(allMusic[hallowoodMapMusicIndex]);
-                                        }
+                                        switchMusic(allMusic[mapMusicIndex]);
                                 }
                         });
                 });
@@ -2448,7 +2454,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(2000);
+                                damageAllEnemies(20);
                                 fxChainLightning.play();
                         },
                         function() {
@@ -2534,6 +2540,7 @@ const cardsInformation = [
                 [ 
                         function() {
                                 spendMana(1);
+                                damageAllEnemies(20);
                                 let enemyIsWindswept = [];
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false) {
@@ -2848,44 +2855,64 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
+                                fxBallLightning.play();
                                 let randomEnemies = [];
-                                let randomEnemy;
                                 let index = 0;
-                                for (let i = 0; i < 3; i++) {
-                                        randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
+                                function ballAttack() {
+                                        if (enemiesAreDead) {
+                                                return;
+                                        }
+                                        let randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
                                         while (enemyIsDead[randomEnemy]) {
                                                 randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
-                                                if (enemyIsDead[0] && enemyIsDead[1] && enemyIsDead[2]) {
-                                                        return;
+                                                if (enemyCurrentHealth[randomEnemy].innerText <= 0) {
+                                                        enemyIsDead[randomEnemy] = true;
+                                                        if ((numberOfEnemies === 1 && enemyIsDead[0]) || (numberOfEnemies === 2 && enemyIsDead[0] && enemyIsDead[1]) || (numberOfEnemies === 3  && enemyIsDead[0] && enemyIsDead[1] && enemyIsDead[2])) {
+                                                                return;
+                                                        } 
                                                 }
                                         }
                                         damageEnemy(10, randomEnemy);
                                         if (!randomEnemies.includes(randomEnemy)) {
                                                 randomEnemies[index] = randomEnemy;
                                                 index++;
+                                                gainEnergize(1);
                                         }
                                 }
-                                gainEnergize(randomEnemies.length);   
-                                fxBallLightning.play();     
+                                ballAttack();
+                                setTimeout(ballAttack, 200);
+                                setTimeout(ballAttack, 400);
                         },
                         function() {
                                 spendMana(3);
+                                fxBallLightning.play();
                                 let randomEnemies = [];
-                                let randomEnemy;
                                 let index = 0;
-                                for (let i = 0; i < 4; i++) {
-                                        randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
+                                function ballAttack() {
+                                        if (enemiesAreDead) {
+                                                return;
+                                        }
+                                        let randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
                                         while (enemyIsDead[randomEnemy]) {
                                                 randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
+                                                if (enemyCurrentHealth[randomEnemy].innerText <= 0) {
+                                                        enemyIsDead[randomEnemy] = true;
+                                                        if ((numberOfEnemies === 1 && enemyIsDead[0]) || (numberOfEnemies === 2 && enemyIsDead[0] && enemyIsDead[1]) || (numberOfEnemies === 3  && enemyIsDead[0] && enemyIsDead[1] && enemyIsDead[2])) {
+                                                                return;
+                                                        } 
+                                                }
                                         }
                                         damageEnemy(10, randomEnemy);
                                         if (!randomEnemies.includes(randomEnemy)) {
                                                 randomEnemies[index] = randomEnemy;
                                                 index++;
+                                                gainEnergize(1);
                                         }
                                 }
-                                gainEnergize(randomEnemies.length); 
-                                fxBallLightning.play();       
+                                ballAttack();
+                                setTimeout(ballAttack, 200);
+                                setTimeout(ballAttack, 400);
+                                setTimeout(ballAttack, 600);
                         }
                 ]
         },
@@ -3377,8 +3404,7 @@ const cardsInformation = [
                 manaCost: [2, 2],
                 name: "Vine Whip",
                 cardImg: "imgs/thorn-whip.jpg",
-                cardText: ["Deal 4 damage plus 3x your thorns", "Gain 2 thorns and deal damage equal to 3x your thorns"],
-                damage: [4, 0],
+                cardText: ["Deal damage equal to 3x your thorns", "Gain 2 thorns and deal damage equal to 3x your thorns"],
                 thorns: [0, 2],
                 chooseEnemyCard: true,
                 index: 34,
@@ -3387,7 +3413,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(2);
-                                damageEnemy(4 + (playerThornsNumber.innerText * 3), chosenEnemy);
+                                damageEnemy((playerThornsNumber.innerText * 3), chosenEnemy);
                                 fxVineWhip.play();
                         },
                         function() {
@@ -4242,13 +4268,8 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
         drawPileArray.push(currentCards[currentCards.length - 1 - potionCards.length]);
         console.log("2 currentCards[currentCards.length - 1 - potionCards.length]", currentCards[currentCards.length - 1 - potionCards.length]);
         switchArea(map, arena);
-        location.href="#bottom-anchor";
         if (switchMapMusic) {
-                if (faeForest) {
-                        //switchMusic(mapMusic);
-                } else if (hallowwood) {
-                        //switchMusic(allMusic[hallowoodMapMusicIndex]);
-                }
+                switchMusic(allMusic[mapMusicIndex]);
         }
         windsOfChange = 8;
 }        
@@ -4633,7 +4654,7 @@ function checkHealth() {
         if (parseFloat(playerCurrentHealth.innerText) <= 0)  {
                 const deathScreenContainer = document.querySelector("#death-screen-container");
                 const deathMusic = new Audio("audio/death-music.wav");
-                //switchMusic(deathMusic);
+                switchMusic(deathMusic);
                 arena.classList.add("dim");
                 //arena.style = "position: absolute";
                 displayFlex(deathScreenContainer);
@@ -5009,7 +5030,7 @@ function updateCardText() {
                 ["[POTION]<br>Permanently gain 5 max health", "[POTION]<br>Permanently gain 6 max health and gain 6 health"],
                 ["Lose all of your block and deal damage equal to how much was lost", `Lose all of your block and deal damage equal to how much was lost. Regain ${cardsInformation[32].block[1]}% of your block.`],
                 [`Gain ${cardsInformation[33].thorns[1]} thorns`, `Gain ${cardsInformation[33].thorns[1]} thorns`],
-                [`Deal ${cardsInformation[34].damage[0]} damage plus 3x your thorns Damage:${4 + (parseFloat(playerThornsNumber.innerText) * 3)}`, `Gain ${cardsInformation[34].thorns[1]} thorns and deal damage equal to 3x your thorns Damage:${2 + (parseFloat(playerThornsNumber.innerText) * 3)}`],
+                [`Deal damage equal to 3x your thorns<br>Damage:${(parseFloat(playerThornsNumber.innerText) * 3)}`, `Gain ${cardsInformation[34].thorns[1]} thorns and deal damage equal to 3x your thorns<br>Damage:${2 + (parseFloat(playerThornsNumber.innerText) * 3)}`],
                 ["[POTION]<br>All block gained is increased by 5 and thorns increased by 1", `[POTION]<br>Gain ${cardsInformation[35].block[1]} block and ${cardsInformation[35].thorns[1]} thorns. All block gained is increased by 5 and thorns increased by 1`],
                 [`Energize ${cardsInformation[36].energize[0]} for each enemy burning`, `Burn all enemies for ${cardsInformation[36].burn[1]} and Energize ${cardsInformation[36].energize[1]} for each enemy burning`],
                 [`If the enemy is either burning or inflicted with frostbite they are inflicted with ${cardsInformation[37].burn[0]} burn and frostbite`, `If the enemy is either burning or inflicted with frostbite they are inflicted with ${cardsInformation[37].burn[1]} burn and frostbite`],
@@ -6229,15 +6250,10 @@ let enemiesAreDead = false;
 let [flameWarden, pyromancer, surgebinder, stormchaser, cryocast, winterWarrior, aeroshift, windrunner, bloodbender, waterweaver, grovertender, stoneshaper] =
 [false, false, false, false, false, false, false, false, false, false, false, false];
 let [faeForest, hallowwood] = [true, false];
-let hallowoodMapMusicIndex, heavenMapMusicIndex;
 function checkIfEnemyDead() {
         // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET AETHER
         function allEnemiesDead() {
-                if (!bossDefeated[0] && !bossDefeated[1] && faeForest) {
-                        getRandomNewCards();
-                } else if (bossDefeated[0] && !bossDefeated[1] && hallowwood) {
-                        getRandomNewCards();
-                } else if (bossDefeated[0] && bossDefeated[1] && !hallowwood) {
+                if ((!bossDefeated[0] && !bossDefeated[1] && faeForest) || (bossDefeated[0] && !bossDefeated[1] && hallowwood) || (bossDefeated[0] && bossDefeated[1] && !hallowwood)) {
                         getRandomNewCards();
                 }
                 window.removeEventListener("keydown", spaceEndTurn);
@@ -6257,94 +6273,98 @@ function checkIfEnemyDead() {
                 if (bossDefeated[0] && !bossDefeated[1] && !hallowwood) {
                         fxDragonGrowls.pause();
                         fxGiantGroans.pause();
-                        const hallowoodMapMusic = new Audio("audio/hallowwood-map-music.wav");
-                        //switchMusic(hallowoodMapMusic);
-                        hallowoodMapMusicIndex = allMusic.indexOf(hallowoodMapMusic);
+                        allMusic.forEach(i => {
+                                i.pause();
+                        });
+                        allMusic = [];
+                        allAmbience = [];
+                        const hallowwoodAmbience = new Audio("audio/hallowwood-ambience.wav");
+                        switchAmbience(hallowwoodAmbience);
+                        const hallowwoodMapMusic = new Audio("audio/hallowwood-map-music.wav");
+                        switchMusic(hallowwoodMapMusic);
+                        mapMusicIndex = allMusic.indexOf(hallowwoodMapMusic);
                         displayFlex(empowerContainer);
                         displayNone(arena);
-                        map.style.backgroundImage = "url(imgs/hallowwood-map3.jpeg); background-position: 1%;";
+                        map.style.backgroundImage = "url(imgs/hallowwood-map3.jpeg)";
                         arena.style.backgroundImage = "url(imgs/hallowwood-arena4.jpeg)";
                         arena.style.backgroundImage = "url(imgs/hallowwood-arena4.jpeg)";
-                        exclamationContainer.style.backgroundImage = "url(imgs/hallowwood-mystery.jpeg)";
                         empowerContainer.innerHTML = `
-                        <div id="empower-container">
-                                <h1>Empower an Element</h1>
-                                <div class="empower-element-div">
-                                        <h2 style="color: #b23d1a">Fire</h2>
-                                        <div class="empower-choice-div">
-                                                <div class="empower-choices">
-                                                        <button id="eternal-flame" style="color: #aa4203">Flame Warden</button>
-                                                        <p>Burn increases by one each turn</p>
-                                                </div>
-                                                <div class="empower-choices">
-                                                        <button id="scorched-earth" style="color: #ba760f">Pyromancer</button>
-                                                        <p>Enemies burn twice per turn</p>
-                                                </div>
+                        <h1>Empower an Element</h1>
+                        <div class="empower-element-div">
+                                <h2 style="color: #b23d1a">Fire</h2>
+                                <div class="empower-choice-div">
+                                        <div class="empower-choices">
+                                                <button id="eternal-flame" style="color: #aa4203">Flame Warden</button>
+                                                <p>Burn increases by one each turn</p>
+                                        </div>
+                                        <div class="empower-choices">
+                                                <button id="scorched-earth" style="color: #ba760f">Pyromancer</button>
+                                                <p>Enemies burn twice per turn</p>
                                         </div>
                                 </div>
-                                <div class="empower-element-div">
-                                        <h2 style="color: #f0fb3e">Lightning</h2>
-                                        <div class="empower-choice-div">
-                                                <div class="empower-choices">
-                                                        <button id="surgebinder" style="color: #fafba5">Surgebinder</button>
-                                                        <p>Double all energize</p>
-                                                </div>
-                                                <div class="empower-choices">
-                                                        <button id="lightning-jewel" style="color: #5e65c5">Stormchaser</button>
-                                                        <p>Gain +1 mana</p>
-                                                </div>
+                        </div>
+                        <div class="empower-element-div">
+                                <h2 style="color: #f0fb3e">Lightning</h2>
+                                <div class="empower-choice-div">
+                                        <div class="empower-choices">
+                                                <button id="surgebinder" style="color: #fafba5">Surgebinder</button>
+                                                <p>Double all energize</p>
+                                        </div>
+                                        <div class="empower-choices">
+                                                <button id="lightning-jewel" style="color: #5e65c5">Stormchaser</button>
+                                                <p>Gain +1 mana</p>
                                         </div>
                                 </div>
-                                <div class="empower-element-div">
-                                        <h2 style="color: #2f989c">Ice</h2>
-                                        <div class="empower-choice-div">
-                                                <div class="empower-choices">
-                                                        <button id="leeching-cold" style="color: #51a9ac">Cryocast</button>
-                                                        <p>Inflicting frostbite will steal two of each buff</p>
-                                                </div>
-                                                <div class="empower-choices">
-                                                        <button id="everlasting-winter" style="color: #b9e8ea">Winter Warrior</button>
-                                                        <p>Frostbite lasts for two turns</p>
-                                                </div>
+                        </div>
+                        <div class="empower-element-div">
+                                <h2 style="color: #2f989c">Ice</h2>
+                                <div class="empower-choice-div">
+                                        <div class="empower-choices">
+                                                <button id="leeching-cold" style="color: #51a9ac">Cryocast</button>
+                                                <p>Inflicting frostbite will steal two of each buff</p>
+                                        </div>
+                                        <div class="empower-choices">
+                                                <button id="everlasting-winter" style="color: #b9e8ea">Winter Warrior</button>
+                                                <p>Frostbite lasts for two turns</p>
                                         </div>
                                 </div>
-                                <div class="empower-element-div">
-                                        <h2 style="color: #86bfdf">Air</h2>
-                                        <div class="empower-choice-div">
-                                                <div class="empower-choices">
-                                                        <button id="shifting-winds" style="color: #9edafd">Aeroshift</button>
-                                                        <p>Your cards that draw cards draw one more card</p>
-                                                </div>
-                                                <div class="empower-choices">
-                                                        <button id="windrunner" style="color: white">Windrunnerr</button>
-                                                        <p>Draw one more card each turn</p>
-                                                </div>
+                        </div>
+                        <div class="empower-element-div">
+                                <h2 style="color: #86bfdf">Air</h2>
+                                <div class="empower-choice-div">
+                                        <div class="empower-choices">
+                                                <button id="shifting-winds" style="color: #9edafd">Aeroshift</button>
+                                                <p>Your cards that draw cards draw one more card</p>
+                                        </div>
+                                        <div class="empower-choices">
+                                                <button id="windrunner" style="color: white">Windrunner</button>
+                                                <p>Draw one more card each turn</p>
                                         </div>
                                 </div>
-                                <div class="empower-element-div">
-                                        <h2 style="color: #0f5e9c">Water</h2>
-                                        <div class="empower-choice-div">
-                                                <div class="empower-choices">
-                                                        <button id="blood-transfusion" style="color: #be291e">Bloodbender</button>
-                                                        <p>Blood siphon now heals for 30% of damage dealt</p>
-                                                </div>
-                                                <div class="empower-choices">
-                                                        <button id="cleansing-currents" style="color: #74ccf4">Waterweaver</button>
-                                                        <p>Heal to full health and gain +1 max health and regen when you play water cards</p>
-                                                </div>
+                        </div>
+                        <div class="empower-element-div">
+                                <h2 style="color: #0f5e9c">Water</h2>
+                                <div class="empower-choice-div">
+                                        <div class="empower-choices">
+                                                <button id="blood-transfusion" style="color: #be291e">Bloodbender</button>
+                                                <p>Blood siphon now heals for 30% of damage dealt</p>
+                                        </div>
+                                        <div class="empower-choices">
+                                                <button id="cleansing-currents" style="color: #74ccf4">Waterweaver</button>
+                                                <p>Heal to full health and gain +1 max health and regen when you play water cards</p>
                                         </div>
                                 </div>
-                                <div class="empower-element-div">
-                                        <h2 style="color: #7a4b31">Earth</h2>
-                                        <div class="empower-choice-div">
-                                                <div class="empower-choices">
-                                                        <button id="venomous-vines" style="color: #81b14f">Grovetender</button>
-                                                        <p>Gain 2 thorns at the end of every turn</p>
-                                                </div>
-                                                <div class="empower-choices">
-                                                        <button id="stonewall" style="color: #757575">Stoneshaper</button>
-                                                        <p>Start each encounter with 50 block</p>
-                                                </div>
+                        </div>
+                        <div class="empower-element-div">
+                                <h2 style="color: #7a4b31">Earth</h2>
+                                <div class="empower-choice-div">
+                                        <div class="empower-choices">
+                                                <button id="venomous-vines" style="color: #81b14f">Grovetender</button>
+                                                <p>Gain 2 thorns at the end of every turn</p>
+                                        </div>
+                                        <div class="empower-choices">
+                                                <button id="stonewall" style="color: #757575">Stoneshaper</button>
+                                                <p>Start each encounter with 50 block</p>
                                         </div>
                                 </div>
                         </div>
@@ -6364,8 +6384,10 @@ function checkIfEnemyDead() {
                                 eliteEncounterMusicTrigger = false;
                                 exclamationMusicTrigger = false;
                                 shopMusicTrigger = false;
+                                blacksmithMusicTrigger = false;
                                 switchArea(map, empowerContainer);
                                 randomizeLocations();
+                                location.href = "#bottom-anchor";
                         }
                         document.getElementById("eternal-flame").addEventListener("click", () => {
                                 flameWarden = true;
@@ -6421,35 +6443,22 @@ function checkIfEnemyDead() {
                                 stoneshaper = true;
                                 nextStage();
                         });
-                        document.getElementById("location2-tiles1").innerHTML = `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`
-                        document.getElementById("location2-tiles3").innerHTML = `<img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">`
-                        document.getElementById("location3-tiles1").innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`
-                        document.getElementById("location3-tiles2").innerHTML = `<img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt = "Hard Monster">`
-                        document.getElementById("location3-tiles3").innerHTML = `<img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt = "Hard Monster">`
-                        document.getElementById("location4-tiles1").innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`
-                        document.getElementById("location4-tiles2").innerHTML = `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`
-                        document.getElementById("location4-tiles4").innerHTML = `<img class="blacksmith-img" src="imgs/icons8-blacksmith-50.png" alt="Blacksmith">`
-                        document.getElementById("location5-tiles1").innerHTML = `<img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">`
-                        document.getElementById("location5-tiles2").innerHTML = `<img class="merchant-img" src="imgs/icons8-stand-50.png" alt="Merchant">`
-                        document.getElementById("location5-tiles3").innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`
-                        document.getElementById("location7-tiles2").innerHTML = `<img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt = "Hard Monster">`
-                        document.getElementById("location8-tiles1").innerHTML = `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`
-                        document.getElementById("location9-tiles1").innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`
-                        document.getElementById("location9-tiles2").innerHTML = `<img class="blacksmith-img" src="imgs/icons8-blacksmith-50.png" alt="Blacksmith">`
-                        document.getElementById("location9-tiles3").innerHTML = `<img class="merchant-img" src="imgs/icons8-stand-50.png" alt="Merchant">`
-                        document.getElementById("location9-tiles4").innerHTML = `<img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">`
-                        document.getElementById("location10-tiles1").innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`
-                        document.getElementById("location10-tiles2").innerHTML = `<img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt = "Hard Monster">`
                 } else if (bossDefeated[0] && bossDefeated[1] && hallowwood) {
-                                /*const heavenMapMusic = new Audio("audio/heaven-map-music.wav");
-                                //switchMusic(heavenMapMusic);
-                                heavenMapMusicIndex = allMusic.indexOf(heavenMapMusic);*/
+                                allMusic.forEach(i => {
+                                        i.pause();
+                                });
+                                allMusic = [];
+                                allAmbience = [];
+                                const heavenMapMusic = new Audio("audio/heaven-map-music.wav");
+                                switchMusic(heavenMapMusic);
+                                mapMusicIndex = allMusic.indexOf(heavenMapMusic);
+                                const heavenAmbience = new Audio("audio/heaven-ambience.wav");
+                                switchAmbience(heavenAmbience);
                                 displayFlex(empowerContainer);
                                 displayNone(arena);
                                 empowerContainer.style.backgroundImage = "url(imgs/heaven-portal2.jpeg)";
                                 arena.style.backgroundImage = "url(imgs/heaven-arena.jpeg)";
                                 map.style.backgroundImage = "url(imgs/heaven-map.jpeg)";
-                                exclamationContainer.style.backgroundImage = "url(imgs/heaven-mystery.jpeg)";
                                 const empowerElementDiv = document.querySelectorAll(".empower-element-div");
                                 if (flameWarden || pyromancer) {
                                         empowerElementDiv[0].innerHTML = ``;
@@ -6797,5 +6806,4 @@ hallowwood = false;
 bossDefeated[0] = true;
 bossDefeated[1] = true;
 arena.style.backgroundImage = "url(imgs/heaven-arena.jpeg)";
-map.style.backgroundImage = "url(imgs/heaven-map.jpeg)";
-exclamationContainer.style.backgroundImage = "url(imgs/heaven-mystery.jpeg)";*/
+map.style.backgroundImage = "url(imgs/heaven-map.jpeg)";*/
