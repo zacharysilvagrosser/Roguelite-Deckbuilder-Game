@@ -40,7 +40,7 @@
 #beginning-screen-container {
     width: 100%;
     height: 100vh;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     background-image: url("imgs/start-screen2.jpeg");
@@ -1175,6 +1175,7 @@
     position: absolute;
     display: flex;
     left: 17rem;
+    z-index: 5;
 }
 #mana-bar-img {
     width: 100px;
@@ -1206,6 +1207,7 @@
     font-weight: bold;
     font-family: fantasy;
     transition-duration: .1s;
+    z-index: 5;
 }
 #end-turn-button:hover {
     background-color: #37513f;
@@ -1223,57 +1225,65 @@
 .exclamation-div {
     width: 100%;
     height: 100vh;
-    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-size: cover;
     background-position: 10%;
     font-family: fantasy;
+    color: white;
 }
 .exclamation-information-container {
     width: 80%;
-    height: 60vh;
-    background-color: black;
-    margin: auto;
-    margin-top: 210px;
+    height: 65%;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: rgb(8, 8, 8);
+    border: 3px solid rgb(24, 24, 24);
+    box-shadow: 10px 10px 15px rgb(0, 0, 0);
+    text-shadow: 1px 1px 5px rgb(139, 139, 139);
 }
 .exclamation-title {
     text-align: center;
-    font-size: 36px;
-    color: white;
+    font-size: 2.5rem;
+    padding-top: .5rem;
+    padding-bottom: 1rem;
 }
 .exclamation-event-img {
     width: 30rem;
     height: 30rem;
     background-size: cover;
-    margin-top: -13px;
     margin-left: 38px;
 }
-.exclamation-text-div {
+.exclamation-text-button-div {
     width: 60%;
-    height: 70%;
-    margin-left: 35rem;
-    margin-top: -30.5rem;
-    padding: 2rem;
-    font-size: 28px;
+    height: 100%;
     color: white;
 }
+.exclamation-text-div {
+    width: 100%;
+    height: 60%;
+    padding-left: 2rem;
+    font-size: 1.8rem;
+}
 .exclamation-button-div {
-    width: 56%;
-    height: 30%;
-    margin-left: 37rem;
-    margin-top: -50px;
+    width: 100%;
+    height: 40%;
+    margin-top: 1.5rem;
     display: flex;
     flex-wrap: wrap;
 }
 .exclamation-button-div button {
     width: 100%;
-    height: 45%;
+    height: 48%;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 1.3rem;
     text-align: left;
     padding-left: 20px;
     background-color:rgb(65, 74, 104);
     color: white;
     transition-duration: .1s;
+    box-shadow: 2px 2px 15px rgb(51, 51, 51);
 }
 .exclamation-button-div button:hover {
     background-color:rgb(95, 119, 150);
@@ -1411,6 +1421,7 @@
 }
 #empower-container h1 {
     font-size: 9rem;
+    padding-top: 1rem;
     cursor: default;
     text-shadow: 4px 4px 12px rgb(34, 34, 34);
 }
@@ -1534,6 +1545,9 @@
 .gold {
     background-image: linear-gradient(gold, black);
 }
+.celestial {
+    background-image: linear-gradient(rgb(23, 112, 202), rgb(46, 40, 115));
+}
 
 .fire-lightning {
     background-image: linear-gradient(#b23d1a, #fafba5);
@@ -1625,7 +1639,6 @@
 .water-earth .card-text {
     background-color: #1f0c02;
 }
-
 .fire .card-text {
     background-color: #3a0000;
 }
@@ -1644,6 +1657,9 @@
 .earth .card-text {
     background-color: #1f0c02;
 }
+.celestial .card-text {
+    background-color: rgb(7, 8, 26);
+}
 .card, .card-reference, .upgrade-reference {
     width: 180px;
     height: 250px;
@@ -1655,6 +1671,7 @@
     transition: .5s;
     display: none;
     position: relative;
+    cursor: default;
     box-shadow: 5px 5px 10px black;
     z-index: 3;
 }
@@ -1664,6 +1681,7 @@
 .card:hover {
     transform: translateY(-100px);
     transition-duration: .5s;
+    z-index: 6;
 }
 .card-clicked {
     transform: translateY(-100px);

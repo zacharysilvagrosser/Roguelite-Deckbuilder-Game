@@ -12,6 +12,7 @@ POTIONS: RED POTION: Increase burn by 1
 
 Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 mana etc.
 4 and 2 enemy encounters
+Light and Dark based class has a light and dark meter based on your actions throughout the game
 
 TO DO
 Settings gear when hitting escape for music and sound volume
@@ -21,8 +22,8 @@ ghost elite becomes opacity: .5 and unable to be attacked
 King Spookly becomes hallowwood encounter, replace starting hand becomes heaven encounter
 
 BUGS
-text not reseting after encounter
-blacksmith loads back to cards not his original text
+///text not reseting after encounter
+///blacksmith loads back to cards not his original text
 death screen brings you to fae forest arena??
 3 elites in hallow inifinit loop
 ///blacksmith music will be deleted with each new stage
@@ -51,8 +52,8 @@ let allAmbience = [];
 const [fxPotion, fxFireball, fxCascadingFlames, fxStaticCharge, fxChainLightning, fxFrostbolt, fxFrostFingers, fxTornado, fxGaleForce, fxBloodCocoon, fxTidalImbuement, fxEarthBarrier, fxThornShield,
         fxFirefall, fxKindredSpirits, fxPhoenixFire, fxStormblessed, fxBallLightning, fxConduit, fxIceNova, fxFrostbitten, fxRayOfIce, fxWindsOfChange, fxWindwalk, fxGust, fxSanguineSpring, fxMistborn, fxTsunami,
         fxEarthShatter, fxWeaveOfThorns, fxVineWhip, fxForestFire, fxFrostfireFusion, fxFanTheFlames, fxCauterize, fxMagma, fxDeepFreeze, fxHurricane, fxElectricCurrent, fxQuakingJolt, fxFlurry, fxLiquify,
-        fxFrozenTundra, fxAirBubbles, fxRockOrbit, fxEnemyAttack, fxEnemyBlock, fxDragonRoar, fxDragonGrowls, fxGiantFootsteps, fxGiantGroans] =
-        [new Audio("audio/potion.wav"), new Audio("audio/fireball.wav"), new Audio("audio/cascadingFlames.wav"), new Audio("audio/staticCharge.wav"), new Audio("audio/chainLightning.wav"),
+        fxFrozenTundra, fxAirBubbles, fxRockOrbit, fxCelestialAttunement, fxEnemyAttack, fxEnemyBlock, fxDragonRoar, fxDragonGrowls, fxGiantFootsteps, fxGiantGroans, fxWizardCast, fxSpellSuccess, fxSpellFail] =
+        [new Audio("audio/potion.wav"), new Audio("audio/fireball.wav"), new Audio("audio/cascadingFlames.wav"), new Audio("audio/staticCharge.wav"), new Audio("audio/conduit.wav"),
         new Audio("audio/frostbolt.wav"), new Audio("audio/frostFingers.wav"), new Audio("audio/tornado.wav"), new Audio("audio/galeForce.wav"), new Audio("audio/bloodCocoon.wav"),
         new Audio("audio/tidalImbuement.wav"), new Audio("audio/earthBarrier.wav"), new Audio("audio/thornShield.wav"), new Audio("audio/firefall.wav"), new Audio("audio/kindredSpirits.wav"),
         new Audio("audio/phoenixFire.wav"),new Audio("audio/stormblessed.wav"), new Audio("audio/ballLightning.wav"), new Audio("audio/chainLightning.wav"), new Audio("audio/iceNova.wav"),
@@ -60,13 +61,13 @@ const [fxPotion, fxFireball, fxCascadingFlames, fxStaticCharge, fxChainLightning
         new Audio("audio/mistborn.wav"), new Audio("audio/tsunami.wav"), new Audio("audio/earthShatter.wav"), new Audio("audio/weaveOfThorns.wav"), new Audio("audio/vineWhip.wav"),
         new Audio("audio/forestFire.wav"), new Audio("audio/frostfireFusion.wav"), new Audio("audio/fanTheFlames.wav"), new Audio("audio/cauterize.wav"), new Audio("audio/magma.wav"),
         new Audio("audio/deepFreeze.wav"), new Audio("audio/hurricane.wav"), new Audio("audio/electricCurrent.wav"), new Audio("audio/quakingJolt.wav"), new Audio("audio/flurry.wav"),
-        new Audio("audio/liquify.wav"), new Audio("audio/frozenTundra.wav"), new Audio("audio/airBubbles.wav"), new Audio("audio/rockOrbit.wav"),
+        new Audio("audio/liquify.wav"), new Audio("audio/frozenTundra.wav"), new Audio("audio/airBubbles.wav"), new Audio("audio/rockOrbit.wav"), new Audio("audio/celestial-attunement.wav"),
         new Audio("audio/enemyAttack.wav"), new Audio("audio/enemyBlock.wav"), new Audio("audio/dragonRoar.wav"), new Audio("audio/dragonGrowls.wav"), new Audio("audio/giantFootsteps.wav"),
-        new Audio("audio/giantGroans.wav")];
+        new Audio("audio/giantGroans.wav"), new Audio("audio/wizard-cast.wav"), new Audio("audio/spell-success.wav"), new Audio("audio/spell-fail.wav")];
 const allSoundFX = [fxPotion, fxFireball, fxCascadingFlames, fxStaticCharge, fxChainLightning, fxFrostbolt, fxFrostFingers, fxTornado, fxGaleForce, fxBloodCocoon, fxTidalImbuement, fxEarthBarrier, fxThornShield,
         fxFirefall, fxKindredSpirits, fxPhoenixFire, fxStormblessed, fxBallLightning, fxConduit, fxIceNova, fxFrostbitten, fxRayOfIce,fxWindsOfChange, fxWindwalk, fxGust, fxSanguineSpring, fxMistborn, fxTsunami,
         fxEarthShatter, fxWeaveOfThorns, fxVineWhip, fxForestFire, fxFrostfireFusion, fxFanTheFlames, fxCauterize, fxMagma, fxDeepFreeze, fxHurricane, fxElectricCurrent, fxQuakingJolt, fxFlurry, fxLiquify,
-        fxFrozenTundra, fxAirBubbles, fxRockOrbit, fxEnemyAttack, fxEnemyBlock, fxDragonRoar, fxDragonGrowls, fxGiantFootsteps, fxGiantGroans];
+        fxFrozenTundra, fxAirBubbles, fxRockOrbit, fxCelestialAttunement, fxEnemyAttack, fxEnemyBlock, fxDragonRoar, fxDragonGrowls, fxGiantFootsteps, fxGiantGroans, fxWizardCast, fxSpellSuccess, fxSpellFail];
 function switchMusic() {
         allMusic.forEach(i => {
                 i.pause();
@@ -120,7 +121,7 @@ window.addEventListener("keydown", () => {
         displayNone(beginningScreen);
         displayFlex(startScreen);
         const startScreenMusic = new Audio("audio/start-screen-music.wav");
-        switchMusic(startScreenMusic);
+        //switchMusic(startScreenMusic);
 }, {once: true});
 let [easyDifficulty, normalDifficulty, hardDifficulty] = [false, false, false];
 let mapMusicIndex;
@@ -130,7 +131,7 @@ startGame.addEventListener("click", () => {
                 displayFlex(boardHeader);
                 displayNone(startScreen, document.querySelector("#difficulty-container"));
                 const mapMusic = new Audio("audio/map-music.wav");
-                switchMusic(mapMusic);
+                //switchMusic(mapMusic);
                 mapMusicIndex = allMusic.indexOf(mapMusic);
                 const forestAmbience = new Audio("audio/forest-ambience.wav");
                 switchAmbience(forestAmbience);
@@ -561,22 +562,22 @@ function encounter() {
         if (!encounterMusicTrigger) {
                 if (faeForest) {
                         const encounterMusic = new Audio("audio/forest-encounter-music.wav");
-                        switchMusic(encounterMusic);
+                        //switchMusic(encounterMusic);
                         encounterMusicTrigger = true;
                         encounterMusicIndex = allMusic.indexOf(encounterMusic);
                 } else if (hallowwood) {
                         const hallowwoodEncounterMusic = new Audio("audio/hallowwood-encounter-music.wav");
-                        switchMusic(hallowwoodEncounterMusic);
+                        //switchMusic(hallowwoodEncounterMusic);
                         encounterMusicTrigger = true;
                         encounterMusicIndex = allMusic.indexOf(hallowwoodEncounterMusic);
                 } else {
                         const heavenEncounterMusic = new Audio("audio/heaven-encounter-music.wav");
-                        switchMusic(heavenEncounterMusic);
+                        //switchMusic(heavenEncounterMusic);
                         encounterMusicTrigger = true;
                         encounterMusicIndex = allMusic.indexOf(heavenEncounterMusic);
                 }
         }
-        switchMusic(allMusic[encounterMusicIndex]);
+        //switchMusic(allMusic[encounterMusicIndex]);
         let randomEncounterNumber;
         if (faeForest) {
                 randomEncounterNumber = createRandomNumber(1, 9);
@@ -705,7 +706,7 @@ function encounter() {
 let dontRepeatGoldEncounter = [];
 let goldEncounterGold = false;
 function goldEncounter() {
-        switchMusic(allMusic[encounterMusicIndex]);
+        //switchMusic(allMusic[encounterMusicIndex]);
         goldEncounterGold = true;
         let randomGoldEncounterNumber;
         if (faeForest) {
@@ -935,22 +936,22 @@ function eliteEncounter() {
         if (!eliteEncounterMusicTrigger) {
                 if (faeForest) {
                         const eliteEncounterMusic = new Audio("audio/elite-encounter-music.wav");
-                        switchMusic(eliteEncounterMusic);
+                        //switchMusic(eliteEncounterMusic);
                         eliteEncounterMusicTrigger = true;
                         eliteEncounterMusicIndex = allMusic.indexOf(eliteEncounterMusic);
                 } else if (hallowwood) {
                         const hallowwoodEliteMusic = new Audio("audio/hallowwood-elite-music.wav");
-                        switchMusic(hallowwoodEliteMusic);
+                        //switchMusic(hallowwoodEliteMusic);
                         eliteEncounterMusicTrigger = true;
                         eliteEncounterMusicIndex = allMusic.indexOf(hallowwoodEliteMusic);
                 } else {
                         const heavenEliteMusic = new Audio("audio/heaven-elite-music.wav");
-                        switchMusic(heavenEliteMusic);
+                        //switchMusic(heavenEliteMusic);
                         eliteEncounterMusicTrigger = true;
                         eliteEncounterMusicIndex = allMusic.indexOf(heavenEliteMusic);
                 }
         }
-        switchMusic(allMusic[eliteEncounterMusicIndex]);
+        //switchMusic(allMusic[eliteEncounterMusicIndex]);
         let randomEliteNumber;
         if (faeForest) {
                 randomEliteNumber = createRandomNumber(1, 3);
@@ -1032,10 +1033,10 @@ let bossDefeated = [false, false];
 function boss() {
         if (faeForest) {
                 const bossMusic = new Audio("audio/forest-boss-music.wav");
-                switchMusic(bossMusic);
+                //switchMusic(bossMusic);
         } else if (hallowwood) {
                 const hallowwoodBossMusic = new Audio("audio/hallowwood-boss-music.wav");
-                switchMusic(hallowwoodBossMusic);
+                //switchMusic(hallowwoodBossMusic);
         }
         numberOfEnemies = 1;
         let randomBossNumber;
@@ -1317,7 +1318,6 @@ randomizeLocations();
 function matchEncounter(locationTile) {
         console.log(locationTile.innerHTML);
         if (locationTile.innerHTML == `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`) {
-                console.log(locationTile.innerHTML === `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`);
                 mystery();
         } else if (locationTile.innerHTML == `<img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">`) {
                 goldEncounter();
@@ -1569,18 +1569,18 @@ EXCLAMATION SECTION
 function createExclamation(title, background, img, text0, text1, text2) {
         const exclamationContainer = document.querySelector("#exclamation-container");
         exclamationContainer.innerHTML = `
-        <div class="exclamation-div" style= "background-image: url(${background})">
+        <div class="exclamation-div" style="background-image: url(${background})">
             <div class="exclamation-information-container">
-                <h1 class="exclamation-title">${title}</h1>
+                <div style="width: 100%"><h1 class="exclamation-title">${title}</h1></div>
                 <div class="exclamation-event-img" style= "background-image: url(${img})"></div>
-                <div class="exclamation-text-div">
-                    <p class="exclamation-text">${text0}<br><br>
-                        ${text1}<br><br>
-                        ${text2}
+                <div class="exclamation-text-button-div">
+                        <div class="exclamation-text-div">
+                        <p class="exclamation-text">${text0}<br><br>
+                                ${text1}<br><br>
+                                ${text2}
                         </p>
-                </div>
-                <div class="exclamation-button-div">
-                    
+                        <div class="exclamation-button-div"></div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -1599,60 +1599,34 @@ const destroyedCardsContainer = document.querySelector("#destroyed-cards-contain
 let dontRepeatExclamation = [];
 let exclamationMusicTrigger = false;
 let exclamationMusicIndex;
+let [aquatasBlessing, gaiaBlessing] = [false, false];
 function mystery() {
         if (exclamationMusicTrigger === false) {
                 if (faeForest) {
                         const exclamationMusic = new Audio("audio/exclamation-music.wav");
-                        switchMusic(exclamationMusic);
+                        //switchMusic(exclamationMusic);
                         exclamationMusicTrigger = true;
                         exclamationMusicIndex = allMusic.indexOf(exclamationMusic);
                 } else if (hallowwood) {
                         const hallowwoodMysteryMusic = new Audio("audio/hallowwood-mystery-music.wav");
-                        switchMusic(hallowwoodMysteryMusic);
+                        //switchMusic(hallowwoodMysteryMusic);
                         exclamationMusicTrigger = true;
                         exclamationMusicIndex = allMusic.indexOf(hallowwoodMysteryMusic);
                 } else {
                         const heavenMysteryMusic = new Audio("audio/heaven-mystery-music.wav");
-                        switchMusic(heavenMysteryMusic);
+                        //switchMusic(heavenMysteryMusic);
                         exclamationMusicTrigger = true;
                         exclamationMusicIndex = allMusic.indexOf(heavenMysteryMusic);
                 }
         }
-        switchMusic(allMusic[exclamationMusicIndex]);
-        let randomExclamationNumber = createRandomNumber(1, 3);
+        //switchMusic(allMusic[exclamationMusicIndex]);
+        const randomExclamationNumber = createRandomNumber(1, 5);
         switchArea(exclamationContainer, map);
         while (dontRepeatExclamation.includes(randomExclamationNumber)) {
-                randomExclamationNumber = createRandomNumber(1, 4);
+                randomExclamationNumber = createRandomNumber(1, 5);
         }
         switch (randomExclamationNumber) {
                 case 1:
-                        createExclamation("King Spookly", "imgs/fae-forest-mystery.jpeg", "imgs/king-spookly2.jpeg", "A ghost peaks out from a tree up ahead.", 
-                                "He beckons you closer with his translucent appendage. You approach.",
-                                `"I was once king in this land long ago." His soft whisper echos. "I had all the gold in my possession burried with me. I now realize the arrogance of my actions and would like to make amends for my past mistakes. Please share this amongt the local townsfolk."`);
-                        exclamationDiv = document.querySelector(".exclamation-div");
-                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
-                        exclamationButtonDiv.innerHTML = `
-                        <button class="exclamation-button-1"><span style="color: rgb(206, 83, 83)">Take It All:</span> Gain 200 Aether. Add Avarice to your deck which can't be used</button>
-                        <button class="exclamation-button-2"><span style="color: lightgreen">Share It:</span> Gain good fortune healing 10 health and gaining 10 max health</button>
-                        `;
-                        exclamationButton1 = document.querySelector(".exclamation-button-1");
-                        exclamationButton2 = document.querySelector(".exclamation-button-2");
-                        exclamationButton1.addEventListener("click", () => {
-                                addCardToDeck(51, 0, true);
-                                playerAether.innerText = parseFloat(playerAether.innerText) + 200;
-                                switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
-                        });
-                        exclamationButton2.addEventListener("click", () => {
-                                playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 10;
-                                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 10;
-                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
-                                switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
-                        });
-                        dontRepeatExclamation.push(1);
-                        break;
-                case 2:
                         createExclamation("A Goddess's Request", "imgs/fae-forest-mystery.jpeg", "imgs/goddess.jpg", "A wise looking woman approaches you with a knowing look.", 
                                 `I am the Goddess <span style="color: #81b14f">Terra</span>, spiritual guardian of this world. I appear to you now in physical form to ask of you a sacrifice.`,
                                 "This world's natural elemental spirits are slowly withering away due to the dwarves mining operations. I must ask that you lend one of your elemental orbs of power to this land. I would not ask of this if not completely necessary.");
@@ -1695,129 +1669,252 @@ function mystery() {
                                 let fire = document.querySelectorAll(".fire");
                                 destroyCards(fire, "fire");
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
+                                //switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton2.addEventListener("click", () => {
                                 let lightning = document.querySelectorAll(".lightning");
                                 destroyCards(lightning, "lightning");
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
+                                //switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton3.addEventListener("click", () => {
                                 let ice = document.querySelectorAll(".ice");
                                 destroyCards(ice, "ice");
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
+                                //switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton4.addEventListener("click", () => {
                                 let air = document.querySelectorAll(".air");
                                 destroyCards(air, "air");
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
+                                //switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton5.addEventListener("click", () => {
                                 let water = document.querySelectorAll(".water");
                                 destroyCards(water, "water");
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
+                                //switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton6.addEventListener("click", () => {
                                 let earth = document.querySelectorAll(".earth");
                                 destroyCards(earth, "earth");
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
+                                //switchMusic(allMusic[mapMusicIndex]);
                         });
-                        dontRepeatExclamation.push(2);
+                        dontRepeatExclamation.push(1);
                         break;
-                case 3:
+                case 2:
                         createExclamation("The Wizard's Apprentice", "imgs/fae-forest-mystery.jpeg", "imgs/clone-mage.jpg", "You see a flustered wizard over the next thicket trying and failing to cast a spell.", 
                                 `"Are you trying to burn down this entire forest?!" You demand indignantly.`,
                                 `"No you damnable fool! I've been trying for days to clone this Terra forsaken thing!" he yells emphatically. "Say...do you think I could get a little bit of practice on one of those spells of yours?"`);
                         exclamationDiv = document.querySelector(".exclamation-div");
                         exclamationButtonDiv = document.querySelector(".exclamation-button-div");
                         exclamationButtonDiv.innerHTML = `
-                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: lightgreen">Success:</span> His spell clones the card you choose</button>
-                        <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83)">Failure:</span> The card you choose disappears</button>
+                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: lightgreen">Agree:</span> He doesn't look like he's taking no for an answer</button>
+                        `;
+                        exclamationButton1 = document.querySelector(".exclamation-button-1");
+                        exclamationButton1.addEventListener("click", () => {
+                                fxWizardCast.play();
+                                function wizardCast() {
+                                        const randomNumber = createRandomNumber(1, 2);
+                                        if (randomNumber === 1) {
+                                                fxSpellSuccess.play();
+                                                exclamationButtonDiv.innerHTML = `
+                                                <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: lightgreen">Success:</span> His spell clones the card you choose</button>`;
+                                                exclamationButton1 = document.querySelector(".exclamation-button-1");
+                                                exclamationButton1.addEventListener("click", () => {
+                                                        let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
+                                                        exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
+                                                        const allCardsList = document.querySelector("#all-cards-list");
+                                                        allCardsArray.forEach((i) => {
+                                                                for (let j = 0; j < cardsInformation.length; j++) {
+                                                                        if (i.classList.contains(j)) {
+                                                                                createCard(j, allCardsList, "card-reference", "card-text", 0);
+                                                                        }
+                                                                }
+                                                        });
+                                                        let cardReference = document.querySelectorAll(".card-reference");
+                                                        cardReference.forEach((i) => {
+                                                                displayFlex(i);
+                                                                i.addEventListener("click", () => {
+                                                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                                                if (i.classList.contains(j)) {
+                                                                                        addCardToDeck(j, 0, true);
+                                                                                        switchArea(map, exclamationContainer);
+                                                                                }
+                                                                        }
+                                                                        for (let k = 0; k < cardReference.length; k++) {
+                                                                                destroyedCardsArray.push(cardReference[k]);
+                                                                                destroyedCardsContainer.appendChild(cardReference[k]);
+                                                                                destroyedCardsArray = [];
+                                                                                destroyedCardsContainer.innerHTML = ``;
+                                                                        }
+                                                                });
+                                                        });
+                                                });
+                                        } else {
+                                                fxSpellFail.play();
+                                                exclamationButtonDiv.innerHTML = `<button class="exclamation-button-1"><span style="color: rgb(206, 83, 83)">Failure:</span> The card you choose disappears</button>`;
+                                                exclamationButton1 = document.querySelector(".exclamation-button-1");
+                                                exclamationButton1.addEventListener("click", () => {
+                                                        let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
+                                                        exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
+                                                        const allCardsList = document.querySelector("#all-cards-list");
+                                                        allCardsArray.forEach((i) => {
+                                                                for (let j = 0; j < cardsInformation.length; j++) {
+                                                                        if (i.classList.contains(j)) {
+                                                                                createCard(j, allCardsList, "card-reference", "card-text", 0);
+                                                                        }
+                                                                }
+                                                        });
+                                                        let cardReference = document.querySelectorAll(".card-reference");
+                                                        cardReference.forEach((i) => {
+                                                                displayFlex(i);
+                                                                i.addEventListener("click", () => {
+                                                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                                                if (i.classList.contains(j)) {
+                                                                                        function removeCard(pile) {
+                                                                                                pile.forEach((k) => {
+                                                                                                        if (k.classList.contains(j)) {
+                                                                                                                let spliceCard = pile.splice(pile.indexOf(k), 1).pop();
+                                                                                                                destroyedCardsArray.push(spliceCard);
+                                                                                                                destroyedCardsContainer.appendChild(spliceCard);
+                                                                                                                destroyedCardsArray = [];
+                                                                                                                destroyedCardsContainer.innerHTML = ``;
+                                                                                                                switchArea(map, exclamationContainer);
+                                                                                                                //switchMusic(allMusic[mapMusicIndex]);
+                                                                                                        }
+                                                                                                });
+                                                                                        }
+                                                                                        removeCard(drawPileArray);
+                                                                                        removeCard(handArray);
+                                                                                }
+                                                                        }
+                                                                        for (let k = 0; k < cardReference.length; k++) {
+                                                                                destroyedCardsArray.push(cardReference[k]);
+                                                                                destroyedCardsContainer.appendChild(cardReference[k]);
+                                                                                destroyedCardsArray = [];
+                                                                                destroyedCardsContainer.innerHTML = ``;
+                                                                        }
+                                                                });
+                                                                
+                                                        });
+                                                });
+                                        }
+                                }
+                                setTimeout(wizardCast, 4000);
+                        }, {once: true});
+                        dontRepeatExclamation.push(2);
+                        break;
+                case 3:
+                        createExclamation("Aquatas' Assistance", "imgs/fae-forest-mystery.jpeg", "imgs/aquatis.jpeg", "The physical incarnation of Terra's water spirit looms over you. You feel a sudden sense of serenity wash over you.", 
+                                `"I speak to you on behalf of Gaia and myself." his voice envelops you reverberating throughout your mind.`,
+                                `"The path forward to stop Illuminia and her sister will be demanding. We offer a choice of blessings to help in your plight. Choose wisely."`);
+                        exclamationDiv = document.querySelector(".exclamation-div");
+                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
+                        exclamationButtonDiv.innerHTML = `
+                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: #74ccf4">Aquatas' Blessing:</span> Gain 8 regeneration next fight.</button>
+                        <button class="exclamation-button-2"><span style="color: #81b14f">Gaia's Blessing:</span> Gain 6 thorns next fight.</button>
                         `;
                         exclamationButton1 = document.querySelector(".exclamation-button-1");
                         exclamationButton2 = document.querySelector(".exclamation-button-2");
                         exclamationButton1.addEventListener("click", () => {
-                                let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
-                                exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
-                                const allCardsList = document.querySelector("#all-cards-list");
-                                allCardsArray.forEach((i) => {
-                                        for (let j = 0; j < cardsInformation.length; j++) {
-                                                if (i.classList.contains(j)) {
-                                                        createCard(j, allCardsList, "card-reference", "card-text", 0);
-                                                }
-                                        }
-                                });
-                                let cardReference = document.querySelectorAll(".card-reference");
-                                cardReference.forEach((i) => {
-                                        displayFlex(i);
-                                        i.addEventListener("click", () => {
-                                                for (let j = 0; j < cardsInformation.length; j++) {
-                                                        if (i.classList.contains(j)) {
-                                                                addCardToDeck(j, 0, true);
-                                                                switchArea(map, exclamationContainer);
-                                                        }
-                                                }
-                                                for (let k = 0; k < cardReference.length; k++) {
-                                                        destroyedCardsArray.push(cardReference[k]);
-                                                        destroyedCardsContainer.appendChild(cardReference[k]);
-                                                        destroyedCardsArray = [];
-                                                        destroyedCardsContainer.innerHTML = ``;
-                                                }
-                                        });
-                                });
+                                aquatasBlessing = true;
+                                switchArea(map, exclamationDiv);
+                                //switchMusic(allMusic[mapMusicIndex]);
                         });    
                         exclamationButton2.addEventListener("click", () => {
-                                let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
-                                exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
-                                const allCardsList = document.querySelector("#all-cards-list");
-                                allCardsArray.forEach((i) => {
-                                        for (let j = 0; j < cardsInformation.length; j++) {
-                                                if (i.classList.contains(j)) {
-                                                        createCard(j, allCardsList, "card-reference", "card-text", 0);
-                                                }
-                                        }
-                                });
-                                let cardReference = document.querySelectorAll(".card-reference");
-                                cardReference.forEach((i) => {
-                                        displayFlex(i);
-                                        i.addEventListener("click", () => {
-                                                for (let j = 0; j < cardsInformation.length; j++) {
-                                                        if (i.classList.contains(j)) {
-                                                                function removeCard(pile) {
-                                                                        pile.forEach((k) => {
-                                                                                if (k.classList.contains(j)) {
-                                                                                        let spliceCard = pile.splice(pile.indexOf(k), 1).pop();
-                                                                                        destroyedCardsArray.push(spliceCard);
-                                                                                        destroyedCardsContainer.appendChild(spliceCard);
-                                                                                        destroyedCardsArray = [];
-                                                                                        destroyedCardsContainer.innerHTML = ``;
-                                                                                        switchArea(map, exclamationContainer);
-                                                                                        switchMusic(allMusic[mapMusicIndex]);
-                                                                                }
-                                                                        });
-                                                                }
-                                                                removeCard(drawPileArray);
-                                                                removeCard(handArray);
-                                                        }
-                                                }
-                                                for (let k = 0; k < cardReference.length; k++) {
-                                                        destroyedCardsArray.push(cardReference[k]);
-                                                        destroyedCardsContainer.appendChild(cardReference[k]);
-                                                        destroyedCardsArray = [];
-                                                        destroyedCardsContainer.innerHTML = ``;
-                                                }
-                                        });
-                                        
-                                });
+                                gaiaBlessing = true;
+                                switchArea(map, exclamationDiv);
+                                //switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(3);
                         break;
                 case 4:
+                        createExclamation(`<span style="color: #81b14f">Gaia's</span> Embrace`, "imgs/fae-forest-mystery.jpeg", "imgs/gaia.jpeg", "You see Terra's earth spirit gleefully skipping through the forest. A sudden rush of dirt and cedar pines floods your nose.", 
+                                `"So you're the one here to save all of Terra, huh?" she giggles. "Hmm...you don't really look like someone ready to save the world."`,
+                                `"And your spell book looks <em>awfully</em> empty! Take this tome so you can at least put up a good fight. I'd love to tell the plants about your valiant effort!" the sound of her laugh slowly fades as she skips away.`);
+                        exclamationDiv = document.querySelector(".exclamation-div");
+                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
+                        exclamationButtonDiv.innerHTML = `
+                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: #81b14f">Let Gaia embrace you:</span> Gain a card that generates 5 block and healing each turn.</button>
+                        <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83">Refuse:</span> Lose all of your earth cards.</button>
+                        `;
+                        exclamationButton1 = document.querySelector(".exclamation-button-1");
+                        exclamationButton2 = document.querySelector(".exclamation-button-2");
+                        exclamationButton1.addEventListener("click", () => {
+                                addCardToDeck(50, 1, true);
+                                switchArea(map, exclamationDiv);
+                        });    
+                        exclamationButton2.addEventListener("click", () => {
+                                let earth = document.querySelectorAll(".earth");
+                                for (let i = 0; i < earth.length; i++) {
+                                        if (drawPileArray.includes(earth[i])) {
+                                                destroyedCardsArray.push(drawPileArray.splice(drawPileArray.indexOf(earth[i]), 1));
+                                        }
+                                        if (handArray.includes(earth[i])) {
+                                                destroyedCardsArray.push(handArray.splice(handArray.indexOf(earth[i]), 1));
+                                        }
+                                        destroyedCardsContainer.appendChild(earth[i]);
+                                }
+                                destroyedCardsContainer.innerHTML = ``;
+                                destroyedCardsArray = [];
+                                switchArea(map, exclamationDiv);
+                                //switchMusic(allMusic[mapMusicIndex]);
+                        });
+                        dontRepeatExclamation.push(4);
+                        break;
+                case 5:
+                        createExclamation(`Celestial Intervention`, "imgs/fae-forest-mystery.jpeg", "imgs/fae-mystery-spirit.jpeg", "You've set up camp for the night. You stare into the warm kindling of the campfire, resting your head on the frigid ground. Just before dozing off, you see the stars form into the shape of a woman.", 
+                                `"My power grows weaker each day. The betrayal of the spirits of life and death have affected even me. I'm afraid it may be too late."`,
+                                `"I can use the last of my power to infuse a spell with each of the six elemental Terran spirits power." She says weakly. "Use it in your fight to restore balance to this realm...for the sake of us all."`);
+                        exclamationDiv = document.querySelector(".exclamation-div");
+                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
+                        exclamationButtonDiv.innerHTML = `
+                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: rgb(123, 240, 238)">Attune with the stars:</span> Gain a celestially infused card.</button>
+                        <button class="exclamation-button-2"><span style="color: #81b14f">Stay Grounded:</span> Gain a potion card that increases block and thorns.</button>
+                        `;
+                        exclamationButton1 = document.querySelector(".exclamation-button-1");
+                        exclamationButton2 = document.querySelector(".exclamation-button-2");
+                        exclamationButton1.addEventListener("click", () => {
+                                addCardToDeck(52, 0, true);
+                                switchArea(map, exclamationDiv);
+                        });    
+                        exclamationButton2.addEventListener("click", () => {
+                                addCardToDeck(35, 0, true);
+                                switchArea(map, exclamationDiv);
+                                //switchMusic(allMusic[mapMusicIndex]);
+                        });
+                        dontRepeatExclamation.push(5);
+                        break;
+                case 6:
+                        createExclamation("King Spookly", "imgs/hallowwood-mystery.jpeg", "imgs/king-spookly2.jpeg", "A ghost peaks out from a tree up ahead.", 
+                                "He beckons you closer with his translucent appendage. You approach.",
+                                `"I was once king in this land long ago." His soft whisper echos. "I had all the gold in my possession burried with me. I now realize the arrogance of my actions and would like to make amends for my past mistakes. Please share this amongt the local townsfolk."`);
+                        exclamationDiv = document.querySelector(".exclamation-div");
+                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
+                        exclamationButtonDiv.innerHTML = `
+                        <button class="exclamation-button-1"><span style="color: rgb(206, 83, 83)">Take It All:</span> Gain 200 Aether and Avarice; a useless card.</button>
+                        <button class="exclamation-button-2"><span style="color: lightgreen">Share It:</span> Your integrity causes you to gain 10 health and max health.</button>
+                        `;
+                        exclamationButton1 = document.querySelector(".exclamation-button-1");
+                        exclamationButton2 = document.querySelector(".exclamation-button-2");
+                        exclamationButton1.addEventListener("click", () => {
+                                addCardToDeck(51, 0, true);
+                                playerAether.innerText = parseFloat(playerAether.innerText) + 200;
+                                switchArea(map, exclamationContainer);
+                                //switchMusic(allMusic[mapMusicIndex]);
+                        });
+                        exclamationButton2.addEventListener("click", () => {
+                                playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 10;
+                                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 10;
+                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
+                                switchArea(map, exclamationContainer);
+                                //switchMusic(allMusic[mapMusicIndex]);
+                        });
+                        dontRepeatExclamation.push(6);
+                        break;
+                case 7:
                         createExclamation("The Hooded Figure", "imgs/meadow-path.jpg", "imgs/rogue.jpg", "You strain to hear barely audible footsteps through the brush.", 
                                 `A hooded figure passes by with his head towards the ground. You aren't sure, but you think you see a smirk for a fraction of a second.`,
                                 `As you pass by, you bump into each other dropping both of your belongings. "My apologies" the gravely voice says. As you pick up your supplies you realize they have been swapped. You turn to confront the man, but he's nowhere to be found.`);
@@ -1860,7 +1957,7 @@ function mystery() {
                                 newOpeningHand.push(newCard);
                         }
                         switchArea(map, exclamationDiv);
-                        switchMusic(allMusic[mapMusicIndex]);
+                        //switchMusic(allMusic[mapMusicIndex]);
                 });
         }
 }
@@ -1870,17 +1967,17 @@ function shop() {
         if (!shopMusicTrigger) {
                 if (faeForest) {
                         const shopMusic = new Audio("audio/shop-music.wav");
-                        switchMusic(shopMusic);
+                        //switchMusic(shopMusic);
                         shopMusicTrigger = true;
                         shopMusicIndex = allMusic.indexOf(shopMusic);
                 } else if (hallowwood) {
                         const hallowwoodShopMusic = new Audio("audio/hallowwood-shop-music.wav");
-                        switchMusic(hallowwoodShopMusic);
+                        //switchMusic(hallowwoodShopMusic);
                         shopMusicTrigger = true;
                         shopMusicIndex = allMusic.indexOf(hallowwoodShopMusic);
                 }
         }
-        switchMusic(allMusic[shopMusicIndex]);
+        //switchMusic(allMusic[shopMusicIndex]);
         const shopContainer = document.querySelector("#shop-container");
         displayNone(map);
         displayFlex(shopContainer);
@@ -1905,7 +2002,7 @@ function shop() {
         const leaveShopButton = document.querySelector("#leave-shop-button");
         leaveShopButton.addEventListener("click", () => {
                 switchArea(map, shopContainer);
-                switchMusic(allMusic[mapMusicIndex]);
+                //switchMusic(allMusic[mapMusicIndex]);
                 let shopCardsReference = document.querySelectorAll(".card-reference");
                 for (let k = 0; k < shopCardsReference.length; k++) {
                         destroyedCardsArray.push(shopCardsReference[k]);
@@ -2159,27 +2256,36 @@ function shop() {
 let blacksmithMusicTrigger = false;
 let blacksmithMusicIndex;
 function blacksmith() {
-        if (blacksmithMusicTrigger === false) {
+        if (!blacksmithMusicTrigger) {
                 const blacksmithMusic = new Audio("audio/blacksmith-music.wav");
                 const blacksmithAmbience =  new Audio("audio/blacksmith-ambience.wav");
-                switchMusic(blacksmithMusic, blacksmithAmbience);
+                //switchMusic(blacksmithMusic);
+                switchAmbience(blacksmithAmbience);
                 blacksmithMusicTrigger = true;
                 blacksmithMusicIndex = allMusic.indexOf(blacksmithMusic);
         }
-        switchMusic(allMusic[blacksmithMusicIndex], allMusic[blacksmithMusicIndex + 1]);
+        //switchMusic(allMusic[blacksmithMusicIndex], allMusic[blacksmithMusicIndex + 1]);
         const blacksmithContainer = document.querySelector("#blacksmith-container");
         displayFlex(blacksmithContainer);
         displayNone(map);
         const blacksmithText = document.querySelector("#blacksmith-text");
+        blacksmithContainer.innerHTML = `
+        <div id="blacksmith-dwarf-div">
+                <div id="blacksmith-text">
+                        <p>I can infuse your cards with aether to make them stronger if you've got the materials.<br><br>75 aether should do.</p>
+                        <div class="dialogue"></div>
+                </div>
+                <img id="blacksmith-dwarf" src="imgs/blacksmith-dwarf.png">
+        </div>`
         let clickCount = 0;
         if (playerAether.innerText < 75) {
                 blacksmithText.innerHTML = `<p>I can infuse your cards with aether to make them stronger if you've got the materials.<br><br>Come back when you have 75 aether for me.</p>`;
                 blacksmithText.addEventListener("click", () => {
                         switchArea(map, blacksmithContainer);
                         if (faeForest) {
-                                switchMusic(allMusic[mapMusicIndex]);
+                                //switchMusic(allMusic[mapMusicIndex]);
                         } else if (hallowwood) {
-                                switchMusic(allMusic[hallowoodMapMusicIndex]);
+                                //switchMusic(allMusic[hallowoodMapMusicIndex]);
                         }
                 });
         } else {
@@ -2269,7 +2375,7 @@ function blacksmith() {
                                 clickCount++;
                                 if (clickCount === 2) {
                                         switchArea(map, blacksmithContainer);
-                                        switchMusic(allMusic[mapMusicIndex]);
+                                        //switchMusic(allMusic[mapMusicIndex]);
                                 }
                         });
                 });
@@ -2418,10 +2524,10 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [1, 1],
+                manaCost: [1, 0],
                 name: "Static Charge",
                 cardImg: "imgs/static-charge.jpg",
-                cardText: ["Energize 2", "Energize 3"],
+                cardText: ["Your next direct damage spell deals 10 more damage", "Your next direct damage spell deals 10 more damage"],
                 energize: [2, 3],
                 chooseEnemyCard: false,
                 index: 2,
@@ -2430,23 +2536,25 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(1);
-                                gainEnergize(2);
+                                tidalImbuement = true;
+                                displayBlock(playerTidalImbuementImg);
                                 fxStaticCharge.play();
-                        },    
+                        },
                         function() {
-                                spendMana(1);
-                                gainEnergize(3);
+                                spendMana(0);
+                                tidalImbuement = true;
+                                displayBlock(playerTidalImbuementImg);
                                 fxStaticCharge.play();
-                        },    
+                        },   
                 ]
         },
         {
                 manaCost: [3, 3],
                 name: "Chain Lightning",
                 cardImg: "imgs/chain-lightning2.jpg",
-                cardText: ["Deal 20 damage to all enemies", "Deal 20 damage to all enemies and Energize 2"],
-                damage: [20, 20],
-                energize: [0, 2],
+                cardText: ["Deal 16 damage to all enemies<br>Energize 2", "Deal 20 damage to all enemies<br>Energize 3"],
+                damage: [16, 20],
+                energize: [2, 3],
                 chooseEnemyCard: false,
                 index: 3,
                 element: "lightning",
@@ -2454,13 +2562,14 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(20);
+                                damageAllEnemies(16);
+                                gainEnergize(2);
                                 fxChainLightning.play();
                         },
                         function() {
                                 spendMana(3);
                                 damageAllEnemies(20);
-                                gainEnergize(2);
+                                gainEnergize(3);
                                 fxChainLightning.play();
                         },
                 ]        
@@ -2503,7 +2612,6 @@ const cardsInformation = [
                 [       
                         function() {
                                 spendMana(2);
-                                damageEnemy(15, chosenEnemy);
                                 if (playerFrostbite || enemyFrostbite[chosenEnemy]) {
                                         if (tidalImbuement) {
                                                 damageEnemy(35, chosenEnemy);
@@ -2511,11 +2619,11 @@ const cardsInformation = [
                                                 damageEnemy(15, chosenEnemy);
                                         }
                                 }
+                                damageEnemy(15, chosenEnemy);
                                 fxFrostFingers.play();
                         },
                         function() {
                                 spendMana(2);
-                                damageEnemy(15, chosenEnemy);
                                 if (playerFrostbite || enemyFrostbite[chosenEnemy]) {
                                         if (tidalImbuement) {
                                                 damageEnemy(60, chosenEnemy);
@@ -2523,6 +2631,7 @@ const cardsInformation = [
                                                 damageEnemy(30, chosenEnemy);
                                         }
                                 }
+                                damageEnemy(15, chosenEnemy);
                                 fxFrostFingers.play();
                         }
                 ]
@@ -2644,25 +2753,71 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [1, 0],
-                name: "Tidal Imbuement",
+                manaCost: [2, 2],
+                name: "Tidal Trident",
                 cardImg: "imgs/infusion2.jpg",
-                cardText: ["Your next direct damage spell deals 10 more damage", "Your next direct damage spell deals 10 more damage"],                
-                chooseEnemyCard: false,
+                cardText: ["Deal 18 damage and half that to adjacent targets<br>Gain 1 regen for each target hit", "Deal 18 damage and half that to adjacent targets<br>Gain 1 regen and blood siphon for each target hit"],
+                damage: [18, 18],
+                damageThird: [8, 8],
+                regen: [1, 1],
+                blood: [0, 1],            
+                chooseEnemyCard: true,
                 index: 9,
                 element: "water",
                 action:
                 [
                         function() {
-                                spendMana(1);
-                                tidalImbuement = true;
-                                displayBlock(playerTidalImbuementImg);
+                                spendMana(2);
+                                let tidalDamage = (damageEnemy(18, chosenEnemy));
+                                if (playerWindswept) {
+                                        tidalDamage *= 2;
+                                }
+                                console.log(tidalDamage);
+                                gainRegen(1);
+                                if (chosenEnemy === 1) {
+                                        if (!enemyIsDead[0]) {
+                                                damageEnemy((tidalDamage) / 2, 0);
+                                                gainRegen(1);
+                                        }
+                                        if (!enemyIsDead[2] && numberOfEnemies === 3) {
+                                                damageEnemy((tidalDamage) / 2, 2);
+                                                gainRegen(1);
+                                        }
+                                } else {
+                                        if (!enemyIsDead[1]) {
+                                                damageEnemy((tidalDamage) / 2, 1);
+                                                gainRegen(1);
+                                        }
+                                }
                                 fxTidalImbuement.play();
                         },
                         function() {
-                                spendMana(0);
-                                tidalImbuement = true;
-                                displayBlock(playerTidalImbuementImg);
+                                spendMana(2);
+                                let tidalDamage = (damageEnemy(18, chosenEnemy));
+                                if (playerWindswept) {
+                                        tidalDamage *= 2;
+                                }
+                                console.log(tidalDamage);
+                                gainRegen(1);
+                                gainBloodSiphon(1);
+                                if (chosenEnemy === 1) {
+                                        if (!enemyIsDead[0]) {
+                                                damageEnemy((tidalDamage) / 2, 0);
+                                                gainRegen(1);
+                                                gainBloodSiphon(1);
+                                        }
+                                        if (!enemyIsDead[2] && numberOfEnemies === 3) {
+                                                damageEnemy((tidalDamage) / 2, 2);
+                                                gainRegen(1);
+                                                gainBloodSiphon(1);
+                                        }
+                                } else {
+                                        if (!enemyIsDead[1]) {
+                                                damageEnemy((tidalDamage) / 2, 1);
+                                                gainRegen(1);
+                                                gainBloodSiphon(1);
+                                        }
+                                }
                                 fxTidalImbuement.play();
                         },
                 ]
@@ -2920,7 +3075,7 @@ const cardsInformation = [
                 manaCost: [4, 4],
                 name: "Conduit",
                 cardImg: "imgs/conduit2.jpg",
-                cardText: ["Deal 40 damage plus 15 for each mana you have after playing Conduit. Energize 1", "Deal 40 damage plus 20 for each mana you have after playing Conduit. Energize 1"],
+                cardText: ["Deal 40 damage plus 20 for each mana you have after playing Conduit. Energize 1", "Deal 40 damage plus 30 for each mana you have after playing Conduit. Energize 1"],
                 damage: [40, 40],
                 damageSecond: [15, 20],
                 energize: [1, 1],
@@ -2931,13 +3086,13 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(4);  
-                                damageEnemy(40 + (currentMana.innerText * 15), chosenEnemy);
+                                damageEnemy(40 + (currentMana.innerText * 20), chosenEnemy);
                                 gainEnergize(1);
                                 fxConduit.play();
                         },
                         function() {
                                 spendMana(4);  
-                                damageEnemy(40 + (currentMana.innerText * 20), chosenEnemy);
+                                damageEnemy(40 + (currentMana.innerText * 30), chosenEnemy);
                                 gainEnergize(1);
                                 fxConduit.play();
                         }
@@ -3788,7 +3943,7 @@ const cardsInformation = [
                 manaCost: [1, 0],
                 name: "Liquify",
                 cardImg: "imgs/liquify.jpg",
-                cardText: ["Gain 2 regen for everyone afflicted with frostbite", "Gain 2 regen for everyone afflicted with frostbite"],
+                cardText: ["Gain 2 regeneration for everyone afflicted with frostbite", "Gain 2 regeneration for everyone afflicted with frostbite"],
                 regen: [2, 2],
                 chooseEnemyCard: false,
                 index: 46,
@@ -3973,6 +4128,42 @@ const cardsInformation = [
                 index: 51,
                 element: "gold",
         },        
+        {
+                manaCost: [3, 2],
+                name: "Celestial Attunement",
+                cardImg: "imgs/celestial-attunement.jpeg",
+                cardText: ["Inflict frostbite, windswept, and 4 burn. Gain 1 energize, 2 blood siphon, and 10 block", "Inflict frostbite, windswept, and 4 burn.Gain 1 energize, 2 blood siphon, and 10 block"],
+                burn: [4, 4],
+                energize: [1, 1],
+                blood: [2, 2],
+                block: [10, 10],
+                chooseEnemyCard: true,
+                index: 52,
+                element: "celestial",
+                action:
+                [
+                        function() {
+                                spendMana(3);
+                                inflictFrostbite(chosenEnemy);
+                                inflictWindswept(chosenEnemy);
+                                burnEnemy(4, chosenEnemy);
+                                gainEnergize(1);
+                                gainBloodSiphon(2);
+                                gainBlock(10);
+                                fxCelestialAttunement.play();
+                        },
+                        function() {
+                                spendMana(2);
+                                inflictFrostbite(chosenEnemy);
+                                inflictWindswept(chosenEnemy);
+                                burnEnemy(4, chosenEnemy);
+                                gainEnergize(1);
+                                gainBloodSiphon(2);
+                                gainBlock(10);
+                                fxCelestialAttunement.play();
+                        }
+                ]
+        },        
 ];
 //  CARD CREATION FUNCTION TO ADD TO HTML
 function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
@@ -4058,6 +4249,9 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
                         break;
                 case 51:
                         element = "gold";
+                        break;
+                case 52:
+                        element = "celestial";
                         break;
         }
         innerLocation.innerHTML +=
@@ -4173,18 +4367,22 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                         }
                         console.log("UPDATING CARD TEXT");
                         updateCardText();
+                        document.querySelectorAll(".enemy-div").forEach(i => {
+                                i.style = "cursor: default";
+                        });
                 }
         }
         // IF CARD REQUIRES YOU TO CLICK ON AN ENEMY
         if (cardsInformation[CIindex].chooseEnemyCard) {
                 cardType[index].addEventListener("click", () => {
                         turnEnded = false;
-                        if (cardClicked === false) {
+                        if (!cardClicked) {
                                 cardClicked = true;
                                 chosenCard = CIindex;
                                 cardType[index].classList.add("card-clicked");
-                                chooseEnemy();          
+                                chooseEnemy();
                         } else {
+                                console.log("WEEEEEEEEEEE");
                                 removeCardClicked();
                                 cardType[index].classList.add("card-clicked");
                                 chosenCard = CIindex;
@@ -4202,8 +4400,12 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         }
         // ADD EVENTLISTENERS TO ALL ENEMIES
         function chooseEnemy() {
+                document.querySelectorAll(".enemy-div").forEach(i => {
+                        i.style = "cursor: crosshair";
+                });
+                        
                 for (let i = 0; i < numberOfEnemies; i++) {
-                        if (enemyIsDead[i] === false) {
+                        if (!enemyIsDead[i]) {
                                 // LOG WHICH ENEMY HAS BEEN CLICKED
                                 enemy[i].addEventListener("click", () => {
                                         chosenEnemy = i;
@@ -4269,7 +4471,7 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
         console.log("2 currentCards[currentCards.length - 1 - potionCards.length]", currentCards[currentCards.length - 1 - potionCards.length]);
         switchArea(map, arena);
         if (switchMapMusic) {
-                switchMusic(allMusic[mapMusicIndex]);
+                //switchMusic(allMusic[mapMusicIndex]);
         }
         windsOfChange = 8;
 }        
@@ -4463,6 +4665,7 @@ function damageEnemy(damage, enemy) {
                 checkIfEnemyDead();
                 damageThisTurn += damage;
         }
+        return damage;
 }
 function damageAllEnemies(damage) {
         for (let i = 0; i < numberOfEnemies; i++) {
@@ -4654,7 +4857,7 @@ function checkHealth() {
         if (parseFloat(playerCurrentHealth.innerText) <= 0)  {
                 const deathScreenContainer = document.querySelector("#death-screen-container");
                 const deathMusic = new Audio("audio/death-music.wav");
-                switchMusic(deathMusic);
+                //switchMusic(deathMusic);
                 arena.classList.add("dim");
                 //arena.style = "position: absolute";
                 displayFlex(deathScreenContainer);
@@ -4998,14 +5201,14 @@ function updateCardText() {
         let updateCardTextStats = [
                 [`Deal ${cardsInformation[0].damage[0]} damage and inflict ${cardsInformation[0].burn[0]} burn`, `Inflict ${cardsInformation[1].burn[1]} burn`],
                 [`Deal ${cardsInformation[1].damage[0]} damage and inflict ${cardsInformation[1].burn[0]} burn on an enemy and 2 burn on yourself`, `Deal ${cardsInformation[1].damage[1]} damage and inflict ${cardsInformation[1].burn[1]} burn on an enemy and 2 burn on yourself`],
-                [`Energize ${cardsInformation[2].energize[0]}`, `Energize ${cardsInformation[2].energize[1]}`],
-                [`Deal ${cardsInformation[3].damage[0]} damage to all enemies`, `Deal ${cardsInformation[3].damage[1]} damage to all enemies and energize ${cardsInformation[3].energize[1]}`],
+                [`Your next direct damage spell deals 10 more damage`, `Your next direct damage spell deals 10 more damage`],
+                [`Deal ${cardsInformation[3].damage[0]} damage to all enemies<br>Energize ${cardsInformation[3].energize[0]}`, `Deal ${cardsInformation[3].damage[1]} damage to all enemies<br>Energize ${cardsInformation[3].energize[1]}`],
                 [`Deal ${cardsInformation[4].damage[0]} damage and inflict frostbite`, `Deal ${cardsInformation[4].damage[1]} damage and inflict frostbite`],
                 [`Deal ${cardsInformation[5].damage[0]} damage.<br>If you or the enemy has frostbite deal double instead.`, `Deal ${cardsInformation[5].damage[1]} damage.<br>If you or the enemy has frostbite deal triple instead.`],
                 [`Enemies with windswept take ${cardsInformation[6].damage[0]} damage. Enemies without gain windswept`, `Enemies with windswept take ${cardsInformation[6].damage[1]} damage. Enemies without gain windswept. Draw a card.`],
                 [`Deal ${cardsInformation[7].damage[0]} damage to an enemy and inflict windswept`, `Deal ${cardsInformation[7].damage[1]} damage to an enemy and inflict windswept. Increase Winds of Wind damage by 3`],
                 [`Gain ${cardsInformation[8].blood[0]} Blood Siphon`, `Gain ${cardsInformation[8].blood[1]} Blood Siphon`],
-                [`Your next direct damage spell deals 10 more damage`, `Your next direct damage spell deals 10 more damage`],
+                [`Deal ${cardsInformation[9].damage[0]} damage and ${cardsInformation[9].damage[0] / 2} damage to adjacent targets<br>Gain ${cardsInformation[9].regen[0]} regen for each target hit`, `Deal ${cardsInformation[9].damage[1]} damage and ${cardsInformation[9].damage[1] / 2} damage to adjacent targets<br>Gain ${cardsInformation[9].regen[1]} regen and blood siphon for each target hit`],
                 [`Gain ${cardsInformation[10].block[0]} block`, `Gain ${cardsInformation[10].block[1]} block`],
                 [`Gain ${cardsInformation[11].block[0]} block and ${cardsInformation[11].thorns[0]} thorns`, `Gain ${cardsInformation[11].block[1]} block and ${cardsInformation[11].thorns[1]} thorns`],
                 [`Inflict ${cardsInformation[12].burn[0]} burn on all enemies and 3 on yourself`, `Inflict ${cardsInformation[12].burn[1]} burn on all enemies and 4 on yourself`],
@@ -5047,7 +5250,8 @@ function updateCardText() {
                 [`Gain ${cardsInformation[48].regen[0]} regen for each card played this turn`, `Gain ${cardsInformation[48].regen[1]} regen for each card played this turn and draw a card`],
                 [`Gain ${cardsInformation[49].block[0]} block and draw a card`, `Gain ${cardsInformation[49].block[1]} block and draw a card`],
                 ["[POTION]\nGain 3 block and healing at the end of each turn", "[POTION]\nGain 5 block and healing at the end of each turn"],
-                ["[DOES NOTHING] Your greed causes you to look down upon peasants", "[DOES NOTHING] Your greed causes you to look down upon peasants"]
+                ["[DOES NOTHING] Your greed causes you to look down upon peasants", "You enslave a peasant gaining 10 aether"],
+                [`Inflict frostbite, windswept, and ${cardsInformation[52].burn[0]} burn. Gain ${cardsInformation[52].energize[0]} energize, ${cardsInformation[52].blood[0]} blood siphon, and ${cardsInformation[52].block[0]} block`, `Inflict frostbite, windswept, and ${cardsInformation[52].burn[1]} burn. Gain ${cardsInformation[52].energize[1]} energize, ${cardsInformation[52].blood[1]} blood siphon, and ${cardsInformation[52].block[1]} block`]
         ];
         // UPDATE CARD TEXT TO MATCH CORRECT STATS
         for (let i = 0; i < handArray.length; i++) {
@@ -6281,7 +6485,7 @@ function checkIfEnemyDead() {
                         const hallowwoodAmbience = new Audio("audio/hallowwood-ambience.wav");
                         switchAmbience(hallowwoodAmbience);
                         const hallowwoodMapMusic = new Audio("audio/hallowwood-map-music.wav");
-                        switchMusic(hallowwoodMapMusic);
+                        //switchMusic(hallowwoodMapMusic);
                         mapMusicIndex = allMusic.indexOf(hallowwoodMapMusic);
                         displayFlex(empowerContainer);
                         displayNone(arena);
@@ -6450,7 +6654,7 @@ function checkIfEnemyDead() {
                                 allMusic = [];
                                 allAmbience = [];
                                 const heavenMapMusic = new Audio("audio/heaven-map-music.wav");
-                                switchMusic(heavenMapMusic);
+                                //switchMusic(heavenMapMusic);
                                 mapMusicIndex = allMusic.indexOf(heavenMapMusic);
                                 const heavenAmbience = new Audio("audio/heaven-ambience.wav");
                                 switchAmbience(heavenAmbience);
@@ -6524,6 +6728,15 @@ function enemyAction() {
                 playerFrostbite = true;
                 displayBlock(playerFrostbiteImg);
                 updateCardText();
+        }
+        if (aquatasBlessing) {
+                playerRegenNumber.innerText = 8;
+                aquatasBlessing = false;
+                displayBlock(playerRegenDiv, playerRegenImg, playerRegenNumber);
+        } else if (gaiaBlessing) {
+                playerRegenNumber.innerText = 6;
+                gaiaBlessing = false;
+                displayBlock(playerThornsDiv, playerThornsImg, playerThornsNumber);
         }
         enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
         trackEnemies.forEach((i) => {
@@ -6801,6 +7014,7 @@ function endTurn() {
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
+mystery();
 /*faeForest = false;
 hallowwood = false;
 bossDefeated[0] = true;
