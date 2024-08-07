@@ -1232,58 +1232,65 @@
     background-position: 10%;
     font-family: fantasy;
     color: white;
+    cursor: default;
 }
 .exclamation-information-container {
     width: 80%;
-    height: 65%;
+    min-height: 65vh;
     display: flex;
     flex-wrap: wrap;
     background-color: rgb(8, 8, 8);
     border: 3px solid rgb(24, 24, 24);
     box-shadow: 10px 10px 15px rgb(0, 0, 0);
     text-shadow: 1px 1px 5px rgb(139, 139, 139);
+    overflow: auto;
 }
 .exclamation-title {
     text-align: center;
-    font-size: 2.5rem;
+    font-size: 2.2vw;
     padding-top: .5rem;
     padding-bottom: 1rem;
 }
 .exclamation-event-img {
-    width: 30rem;
-    height: 30rem;
-    background-size: cover;
+    width: 32%;
     margin-left: 38px;
+}
+.exclamation-event-img img {
+    max-width: 100%;
+    height: auto;
 }
 .exclamation-text-button-div {
     width: 60%;
-    height: 100%;
+    height: 87%;
     color: white;
 }
 .exclamation-text-div {
     width: 100%;
     height: 60%;
     padding-left: 2rem;
-    font-size: 1.8rem;
+    font-size: 1.5vw;
 }
 .exclamation-button-div {
-    width: 100%;
-    height: 40%;
+    max-width: 100%;
+    min-width: 10%;
+    height: 15vh;
     margin-top: 1.5rem;
+    margin-left: 1.7rem;
     display: flex;
     flex-wrap: wrap;
 }
 .exclamation-button-div button {
     width: 100%;
-    height: 48%;
+    height: 50%;
     font-weight: bold;
-    font-size: 1.3rem;
+    font-size: 1.1vw;
     text-align: left;
     padding-left: 20px;
     background-color:rgb(65, 74, 104);
     color: white;
     transition-duration: .1s;
     box-shadow: 2px 2px 15px rgb(51, 51, 51);
+    cursor: pointer;
 }
 .exclamation-button-div button:hover {
     background-color:rgb(95, 119, 150);
