@@ -1549,15 +1549,15 @@
 .earth {
     background-image: linear-gradient(#451b04, #81b14f);
 }
-.gold {
-    background-image: linear-gradient(gold, black);
+.avarice {
+    background-image: linear-gradient(rgb(122, 67, 133), rgb(49, 0, 61));
 }
 .celestial {
     background-image: linear-gradient(rgb(23, 112, 202), rgb(46, 40, 115));
 }
 
 .fire-lightning {
-    background-image: linear-gradient(#b23d1a, #fafba5);
+    background-image: linear-gradient(#221d54, #ba760f);
 }
 .fire-lightning .card-text {
     background-color: #3a0000;
@@ -1623,7 +1623,7 @@
     background-color: rgb(7, 40, 58)
 }
 .ice-earth {
-    background-image: linear-gradient(#451b04, #b9e8ea);
+    background-image: linear-gradient(#2f989c, #451b04);
 }
 .ice-earth .card-text {
     background-color: rgb(26, 111, 150)
@@ -1656,13 +1656,16 @@
     background-color: rgb(26, 111, 150);
 }
 .air .card-text {
-    background-color: rgb(139, 165, 173)
+    background-color: rgb(139, 165, 173);
 }
 .water .card-text {
     background-color: rgb(7, 40, 58);
 }
 .earth .card-text {
     background-color: #1f0c02;
+}
+.avarice .card-text {
+    background-color: rgb(35, 0, 43);
 }
 .celestial .card-text {
     background-color: rgb(7, 8, 26);
@@ -1709,7 +1712,7 @@
 }
 .card-mana-number {
     top: -2.7px;
-    left: 3px;
+    left: 2.7px;
     font-size: 18px;
     position: absolute;
     z-index: 1;
@@ -1727,7 +1730,8 @@
     color: white;
     width: 90%;
     height: 42%;
-    font-size: 14px;
+    font-size: .65vw;
+    font-weight: 600;
     padding: 10px 8px;
     border: 1px solid black;
     font-family: fantasy;
