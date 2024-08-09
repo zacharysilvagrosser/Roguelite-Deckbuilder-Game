@@ -29,6 +29,7 @@ death screen brings you to fae forest arena??
 ///blacksmith music will be deleted with each new stage
 ball lightning had tidal and windswept text said 17 card did 15 damage then it returned to 11 damage
 ///mana and end turn button need high z index because of hand container; when hovering over card increase card z index
+you can just define music when it's played then set its volume to the slider each time instead of an array trigger system
 
 */
 /*
@@ -482,9 +483,14 @@ function resetArena() {
         }
         playerWindswept = false;
         playerFrostbite = false;
-        playerBurnNumber.innerText = 0;
         displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber, playerRegenImg, playerRegenNumber, playerThornsImg, playerThornsNumber,
                 playerBloodImg, playerBloodNumber, playerBlockImg, playerBlockNumber);
+                if (playerEmberNumber > 0) {
+                        displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
+                        playerEmberNumber = 0;
+                        emberBurned = true;
+                }
+                playerBurnNumber.innerText = 0 + playerEmberNumber;
         if (stormchaser) {
                 currentMana.innerText = 5;
         } else {
@@ -498,8 +504,6 @@ function resetArena() {
         playerRegenNumber.innerText = 0;
         playerBloodNumber.innerText = 0;
         frostbitten = false;
-        console.log("HAND CONTAINER BEFORE: ", handContainer.childElementCount);
-        console.log("POTION CARDS: ", potionCards);
         let potionLength = potionCards.length;
         for (let i = 0; i < potionLength; i++) {
                 let spliceCard = potionCards.pop();
@@ -508,7 +512,6 @@ function resetArena() {
                 drawPileArray.push(spliceCard);
                 handContainer.appendChild(spliceCard);
         }
-        console.log("HAND CONTAINER AFTER: ", handContainer.childElementCount);
         essenceOfEmber = [];
         essenceOfEmberUpgrade = [];
         liquidLightning = [];
@@ -1043,7 +1046,13 @@ function boss() {
         if (faeForest) {
                 randomBossNumber = createRandomNumber(1, 2);
         } else if (hallowwood) {
-                randomBossNumber = createRandomNumber(3, 4);
+                if (slainWerewolf) {
+                        randomBossNumber = 3;
+                } else if (slainVampire) {
+                        randomBossNumber = 4;
+                } else {
+                        randomBossNumber = createRandomNumber(3, 4);
+                }
         } else {
                 randomBossNumber = createRandomNumber(5, 6);
         }
@@ -1601,7 +1610,8 @@ const destroyedCardsContainer = document.querySelector("#destroyed-cards-contain
 let dontRepeatExclamation = [];
 let exclamationMusicTrigger = false;
 let exclamationMusicIndex;
-let [aquatasBlessing, gaiaBlessing, mysteryReturn] = [false, false, false];
+let [aquatasBlessing, gaiaBlessing, mysteryReturn, slainWerewolf, slainVampire, emberBurned] = [false, false, false,false, false, false];
+let playerEmberNumber = 0;
 function mystery() {
         if (exclamationMusicTrigger === false) {
                 if (faeForest) {
@@ -1622,14 +1632,19 @@ function mystery() {
                 }
         }
         //switchMusic(allMusic[exclamationMusicIndex]);
-        const randomExclamationNumber = createRandomNumber(9, 9);
+        let randomExclamationNumber = createRandomNumber(12, 12);
         switchArea(exclamationContainer, map);
         while (dontRepeatExclamation.includes(randomExclamationNumber) && !mysteryReturn) {
-                randomExclamationNumber = createRandomNumber(1, 5);
-                if (dontRepeatExclamation.includes(1, 2, 3, 4, 5)) {
-                        encounter();
-                        mysteryReturn = true;
-                }
+                randomExclamationNumber = createRandomNumber(8, 8);
+        }
+        if (randomExclamationNumber === 8 && !dontRepeatExclamation.includes(10)) {
+                randomExclamationNumber = 10;
+        } else if (dontRepeatExclamation.includes(10) && !dontRepeatExclamation.includes(8)) {
+                randomExclamationNumber = 8;
+        }
+        if (dontRepeatExclamation.includes(1, 2, 3, 4, 5)) {
+                encounter();
+                mysteryReturn = true;
         }
         switch (randomExclamationNumber) {
                 case 1:
@@ -1894,14 +1909,14 @@ function mystery() {
                         dontRepeatExclamation.push(5);
                         break;
                 case 6:
-                        createExclamation("King Spookly", "imgs/hallowwood-mystery.jpeg", "imgs/king-spookly2.jpeg", "A ghost peaks out from a tree up ahead.", 
+                        createExclamation("King Spookly", "imgs/hallowwood-mystery.jpeg", "imgs/king-spookly2.jpeg", "You're feeling exhausted from the long walk through the forest. You go to sit down and rest when you notive a ghost sitting on a large pile of aether.", 
                                 "He beckons you closer with his translucent appendage. You approach.",
                                 `"I was once king in this land long ago." His soft whisper echos. "I had all the aether in my possession burried with me. I realize the arrogance of my actions and would like to make amends for my past. Please share this amongst the local townsfolk."`);
                         exclamationDiv = document.querySelector(".exclamation-div");
                         exclamationButtonDiv = document.querySelector(".exclamation-button-div");
                         exclamationButtonDiv.innerHTML = `
-                        <button class="exclamation-button-1"><span style="color: rgb(206, 83, 83)">Take It All:</span> Gain 200 Aether and Avarice; a useless card.</button>
-                        <button class="exclamation-button-2"><span style="color: lightgreen">Share It:</span> Your integrity causes you to gain 10 health and max health.</button>
+                        <button class="exclamation-button-1" style="height: 45%"><span style="color: rgb(206, 83, 83)">Take It All:</span> Gain 200 Aether and Avarice; a useless card.</button>
+                        <button class="exclamation-button-2" style="height: 45%"><span style="color: lightgreen">Share It:</span> Your integrity causes you to gain 10 health and max health.</button>
                         `;
                         exclamationButton1 = document.querySelector(".exclamation-button-1");
                         exclamationButton2 = document.querySelector(".exclamation-button-2");
@@ -1968,22 +1983,53 @@ function mystery() {
                         dontRepeatExclamation.push(7);
                         break;
                 case 8:
-                        createExclamation("Glacia's Posession", "imgs/hallowwood-mystery.jpeg", "imgs/glacia.jpeg", "The air grows increasingly frigid as you walk around Hallowwood lake. The elemental spirit of ice gracefully glides across, freezing it with each step. She has a hollow look to her face and he eyes glow faintly red.", 
-                                `"You!" she shouts. "Please help me! I went to a visit an old spirit friend, but something felt different. She coalesced inside of me and now I feel a presence within me leeching the cold from my body."`,
-                                `"Please! I need a snowfall elixir to cleanse the spirit from my soul."`);
+                        createExclamation("Glacia's Posession", "imgs/hallowwood-mystery.jpeg", "imgs/glacia.jpeg", "The air grows increasingly frigid as you walk around Hallowwood lake. Ice spirit Glacia gracefully glides across, freezing it with each step. She has a hollow look to her face and her eyes glow faintly red.", 
+                                `"Please help me!" she shouts. "I visited an old friend in town, but I felt an abhorrent revulsion deep within his soul. His essence coalesced inside of me and now I feel his presence within me, leeching the cold from my body."`,
+                                `"Please! Do you have anything that can save me?"`);
                         document.querySelector(".exclamation-button-div").innerHTML = `
-                        <button class="exclamation-button-1" style="height: 35%"><span style="color: lightgreen">Give her the potion:</span> Glacia gives you an empowered frostbitten</button>
-                        <button class="exclamation-button-2" style="height: 35%"><span style="color: rgb(206, 83, 83)">Take it for yourself:</span> Gain an empowered snowfall elixir</button>
-                        <button class="exclamation-button-3" style="height: 35%">Pretend you didn't hear her and keep walking</button>`
+                        <button class="exclamation-button-1" style="height: 35%"><span style="color: lightblue">Cleanse her:</span> Glacia gives you an empowered ice card of your choice</button>
+                        <button class="exclamation-button-2" style="height: 35%"><span style="color: rgb(115, 215, 215)">Change your mind:</span> Gain an empowered winds of change card</button>
+                        <button class="exclamation-button-3" style="height: 35%; color: rgb(206, 83, 83)">You never learned the healing spell</button>`
+                        const allCurrentCards = document.querySelectorAll(".card");
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
-                                addCardToDeck(21, 1, true);
-                                switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                for (let i = 0; i < allCurrentCards.length; i++) {
+                                        if (allCurrentCards[i].classList.contains(28) && allCurrentCards[i].classList.contains("upgraded")) {
+                                                fxSpellSuccess.play();
+                                                exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
+                                                for (let j = 0; j < cardsInformation.length; j++) {
+                                                        if (cardsInformation[j].element.includes("ice") && j !== 51) {
+                                                                createCard(j, document.getElementById("all-cards-list"), "card-reference upgraded", "card-text upgraded-text", 1);
+                                                        }
+                                                }
+                                                document.querySelectorAll(".card-reference").forEach((i) => {
+                                                        displayFlex(i);
+                                                        i.addEventListener("click", () => {
+                                                                for (let j = 0; j < cardsInformation.length; j++) {
+                                                                        if (i.classList.contains(j)) {
+                                                                                addCardToDeck(j, 1, true);
+                                                                                switchArea(map, exclamationContainer);
+                                                                                //switchMusic(allMusic[mapMusicIndex]);
+                                                                        }
+                                                                }
+                                                                for (let k = 0; k < cardReference.length; k++) {
+                                                                        destroyedCardsArray.push(cardReference[k]);
+                                                                        destroyedCardsContainer.appendChild(cardReference[k]);
+                                                                }
+                                                                destroyedCardsArray = [];
+                                                                destroyedCardsContainer.innerHTML = ``;
+                                                        });
+                                                });
+                                        }
+                                }
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
-                                addCardToDeck(23, 1, true);
-                                switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                for (let i = 0; i < allCurrentCards.length; i++) {
+                                        if (allCurrentCards[i].classList.contains(28) && allCurrentCards[i].classList.contains("upgraded")) {
+                                        addCardToDeck(24, 1, true);
+                                        switchArea(map, exclamationContainer);
+                                        //switchMusic(allMusic[mapMusicIndex]);
+                                        }
+                                }
                         });
                         document.querySelector(".exclamation-button-3").addEventListener("click", () => {
                                 switchArea(map, exclamationContainer);
@@ -1992,7 +2038,7 @@ function mystery() {
                         dontRepeatExclamation.push(8);
                         break;
                 case 9:
-                        createExclamation("A Tavern Bounty", "imgs/tavern.jpeg", "imgs/bounty-hunter.jpeg", "You enter the local tavern looking for a hot beverage to quench your thirst after the last fight. Just as soon as you take a seat, a skeletal man pulls up a chair at your table.", 
+                        createExclamation("A Tavern Bounty", "imgs/tavern.jpeg", "imgs/bounty-hunter.jpeg", "You enter the local tavern looking for a hot beverage to quench your thirst after the last fight. Just as soon as you take a seat, a skeletal disheveled man pulls up a chair at your table.", 
                                 `"I've had my eye on you for some time." the gaunt man says. "You seem capable enough of what I need. You see, I'm a bounty hunter of sorts. Lots of business in these parts. My next bounty is slightly... more challenging than I'm used to."`,
                                 `"I could use someone of your talents. What do you say?"`);
                         document.querySelector(".exclamation-button-div").innerHTML = `
@@ -2000,6 +2046,7 @@ function mystery() {
                                 <button class="exclamation-button-2" style="height: 35%"> <span style="color: rgb(206, 83, 83)">Slay the Vampire:</span> Empower all of your blood siphon cards and lose 15 health</button>
                                 <button class="exclamation-button-3" style="height: 35%"> <span style="color: lightgreen">You don't trust the man:</span> Grab your drink and head for the door</button>`
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                slainWerewolf = true;
                                 playerAether.innerText = parseFloat(playerAether.innerText) + 150;
                                 playerCurrentHealth.innerText -= 20;
                                 topBarHealthNumber.innerText -= 20;
@@ -2007,6 +2054,7 @@ function mystery() {
                                 //switchMusic(allMusic[mapMusicIndex]);
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
+                                slainVampire = true;
                                 document.querySelectorAll(".card").forEach((i) => {
                                         for (let j = 0; j < cardsInformation.length; j++) {
                                                 if (i.classList.contains(j) && "blood" in cardsInformation[j] && cardsInformation[j].blood[0] !== 0) {
@@ -2034,20 +2082,20 @@ function mystery() {
                                         switchArea(exclamationContainer, map);
                                         exclamationContainer.innerHTML = `
                                         <div class="exclamation-div" style="background-image: url(imgs/tavern.jpeg)">
-                                        <div class="exclamation-information-container">
-                                                <div style="width: 100%"><h1 class="exclamation-title">An Angry Bounter Hunter</h1></div>
-                                                <div class="exclamation-event-img">
-                                                        <img src="imgs/bounty-hunter.jpeg">
-                                                </div>
-                                                <div class="exclamation-text-button-div">
-                                                        <div class="exclamation-text-div">
-                                                        <p class="exclamation-text">"Now wait just a minute!" he angrily slams his fist on the counter.<br><br>"Nobody denies an offer from me! Now you'll pay up 50 aether or you're not leaving this place alive."</p>
-                                                        <div class="exclamation-button-div">
-                                                                <button class="exclamation-button-1"><span style="color: pink">Cower in fear:</span> Pay the man 50 aether</button>
-                                                                <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83)">Start a tavern brawl:</span> Lose 10 health</button>
+                                                <div class="exclamation-information-container">
+                                                        <div style="width: 100%"><h1 class="exclamation-title">An Angry Bounter Hunter</h1></div>
+                                                        <div class="exclamation-event-img"><img src="imgs/bounty-hunter.jpeg"></div>
+                                                        <div class="exclamation-text-button-div">
+                                                                <div class="exclamation-text-div">
+                                                                        <p class="exclamation-text">"Now wait just a minute!" You feel yourself lurch backward as a hand grabs you from behind.<br><br>
+                                                                        "Nobody denies an offer from me!" he angrily slams his fist on the counter.<br><br>
+                                                                        "Now you'll pay up 50 aether for wasting my time or you'll be my next bounty."</p>
+                                                                </div>
+                                                                <div class="exclamation-button-div">
+                                                                        <button class="exclamation-button-1"><span style="color: pink">Cower in fear:</span> Pay the man 50 aether</button>
+                                                                        <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83)">Start a tavern brawl:</span> Lose 10 health</button>
+                                                                </div>
                                                         </div>
-                                                        </div>
-                                                </div>
                                                 </div>
                                         </div>`;
                                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
@@ -2067,30 +2115,271 @@ function mystery() {
                         dontRepeatExclamation.push(9);
                         break;
                 case 10:
-                        createExclamation("Aero God", "imgs/hallowwood-mystery.jpeg", "imgs/glacia.jpeg", "The air grows increasingly frigid as you walk around Hallowwood lake. The elemental spirit of ice gracefully glides across, freezing it with each step. She has a hollow look to her face and he eyes glow faintly red.", 
-                                `"You!" she shouts. "Please help me! I went to a visit an old spirit friend, but something felt different. She coalesced inside of me and now I feel a presence within me leeching the cold from my body."`,
-                                `"Please! I need a snowfall elixir to cleanse the spirit from my soul."`);
+                        createExclamation("Tempia", "imgs/hallowwood-mystery.jpeg", "imgs/tempia2.jpeg", "As you're walking through the forest you feel the air suddenly shift. You look up towards the sky to see the shape of a dragon form from the winds. You stare in awe.", 
+                                `"What, were you expecting me to be in human form like the other spirits?" his words gently touch your ears as if floating on a breeze. "Know that I go where the winds take me and I don't change for anyone human."`,
+                                `"I've come to you because I can be of no assistance in this matter. My sibling Glacia, spirit of ice, seems to have been possesed by a vengeful spirit herself. I can give you a cleansing spell that will heal her or give you a sliver of my power. I will honor either decision."`);
                         document.querySelector(".exclamation-button-div").innerHTML = `
-                        <button class="exclamation-button-1" style="height: 35%"><span style="color: lightgreen">Change your mind:</span> Aero God gives you a winds of change card</button>
-                        <button class="exclamation-button-2" style="height: 35%"><span style="color: rgb(206, 83, 83)">Agree to heal Glacia:</span> Gain an upgraded sanguine spring</button>
-                        <button class="exclamation-button-3" style="height: 35%">Pretend you didn't hear her and keep walking</button>`
+                        <button class="exclamation-button-1" style="height: 45%"><span style="color: lightblue">Agree to heal Glacia:</span> Gain an empowered sanguine spring</button>
+                        <button class="exclamation-button-2" style="height: 45%"><span style="color: rgb(115, 215, 215)">Fuse with Tempia:</span> Gain a zephyr infusion</button>`
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
-                                addCardToDeck(21, 1, true);
+                                addCardToDeck(28, 1, true);
                                 switchArea(map, exclamationContainer);
                                 //switchMusic(allMusic[mapMusicIndex]);
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
-                                addCardToDeck(23, 1, true);
-                                switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
-                        });
-                        document.querySelector(".exclamation-button-3").addEventListener("click", () => {
+                                addCardToDeck(28, 0, true);
                                 switchArea(map, exclamationContainer);
                                 //switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(10);
                         break;
                 case 11:
+                        createExclamation("Ember's Vexation", "imgs/heaven-mystery.jpeg", "imgs/ember3.jpeg", "As you're walking through the forest you feel the air suddenly shift. You look up towards the sky to see the shape of a dragon form from the winds. You stare in awe.", 
+                                `"Lectra thinks she's stronger than I am?"`,
+                                `"I've come to you because I can be of no assistance in this matter. My sibling Glacia, spirit of ice, seems to have been possesed by a vengeful spirit herself. I can give you a cleansing spell that will heal her or give you a sliver of my power. I will honor either decision."`);
+                        document.querySelector(".exclamation-button-div").innerHTML = `
+                        <button class="exclamation-button-1" style="height: 45%"><span style="color: #ba760f">Agree that Ember is stronger:</span> Empower a fire card</button>
+                        <button class="exclamation-button-2" style="height: 45%"><span style="color: #f0fb3e">Disagree; Lectra is stronger:</span> She seems well adjusted. You'll be fine probably.</button>`
+                        const allCards = document.querySelectorAll(".card");
+                        function coolOff() {
+                                exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
+                                allCards.forEach(i => {
+                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                if (i.classList.contains(j) && cardsInformation[j].element.includes("water")) {
+                                                        if (i.classList.contains("upgraded")) {
+                                                                createCard(j, document.getElementById("all-cards-list"), "card-reference", "card-text", 1);
+                                                        } else {
+                                                                createCard(j, document.getElementById("all-cards-list"), "card-reference", "card-text", 0);
+                                                        }
+                                                }
+                                        }
+                                });
+                                document.querySelectorAll(".card-reference").forEach((i) => {
+                                        displayFlex(i);
+                                        i.addEventListener("click", () => {
+                                                if (i.classList.contains(29) || i.classList.contains(30) || i.classList.contains(31) || i.classList.contains(46) || i.classList.contains(48)) {
+                                                        fxTsunami.play();
+                                                        exclamationContainer.innerHTML = `
+                                                        <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
+                                                                <div class="exclamation-information-container">
+                                                                        <div style="width: 100%"><h1 class="exclamation-title">Ember's Cooled Off</h1></div>
+                                                                        <div class="exclamation-event-img"><img src="imgs/ember-after2.jpeg"></div>
+                                                                        <div class="exclamation-text-button-div">
+                                                                                <div class="exclamation-text-div">
+                                                                                        <p class="exclamation-text">Her eyes suddenly lose their intensity and her stern face is replaced by a soft angelic glow.<br><br>
+                                                                                        "Sorry I can get a little heated sometimes when it comes to my sister...we share a long history."<br><br>
+                                                                                        "Good luck on your journey mortal...our fate depends on it."</p>
+                                                                                </div>
+                                                                                <div class="exclamation-button-div">
+                                                                                        <button class="exclamation-button-1"><span style="color: #74ccf4">You've cooled her off:</span> Empower a water card</button>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>`;
+                                                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                                                exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
+                                                                allCards.forEach(i => {
+                                                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                                                if (i.classList.contains(j) && cardsInformation[j].element.includes("water") && !i.classList.contains("upgraded")) {
+                                                                                        createCard(j, document.getElementById("all-cards-list"), "card-reference upgraded", "card-text upgraded-text", 1);
+                                                                                }
+                                                                        }
+                                                                });
+                                                                document.querySelectorAll(".card-reference").forEach(i => {
+                                                                        displayFlex(i);
+                                                                        i.addEventListener("click", () => {
+                                                                                for (let j = 0; j < cardsInformation.length; j++) {
+                                                                                        if (i.classList.contains(j)) {
+                                                                                                addCardToDeck(j, 1, true);
+                                                                                                switchArea(map, exclamationContainer);
+                                                                                        }
+                                                                                }
+                                                                        });
+                                                                });
+                                                        });
+                                                } else {
+                                                        exclamationContainer.innerHTML = `
+                                                        <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
+                                                                <div class="exclamation-information-container">
+                                                                        <div style="width: 100%"><h1 class="exclamation-title">Ember's Wrath</h1></div>
+                                                                        <div class="exclamation-event-img"><img src="imgs/ember-angry.jpeg"></div>
+                                                                        <div class="exclamation-text-button-div">
+                                                                                <div class="exclamation-text-div">
+                                                                                        <p class="exclamation-text">"NOW YOU'RE TRYING TO KILL ME?!"<br><br>
+                                                                                        "I'M IMMORTAL! NOT THAT YOU COULD TAKE ME IN A FIGHT ANYWAY!"<br><br>
+                                                                                        "GO BEG AT LECTRA'S FEET YOU CRAVEN BLIND IMBECILE"</p>
+                                                                                </div>
+                                                                                <div class="exclamation-button-div">
+                                                                                        <button class="exclamation-button-1"><span style="color: pink">Get burned:</span> You burn for 10 next fight</button>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>`;
+                                                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                                                playerEmberNumber = 10;
+                                                                displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
+                                                                switchArea(map, exclamationContainer);
+                                                                //switchMusic(allMusic[mapMusicIndex]);
+                                                        });
+                                                }
+                                        });
+                                });
+                        }
+                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                let fireCards = 0;
+                                let lightningCards = 0;
+                                for (let i = 0; i < allCards.length; i++) {
+                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                if (allCards[i].classList.contains(j) && cardsInformation[j].element.includes("fire")) {
+                                                        fireCards++;
+                                                }
+                                                if (allCards[i].classList.contains(j) && cardsInformation[j].element.includes("lightning")) {
+                                                        lightningCards++;
+                                                }
+                                        }
+                                }
+                                if (fireCards > lightningCards) {
+                                        exclamationContainer.innerHTML = `
+                                        <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
+                                                <div class="exclamation-information-container">
+                                                        <div style="width: 100%"><h1 class="exclamation-title">Ember's Satisfaction</h1></div>
+                                                        <div class="exclamation-event-img"><img src="imgs/ember-after2.jpeg"></div>
+                                                        <div class="exclamation-text-button-div">
+                                                                <div class="exclamation-text-div">
+                                                                        <p class="exclamation-text">Her eyes suddenly lose their intensity and her stern face is replaced by a soft angelic glow<br><br>
+                                                                        "I can see you're telling the truth since you're using more of my spells than hers"<br><br>
+                                                                        "Let's make sure that doesn't change..." You slowly step away hoping she stays this congenial</p>
+                                                                </div>
+                                                                <div class="exclamation-button-div">
+                                                                        <button class="exclamation-button-1"><span style="color: #ba760f">Be thankful you survived:</span> Empower a fire card</button>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </div>`;
+                                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                                exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
+                                                allCards.forEach(i => {
+                                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                                if (i.classList.contains(j) && cardsInformation[j].element.includes("fire") && !i.classList.contains("upgraded")) {
+                                                                        createCard(j, document.getElementById("all-cards-list"), "card-reference upgraded", "card-text upgraded-text", 1);
+                                                                }
+                                                        }
+                                                });
+                                                document.querySelectorAll(".card-reference").forEach(i => {
+                                                        displayFlex(i);
+                                                        i.addEventListener("click", () => {
+                                                                for (let j = 0; j < cardsInformation.length; j++) {
+                                                                        if (i.classList.contains(j)) {
+                                                                                function removeCard(pile) {
+                                                                                        pile.forEach((k) => {
+                                                                                                if (k.classList.contains(j)) {
+                                                                                                        let spliceCard = pile.splice(pile.indexOf(k), 1).pop();
+                                                                                                        destroyedCardsArray.push(spliceCard);
+                                                                                                        destroyedCardsContainer.appendChild(spliceCard);
+                                                                                                        destroyedCardsArray = [];
+                                                                                                        destroyedCardsContainer.innerHTML = ``;
+                                                                                                        switchArea(map, exclamationContainer);
+                                                                                                        //switchMusic(allMusic[mapMusicIndex]);
+                                                                                                }
+                                                                                        });
+                                                                                }
+                                                                                removeCard(drawPileArray);
+                                                                                removeCard(handArray);
+                                                                                destroyedCardsArray = [];
+                                                                                destroyedCardsContainer.innerHTML = ``;
+                                                                                addCardToDeck(j, 1, true);
+                                                                        }
+                                                                }
+                                                        });
+                                                });
+                                        });
+                                } else {
+                                        exclamationContainer.innerHTML = `
+                                        <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
+                                                <div class="exclamation-information-container">
+                                                        <div style="width: 100%"><h1 class="exclamation-title">Ember's Wrath</h1></div>
+                                                        <div class="exclamation-event-img"><img src="imgs/ember-angry.jpeg"></div>
+                                                        <div class="exclamation-text-button-div">
+                                                                <div class="exclamation-text-div">
+                                                                        <p class="exclamation-text">She somehow manages to become even more infuriated.<br><br>
+                                                                        "YOU DARE LIE TO THE GODDESS OF FIRE!" she furiously bellows. "I SHOULD SMITE YOU WEAR YOU STAND!"<br><br>
+                                                                        "NOT EVEN TERRA HERSELF COULD SAVE YOU FROM MY WRATH!!!" You look for any way you could possibly calm her.</p>
+                                                                </div>
+                                                                <div class="exclamation-button-div">
+                                                                        <button class="exclamation-button-1"><span style="color: #74ccf4">Douse her with water:</span> Use a water card to extinguish her flames</button>
+                                                                        <button class="exclamation-button-2"><span style="color: #ba760f">Get burned:</span> You burn for 7 next fight</button>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </div>`;
+                                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                                coolOff();
+                                        });
+                                        document.querySelector(".exclamation-button-2").addEventListener("click", () => {
+                                                playerEmberNumber = 7;
+                                                displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
+                                                switchArea(map, exclamationContainer);
+                                                //switchMusic(allMusic[mapMusicIndex]);
+                                        });
+                                }
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("click", () => {
+                                exclamationContainer.innerHTML = `
+                                <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
+                                        <div class="exclamation-information-container">
+                                                <div style="width: 100%"><h1 class="exclamation-title">Ember's Wrath</h1></div>
+                                                <div class="exclamation-event-img"><img src="imgs/ember-angry.jpeg"></div>
+                                                <div class="exclamation-text-button-div">
+                                                        <div class="exclamation-text-div">
+                                                                <p class="exclamation-text">She somehow manages to become even more infuriated.<br><br>
+                                                                "YOU KNOW NOTHING OF POWER YOU MISCREANT WORTHLESS MORTAL!" she furiously bellows. "I WILL SMITE YOU WEAR YOU STAND!"<br><br>
+                                                                "NOT EVEN TERRA HERSELF COULD SAVE YOU FROM MY WRATH!!!" You look for any way you could possibly calm her.</p>
+                                                        </div>
+                                                        <div class="exclamation-button-div">
+                                                                <button class="exclamation-button-1"><span style="color: #74ccf4">Douse her with water:</span> Use a water card to extinguish her flames</button>
+                                                                <button class="exclamation-button-2"><span style="color: #ba760f">Get burned:</span> You burn for 7 next fight</button>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>`;
+                                document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                        coolOff();
+                                });
+                                document.querySelector(".exclamation-button-2").addEventListener("click", () => {
+                                        playerEmberNumber = 7;
+                                        displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
+                                        switchArea(map, exclamationContainer);
+                                        //switchMusic(allMusic[mapMusicIndex]);
+                                });
+                        });
+                        dontRepeatExclamation.push(11);
+                        break;
+                case 12:
+                        if (emberBurned) {
+                                createExclamation("Lectra", "imgs/heaven-mystery.jpeg", "imgs/lectra2.jpeg", "You look across the next floating island contemplating how to reach it when you start to feel your hair slowly stand on end.", 
+                                        `"I see by those burn marks you've already met my sister...I'm sorry about her. She's got a fiery temper about her. She blames me for our father's death and has never forgiven me."`,
+                                        `"Even though it wasn't my fault, I want to restore peace to this land and stop the Luminia sisters. Please, take my boon. You'll need it."`);
+                        } else {
+                                createExclamation("Lectra", "imgs/heaven-mystery.jpeg", "imgs/lectra2.jpeg", "You look across the next floating island contemplating how to reach it when you start to feel your hair slowly stand on end.", 
+                                        `"I see by your empowered spell there that you've already met my sister. I hope she didn't give you too much trouble...she's got a fiery temper about her. She blames me for our father's death and has never forgiven me."`,
+                                        `"Even though it wasn't my fault, I want to restore peace to this land and stop the Luminia sisters. Please, take my boon. You'll need it."`);
+                        }
+                        document.querySelector(".exclamation-button-div").innerHTML = `
+                        <button class="exclamation-button-1" style="height: 45%"><span style="color: lightblue">Agree to heal Glacia:</span> Gain an empowered sanguine spring</button>
+                        <button class="exclamation-button-2" style="height: 45%"><span style="color: rgb(115, 215, 215)">Fuse with Tempia:</span> Gain a zephyr infusion</button>`
+                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                addCardToDeck(28, 1, true);
+                                switchArea(map, exclamationContainer);
+                                //switchMusic(allMusic[mapMusicIndex]);
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("click", () => {
+                                addCardToDeck(28, 0, true);
+                                switchArea(map, exclamationContainer);
+                                //switchMusic(allMusic[mapMusicIndex]);
+                        });
+                        dontRepeatExclamation.push(12);
+                        break;
+                case 13:
                         createExclamation("The Hooded Figure", "imgs/meadow-path.jpg", "imgs/rogue.jpg", "You strain to hear barely audible footsteps through the brush.", 
                                 `A hooded figure passes by with his head towards the ground. You aren't sure, but you think you see a smirk for a fraction of a second.`,
                                 `As you pass by, you bump into each other dropping both of your belongings. "My apologies" the gravely voice says. As you pick up your supplies you realize they have been swapped. You turn to confront the man, but he's nowhere to be found.`);
@@ -2130,7 +2419,7 @@ function mystery() {
                                 switchArea(map, exclamationDiv);
                                 //switchMusic(allMusic[mapMusicIndex]);
                         });
-                        dontRepeatExclamation.push(11);
+                        dontRepeatExclamation.push(13);
                         break;
         }
 }
@@ -2645,7 +2934,7 @@ const cardsInformation = [
                 manaCost: [1, 1],
                 name: "Fireball",
                 cardImg: "imgs/fireball2.jpeg",
-                cardText: [`Deal 5 damage and inflict 4 burn`, "Inflict 6 burn"],
+                cardText: [`Deal 5 damage and inflict 4 burn`, "Inflict 7 burn"],
                 damage: [5, 0],
                 burn: [4, 6],
                 chooseEnemyCard: true,
@@ -2661,7 +2950,7 @@ const cardsInformation = [
                         },
                         function () {
                                 spendMana(1);
-                                burnEnemy(6, chosenEnemy);
+                                burnEnemy(7, chosenEnemy);
                                 fxFireball.play();
                         }
                 ]
@@ -3183,7 +3472,7 @@ const cardsInformation = [
         {
                 manaCost: [3, 3],
                 name: "Ball Lightning",
-                cardImg: "imgs/static-electricity.jpg",
+                cardImg: "imgs/ball-lightning2.jpeg",
                 cardText: ["Deal 10 damage to a random enemy three times and Energize 1 for each enemy damaged",
                         "Deal 10 damage to a random enemy four times and Energize 1 for each enemy damaged"],
                 damage: [10, 10],
@@ -3690,7 +3979,7 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [2, 2],
+                manaCost: [2, 2],//gain 1 thorn for every 10 block you have or for every earth card in your deck maybe
                 name: "Earth Shatter",
                 cardImg: "imgs/earth-shatter.jpg",
                 cardText: ["Lose all of your block and deal damage to all enemies equal to how much was lost", "Lose all of your block and deal damage to all enemies equal to how much was lost. Regain 50% of your block."],
@@ -3766,8 +4055,8 @@ const cardsInformation = [
         },
         {
                 manaCost: [2, 2],
-                name: "Gaias Embrace",
-                cardImg: "imgs/gaias-embrace.jpg",
+                name: "Gaia's Embrace",
+                cardImg: "imgs/gaias-embrace.jpeg",
                 cardText: ["[POTION]<br>All block gained is increased by 5 and thorns by 1", "[POTION]<br>Gain 10 block and 2 thorns. All block gained is increased by 5 and thorns by 1"],
                 block: [0, 10],
                 thorns: [0, 2],
@@ -3779,14 +4068,14 @@ const cardsInformation = [
                         function() {
                                 spendMana(2);
                                 terrasBlessing.push(true);
-                                fxPotion.play();
+                                fxMistborn.play();
                         },
                         function() {
                                 spendMana(2);
                                 gainBlock(10);
                                 gainThorns(2);
                                 terrasBlessing.push(true);
-                                fxPotion.play();
+                                fxMistborn.play();
                         }
                 ]
         },
@@ -3928,7 +4217,6 @@ const cardsInformation = [
                 cardImg: "imgs/magma.jpeg",
                 cardText: ["Inflict 6 burn on an enemy and gain block equal to 100% of their burn", "Inflict 6 burn on an enemy and gain block equal to 100% their burn"],
                 burn: [6, 6],
-                block: [100, 100],
                 chooseEnemyCard: true,
                 index: 40,
                 element: "fire-earth fire earth",
@@ -4070,13 +4358,13 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(1);
-                                energize(1);
+                                gainEnergize(1);
                                 gainBlock(parseFloat(playerEnergizeNumber.innerText) * 8);
                                 fxQuakingJolt.play();
                         },
                         function() {
                                 spendMana(1);
-                                energize(2);
+                                gainEnergize(2);
                                 gainBlock(parseFloat(playerEnergizeNumber.innerText) * 8);
                                 fxQuakingJolt.play();
                         }
@@ -4454,7 +4742,7 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
 }
 arena.classList.remove("darken");
 // LOOP TO CREATE OPENING 12 CARDS
-for (let i = 0; i < 12; i++) {
+for (let i = 0; i < 50; i++) {
         createCard(i, handContainer, "card", "card-text", 0);
 }
 // SET CARDS TO ACTIVATE WHEN CLICKED RATHER THAN WHEN ENEMY IS CLICKED
@@ -5331,7 +5619,7 @@ function updateCardText() {
                                                                         if (type === cardsInformation[j].block) {
                                                                                 type[upgradeIndex] += terrasBlessing.length * terraBlock;
                                                                         }
-                                                                        if (type === cardsInformation[j].block) {
+                                                                        if (type === cardsInformation[j].thorns) {
                                                                                 type[upgradeIndex] += terrasBlessing.length * terraThorns;
                                                                         }
                                                                 }
@@ -5388,7 +5676,7 @@ function updateCardText() {
         updateText(.5, 2, 2, 10, 2, 4, 5, 7, 5, 1);
         // UPDATE ARRAY WITH NEW CHANGED STATS
         let updateCardTextStats = [
-                [`Deal ${cardsInformation[0].damage[0]} damage and inflict ${cardsInformation[0].burn[0]} burn`, `Inflict ${cardsInformation[1].burn[1]} burn`],
+                [`Deal ${cardsInformation[0].damage[0]} damage and inflict ${cardsInformation[0].burn[0]} burn`, `Inflict ${cardsInformation[0].burn[1]} burn`],
                 [`Deal ${cardsInformation[1].damage[0]} damage and inflict ${cardsInformation[1].burn[0]} burn on an enemy and 2 burn on yourself`, `Deal ${cardsInformation[1].damage[1]} damage and inflict ${cardsInformation[1].burn[1]} burn on an enemy and 2 burn on yourself`],
                 [`Your next direct damage spell deals 10 more damage`, `Your next direct damage spell deals 10 more damage`],
                 [`Deal ${cardsInformation[3].damage[0]} damage to all enemies<br>Energize ${cardsInformation[3].energize[0]}`, `Deal ${cardsInformation[3].damage[1]} damage to all enemies<br>Energize ${cardsInformation[3].energize[1]}`],
@@ -5421,14 +5709,14 @@ function updateCardText() {
                 [`Deal damage equal to how much you've healed this fight<br>Damage: ${cardsInformation[30].damage[0]}`, `Deal damage to all enemies equal to how much you've healed this fight<br>Damage: ${cardsInformation[30].damage[1]}`],
                 ["[POTION]<br>Permanently gain 5 max health", "[POTION]<br>Permanently gain 6 max health and gain 6 health"],
                 ["Lose all of your block and deal damage equal to how much was lost", `Lose all of your block and deal damage equal to how much was lost. Regain ${cardsInformation[32].block[1]}% of your block.`],
-                [`Gain ${cardsInformation[33].thorns[1]} thorns`, `Gain ${cardsInformation[33].thorns[1]} thorns`],
+                [`Gain ${cardsInformation[33].thorns[0]} thorns`, `Gain ${cardsInformation[33].thorns[1]} thorns`],
                 [`Deal damage equal to 3x your thorns<br>Damage:${(parseFloat(playerThornsNumber.innerText) * 3)}`, `Gain ${cardsInformation[34].thorns[1]} thorns and deal damage equal to 3x your thorns<br>Damage:${2 + (parseFloat(playerThornsNumber.innerText) * 3)}`],
                 ["[POTION]<br>All block gained is increased by 5 and thorns increased by 1", `[POTION]<br>Gain ${cardsInformation[35].block[1]} block and ${cardsInformation[35].thorns[1]} thorns. All block gained is increased by 5 and thorns increased by 1`],
                 [`Energize ${cardsInformation[36].energize[0]} for each enemy burning`, `Burn all enemies for ${cardsInformation[36].burn[1]} and Energize ${cardsInformation[36].energize[1]} for each enemy burning`],
                 [`If the enemy is either burning or inflicted with frostbite they are inflicted with ${cardsInformation[37].burn[0]} burn and frostbite`, `If the enemy is either burning or inflicted with frostbite they are inflicted with ${cardsInformation[37].burn[1]} burn and frostbite`],
                 [`Inflict windswept on all enemies and increase burn count by ${cardsInformation[38].burn[0]} if they're already burning`, `Inflict windswept on all enemies and increase burn count by ${cardsInformation[38].burn[1]} if they're already burning`],
                 [`Gain ${cardsInformation[39].burn[0]} burn, ${cardsInformation[39].regen[0]} regen, and ${cardsInformation[39].blood[0]} blood siphon`, `Gain ${cardsInformation[39].burn[1]} burn, ${cardsInformation[39].regen[1]} regen, and ${cardsInformation[39].blood[1]} blood siphon`],
-                [`Inflict ${cardsInformation[40].burn[0]} burn on an enemy and gain block equal to ${cardsInformation[40].block[0]}% of their burn`, `Inflict ${cardsInformation[40].burn[1]} burn on an enemy and gain block equal to ${cardsInformation[40].block[1]}% of their burn`],
+                [`Inflict ${cardsInformation[40].burn[0]} burn on an enemy and gain block equal to 100%% of their burn`, `Inflict ${cardsInformation[40].burn[1]} burn on an enemy and gain block equal to 100% of their burn`],
                 [`Electrucute enemies with frostbite dealing damage equal to ${cardsInformation[41].damageSecond[0]} times your mana<br>Damage: ${cardsInformation[41].damage[0]}`, `Electrucute enemies with frostbite dealing damage equal to ${cardsInformation[41].damageSecond[1]} times your mana</br>Damage: ${cardsInformation[41].damage[0]}`],
                 [`Inflict windswept and deal ${cardsInformation[42].damage[0]} damage to all enemies<br>Draw a card, energize ${cardsInformation[42].energize[0]}, and gain 2 mana.`, `Inflict windswept and deal ${cardsInformation[42].damage[1]} damage to all enemies. Draw a card, energize ${cardsInformation[42].energize[1]}, and gain 3 mana.`],
                 [`Deal damage based on your current health. Energize ${cardsInformation[43].energize[0]} and gain ${cardsInformation[43].regen[0]} regeneration<br>Damage: ${cardsInformation[43].damage[0]}`, `Deal damage based on your current health. Energize ${cardsInformation[43].energize[1]} and gain ${cardsInformation[43].energize[1]} regeneration and 2 max health<br>Damage: ${cardsInformation[43].damage[1]}`],
@@ -7203,8 +7491,7 @@ function endTurn() {
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
-encounter();
-drawCards(5);
+mystery();
 /*faeForest = false;
 hallowwood = false;
 bossDefeated[0] = true;

@@ -1299,33 +1299,15 @@
     padding-top: 6px;
 } 
 #all-cards-list {
-    position: absolute;
     width: 100%;
     height: 100vh;
     display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: flex-end;
+    justify-content: flex-end;
     flex-wrap: wrap;
     overflow: hidden;
-    background-size: cover;
-}
-#all-cards-list {
     background-image: url("imgs/backpack3.jpg");
-}
-.all-cards-row {
-    display: flex;
-    justify-content: start;
-    align-items: start;
-    flex-shrink: 1;
-    width: 100%;
-    height: 30%;
-    max-width: 180px;
-    
-}
-.all-cards-row div {
-    display: inline;
-    max-width: 180px;
-    
+    background-size: cover;
 }
 /* TREASURE */
 #treasure-container {
