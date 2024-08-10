@@ -22,14 +22,15 @@ ghost elite becomes opacity: .5 and unable to be attacked
 King Spookly becomes hallowwood encounter, replace starting hand becomes heaven encounter
 
 BUGS
-///text not reseting after encounter
-///blacksmith loads back to cards not his original text
 death screen brings you to fae forest arena??
-3 elites in hallow inifinit loop
-///blacksmith music will be deleted with each new stage
-ball lightning had tidal and windswept text said 17 card did 15 damage then it returned to 11 damage
-///mana and end turn button need high z index because of hand container; when hovering over card increase card z index
 you can just define music when it's played then set its volume to the slider each time instead of an array trigger system
+chain lightning energized 4
+///3 elites in hallow inifinit loop
+///make vine sheath an ethereal card
+//frost fingers static charge doing 60 not 50 damage
+//elite margins go way right when attacking
+//thunder crash energize <br>
+//magma blast 100%% card text
 
 */
 /*
@@ -957,16 +958,25 @@ function eliteEncounter() {
         switchMusic(allMusic[eliteEncounterMusicIndex]);
         let randomEliteNumber;
         if (faeForest) {
+                if (dontRepeatEliteEncounter.includes(1) && dontRepeatEliteEncounter.includes(2) && dontRepeatEliteEncounter.includes(3)) {
+                        encounter();
+                }
                 randomEliteNumber = createRandomNumber(1, 3);
                 while (dontRepeatEncounter.includes(randomEliteNumber)) {
                         randomEliteNumber = createRandomNumber(1, 3);        
                 }
         } else if (hallowwood) {
+                if (dontRepeatEliteEncounter.includes(4) && dontRepeatEliteEncounter.includes(5) && dontRepeatEliteEncounter.includes(6)) {
+                        encounter();
+                }
                 randomEliteNumber = createRandomNumber(4, 6);
                 while (dontRepeatEncounter.includes(randomEliteNumber)) {
                         randomEliteNumber = createRandomNumber(4, 6);        
                 }
         } else {
+                if (dontRepeatEliteEncounter.includes(7) && dontRepeatEliteEncounter.includes(8) && dontRepeatEliteEncounter.includes(9)) {
+                        encounter();
+                }
                 randomEliteNumber = createRandomNumber(7, 9);
                 while (dontRepeatEncounter.includes(randomEliteNumber)) {
                         randomEliteNumber = createRandomNumber(7, 9);        
@@ -991,14 +1001,14 @@ function eliteEncounter() {
                 case 2:
                         createEliteEnemy("Dryad", 10, 2);
                         document.querySelector(".enemy-img").style = "width: 500px";
-                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         document.querySelector(".enemy-action-div").style = "margin-bottom: -3rem";
                         document.querySelector(".enemy-debuffs").style = "margin-bottom: -1rem";
                         break;
                 case 3:
                         createEliteEnemy("Frost Sprite", 11, 3);
                         document.querySelector(".enemy-img").style = "width: 450px";
-                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
                 case 4:
                         createEliteEnemy("Reaper", 23, 4);
@@ -1371,7 +1381,7 @@ function chooseLocationPath(location) {
                         addGlow(location3Tiles1);
                         removeELL2();
                         location3Tiles1.addEventListener("click", L3T1);
-                        matchEncounter(location2Tiles2);
+                        matchEncounter(location2Tiles1);
                         break;
                 case "L2T2":
                         removeGlow(location2Tiles1, location2Tiles2);
@@ -1399,7 +1409,7 @@ function chooseLocationPath(location) {
                         addGlow(location4Tiles1);
                         removeELL3();
                         location4Tiles1.addEventListener("click", L4T1);
-                        matchEncounter(location2Tiles2);
+                        matchEncounter(location3Tiles1);
                         break;
                 case "L3T2":
                         removeGlow(location3Tiles2);
@@ -1421,7 +1431,7 @@ function chooseLocationPath(location) {
                         addGlow(location5Tiles1);
                         removeELL4();
                         location5Tiles1.addEventListener("click", L5T1);
-                        matchEncounter(location2Tiles2);
+                        matchEncounter(location4Tiles1);
                         break;
                 case "L4T2":
                         removeGlow(location4Tiles2);
@@ -1451,7 +1461,7 @@ function chooseLocationPath(location) {
                         addGlow(location6Tiles1);
                         removeELL5();
                         location6Tiles1.addEventListener("click", L6T1);
-                        matchEncounter(location2Tiles2);
+                        matchEncounter(location5Tiles1);
                         break;
                 case "L5T2":
                         removeGlow(location5Tiles1, location5Tiles2, location5Tiles3);
@@ -3165,6 +3175,7 @@ function shop() {
 }
 let blacksmithMusicTrigger = false;
 let blacksmithMusicIndex;
+let blacksmithAmbienceIndex;
 function blacksmith() {
         if (!blacksmithMusicTrigger) {
                 const blacksmithMusic = new Audio("audio/blacksmith-music.wav");
@@ -3173,8 +3184,10 @@ function blacksmith() {
                 switchAmbience(blacksmithAmbience);
                 blacksmithMusicTrigger = true;
                 blacksmithMusicIndex = allMusic.indexOf(blacksmithMusic);
+                blacksmithAmbienceIndex = allAmbience.indexOf(blacksmithAmbience);
         }
-        switchMusic(allMusic[blacksmithMusicIndex], allMusic[blacksmithMusicIndex + 1]);
+        switchMusic(allMusic[blacksmithMusicIndex]);
+        switchAmbience(blacksmithAmbience);
         const blacksmithContainer = document.querySelector("#blacksmith-container");
         displayFlex(blacksmithContainer);
         displayNone(map);
@@ -3524,7 +3537,7 @@ const cardsInformation = [
                                 spendMana(2);
                                 if (playerFrostbite || enemyFrostbite[chosenEnemy]) {
                                         if (tidalImbuement) {
-                                                damageEnemy(35, chosenEnemy);
+                                                damageEnemy(25, chosenEnemy);
                                         } else {
                                                 damageEnemy(15, chosenEnemy);
                                         }
@@ -3536,7 +3549,7 @@ const cardsInformation = [
                                 spendMana(2);
                                 if (playerFrostbite || enemyFrostbite[chosenEnemy]) {
                                         if (tidalImbuement) {
-                                                damageEnemy(60, chosenEnemy);
+                                                damageEnemy(50, chosenEnemy);
                                         } else {
                                                 damageEnemy(30, chosenEnemy);
                                         }
@@ -3559,7 +3572,6 @@ const cardsInformation = [
                 [ 
                         function() {
                                 spendMana(1);
-                                damageAllEnemies(20);
                                 let enemyIsWindswept = [];
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false) {
@@ -3876,7 +3888,7 @@ const cardsInformation = [
                 manaCost: [1, 2],
                 name: "Essence of Ember",
                 cardImg: "imgs/essence-of-ember.jpeg",
-                cardText: ["[POTION]<br>You apply +2 burn damage", "[POTION]<br>You apply +4 burn damage"],
+                cardText: ["[Ethereal]<br>You apply +2 burn damage", "[Ethereal]<br>You apply +4 burn damage"],
                 chooseEnemyCard: false,
                 index: 15,
                 element: "fire",
@@ -4024,7 +4036,7 @@ const cardsInformation = [
                 manaCost: [2, 2],
                 name: "Storm Form",
                 cardImg: "imgs/storm-form.jpeg",
-                cardText: ["[POTION]<br>All damage is increased by 5", "[POTION]<br>All damage is increased by 7"],
+                cardText: ["[Ethereal]<br>All damage is increased by 5", "[Ethereal]<br>All damage is increased by 7"],
                 chooseEnemyCard: false,
                 index: 19,
                 element: "lightning",
@@ -4131,7 +4143,7 @@ const cardsInformation = [
                 manaCost: [3, 2],
                 name: "Icy Imbuement",
                 cardImg: "imgs/icy-imbuement.jpeg",
-                cardText: ["[POTION]<br>Damage and Frostbite now hits every enemy", "[POTION]<br>Damage and Frostbite now hits every enemy"],
+                cardText: ["[Ethereal]<br>Damage and Frostbite now hits every enemy", "[Ethereal]<br>Damage and Frostbite now hits every enemy"],
                 chooseEnemyCard: false,
                 index: 23,
                 element: "ice",
@@ -4229,7 +4241,7 @@ const cardsInformation = [
                                 spendMana(2);
                                 let drawCard = false;
                                 let discardCard = false;
-                                let windCards = document.querySelectorAll(".winds-of-change");
+                                let windCards = document.querySelectorAll(".24");
                                 //console.log("BEFORE\nDRAW: ", drawPileArray);
                                 //console.log("BEFORE\nHAND: ", handArray);
                                 //console.log("BEFORE\nDISCARD: ", discardPileArray);
@@ -4261,7 +4273,7 @@ const cardsInformation = [
                                 spendMana(2);
                                 let drawCard = false;
                                 let discardCard = false;
-                                let windCards = document.querySelectorAll(".winds-of-change");
+                                let windCards = document.querySelectorAll(".24");
                                 //console.log("BEFORE\nDRAW: ", drawPileArray);
                                 //console.log("BEFORE\nHAND: ", handArray);
                                 //console.log("BEFORE\nDISCARD: ", discardPileArray);
@@ -4297,7 +4309,7 @@ const cardsInformation = [
                 manaCost: [3, 2],
                 name: "Zephyr Infusion",
                 cardImg: "imgs/zephyr-infusion.jpeg",
-                cardText: ["[POTION]<br>Draw one more card at the end of each turn", "[POTION]<br>Draw one more card at the end of each turn"],
+                cardText: ["[Ethereal]<br>Draw one more card at the end of each turn", "[Ethereal]<br>Draw one more card at the end of each turn"],
                 chooseEnemyCard: false,
                 index: 27,
                 element: "air",
@@ -4407,7 +4419,7 @@ const cardsInformation = [
                 manaCost: [2, 2],
                 name: "Spring Water",
                 cardImg: "imgs/spring-water.jpeg",
-                cardText: ["[POTION]<br>Permanently gain 5 max health", "[POTION]<br>Permanently gain 7 max health and gain 5 regeneration"],
+                cardText: ["[Ethereal]<br>Permanently gain 5 max health", "[Ethereal]<br>Permanently gain 7 max health and gain 5 regeneration"],
                 chooseEnemyCard: false,
                 index: 31,
                 element: "water",
@@ -4427,11 +4439,10 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [2, 2],//gain 1 thorn for every 10 block you have or for every earth card in your deck maybe
-                name: "Earth Shatter",
-                cardImg: "imgs/earth-shatter.jpg",
-                cardText: ["Lose all of your block and deal damage to all enemies equal to how much was lost", "Lose all of your block and deal damage to all enemies equal to how much was lost. Regain 50% of your block."],
-                block: [0, 50],
+                manaCost: [2, 2],
+                name: "Vine Sheath",
+                cardImg: "imgs/vine-sheath.jpeg",
+                cardText: ["[Ethereal]<br>Double your thorns", "[Ethereal]<br>Triple your thorns."],
                 chooseEnemyCard: false,
                 index: 32,
                 element: "earth",
@@ -4439,17 +4450,12 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(2);
-                                damageAllEnemies(playerBlockNumber.innerText);
-                                playerBlockNumber.innerText = 0;
-                                displayNone(playerBlockImg, playerBlockNumber);
+                                playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) * 2;
                                 fxEarthShatter.play();
                         },
                         function() {
                                 spendMana(2);
-                                damageAllEnemies(parseFloat(playerBlockNumber.innerText));
-                                const halfBlock = parseFloat(playerBlockNumber.innerText) * .5;
-                                playerBlockNumber.innerText = 0;
-                                gainBlock(halfBlock);
+                                playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) * 2;
                                 fxEarthShatter.play();
                         }
                 ]
@@ -4505,7 +4511,7 @@ const cardsInformation = [
                 manaCost: [2, 2],
                 name: "Gaia's Embrace",
                 cardImg: "imgs/gaias-embrace.jpeg",
-                cardText: ["[POTION]<br>All block gained is increased by 5 and thorns by 1", "[POTION]<br>Gain 10 block and 2 thorns. All block gained is increased by 5 and thorns by 1"],
+                cardText: ["[Ethereal]<br>All block gained is increased by 5 and thorns by 1", "[Ethereal]<br>Gain 10 block and 2 thorns. All block gained is increased by 5 and thorns by 1"],
                 block: [0, 10],
                 thorns: [0, 2],
                 chooseEnemyCard: false,
@@ -5012,7 +5018,7 @@ const cardsInformation = [
                 manaCost: [4, 4],
                 name: "Terra's Blessing",
                 cardImg: "imgs/terras-blessing.jpeg",
-                cardText: ["[POTION]<br>Gain 3 block and healing at the end of each turn", "[POTION]<br>Gain 5 block and healing at the end of each turn"],
+                cardText: ["[Ethereal]<br>Gain 3 block and healing at the end of each turn", "[Ethereal]<br>Gain 5 block and healing at the end of each turn"],
                 chooseEnemyCard: false,
                 index: 50,
                 element: "water-earth water earth",
@@ -5190,7 +5196,7 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
 }
 arena.classList.remove("darken");
 // LOOP TO CREATE OPENING 12 CARDS
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 33; i++) {
         createCard(i, handContainer, "card", "card-text", 0);
 }
 // SET CARDS TO ACTIVATE WHEN CLICKED RATHER THAN WHEN ENEMY IS CLICKED
@@ -5264,7 +5270,7 @@ let turnEnded = false;
 function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         function addToDiscard() {
                 let spliceCard = handArray.splice(handArray.indexOf(cardType[index]), 1).pop();
-                if (CIindex === 15 || CIindex === 19 || CIindex === 23 || CIindex === 27 || CIindex === 31 || CIindex === 35 || CIindex === 50) {
+                if (CIindex === 15 || CIindex === 19 || CIindex === 23 || CIindex === 27 || CIindex === 31 || CIindex === 32 || CIindex === 35 || CIindex === 50) {
                         potionCards.push(cardType[index]);
                         potionCardsContainer.appendChild(cardType[index]);
                 } else {
@@ -5366,19 +5372,8 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
         console.log("CREATING CARD NEW RANDOM CARD", newRandomCard);
         chooseNewCardDiv.innerHTML = ``;
         displayNone(chooseNewCardDiv);
-        // THIS WONT WORK ANYMORE UPDATE IN CREATECARD
-        if (newRandomCard == 24) {
-                createCard(newRandomCard, destroyedCardsContainer, "card winds-of-change", "card-text winds-card-text", upgradeIndex);
-        } else if (newRandomCard == 43) {
-                createCard(newRandomCard, destroyedCardsContainer, "card", "card-text electric-card-text", upgradeIndex);
-        } else if (newRandomCard == 16) {
-                createCard(newRandomCard, destroyedCardsContainer, "card", "card-text storm-card-text", upgradeIndex);
-        } else if (newRandomCard == 30) {
-                createCard(newRandomCard, destroyedCardsContainer, "card", "card-text downpour-card-text", upgradeIndex);
-        } else {
-                console.log("UPGRADE INDEX: ", upgradeIndex);
-                createCard(newRandomCard, destroyedCardsContainer, "card", "card-text", upgradeIndex);
-        }
+        console.log("UPGRADE INDEX: ", upgradeIndex);
+        createCard(newRandomCard, destroyedCardsContainer, "card", "card-text", upgradeIndex);
         let currentCards = document.querySelectorAll(".card");
         console.log("1 currentCards", currentCards);
         let newCardsText = document.querySelectorAll(".card-text");
@@ -5400,10 +5395,10 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
 function getRandomNewCards () {
         arena.classList.add("dim");
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = createRandomNumber(12, cardsInformation.length - 2);
-        let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
-        let newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
-        let newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCard0 = createRandomNumber(12, cardsInformation.length - 3);
+        let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 3);
+        let newRandomCard2 = createRandomNumber(12, cardsInformation.length - 3);
+        let newRandomCard3 = createRandomNumber(12, cardsInformation.length - 3);
         console.log("BEFORE 0", newRandomCard0, "1", newRandomCard1, "2", newRandomCard2, "3", newRandomCard3);
         // CHANGE CARDS IF THEY ARE THE SAME
         while (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3 || 
@@ -6056,9 +6051,11 @@ function updateCardText() {
                                                                 }
                                                                 if (type === cardsInformation[j].burn && (essenceOfEmber.length > 0 || essenceOfEmberUpgrade.length > 0)) {
                                                                         type[upgradeIndex] += (essenceOfEmber.length * ember) + (essenceOfEmberUpgrade * emberUpgrade);
+                                                                        console.log("ESSENCE OF EMBER LENGTH", essenceOfEmber.length);
                                                                 }
                                                                 if (type === cardsInformation[j].damage && (liquidLightning.length > 0 || liquidLightningUpgrade.length > 0)) {
                                                                         type[upgradeIndex] += (liquidLightning.length * liquid) + (liquidLightningUpgrade * liquidUpgrade);
+                                                                        console.log("LIQUID LGIHTNING LENGTH", liquidLightning.length.length);
                                                                 }
                                                                 if (type === cardsInformation[j].energize && surgebinder) {
                                                                         type[upgradeIndex] *= energized;
@@ -6098,6 +6095,9 @@ function updateCardText() {
                                                         }
                                                         if ("damage" in cardsInformation[j]) {
                                                                 update(cardsInformation[j].damage, oddDamage);
+                                                        }
+                                                        if ("burn" in cardsInformation[j]) {
+                                                                update(cardsInformation[j].burn, oddBurn);
                                                         }
                                                         if ("energize" in cardsInformation[j]) {
                                                                 update(cardsInformation[j].energize, oddEnergize);
@@ -6139,32 +6139,32 @@ function updateCardText() {
                 [`Inflict ${cardsInformation[12].burn[0]} burn on all enemies and 3 on yourself`, `Inflict ${cardsInformation[12].burn[1]} burn on all enemies and 4 on yourself`],
                 [`Gain ${cardsInformation[13].burn[0]} burn and transfer your burn onto the enemy`, `Gain ${cardsInformation[13].burn[1]} burn and transfer your burn onto all enemies`],
                 [`Deal damage equal to ${cardsInformation[14].damage[0]}x the amount of burn on the enemy`, `Deal damage equal to ${cardsInformation[14].damage[1]}x the amount of burn on the enemy`],
-                ["[POTION]<br>You apply +2 burn damage", "[POTION]<br>You apply +4 burn damage"],
+                ["[Ethereal]<br>You apply +2 burn damage", "[Ethereal]<br>You apply +4 burn damage"],
                 [`Deal 50% of the damage you've dealt this turn to an enemy<br>Damage: ${cardsInformation[16].damage[0]}`, `Deal 50% of the damage you've dealt this turn to an enemy<br>Damage: ${cardsInformation[16].damage[1]}`],
                 [`Deal ${cardsInformation[17].damage[0]} damage to a random enemy three times and Energize ${cardsInformation[17].energize[0]} for each enemy damaged`, `Deal ${cardsInformation[17].damage[0]} damage to a random enemy four times and Energize ${cardsInformation[17].energize[1]} for each enemy damaged`],
-                [`Deal ${cardsInformation[18].damage[0]} damage plus ${cardsInformation[18].damageSecond[0]} for each mana you have after playing Thunder Crash. Energize ${cardsInformation[18].energize[0]}`, `Deal ${cardsInformation[18].damage[1]} damage plus ${cardsInformation[18].damageSecond[1]} for each mana you have after playing Thunder Crash. Energize ${cardsInformation[17].energize[1]}`],
-                ["[POTION]<br>All damage is increased by 5", "[POTION]<br>All damage is increased by 7"],
+                [`Deal ${cardsInformation[18].damage[0]} damage plus ${cardsInformation[18].damageSecond[0]} for each mana you have after playing Thunder Crash.<br>Energize ${cardsInformation[18].energize[0]}`, `Deal ${cardsInformation[18].damage[1]} damage plus ${cardsInformation[18].damageSecond[1]} for each mana you have after playing Thunder Crash.<br>Energize ${cardsInformation[17].energize[1]}`],
+                ["[Ethereal]<br>All damage is increased by 5", "[Ethereal]<br>All damage is increased by 7"],
                 [`Deal ${cardsInformation[20].damage[0]} damage to all enemies and inflict frostbite on everyone including yourself`, `Deal ${cardsInformation[20].damage[1]} damage to all enemies and inflict frostbite on everyone including yourself`],
                 ["For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself", "For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself"],
                 [`Inflict frostbite and deal damage equal to your block amount`, `Gain ${cardsInformation[22].block[1]} block, inflict frostbite, and deal damage equal to your block amount`],
-                ["[POTION]<br>Damage and Frostbite now hits every enemy", "[POTION]<br>Damage and Frostbite now hits every enemy"],
+                ["[Ethereal]<br>Damage and Frostbite now hits every enemy", "[Ethereal]<br>Damage and Frostbite now hits every enemy"],
                 [`Deal ${windsOfChange} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept`, `Deal ${windsOfChange} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept`],
                 ["Draw two cards", "Draw two cards and inflict windswept on a random enemy"],
                 ["Draw a Winds of Change from your draw pile and discard pile", "Draw a Winds of Change from your draw pile and discard pile. Winds of Change gains +2 damage for each drawn."],
-                ["[POTION]<br>Draw one more card at the end of each turn", "[POTION]<br>Draw one more card at the end of each turn"],
+                ["[Ethereal]<br>Draw one more card at the end of each turn", "[Ethereal]<br>Draw one more card at the end of each turn"],
                 [`Cleanse all debuffs and gain ${cardsInformation[28].blood[0]} blood siphon`, `Cleanse all debuffs and gain ${cardsInformation[28].blood[1]} blood siphon`],
                 [`Use all mana to gain ${cardsInformation[29].regen[0]} regeneration and blood siphon per mana spent`, `Use all mana to gain ${cardsInformation[29].regen[1]} regeneration and ${cardsInformation[29].blood[1]} blood siphon per mana spent`],
                 [`Deal damage equal to how much you've healed this fight<br>Damage: ${cardsInformation[30].damage[0]}`, `Deal damage to all enemies equal to how much you've healed this fight<br>Damage: ${cardsInformation[30].damage[1]}`],
-                ["[POTION]<br>Permanently gain 5 max health", "[POTION]<br>Permanently gain 6 max health and gain 6 health"],
-                ["Lose all of your block and deal damage equal to how much was lost", `Lose all of your block and deal damage equal to how much was lost. Regain ${cardsInformation[32].block[1]}% of your block.`],
+                ["[Ethereal]<br>Permanently gain 5 max health", "[Ethereal]<br>Permanently gain 6 max health and gain 6 health"],
+                ["[Ethereal]<br>Double your thorns", "[Ethereal]<br>Triple your thorns."],
                 [`Gain ${cardsInformation[33].thorns[0]} thorns`, `Gain ${cardsInformation[33].thorns[1]} thorns`],
-                [`Deal damage equal to 3x your thorns<br>Damage:${(parseFloat(playerThornsNumber.innerText) * 3)}`, `Gain ${cardsInformation[34].thorns[1]} thorns and deal damage equal to 3x your thorns<br>Damage:${2 + (parseFloat(playerThornsNumber.innerText) * 3)}`],
-                ["[POTION]<br>All block gained is increased by 5 and thorns increased by 1", `[POTION]<br>Gain ${cardsInformation[35].block[1]} block and ${cardsInformation[35].thorns[1]} thorns. All block gained is increased by 5 and thorns increased by 1`],
+                [`Deal damage equal to 3x your thorns<br>Damage: ${(parseFloat(playerThornsNumber.innerText) * 3)}`, `Gain ${cardsInformation[34].thorns[1]} thorns and deal damage equal to 3x your thorns<br>Damage: ${2 + (parseFloat(playerThornsNumber.innerText) * 3)}`],
+                ["[Ethereal]<br>All block gained is increased by 5 and thorns increased by 1", `[Ethereal]<br>Gain ${cardsInformation[35].block[1]} block and ${cardsInformation[35].thorns[1]} thorns. All block gained is increased by 5 and thorns increased by 1`],
                 [`Energize ${cardsInformation[36].energize[0]} for each enemy burning`, `Burn all enemies for ${cardsInformation[36].burn[1]} and Energize ${cardsInformation[36].energize[1]} for each enemy burning`],
                 [`If the enemy is either burning or inflicted with frostbite they are inflicted with ${cardsInformation[37].burn[0]} burn and frostbite`, `If the enemy is either burning or inflicted with frostbite they are inflicted with ${cardsInformation[37].burn[1]} burn and frostbite`],
                 [`Inflict windswept on all enemies and increase burn count by ${cardsInformation[38].burn[0]} if they're already burning`, `Inflict windswept on all enemies and increase burn count by ${cardsInformation[38].burn[1]} if they're already burning`],
                 [`Gain ${cardsInformation[39].burn[0]} burn, ${cardsInformation[39].regen[0]} regen, and ${cardsInformation[39].blood[0]} blood siphon`, `Gain ${cardsInformation[39].burn[1]} burn, ${cardsInformation[39].regen[1]} regen, and ${cardsInformation[39].blood[1]} blood siphon`],
-                [`Inflict ${cardsInformation[40].burn[0]} burn on an enemy and gain block equal to 100%% of their burn`, `Inflict ${cardsInformation[40].burn[1]} burn on an enemy and gain block equal to 100% of their burn`],
+                [`Inflict ${cardsInformation[40].burn[0]} burn on an enemy and gain block equal to 100% of their burn`, `Inflict ${cardsInformation[40].burn[1]} burn on an enemy and gain block equal to 100% of their burn`],
                 [`Electrucute enemies with frostbite dealing damage equal to ${cardsInformation[41].damageSecond[0]} times your mana<br>Damage: ${cardsInformation[41].damage[0]}`, `Electrucute enemies with frostbite dealing damage equal to ${cardsInformation[41].damageSecond[1]} times your mana</br>Damage: ${cardsInformation[41].damage[0]}`],
                 [`Inflict windswept and deal ${cardsInformation[42].damage[0]} damage to all enemies<br>Draw a card, energize ${cardsInformation[42].energize[0]}, and gain 2 mana.`, `Inflict windswept and deal ${cardsInformation[42].damage[1]} damage to all enemies. Draw a card, energize ${cardsInformation[42].energize[1]}, and gain 3 mana.`],
                 [`Deal damage based on your current health. Energize ${cardsInformation[43].energize[0]} and gain ${cardsInformation[43].regen[0]} regeneration<br>Damage: ${cardsInformation[43].damage[0]}`, `Deal damage based on your current health. Energize ${cardsInformation[43].energize[1]} and gain ${cardsInformation[43].energize[1]} regeneration and 2 max health<br>Damage: ${cardsInformation[43].damage[1]}`],
@@ -6174,7 +6174,7 @@ function updateCardText() {
                 [`Inflict everyone including yourself with frostbite and gain ${cardsInformation[47].block[0]} block for everyone inflicted`, `Inflict everyone including yourself with frostbite and gain ${cardsInformation[47].block[1]} block for everyone inflicted`],
                 [`Gain ${cardsInformation[48].regen[0]} regen for each card played this turn`, `Gain ${cardsInformation[48].regen[1]} regen for each card played this turn and draw a card`],
                 [`Gain ${cardsInformation[49].block[0]} block and draw a card`, `Gain ${cardsInformation[49].block[1]} block and draw a card`],
-                ["[POTION]\nGain 3 block and healing at the end of each turn", "[POTION]\nGain 5 block and healing at the end of each turn"],
+                ["[Ethereal]\nGain 3 block and healing at the end of each turn", "[Ethereal]\nGain 5 block and healing at the end of each turn"],
                 ["[DOES NOTHING]<br>Your greed causes you to look down upon peasants", "Your greed causes you to look down upon peasants...and enslave them gaining 20 aether"],
                 [`Inflict frostbite, windswept, and ${cardsInformation[52].burn[0]} burn. Gain ${cardsInformation[52].energize[0]} energize, ${cardsInformation[52].blood[0]} blood siphon, and ${cardsInformation[52].block[0]} block`, `Inflict frostbite, windswept, and ${cardsInformation[52].burn[1]} burn. Gain ${cardsInformation[52].energize[1]} energize, ${cardsInformation[52].blood[1]} blood siphon, and ${cardsInformation[52].block[1]} block`]
         ];
@@ -6196,114 +6196,6 @@ function updateCardText() {
         }
         // CHANGE CARD BACK TO ORIGINAL STATS
         updateText(2, .5, .5, -10, -2, -4, -5, -7, -5, -1);
-        /*document.querySelectorAll(".winds-card-text").forEach((i) => {
-                if (i.classList.contains("upgraded-text")) {
-                        if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal ${(windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2) + 10} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
-                        } else if (playerWindswept) {
-                                i.innerText = `Deal ${windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
-                        } else if (tidalImbuement) {
-                                i.innerText = `Deal ${windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
-                        } else {
-                                i.innerText = `Deal ${windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept.`;
-                        }
-                } else {
-                        if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal ${(windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2) + 10} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
-                        } else if (playerWindswept) {
-                                i.innerText = `Deal ${windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
-                        } else if (tidalImbuement) {
-                                i.innerText = `Deal ${windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
-                        } else {
-                                i.innerText = `Deal ${windsOfChange + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept.`;
-                        }
-                }
-        });
-        document.querySelectorAll(".electric-card-text").forEach((i) => {
-                if (i.classList.contains("upgraded-text")) {
-                        if (playerWindswept && tidalImbuement && playerFrostbite) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
-                        } else if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
-                        } else if (playerWindswept && playerFrostbite) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2)}`;
-                        } else if (tidalImbuement && playerFrostbite) {
-                                i.innerText = `Deal 2 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
-                        } else if (playerWindswept) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) / 2}`;
-                        } else if (tidalImbuement) {
-                                i.innerText = `Deal 2 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
-                        } else if (playerFrostbite) {
-                                i.innerText = `Deal 2 damage per 5 health you currently have, gain 2 max health and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7))}`;
-                        } else {
-                                i.innerText = `Deal 2 damage per 5 health you currently have, gain 2 max health and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7))}`;
-                        }
-                } else {
-                        if (playerWindswept && tidalImbuement && playerFrostbite) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
-                        } else if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
-                        } else if (playerWindswept && playerFrostbite) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2)}`;
-                        } else if (tidalImbuement && playerFrostbite) {
-                                i.innerText = `Deal 2 damage per 5 health you currently have and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
-                        } else if (playerWindswept) {
-                                i.innerText = `Deal 1 damage per 5 health you currently have and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2)}`;
-                        } else if (tidalImbuement) {
-                                i.innerText = `Deal 2 damage per 5 health you currently have and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)) + 10}`;
-                        } else if (playerFrostbite) {
-                                i.innerText = `Deal 2 damage per 5 health you currently have and 1 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7))}`;
-                        } else {
-                                i.innerText = `Deal 2 damage per 5 health you currently have and 3 regeneration Damage: ${Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7))}`;
-                        }
-                }
-        });
-        document.querySelectorAll(".storm-card-text").forEach((i) => {
-                if (i.classList.contains("upgraded-text")) {
-                        if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal 37% of the damage you've dealt this turn to an enemy Damage: ${Math.floor(((damageThisTurn * 75) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2)) + 10}` ;
-                        } else if (playerWindswept) {
-                                i.innerText = `Deal 37% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn * .75) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2)}` ;
-                        } else if (tidalImbuement) {
-                                i.innerText = `Deal 75% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn * .75)) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10}` ;
-                        } else {
-                                i.innerText = `Deal 75% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn * .75)) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)}` ;
-                        }
-                } else {
-                        if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal 25% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn / 4)) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10}` ;
-                        } else if (playerWindswept) {
-                                i.innerText = `Deal 25% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn / 4)) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)}` ;
-                        } else if (tidalImbuement) {
-                                i.innerText = `Deal 50% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn / 2)) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10}` ;
-                        } else {
-                                i.innerText = `Deal 50% of the damage you've dealt this turn to an enemy Damage: ${Math.floor((damageThisTurn / 2)) + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)}` ;
-                        }
-                }
-        });
-        document.querySelectorAll(".downpour-card-text").forEach((i) => {
-                if (i.classList.contains("upgraded-text")) {
-                        if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Gain +1 max health for each enemy hit. Damage: ${(healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2) + 10}` ;
-                        } else if (playerWindswept) {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Gain +1 max health for each enemy hit. Damage: ${healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2}` ;
-                        } else if (tidalImbuement) {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Gain +1 max health for each enemy hit. Damage: ${healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10}` ;
-                        } else {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Gain +1 max health for each enemy hit. Damage: ${healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)}` ;
-                        }
-                } else {
-                        if (playerWindswept && tidalImbuement) {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${(healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2) + 10}` ;
-                        } else if (playerWindswept) {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) / 2}` ;
-                        } else if (tidalImbuement) {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7) + 10}` ;
-                        } else {
-                                i.innerText = `Deal damage to all enemies equal to how much you've healed this fight. Damage: ${healthGainedThisFight + (liquidLightning.length * 5 + liquidLightningUpgrade.length * 7)}` ;
-                        }
-                }
-        });*/
 }
 /*
 ENEMY SECTION
