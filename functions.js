@@ -122,7 +122,7 @@ window.addEventListener("keydown", () => {
         displayNone(beginningScreen);
         displayFlex(startScreen);
         const startScreenMusic = new Audio("audio/start-screen-music.wav");
-        //switchMusic(startScreenMusic);
+        switchMusic(startScreenMusic);
 }, {once: true});
 let [easyDifficulty, normalDifficulty, hardDifficulty] = [false, false, false];
 let mapMusicIndex;
@@ -132,7 +132,7 @@ startGame.addEventListener("click", () => {
                 displayFlex(boardHeader);
                 displayNone(startScreen, document.querySelector("#difficulty-container"));
                 const mapMusic = new Audio("audio/map-music.wav");
-                //switchMusic(mapMusic);
+                switchMusic(mapMusic);
                 mapMusicIndex = allMusic.indexOf(mapMusic);
                 const forestAmbience = new Audio("audio/forest-ambience.wav");
                 switchAmbience(forestAmbience);
@@ -565,22 +565,22 @@ function encounter() {
         if (!encounterMusicTrigger) {
                 if (faeForest) {
                         const encounterMusic = new Audio("audio/forest-encounter-music.wav");
-                        //switchMusic(encounterMusic);
+                        switchMusic(encounterMusic);
                         encounterMusicTrigger = true;
                         encounterMusicIndex = allMusic.indexOf(encounterMusic);
                 } else if (hallowwood) {
                         const hallowwoodEncounterMusic = new Audio("audio/hallowwood-encounter-music.wav");
-                        //switchMusic(hallowwoodEncounterMusic);
+                        switchMusic(hallowwoodEncounterMusic);
                         encounterMusicTrigger = true;
                         encounterMusicIndex = allMusic.indexOf(hallowwoodEncounterMusic);
                 } else {
                         const heavenEncounterMusic = new Audio("audio/heaven-encounter-music.wav");
-                        //switchMusic(heavenEncounterMusic);
+                        switchMusic(heavenEncounterMusic);
                         encounterMusicTrigger = true;
                         encounterMusicIndex = allMusic.indexOf(heavenEncounterMusic);
                 }
         }
-        //switchMusic(allMusic[encounterMusicIndex]);
+        switchMusic(allMusic[encounterMusicIndex]);
         let randomEncounterNumber;
         if (faeForest) {
                 randomEncounterNumber = createRandomNumber(1, 9);
@@ -709,7 +709,7 @@ function encounter() {
 let dontRepeatGoldEncounter = [];
 let goldEncounterGold = false;
 function goldEncounter() {
-        //switchMusic(allMusic[encounterMusicIndex]);
+        switchMusic(allMusic[encounterMusicIndex]);
         goldEncounterGold = true;
         let randomGoldEncounterNumber;
         if (faeForest) {
@@ -939,22 +939,22 @@ function eliteEncounter() {
         if (!eliteEncounterMusicTrigger) {
                 if (faeForest) {
                         const eliteEncounterMusic = new Audio("audio/elite-encounter-music.wav");
-                        //switchMusic(eliteEncounterMusic);
+                        switchMusic(eliteEncounterMusic);
                         eliteEncounterMusicTrigger = true;
                         eliteEncounterMusicIndex = allMusic.indexOf(eliteEncounterMusic);
                 } else if (hallowwood) {
                         const hallowwoodEliteMusic = new Audio("audio/hallowwood-elite-music.wav");
-                        //switchMusic(hallowwoodEliteMusic);
+                        switchMusic(hallowwoodEliteMusic);
                         eliteEncounterMusicTrigger = true;
                         eliteEncounterMusicIndex = allMusic.indexOf(hallowwoodEliteMusic);
                 } else {
                         const heavenEliteMusic = new Audio("audio/heaven-elite-music.wav");
-                        //switchMusic(heavenEliteMusic);
+                        switchMusic(heavenEliteMusic);
                         eliteEncounterMusicTrigger = true;
                         eliteEncounterMusicIndex = allMusic.indexOf(heavenEliteMusic);
                 }
         }
-        //switchMusic(allMusic[eliteEncounterMusicIndex]);
+        switchMusic(allMusic[eliteEncounterMusicIndex]);
         let randomEliteNumber;
         if (faeForest) {
                 randomEliteNumber = createRandomNumber(1, 3);
@@ -1036,10 +1036,10 @@ let bossDefeated = [false, false];
 function boss() {
         if (faeForest) {
                 const bossMusic = new Audio("audio/forest-boss-music.wav");
-                //switchMusic(bossMusic);
+                switchMusic(bossMusic);
         } else if (hallowwood) {
                 const hallowwoodBossMusic = new Audio("audio/hallowwood-boss-music.wav");
-                //switchMusic(hallowwoodBossMusic);
+                switchMusic(hallowwoodBossMusic);
         }
         numberOfEnemies = 1;
         let randomBossNumber;
@@ -1371,7 +1371,7 @@ function chooseLocationPath(location) {
                         addGlow(location3Tiles1);
                         removeELL2();
                         location3Tiles1.addEventListener("click", L3T1);
-                        matchEncounter(location2Tiles1);
+                        matchEncounter(location2Tiles2);
                         break;
                 case "L2T2":
                         removeGlow(location2Tiles1, location2Tiles2);
@@ -1399,7 +1399,7 @@ function chooseLocationPath(location) {
                         addGlow(location4Tiles1);
                         removeELL3();
                         location4Tiles1.addEventListener("click", L4T1);
-                        matchEncounter(location3Tiles1);
+                        matchEncounter(location2Tiles2);
                         break;
                 case "L3T2":
                         removeGlow(location3Tiles2);
@@ -1421,7 +1421,7 @@ function chooseLocationPath(location) {
                         addGlow(location5Tiles1);
                         removeELL4();
                         location5Tiles1.addEventListener("click", L5T1);
-                        matchEncounter(location4Tiles1);
+                        matchEncounter(location2Tiles2);
                         break;
                 case "L4T2":
                         removeGlow(location4Tiles2);
@@ -1451,7 +1451,7 @@ function chooseLocationPath(location) {
                         addGlow(location6Tiles1);
                         removeELL5();
                         location6Tiles1.addEventListener("click", L6T1);
-                        matchEncounter(location5Tiles1);
+                        matchEncounter(location2Tiles2);
                         break;
                 case "L5T2":
                         removeGlow(location5Tiles1, location5Tiles2, location5Tiles3);
@@ -1610,41 +1610,77 @@ const destroyedCardsContainer = document.querySelector("#destroyed-cards-contain
 let dontRepeatExclamation = [];
 let exclamationMusicTrigger = false;
 let exclamationMusicIndex;
-let [aquatasBlessing, gaiaBlessing, mysteryReturn, slainWerewolf, slainVampire, emberBurned] = [false, false, false,false, false, false];
+let [aquatasBlessing, gaiaBlessing, slainWerewolf, slainVampire, emberBurned] = [false, false, false, false, false];
+mysteryReturn = [false, false, false];
 let playerEmberNumber = 0;
 function mystery() {
+        switchArea(exclamationContainer, map);
         if (exclamationMusicTrigger === false) {
                 if (faeForest) {
                         const exclamationMusic = new Audio("audio/exclamation-music.wav");
-                        //switchMusic(exclamationMusic);
+                        switchMusic(exclamationMusic);
                         exclamationMusicTrigger = true;
                         exclamationMusicIndex = allMusic.indexOf(exclamationMusic);
                 } else if (hallowwood) {
                         const hallowwoodMysteryMusic = new Audio("audio/hallowwood-mystery-music.wav");
-                        //switchMusic(hallowwoodMysteryMusic);
+                        switchMusic(hallowwoodMysteryMusic);
                         exclamationMusicTrigger = true;
                         exclamationMusicIndex = allMusic.indexOf(hallowwoodMysteryMusic);
                 } else {
                         const heavenMysteryMusic = new Audio("audio/heaven-mystery-music.wav");
-                        //switchMusic(heavenMysteryMusic);
+                        switchMusic(heavenMysteryMusic);
                         exclamationMusicTrigger = true;
                         exclamationMusicIndex = allMusic.indexOf(heavenMysteryMusic);
                 }
         }
-        //switchMusic(allMusic[exclamationMusicIndex]);
-        let randomExclamationNumber = createRandomNumber(12, 12);
-        switchArea(exclamationContainer, map);
-        while (dontRepeatExclamation.includes(randomExclamationNumber) && !mysteryReturn) {
-                randomExclamationNumber = createRandomNumber(8, 8);
-        }
-        if (randomExclamationNumber === 8 && !dontRepeatExclamation.includes(10)) {
-                randomExclamationNumber = 10;
-        } else if (dontRepeatExclamation.includes(10) && !dontRepeatExclamation.includes(8)) {
-                randomExclamationNumber = 8;
-        }
-        if (dontRepeatExclamation.includes(1, 2, 3, 4, 5)) {
-                encounter();
-                mysteryReturn = true;
+        let randomExclamationNumber;
+        if (faeForest) {
+                if (dontRepeatExclamation.includes(1) && dontRepeatExclamation.includes(2) && dontRepeatExclamation.includes(3) && dontRepeatExclamation.includes(4) && dontRepeatExclamation.includes(5)) {
+                        mysteryReturn[0] = true;
+                }
+                if (mysteryReturn[0]) {
+                        encounter();
+                } else {
+                        randomExclamationNumber = createRandomNumber(1, 5);
+                        console.log("dontRepeatExclamation.includes(randomExclamationNumber) ", dontRepeatExclamation.includes(randomExclamationNumber));
+                        console.log("dontRepeatExclamation ", dontRepeatExclamation);
+                        console.log("randomExclamationNumber ", randomExclamationNumber);
+                        while (dontRepeatExclamation.includes(randomExclamationNumber) && !mysteryReturn[0]) {
+                                randomExclamationNumber = createRandomNumber(1, 5);
+                                console.log("NEW NUMBER dontRepeatExclamation.includes(randomExclamationNumber) ", dontRepeatExclamation.includes(randomExclamationNumber));
+                                console.log("NEW NUMBER dontRepeatExclamation ", dontRepeatExclamation);
+                                console.log("NEW NUMBER randomExclamationNumber ", randomExclamationNumber);
+                        }
+                }
+        } else if (hallowwood) {
+                if (dontRepeatExclamation.includes(6) && dontRepeatExclamation.includes(7) && dontRepeatExclamation.includes(8) && dontRepeatExclamation.includes(9) && dontRepeatExclamation.includes(10)) {
+                        mysteryReturn[1] = true;
+                }
+                if (mysteryReturn[1]) {
+                        encounter();
+                } else {
+                        randomExclamationNumber = createRandomNumber(6, 10);
+                        while (dontRepeatExclamation.includes(randomExclamationNumber) && !mysteryReturn[1]) {
+                                randomExclamationNumber = createRandomNumber(6, 10);
+                        }
+                        if (randomExclamationNumber === 8 && !dontRepeatExclamation.includes(10)) {
+                                randomExclamationNumber = 10;
+                        } else if (dontRepeatExclamation.includes(10) && !dontRepeatExclamation.includes(8)) {
+                                randomExclamationNumber = 8;
+                        }
+                } 
+        } else {
+                if (dontRepeatExclamation.includes(11) && dontRepeatExclamation.includes(12) && dontRepeatExclamation.includes(13) && dontRepeatExclamation.includes(14) && dontRepeatExclamation.includes(15)) {
+                        mysteryReturn[2] = true;
+                }
+                if (mysteryReturn[2]) {
+                        encounter();
+                } else {
+                        randomExclamationNumber = createRandomNumber(11, 15);
+                        while (dontRepeatExclamation.includes(randomExclamationNumber) && !mysteryReturn[2]) {
+                                randomExclamationNumber = createRandomNumber(11, 15);
+                        }
+                }
         }
         switch (randomExclamationNumber) {
                 case 1:
@@ -1659,8 +1695,7 @@ function mystery() {
                         <button class="exclamation-button-3" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #2f989c">ice</span> cards</button>
                         <button class="exclamation-button-4" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #86bfdf">air</span> cards</button>
                         <button class="exclamation-button-5" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #74ccf4">water</span> cards</button>
-                        <button class="exclamation-button-6" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #8d624b">earth</span> cards</button>
-                        `;
+                        <button class="exclamation-button-6" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #8d624b">earth</span> cards</button>`;
                         exclamationButton1 = document.querySelector(".exclamation-button-1");
                         exclamationButton2 = document.querySelector(".exclamation-button-2");
                         exclamationButton3 = document.querySelector(".exclamation-button-3");
@@ -1687,40 +1722,34 @@ function mystery() {
                                 displayNone(orbImg);
                         }
                         exclamationButton1.addEventListener("click", () => {
-                                let fire = document.querySelectorAll(".fire");
-                                destroyCards(fire, "fire");
+                                destroyCards(document.querySelectorAll(".fire"), "fire");
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton2.addEventListener("click", () => {
-                                let lightning = document.querySelectorAll(".lightning");
-                                destroyCards(lightning, "lightning");
+                                destroyCards(document.querySelectorAll(".lightning"), "lightning");
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton3.addEventListener("click", () => {
-                                let ice = document.querySelectorAll(".ice");
-                                destroyCards(ice, "ice");
+                                destroyCards(document.querySelectorAll(".ice"), "ice");
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton4.addEventListener("click", () => {
-                                let air = document.querySelectorAll(".air");
-                                destroyCards(air, "air");
+                                destroyCards(document.querySelectorAll(".air"), "air");
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton5.addEventListener("click", () => {
-                                let water = document.querySelectorAll(".water");
-                                destroyCards(water, "water");
+                                destroyCards(document.querySelectorAll(".water"), "water");
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton6.addEventListener("click", () => {
-                                let earth = document.querySelectorAll(".earth");
-                                destroyCards(earth, "earth");
+                                destroyCards(document.querySelectorAll(".earth"), "earth");
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(1);
                         break;
@@ -1733,8 +1762,7 @@ function mystery() {
                         exclamationButtonDiv.innerHTML = `
                         <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: lightgreen">Agree:</span> He doesn't look like he's taking no for an answer</button>
                         `;
-                        exclamationButton1 = document.querySelector(".exclamation-button-1");
-                        exclamationButton1.addEventListener("click", () => {
+                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 fxWizardCast.play();
                                 function wizardCast() {
                                         const randomNumber = createRandomNumber(1, 2);
@@ -1742,8 +1770,7 @@ function mystery() {
                                                 fxSpellSuccess.play();
                                                 exclamationButtonDiv.innerHTML = `
                                                 <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: lightgreen">Success:</span> His spell clones the card you choose</button>`;
-                                                exclamationButton1 = document.querySelector(".exclamation-button-1");
-                                                exclamationButton1.addEventListener("click", () => {
+                                                document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                                         let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
                                                         exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
                                                         const allCardsList = document.querySelector("#all-cards-list");
@@ -1776,8 +1803,7 @@ function mystery() {
                                         } else {
                                                 fxSpellFail.play();
                                                 exclamationButtonDiv.innerHTML = `<button class="exclamation-button-1"><span style="color: rgb(206, 83, 83)">Failure:</span> The card you choose disappears</button>`;
-                                                exclamationButton1 = document.querySelector(".exclamation-button-1");
-                                                exclamationButton1.addEventListener("click", () => {
+                                                document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                                         let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
                                                         exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
                                                         const allCardsList = document.querySelector("#all-cards-list");
@@ -1803,7 +1829,7 @@ function mystery() {
                                                                                                                 destroyedCardsArray = [];
                                                                                                                 destroyedCardsContainer.innerHTML = ``;
                                                                                                                 switchArea(map, exclamationContainer);
-                                                                                                                //switchMusic(allMusic[mapMusicIndex]);
+                                                                                                                switchMusic(allMusic[mapMusicIndex]);
                                                                                                         }
                                                                                                 });
                                                                                         }
@@ -1842,19 +1868,19 @@ function mystery() {
                         exclamationButton1.addEventListener("click", () => {
                                 aquatasBlessing = true;
                                 switchArea(map, exclamationDiv);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });    
                         exclamationButton2.addEventListener("click", () => {
                                 gaiaBlessing = true;
                                 switchArea(map, exclamationDiv);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(3);
                         break;
                 case 4:
                         createExclamation(`Gaia's Embrace`, "imgs/fae-forest-mystery.jpeg", "imgs/gaia.jpeg", "You see Terra's earth spirit gleefully skipping through the forest. A sudden rush of dirt and cedar pines floods your nose.", 
                                 `"So you're the one here to save all of Terra, huh?" she giggles. "Hmm...you don't really look like someone ready to save the world."`,
-                                `"And your spell book looks <em>awfully</em> empty! Take this tome so you can at least put up a good fight. I'd love to tell the plants about your valiant effort!" the sound of her laugh slowly fades as she skips away.`);
+                                `"And your spell book looks <em>awfully</em> empty! Take my spell so you can at least give them a good fight. I'll tell the plants about your valiant effort!" the sound of her laughter slowly fades as she skips away.`);
                         exclamationDiv = document.querySelector(".exclamation-div");
                         exclamationButtonDiv = document.querySelector(".exclamation-button-div");
                         exclamationButtonDiv.innerHTML = `
@@ -1881,18 +1907,18 @@ function mystery() {
                                 destroyedCardsContainer.innerHTML = ``;
                                 destroyedCardsArray = [];
                                 switchArea(map, exclamationDiv);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(4);
                         break;
                 case 5:
                         createExclamation(`Celestial Intervention`, "imgs/fae-forest-mystery.jpeg", "imgs/fae-mystery-spirit.jpeg", "You've set up camp for the night. You stare into the warm kindling of the campfire, resting your head on the frigid ground. Just before dozing off, you see the stars form into the shape of a woman.", 
-                                `"My power grows weaker each day. The betrayal of the spirits of life and death have affected even me. I'm afraid it may be too late."`,
+                                `"My power grows weaker each day now that the spirits of life and death left their rightful realms. I'm afraid it may be too late for me."`,
                                 `"I can use the last of my power to infuse a spell with each of the six elemental Terran spirits power." She says weakly. "Use it in your fight to restore balance to this realm...for the sake of us all."`);
                         exclamationDiv = document.querySelector(".exclamation-div");
                         exclamationButtonDiv = document.querySelector(".exclamation-button-div");
                         exclamationButtonDiv.innerHTML = `
-                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: rgb(123, 240, 238)">Attune with the stars:</span> Gain a celestially infused card.</button>
+                        <button class="exclamation-button-1""><span style="color: rgb(123, 240, 238)">Attune with the stars:</span> Gain a celestially infused card.</button>
                         <button class="exclamation-button-2"><span style="color: #81b14f">Stay Grounded:</span> Gain a potion card that increases block and thorns.</button>
                         `;
                         exclamationButton1 = document.querySelector(".exclamation-button-1");
@@ -1904,7 +1930,7 @@ function mystery() {
                         exclamationButton2.addEventListener("click", () => {
                                 addCardToDeck(35, 0, true);
                                 switchArea(map, exclamationDiv);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(5);
                         break;
@@ -1924,14 +1950,14 @@ function mystery() {
                                 addCardToDeck(51, 0, true);
                                 playerAether.innerText = parseFloat(playerAether.innerText) + 200;
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton2.addEventListener("click", () => {
                                 playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 10;
                                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 10;
                                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(6);
                         break;
@@ -1968,17 +1994,17 @@ function mystery() {
                                 document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                         addCardToDeck(41, 1, true);
                                         switchArea(map, exclamationContainer);
-                                        //switchMusic(allMusic[mapMusicIndex]);
+                                        switchMusic(allMusic[mapMusicIndex]);
                                 });
                                 document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                         switchArea(map, exclamationContainer);
-                                        //switchMusic(allMusic[mapMusicIndex]);
+                                        switchMusic(allMusic[mapMusicIndex]);
                                 });
                         });
                         exclamationButton2.addEventListener("click", () => {
                                 addCardToDeck(25, 0, true);
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(7);
                         break;
@@ -2008,7 +2034,7 @@ function mystery() {
                                                                         if (i.classList.contains(j)) {
                                                                                 addCardToDeck(j, 1, true);
                                                                                 switchArea(map, exclamationContainer);
-                                                                                //switchMusic(allMusic[mapMusicIndex]);
+                                                                                switchMusic(allMusic[mapMusicIndex]);
                                                                         }
                                                                 }
                                                                 for (let k = 0; k < cardReference.length; k++) {
@@ -2027,13 +2053,13 @@ function mystery() {
                                         if (allCurrentCards[i].classList.contains(28) && allCurrentCards[i].classList.contains("upgraded")) {
                                         addCardToDeck(24, 1, true);
                                         switchArea(map, exclamationContainer);
-                                        //switchMusic(allMusic[mapMusicIndex]);
+                                        switchMusic(allMusic[mapMusicIndex]);
                                         }
                                 }
                         });
                         document.querySelector(".exclamation-button-3").addEventListener("click", () => {
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(8);
                         break;
@@ -2051,7 +2077,7 @@ function mystery() {
                                 playerCurrentHealth.innerText -= 20;
                                 topBarHealthNumber.innerText -= 20;
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 slainVampire = true;
@@ -2072,11 +2098,11 @@ function mystery() {
                                         }
                                 });
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         document.querySelector(".exclamation-button-3").addEventListener("click", () => {
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                                 location.href = "#bottom-anchor";
                                 function hunter() {
                                         switchArea(exclamationContainer, map);
@@ -2101,13 +2127,13 @@ function mystery() {
                                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                                 playerAether.innerText -= 50;
                                                 switchArea(map, exclamationContainer);
-                                                //switchMusic(allMusic[mapMusicIndex]);
+                                                switchMusic(allMusic[mapMusicIndex]);
                                         });
                                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                                 playerCurrentHealth.innerText -= 10;
                                                 topBarHealthNumber.innerText -= 10;
                                                 switchArea(map, exclamationContainer);
-                                                //switchMusic(allMusic[mapMusicIndex]);
+                                                switchMusic(allMusic[mapMusicIndex]);
                                         });
                                 }
                                 setTimeout(hunter, 700);
@@ -2124,12 +2150,12 @@ function mystery() {
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 addCardToDeck(28, 1, true);
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 addCardToDeck(28, 0, true);
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(10);
                         break;
@@ -2219,7 +2245,7 @@ function mystery() {
                                                                 playerEmberNumber = 10;
                                                                 displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
                                                                 switchArea(map, exclamationContainer);
-                                                                //switchMusic(allMusic[mapMusicIndex]);
+                                                                switchMusic(allMusic[mapMusicIndex]);
                                                         });
                                                 }
                                         });
@@ -2279,7 +2305,7 @@ function mystery() {
                                                                                                         destroyedCardsArray = [];
                                                                                                         destroyedCardsContainer.innerHTML = ``;
                                                                                                         switchArea(map, exclamationContainer);
-                                                                                                        //switchMusic(allMusic[mapMusicIndex]);
+                                                                                                        switchMusic(allMusic[mapMusicIndex]);
                                                                                                 }
                                                                                         });
                                                                                 }
@@ -2319,7 +2345,7 @@ function mystery() {
                                                 playerEmberNumber = 7;
                                                 displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
                                                 switchArea(map, exclamationContainer);
-                                                //switchMusic(allMusic[mapMusicIndex]);
+                                                switchMusic(allMusic[mapMusicIndex]);
                                         });
                                 }
                         });
@@ -2349,7 +2375,7 @@ function mystery() {
                                         playerEmberNumber = 7;
                                         displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
                                         switchArea(map, exclamationContainer);
-                                        //switchMusic(allMusic[mapMusicIndex]);
+                                        switchMusic(allMusic[mapMusicIndex]);
                                 });
                         });
                         dontRepeatExclamation.push(11);
@@ -2365,32 +2391,454 @@ function mystery() {
                                         `"Even though it wasn't my fault, I want to restore peace to this land and stop the Luminia sisters. Please, take my boon. You'll need it."`);
                         }
                         document.querySelector(".exclamation-button-div").innerHTML = `
-                        <button class="exclamation-button-1" style="height: 45%"><span style="color: lightblue">Agree to heal Glacia:</span> Gain an empowered sanguine spring</button>
-                        <button class="exclamation-button-2" style="height: 45%"><span style="color: rgb(115, 215, 215)">Fuse with Tempia:</span> Gain a zephyr infusion</button>`
+                        <button class="exclamation-button-1" style="height: 45%"><span style="color: #f0fb3e">Accept Lectra's Boon:</span> Empower a lightning card</button>
+                        <button class="exclamation-button-2" style="height: 45%"><span style="color: #ba760f">Ember is still better sorry:</span> Gain essense of ember</button>`
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
-                                addCardToDeck(28, 1, true);
-                                switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
+                                document.querySelectorAll(".card").forEach((i) => {
+                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                if (i.classList.contains(j) && !i.classList.contains("upgraded") && cardsInformation[j].element.includes("lightning")) {
+                                                        createCard(j, document.getElementById("all-cards-list"), "card-reference upgraded", "card-text upgraded-text", 1);
+                                                }
+                                        }
+                                });
+                                document.querySelectorAll(".card-reference").forEach((i) => {
+                                        displayFlex(i);
+                                        i.addEventListener("click", () => {
+                                                for (let j = 0; j < cardsInformation.length; j++) {
+                                                        if (i.classList.contains(j)) {
+                                                                function removeCard(pile) {
+                                                                        pile.forEach((k) => {
+                                                                                if (k.classList.contains(j)) {
+                                                                                        let spliceCard = pile.splice(pile.indexOf(k), 1).pop();
+                                                                                        destroyedCardsArray.push(spliceCard);
+                                                                                        destroyedCardsContainer.appendChild(spliceCard);
+                                                                                        destroyedCardsArray = [];
+                                                                                        destroyedCardsContainer.innerHTML = ``;
+                                                                                        switchArea(map, exclamationContainer);
+                                                                                        switchMusic(allMusic[mapMusicIndex]);
+                                                                                }
+                                                                        });
+                                                                }
+                                                                removeCard(drawPileArray);
+                                                                removeCard(handArray);
+                                                                destroyedCardsArray = [];
+                                                                destroyedCardsContainer.innerHTML = ``;
+                                                                addCardToDeck(j, 1, true);
+                                                                for (let k = 0; k < cardReference.length; k++) {
+                                                                        destroyedCardsArray.push(cardReference[k]);
+                                                                        destroyedCardsContainer.appendChild(cardReference[k]);
+                                                                }
+                                                                destroyedCardsArray = [];
+                                                                destroyedCardsContainer.innerHTML = ``;
+                                                        }
+                                                }
+                                        });
+                                });
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
-                                addCardToDeck(28, 0, true);
+                                addCardToDeck(15, 0, true);
                                 switchArea(map, exclamationContainer);
-                                //switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(12);
                         break;
                 case 13:
-                        createExclamation("The Hooded Figure", "imgs/meadow-path.jpg", "imgs/rogue.jpg", "You strain to hear barely audible footsteps through the brush.", 
-                                `A hooded figure passes by with his head towards the ground. You aren't sure, but you think you see a smirk for a fraction of a second.`,
-                                `As you pass by, you bump into each other dropping both of your belongings. "My apologies" the gravely voice says. As you pick up your supplies you realize they have been swapped. You turn to confront the man, but he's nowhere to be found.`);
-                        exclamationDiv = document.querySelector(".exclamation-div");
-                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
-                        exclamationButtonDiv.innerHTML = `<button class="exclamation-button-1" style="margin-top: 100px;">Your entire starting hand has been swapped!</button>`
-                        exclamationButton1 = document.querySelector(".exclamation-button-1");
-                        exclamationButton1.addEventListener("click", () => {
+                        createExclamation("Glowing Crystal", "imgs/heaven-mystery.jpeg", "imgs/magical-relic.jpeg", `You've been leaping from island to island all day and feel like the sun should have gone down by now. "I wonder if the sun ever goes down here..." You think to yourself.`, 
+                                `As you lie down to rest for the "night" you see one on the islands to the right has what looks to be a glowing crystal infused with aether. It's a much further distance than the other islands though and you're not sure you can reach it.`,
+                                `"Maybe one of my spells can help get me across..."`);
+                        document.querySelector(".exclamation-button-div").innerHTML = `
+                        <button class="exclamation-button-1"><span style="color: lightgreen">Use spell:</span> Try a spell to reach the island</button>
+                        <button class="exclamation-button-2"><span style="color: pink">Rest:</span> Heal 10 health. You're not sure you have a spell for that</button>`
+                        function empowerCard() {
+                                exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
+                                document.querySelectorAll(".card").forEach((i) => {
+                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                if (i.classList.contains(j) && !i.classList.contains("upgraded")) {
+                                                        createCard(j, document.getElementById("all-cards-list"), "card-reference upgraded", "card-text upgraded-text", 1);
+                                                }
+                                        }
+                                });
+                                document.querySelectorAll(".card-reference").forEach((i) => {
+                                        displayFlex(i);
+                                        i.addEventListener("click", () => {
+                                                for (let j = 0; j < cardsInformation.length; j++) {
+                                                        if (i.classList.contains(j)) {
+                                                                addCardToDeck(j, 1, true);
+                                                                switchArea(map, exclamationContainer);
+                                                                switchMusic(allMusic[mapMusicIndex]);
+                                                        }
+                                                }
+                                                for (let k = 0; k < cardReference.length; k++) {
+                                                        destroyedCardsArray.push(cardReference[k]);
+                                                        destroyedCardsContainer.appendChild(cardReference[k]);
+                                                }
+                                                destroyedCardsArray = [];
+                                                destroyedCardsContainer.innerHTML = ``;
+                                        });
+                                });
+                        }
+                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
+                                document.querySelectorAll(".card").forEach(i => {
+                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                if (i.classList.contains(j)) {
+                                                        if (i.classList.contains("upgraded")) {
+                                                                createCard(j, document.getElementById("all-cards-list"), "card-reference", "card-text", 1);
+                                                        } else {
+                                                                createCard(j, document.getElementById("all-cards-list"), "card-reference", "card-text", 0);
+                                                        }
+                                                }
+                                        }
+                                });
+                                document.querySelectorAll(".card-reference").forEach((i) => {
+                                        displayFlex(i);
+                                        i.addEventListener("click", () => {
+                                                if (i.classList.contains(20) || i.classList.contains(22) || i.classList.contains(45) || i.classList.contains(47)) {
+                                                        fxIceNova.play();
+                                                        exclamationContainer.innerHTML = `
+                                                        <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
+                                                                <div class="exclamation-information-container">
+                                                                        <div style="width: 100%"><h1 class="exclamation-title">Ice Pathway</h1></div>
+                                                                        <div class="exclamation-event-img"><img src="imgs/magical-relic.jpeg"></div>
+                                                                        <div class="exclamation-text-button-div">
+                                                                                <div class="exclamation-text-div">
+                                                                                        <p class="exclamation-text">You launch an ice spell toward the island.<br><br>
+                                                                                        The air freezes around you creating a path of ice surrounding your feet. You think this gives you just enough extra space to make the leap.<br><br>
+                                                                                        You jump from the ice platform and safely land on the island with the glowing crystal. The aether from the crystal begins to drain and infuse itself onto one of your spells.</p>
+                                                                                </div>
+                                                                                <div class="exclamation-button-div">
+                                                                                        <button class="exclamation-button-1"><span style="color: rgb(190, 105, 209">Gain aether infusion:</span> Empower a card</button>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>`;
+                                                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                                                empowerCard();
+                                                        });
+                                                } else if (i.classList.contains(24) || i.classList.contains(25) || i.classList.contains(26)) {
+                                                        fxGust.play();
+                                                        exclamationContainer.innerHTML = `
+                                                        <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
+                                                                <div class="exclamation-information-container">
+                                                                        <div style="width: 100%"><h1 class="exclamation-title">Air Pull</h1></div>
+                                                                        <div class="exclamation-event-img"><img src="imgs/magical-relic.jpeg"></div>
+                                                                        <div class="exclamation-text-button-div">
+                                                                                <div class="exclamation-text-div">
+                                                                                        <p class="exclamation-text">You launch an air spell toward the island.<br><br>
+                                                                                        A gust of wind surrounds the bottom of the crystal uprooting it. You shift the winds toward you and pull the crystal to your island until it lands in front of you.<br><br>
+                                                                                        The aether from the crystal begins to drain and infuse itself onto one of your spells.</p>
+                                                                                </div>
+                                                                                <div class="exclamation-button-div">
+                                                                                        <button class="exclamation-button-1"><span style="color: rgb(190, 105, 209">Gain aether infusion:</span> Empower a card</button>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>`;
+                                                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                                                empowerCard();
+                                                        });
+                                                } else if (i.classList.contains(34)) {
+                                                        fxVineWhip.play();
+                                                        exclamationContainer.innerHTML = `
+                                                        <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
+                                                                <div class="exclamation-information-container">
+                                                                        <div style="width: 100%"><h1 class="exclamation-title">Vine Pull</h1></div>
+                                                                        <div class="exclamation-event-img"><img src="imgs/magical-relic.jpeg"></div>
+                                                                        <div class="exclamation-text-button-div">
+                                                                                <div class="exclamation-text-div">
+                                                                                        <p class="exclamation-text">You launch your vine whip toward the island.<br><br>
+                                                                                        The whip wraps around the crystal and uproots it. You pull the crystal to your island until it lands in front of you.<br><br>
+                                                                                        The aether from the crystal begins to drain and infuse itself onto one of your spells.</p>
+                                                                                </div>
+                                                                                <div class="exclamation-button-div">
+                                                                                        <button class="exclamation-button-1"><span style="color: rgb(190, 105, 209">Gain aether infusion:</span> Empower a card</button>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>`;
+                                                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                                                empowerCard();
+                                                        });
+                                                } else if (i.classList.contains(40)) {
+                                                        fxMagma.play();
+                                                        exclamationContainer.innerHTML = `
+                                                        <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
+                                                                <div class="exclamation-information-container">
+                                                                        <div style="width: 100%"><h1 class="exclamation-title">Magma Shot</h1></div>
+                                                                        <div class="exclamation-event-img"><img src="imgs/magical-relic.jpeg"></div>
+                                                                        <div class="exclamation-text-button-div">
+                                                                                <div class="exclamation-text-div">
+                                                                                        <p class="exclamation-text">You launch your magma blast toward the island.<br><br>
+                                                                                        Land begins to form in front of you in a direct path toward the crystal. You carefully step across until you safely reach the other island.<br><br>
+                                                                                        The aether from the crystal begins to drain and infuse itself onto one of your spells.</p>
+                                                                                </div>
+                                                                                <div class="exclamation-button-div">
+                                                                                        <button class="exclamation-button-1"><span style="color: rgb(190, 105, 209">Gain aether infusion:</span> Empower a card</button>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>`;
+                                                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                                                empowerCard();
+                                                        });
+                                                } else if (i.classList.contains(48)) {
+                                                        fxAirBubbles.play();
+                                                        exclamationContainer.innerHTML = `
+                                                        <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
+                                                                <div class="exclamation-information-container">
+                                                                        <div style="width: 100%"><h1 class="exclamation-title">Air Bubble</h1></div>
+                                                                        <div class="exclamation-event-img"><img src="imgs/magical-relic.jpeg"></div>
+                                                                        <div class="exclamation-text-button-div">
+                                                                                <div class="exclamation-text-div">
+                                                                                        <p class="exclamation-text">You create a giant air bubble in front of you.<br><br>
+                                                                                        You slowly step into the air bubble and gently push yourself toward the island. Just before reaching the island you look down and begin to panic. You can only see the incredibly long drop to the ground from here. The bubble pops.<br><br>
+                                                                                        You grab onto the ledge just before falling and pull yourself up. The aether from the crystal begins to drain and infuse itself onto one of your spells.</p>
+                                                                                </div>
+                                                                                <div class="exclamation-button-div">
+                                                                                        <button class="exclamation-button-1"><span style="color: rgb(190, 105, 209">Gain aether infusion:</span> Empower a card</button>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>`;
+                                                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                                                empowerCard();
+                                                        });
+                                                } else {
+                                                        fxSpellFail.play();
+                                                        exclamationContainer.innerHTML = `
+                                                        <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
+                                                                <div class="exclamation-information-container">
+                                                                        <div style="width: 100%"><h1 class="exclamation-title">Failure</h1></div>
+                                                                        <div class="exclamation-event-img"><img src="imgs/magical-relic.jpeg"></div>
+                                                                        <div class="exclamation-text-button-div">
+                                                                                <div class="exclamation-text-div">
+                                                                                        <p class="exclamation-text">You cast your spell.<br><br>
+                                                                                        Though the spell was successfully cast, it failed to create a way over to the island. "What a waste of mana..." you think to yourself.<br><br>
+                                                                                        You lie your head down and try to get some rest thinking about what that crystal could have been.</p>
+                                                                                </div>
+                                                                                <div class="exclamation-button-div">
+                                                                                        <button class="exclamation-button-1"><span style="color: lightgreen">Take a rest:</span> Recover 5 health</button>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>`;
+                                                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                                                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 5;
+                                                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 5;
+                                                                switchArea(map, exclamationContainer);
+                                                        });
+                                                }
+                                        });
+                                });
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("click", () => {
+                                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 10;
+                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
+                                switchMusic(allMusic[mapMusicIndex]);
+                        });
+                        dontRepeatExclamation.push(13);
+                        break;
+                case 14:
+                        createExclamation("A Worthy Hero", "imgs/heaven-mystery.jpeg", "imgs/god-statue.jpeg", "As you journey closer to your fate, you notice a beam of light glowing in the distance. Your curiousity gets the best of you as you charter a course toward it.", 
+                                `After a few hours, you finally reach the light. It's shining upon a heroic statue with large angelic wings. "Greetings hero." You jump as you realize the statue just spoke to you.`,
+                                `"I've seen your journey thus far" his gravelly voice booms. "and yet I cannot see what is in your heart. Tell me hero, what is the best way to dispatch a foe?"`);
+                        document.querySelector(".exclamation-button-div").innerHTML = `
+                        <button class="exclamation-button-1" style="height: 30%">Ensuring you always have an answer to whatever they throw at you</button>
+                        <button class="exclamation-button-2" style="height: 30%">Finding their weakness and expoiting it</button>
+                        <button class="exclamation-button-3" style="height: 30%">Overpowering them through brute force</button>`
+                        let [firePoints, lightningPoints, icePoints, airPoints, waterPoints, earthPoints] = [0, 0, 0, 0, 0, 0];
+                        let elementChoice;
+                        function getUpgrade() {
+                                function upgradeCard(element) {
+                                        let elementUpgradedTotal = [];
+                                        let randomCardArray = [];
+                                        document.querySelectorAll(".card").forEach(i => {
+                                                for (let j = 0; j < cardsInformation.length; j++) {
+                                                        if (i.classList.contains(j) && !i.classList.contains("upgraded") && (cardsInformation[j].element.includes(`${element}`) || element === "none")) {
+                                                                randomCardArray.push(j);
+                                                        } else if (i.classList.contains(j) && i.classList.contains("upgraded") && (cardsInformation[j].element.includes(`${element}`) || element === "none")) {
+                                                                elementUpgradedTotal.push(true);
+                                                        }
+                                                }
+                                        });
+                                        let randomCardUpgrade;
+                                        if (element === "none") {
+                                                randomCardUpgrade = createRandomNumber(0, document.querySelectorAll(`.card`).length - elementUpgradedTotal.length - 1);
+                                        } else {
+                                                randomCardUpgrade = createRandomNumber(0, document.querySelectorAll(`.${element}`).length - elementUpgradedTotal.length - 1);
+                                        }
+                                        function removeCard(pile) {
+                                                pile.forEach((k) => {
+                                                        if (k.classList.contains(randomCardArray[randomCardUpgrade])) {
+                                                                let spliceCard = pile.splice(pile.indexOf(k), 1).pop();
+                                                                destroyedCardsArray.push(spliceCard);
+                                                                destroyedCardsContainer.appendChild(spliceCard);
+                                                        }
+                                                });
+                                        }
+                                        removeCard(drawPileArray);
+                                        removeCard(handArray);
+                                        addCardToDeck(randomCardArray[randomCardUpgrade], 1, true);
+                                        destroyedCardsArray = [];
+                                        destroyedCardsContainer.innerHTML = ``;
+                                }
+                                if (firePoints > lightningPoints && firePoints > icePoints && firePoints > airPoints && firePoints > waterPoints && firePoints > earthPoints) {
+                                        elementChoice = "fire";
+                                        upgradeCard(elementChoice);
+                                } else if (lightningPoints > firePoints && lightningPoints > icePoints && lightningPoints > airPoints && lightningPoints > waterPoints && lightningPoints > earthPoints) {
+                                        elementChoice = "lightning";
+                                        upgradeCard(elementChoice);
+                                } else if (icePoints > firePoints && icePoints > lightningPoints && icePoints > airPoints && icePoints > waterPoints && icePoints > earthPoints) {
+                                        elementChoice = "ice";
+                                        upgradeCard(elementChoice);
+                                } else if (airPoints > firePoints && airPoints > lightningPoints && airPoints > icePoints && airPoints > waterPoints && airPoints > earthPoints) {
+                                        elementChoice = "air";
+                                        upgradeCard(elementChoice);
+                                } else if (waterPoints > firePoints && waterPoints > lightningPoints && waterPoints > icePoints && waterPoints > airPoints && waterPoints > earthPoints) {
+                                        elementChoice = "water";
+                                        upgradeCard(elementChoice);
+                                } else if (earthPoints > firePoints && earthPoints > lightningPoints && earthPoints > icePoints && earthPoints > airPoints && earthPoints > waterPoints) {
+                                        elementChoice = "earth";
+                                        upgradeCard(elementChoice);
+                                } else {
+                                        elementChoice = "none";
+                                        upgradeCard("none");
+                                        document.querySelector(".exclamation-text").innerHTML = `
+                                        <p class="exclamation-text">You feel the earth tremble as he considers your answers.<br><br>
+                                        "You are well balanced and don't align with any particular element."<br><br>
+                                        "I've empowered a random spell of yours. Now go." The statue seems to become inanimate again.</p>`
+                                        document.querySelector(".exclamation-button-div").innerHTML = `
+                                                <button class="exclamation-button-1">Thank him for the blessing and depart</button>`
+                                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                                switchArea(map, exclamationContainer);
+                                        });
+                                }
+                                if (elementChoice !== "none") {
+                                        document.querySelector(".exclamation-text").innerHTML = `
+                                        <p class="exclamation-text">You feel the earth tremble as he considers your answers.<br><br>
+                                        "You most align with the element ${elementChoice}"<br><br>
+                                        "I've empowered one of your ${elementChoice} spells. Now go." The statue seems to become inanimate again.</p>`
+                                        document.querySelector(".exclamation-button-div").innerHTML = `
+                                                <button class="exclamation-button-1">Thank him for the blessing and depart</button>`
+                                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                                switchArea(map, exclamationContainer);
+                                        });
+                                }
+                        }
+                        function questionThree() {
+                                document.querySelector(".exclamation-text").innerHTML = `
+                                        <p class="exclamation-text">"Yes...yes I can see the value in this."<br><br>
+                                        "I have one last question for you."<br><br>
+                                        "If someone was in need of aid, what would you do?"</p>`
+                                document.querySelector(".exclamation-button-div").innerHTML = `
+                                        <button class="exclamation-button-1">Carefully plan before jumping in to save them</button>
+                                        <button class="exclamation-button-2">Help them as long as you aren't put in danger</button>
+                                        <button class="exclamation-button-3">Your strong resolve gives you the courage to immediately jump in</button>`
+                                document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                        icePoints++;
+                                        airPoints++;
+                                        lightningPoints += 2;
+                                        firePoints--;
+                                        getUpgrade();
+                                });
+                                document.querySelector(".exclamation-button-2").addEventListener("click", () => {
+                                        airPoints += 2;
+                                        waterPoints--;
+                                        earthPoints -= 2;
+                                        getUpgrade();
+                                });
+                                document.querySelector(".exclamation-button-3").addEventListener("click", () => {
+                                        earthPoints += 2;
+                                        firePoints += 2;
+                                        icePoints--;
+                                        airPoints -= 2;
+                                        lightningPoints -= 2;
+                                        getUpgrade();
+                                });
+                        }
+                        function questionTwo() {
+                                document.querySelector(".exclamation-text").innerHTML = `
+                                        <p class="exclamation-text">The statue considers your answer.<br><br>
+                                        "I can see how that would be effective."<br><br>
+                                        "What then would you say you would like to gain most in this life?"</p>`  
+                                document.querySelector(".exclamation-button-div").innerHTML = `
+                                        <button class="exclamation-button-1" style="text-align: center; height: 50px;">Unremitted thorough wisdom</button>
+                                        <button class="exclamation-button-2" style="text-align: center; height: 50px;">Overwhelming power at any cost</button>
+                                        <button class="exclamation-button-3" style="text-align: center; height: 50px;">The ability to protect my loved ones</button>
+                                        <button class="exclamation-button-4" style="text-align: center; height: 50px;">Being known as a caring and loving person</button>
+                                        <button class="exclamation-button-5" style="text-align: center; height: 50px;">Having the freedom to do whatever pleases me</button>
+                                        <button class="exclamation-button-6" style="text-align: center; height: 50px;">Ability to intuitively anticipate what's coming next</button>`
+                                document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                        icePoints += 2;
+                                        lightningPoints++;
+                                        questionThree();
+                                });
+                                document.querySelector(".exclamation-button-2").addEventListener("click", () => {
+                                        firePoints += 2;
+                                        lightningPoints++;
+                                        earthPoints--;
+                                        waterPoints--;
+                                        icePoints--;
+                                        questionThree();
+                                });
+                                document.querySelector(".exclamation-button-3").addEventListener("click", () => {
+                                        earthPoints += 2;
+                                        waterPoints++;
+                                        firePoints--;
+                                        lightningPoints -= 2;
+                                        airPoints -= 2;
+                                        questionThree();
+                                });
+                                document.querySelector(".exclamation-button-4").addEventListener("click", () => {
+                                        waterPoints += 2;
+                                        lightningPoints--;
+                                        firePoints--;
+                                        airPoints--;
+                                        questionThree();
+                                });
+                                document.querySelector(".exclamation-button-5").addEventListener("click", () => {
+                                        airPoints += 2;
+                                        questionThree();
+                                });
+                                document.querySelector(".exclamation-button-6").addEventListener("click", () => {
+                                        lightningPoints += 2;
+                                        airPoints++;
+                                        icePoints--;
+                                        questionThree();
+                                });
+                        }
+                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                waterPoints++;
+                                earthPoints++;
+                                lightningPoints -= 2;
+                                airPoints--;
+                                questionTwo();
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("click", () => {
+                                icePoints++;
+                                airPoints++;
+                                firePoints--;
+                                questionTwo();
+                        });
+                        document.querySelector(".exclamation-button-3").addEventListener("click", () => {
+                                firePoints += 2;
+                                lightningPoints++;
+                                earthPoints -= 2;
+                                waterPoints -= 2;
+                                airPoints--;
+                                icePoints--;
+                                questionTwo();
+                        });
+                        dontRepeatExclamation.push(14);
+                        break;
+                case 15:
+                        createExclamation("Maluminia Entropy", "imgs/heaven-night.jpeg", "imgs/maluminia.jpeg", "After days of trekking with daylight constantly permeating the confines of this realm, darkness settles in. You suppose the days must be much longer here.", 
+                                `An angelic woman slowly descends from the sky adorned with armor as black as night. "I know you seek to stop my sister and I. You've come far and for that I'm impressed, but you shall join me in my realm soon."`,
+                                `Fast as lightning, she reaches for your spell book. Before you have a chance to react, she engulfs your spells in a dark liquid emenating from her hands. She swiftly flies away and is gone in a blink.`);
+                        document.querySelector(".exclamation-button-div").innerHTML = `<button class="exclamation-button-1">Your entire starting hand has been swapped!</button>`
+                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 // DESTROY OPENING HAND CARDS
-                                let allCards = document.querySelectorAll(".card");
-                                allCards.forEach((i) => {
+                                document.querySelectorAll(".card").forEach((i) => {
                                         for (let j = 0; j < 12; j++) {
                                                 if (i.classList.contains(j)) {
                                                         if (drawPileArray.includes(i)) {
@@ -2416,10 +2864,10 @@ function mystery() {
                                         addCardToDeck(newCard, 0, false);
                                         newOpeningHand.push(newCard);
                                 }
-                                switchArea(map, exclamationDiv);
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchArea(map, exclamationContainer);
+                                switchMusic(allMusic[mapMusicIndex]);
                         });
-                        dontRepeatExclamation.push(13);
+                        dontRepeatExclamation.push(15);
                         break;
         }
 }
@@ -2429,17 +2877,17 @@ function shop() {
         if (!shopMusicTrigger) {
                 if (faeForest) {
                         const shopMusic = new Audio("audio/shop-music.wav");
-                        //switchMusic(shopMusic);
+                        switchMusic(shopMusic);
                         shopMusicTrigger = true;
                         shopMusicIndex = allMusic.indexOf(shopMusic);
                 } else if (hallowwood) {
                         const hallowwoodShopMusic = new Audio("audio/hallowwood-shop-music.wav");
-                        //switchMusic(hallowwoodShopMusic);
+                        switchMusic(hallowwoodShopMusic);
                         shopMusicTrigger = true;
                         shopMusicIndex = allMusic.indexOf(hallowwoodShopMusic);
                 }
         }
-        //switchMusic(allMusic[shopMusicIndex]);
+        switchMusic(allMusic[shopMusicIndex]);
         const shopContainer = document.querySelector("#shop-container");
         displayNone(map);
         displayFlex(shopContainer);
@@ -2464,7 +2912,7 @@ function shop() {
         const leaveShopButton = document.querySelector("#leave-shop-button");
         leaveShopButton.addEventListener("click", () => {
                 switchArea(map, shopContainer);
-                //switchMusic(allMusic[mapMusicIndex]);
+                switchMusic(allMusic[mapMusicIndex]);
                 let shopCardsReference = document.querySelectorAll(".card-reference");
                 for (let k = 0; k < shopCardsReference.length; k++) {
                         destroyedCardsArray.push(shopCardsReference[k]);
@@ -2721,12 +3169,12 @@ function blacksmith() {
         if (!blacksmithMusicTrigger) {
                 const blacksmithMusic = new Audio("audio/blacksmith-music.wav");
                 const blacksmithAmbience =  new Audio("audio/blacksmith-ambience.wav");
-                //switchMusic(blacksmithMusic);
+                switchMusic(blacksmithMusic);
                 switchAmbience(blacksmithAmbience);
                 blacksmithMusicTrigger = true;
                 blacksmithMusicIndex = allMusic.indexOf(blacksmithMusic);
         }
-        //switchMusic(allMusic[blacksmithMusicIndex], allMusic[blacksmithMusicIndex + 1]);
+        switchMusic(allMusic[blacksmithMusicIndex], allMusic[blacksmithMusicIndex + 1]);
         const blacksmithContainer = document.querySelector("#blacksmith-container");
         displayFlex(blacksmithContainer);
         displayNone(map);
@@ -2745,9 +3193,9 @@ function blacksmith() {
                 blacksmithText.addEventListener("click", () => {
                         switchArea(map, blacksmithContainer);
                         if (faeForest) {
-                                //switchMusic(allMusic[mapMusicIndex]);
+                                switchMusic(allMusic[mapMusicIndex]);
                         } else if (hallowwood) {
-                                //switchMusic(allMusic[hallowoodMapMusicIndex]);
+                                switchMusic(allMusic[hallowoodMapMusicIndex]);
                         }
                 });
         } else {
@@ -2837,7 +3285,7 @@ function blacksmith() {
                                 clickCount++;
                                 if (clickCount === 2) {
                                         switchArea(map, blacksmithContainer);
-                                        //switchMusic(allMusic[mapMusicIndex]);
+                                        switchMusic(allMusic[mapMusicIndex]);
                                 }
                         });
                 });
@@ -4944,7 +5392,7 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
         console.log("2 currentCards[currentCards.length - 1 - potionCards.length]", currentCards[currentCards.length - 1 - potionCards.length]);
         switchArea(map, arena);
         if (switchMapMusic) {
-                //switchMusic(allMusic[mapMusicIndex]);
+                switchMusic(allMusic[mapMusicIndex]);
         }
         windsOfChange = 8;
 }        
@@ -5330,7 +5778,7 @@ function checkHealth() {
         if (parseFloat(playerCurrentHealth.innerText) <= 0)  {
                 const deathScreenContainer = document.querySelector("#death-screen-container");
                 const deathMusic = new Audio("audio/death-music.wav");
-                //switchMusic(deathMusic);
+                switchMusic(deathMusic);
                 arena.classList.add("dim");
                 //arena.style = "position: absolute";
                 displayFlex(deathScreenContainer);
@@ -6962,7 +7410,7 @@ function checkIfEnemyDead() {
                         const hallowwoodAmbience = new Audio("audio/hallowwood-ambience.wav");
                         switchAmbience(hallowwoodAmbience);
                         const hallowwoodMapMusic = new Audio("audio/hallowwood-map-music.wav");
-                        //switchMusic(hallowwoodMapMusic);
+                        switchMusic(hallowwoodMapMusic);
                         mapMusicIndex = allMusic.indexOf(hallowwoodMapMusic);
                         displayFlex(empowerContainer);
                         displayNone(arena);
@@ -7131,7 +7579,7 @@ function checkIfEnemyDead() {
                                 allMusic = [];
                                 allAmbience = [];
                                 const heavenMapMusic = new Audio("audio/heaven-map-music.wav");
-                                //switchMusic(heavenMapMusic);
+                                switchMusic(heavenMapMusic);
                                 mapMusicIndex = allMusic.indexOf(heavenMapMusic);
                                 const heavenAmbience = new Audio("audio/heaven-ambience.wav");
                                 switchAmbience(heavenAmbience);
@@ -7491,7 +7939,6 @@ function endTurn() {
 for (let i = 0; i < openingCards.length; i++) {
       addCardListeners(openingCards, i, i, 0);      
 }
-mystery();
 /*faeForest = false;
 hallowwood = false;
 bossDefeated[0] = true;
