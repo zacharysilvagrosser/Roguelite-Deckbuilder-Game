@@ -25,12 +25,8 @@ BUGS
 death screen brings you to fae forest arena??
 you can just define music when it's played then set its volume to the slider each time instead of an array trigger system
 chain lightning energized 4
-///3 elites in hallow inifinit loop
-///make vine sheath an ethereal card
-//frost fingers static charge doing 60 not 50 damage
-//elite margins go way right when attacking
-//thunder crash energize <br>
-//magma blast 100%% card text
+work on shop display
+Create skip card button
 
 */
 /*
@@ -1335,7 +1331,6 @@ function randomizeLocations() {
 }
 randomizeLocations();
 function matchEncounter(locationTile) {
-        console.log(locationTile.innerHTML);
         if (locationTile.innerHTML == `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`) {
                 mystery();
         } else if (locationTile.innerHTML == `<img class="gold-img" src="imgs/icons8-gold-bars-64.png" alt="Gold">`) {
@@ -1453,7 +1448,7 @@ function chooseLocationPath(location) {
                         removeGlow(location4Tiles3, location4Tiles4);
                         addGlow(location5Tiles3);
                         removeELL5();
-                        location5Tiles3.addEventListener("click", L6T1);
+                        location5Tiles3.addEventListener("click", L5T3);
                         matchEncounter(location4Tiles4);
                         break;
                 case "L5T1":
@@ -2895,6 +2890,11 @@ function shop() {
                         switchMusic(hallowwoodShopMusic);
                         shopMusicTrigger = true;
                         shopMusicIndex = allMusic.indexOf(hallowwoodShopMusic);
+                } else {
+                        const heavenShopMusic = new Audio("audio/heaven-shop-music.wav");
+                        switchMusic(heavenShopMusic);
+                        shopMusicTrigger = true;
+                        shopMusicIndex = allMusic.indexOf(heavenShopMusic);
                 }
         }
         switchMusic(allMusic[shopMusicIndex]);
@@ -2919,8 +2919,7 @@ function shop() {
                 document.getElementById("shopkeeper").style = "margin-top: 0rem";
         }
         // LEAVE SHOP BUTTON
-        const leaveShopButton = document.querySelector("#leave-shop-button");
-        leaveShopButton.addEventListener("click", () => {
+        document.querySelector("#leave-shop-button").addEventListener("click", () => {
                 switchArea(map, shopContainer);
                 switchMusic(allMusic[mapMusicIndex]);
                 let shopCardsReference = document.querySelectorAll(".card-reference");
@@ -2942,37 +2941,42 @@ function shop() {
                 }
         });*/
         // SHOP CARDS
-        const shopCardsDiv = document.querySelector("#shop-cards-div");
         let shopCards = [];
         let dontRepeatCard = [];
+        let cardCost = [];
         while (dontRepeatCard.length < 10) {
-                let newRandomNumber = createRandomNumber(12, cardsInformation.length - 2);
+                let newRandomNumber = createRandomNumber(12, cardsInformation.length - 3);
                 if (dontRepeatCard.includes(newRandomNumber)) {
-                        newRandomNumber = createRandomNumber(12, cardsInformation.length - 2);
+                        newRandomNumber = createRandomNumber(12, cardsInformation.length - 3);
                 } else {
                         dontRepeatCard.push(newRandomNumber);
                 }
         }
-        let index = 0;
-        dontRepeatCard.forEach((i) => {
-                shopCardsDiv.innerHTML += `<div class="shop-cards-cost-div"></div>`;
-                let shopCardsCostDiv = document.querySelectorAll(".shop-cards-cost-div");
-                createCard(i, shopCardsCostDiv[index], "card-reference", "card-text", 0);
-                shopCardsCostDiv[index].innerHTML += `<img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">50</p>`
+        for (let i = 0; i < dontRepeatCard.length; i++) {
+                if (cardsInformation[dontRepeatCard[i]].rarity === "common") {
+                        cardCost[i] = createRandomNumber(40, 50);
+                } else if (cardsInformation[dontRepeatCard[i]].rarity === "rare") {
+                        cardCost[i] = createRandomNumber(60, 70);
+                } else {
+                        cardCost[i] = createRandomNumber(80, 90);
+                }
+        }
+        for (let i = 0; i < dontRepeatCard.length; i++) {
+                document.querySelector("#shop-cards-div").innerHTML += `<div class="shop-cards-cost-div"></div>`;
+                createCard(dontRepeatCard[i], document.querySelectorAll(".shop-cards-cost-div")[i], "card-reference", "card-text", 0);
+                document.querySelectorAll(".shop-cards-cost-div")[i].innerHTML += `<img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">${cardCost[i]}</p>`
                 let shopCardsReference = document.querySelectorAll(".card-reference");
-                index++;
                 shopCards.push(shopCardsReference[shopCardsReference.length - 1]);
-        });
-        let shopCardsCostDiv = document.querySelectorAll(".shop-cards-cost-div");
+        }
         let shopCardsReference = document.querySelectorAll(".card-reference");
         for (let i = 0; i < shopCardsReference.length; i++) {
                 displayFlex(shopCardsReference[i]);
                 shopCardsReference[i].addEventListener("click", () => {       
                         for (let j = 0; j < cardsInformation.length; j++) {
-                                if (shopCardsReference[i].classList.contains(j) && playerAether.innerText >= 50) {
+                                if (shopCardsReference[i].classList.contains(j) && playerAether.innerText >= cardCost[i]) {
                                         addCardToDeck(j, 0, false);
-                                        playerAether.innerText -= 50;
-                                        displayNone(shopCardsCostDiv[i], map);
+                                        playerAether.innerText -= cardCost[i];
+                                        displayNone(document.querySelectorAll(".shop-cards-cost-div")[i], map);
                                 }
                         }
                 });
@@ -3186,12 +3190,12 @@ function blacksmith() {
                 blacksmithMusicIndex = allMusic.indexOf(blacksmithMusic);
                 blacksmithAmbienceIndex = allAmbience.indexOf(blacksmithAmbience);
         }
+
         switchMusic(allMusic[blacksmithMusicIndex]);
-        switchAmbience(blacksmithAmbience);
+        switchAmbience(allAmbience[blacksmithAmbienceIndex]);
         const blacksmithContainer = document.querySelector("#blacksmith-container");
         displayFlex(blacksmithContainer);
         displayNone(map);
-        const blacksmithText = document.querySelector("#blacksmith-text");
         blacksmithContainer.innerHTML = `
         <div id="blacksmith-dwarf-div">
                 <div id="blacksmith-text">
@@ -3202,19 +3206,21 @@ function blacksmith() {
         </div>`
         let clickCount = 0;
         if (playerAether.innerText < 75) {
-                blacksmithText.innerHTML = `<p>I can infuse your cards with aether to make them stronger if you've got the materials.<br><br>Come back when you have 75 aether for me.</p>`;
-                blacksmithText.addEventListener("click", () => {
+                document.querySelector("#blacksmith-text").innerHTML = `<p>I can infuse your cards with aether to make them stronger if you've got the materials.<br><br>Come back when you have 75 aether for me.</p>`;
+                document.querySelector("#blacksmith-text").addEventListener("click", () => {
                         switchArea(map, blacksmithContainer);
                         if (faeForest) {
                                 switchMusic(allMusic[mapMusicIndex]);
                         } else if (hallowwood) {
                                 switchMusic(allMusic[hallowoodMapMusicIndex]);
+                        } else {
+                                switchMusic(allMusic[heavenMapMusicIndex]);
                         }
                 });
         } else {
-                blacksmithText.addEventListener("click", () => {
-                        blacksmithText.innerHTML = `Leave Blacksmith<br>`;
-                        blacksmithText.style = `margin-top: 60px`;
+                document.querySelector("#blacksmith-text").addEventListener("click", () => {
+                        document.querySelector("#blacksmith-text").innerHTML = `Leave Blacksmith<br>`;
+                        document.querySelector("#blacksmith-text").style = `margin-top: 60px`;
                         blacksmithContainer.innerHTML += `<div id="blacksmith-cards-list"></div>`
                         const blacksmithCardsList = document.querySelector("#blacksmith-cards-list");
                         let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
@@ -3485,7 +3491,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(16);
+                                damageAllEnemies(2000);
                                 gainEnergize(2);
                                 fxChainLightning.play();
                         },
@@ -3758,24 +3764,32 @@ const cardsInformation = [
         },
         {
                 manaCost: [1, 1],
-                name: "Earth Barrier",
-                cardImg: "imgs/earth-barrier.jpeg",
-                cardText: ["Gain 12 block", "Gain 20 block"],
-                block: [12, 20],
-                chooseEnemyCard: false,
+                name: "Rock Smash",
+                cardImg: "imgs/rock-shot2.jpeg",
+                cardText: ["Deal 8 damage and gain block equal to the damage dealt", "Deal 12 damage and gain block equal to the damage dealt"],
+                damage: [8, 12],
+                chooseEnemyCard: true,
                 index: 10,
                 element: "earth",
                 action:
                 [ 
                         function() {
-                                spendMana(1);
-                                gainBlock(12);
-                                fxEarthBarrier.play();
+                                fxEarthShatter.play();
+                                function rockSmash() {
+                                        spendMana(1);
+                                        let damageDone = damageEnemy(8, chosenEnemy);
+                                        gainBlock(damageDone);
+                                }
+                                setTimeout(rockSmash, 820);
                         },
                         function() {
-                                spendMana(1);
-                                gainBlock(20);
-                                fxEarthBarrier.play();
+                                fxEarthShatter.play();
+                                function rockSmash() {
+                                        spendMana(1);
+                                        let damageDone = damageEnemy(12, chosenEnemy);
+                                        gainBlock(damageDone);
+                                }
+                                setTimeout(rockSmash, 820);
                         },
                 ]
         },
@@ -3783,8 +3797,8 @@ const cardsInformation = [
                 manaCost: [2, 2],
                 name: "Thorn Shield",
                 cardImg: "imgs/thorn-shield.jpeg",
-                cardText: ["Gain 16 block and 2 thorns", "Gain 16 block and 3 thorns"],
-                block: [16, 20],
+                cardText: ["Gain 16 block and 2 thorns", "Gain 24 block and 3 thorns"],
+                block: [16, 24],
                 thorns: [2, 3],
                 chooseEnemyCard: false,
                 index: 11,
@@ -3799,7 +3813,7 @@ const cardsInformation = [
                         },
                         function() {
                                 spendMana(2);
-                                gainBlock(16);
+                                gainBlock(24);
                                 gainThorns(3);
                                 fxThornShield.play();
                         }
@@ -3814,6 +3828,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 12,
                 element: "fire",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -3841,6 +3856,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 13,
                 element: "fire",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -3870,6 +3886,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 14,
                 element: "fire",
+                rarity: "rare",
                 action:
                 [
                         function() {
@@ -3892,6 +3909,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 15,
                 element: "fire",
+                rarity: "deific",
                 action:
                 [
                         function() {
@@ -3915,6 +3933,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 16,
                 element: "lightning",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -3940,6 +3959,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 17,
                 element: "lightning",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4016,6 +4036,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 18,
                 element: "lightning",
+                rarity: "rare",
                 action:
                 [
                         function() {
@@ -4040,6 +4061,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 19,
                 element: "lightning",
+                rarity: "deific",
                 action:
                 [
                         function() {
@@ -4063,6 +4085,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 20,
                 element: "ice",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4093,6 +4116,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 21,
                 element: "ice",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4122,6 +4146,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 22,
                 element: "ice",
+                rarity: "rare",
                 action:
                 [
                         function() {
@@ -4147,6 +4172,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 23,
                 element: "ice",
+                rarity: "deific",
                 action:
                 [
                         function() {
@@ -4170,6 +4196,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 24,
                 element: "air",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4200,6 +4227,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 25,
                 element: "air",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4235,6 +4263,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 26,
                 element: "air",
+                rarity: "rare",
                 action:
                 [
                         function() {
@@ -4313,6 +4342,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 27,
                 element: "air",
+                rarity: "deific",
                 action:
                 [
                         function() {
@@ -4336,6 +4366,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 28,
                 element: "water",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4368,6 +4399,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 29,
                 element: "water",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4396,6 +4428,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 30,
                 element: "water",
+                rarity: "rare",
                 action:
                 [
                         function() {
@@ -4423,6 +4456,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 31,
                 element: "water",
+                rarity: "deific",
                 action:
                 [
                         function() {
@@ -4446,6 +4480,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 32,
                 element: "earth",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4469,6 +4504,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 33,
                 element: "earth",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4492,6 +4528,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 34,
                 element: "earth",
+                rarity: "rare",
                 action:
                 [
                         function() {
@@ -4517,6 +4554,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 35,
                 element: "earth",
+                rarity: "deific",
                 action:
                 [
                         function() {
@@ -4543,6 +4581,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 36,
                 element: "fire-lightning fire lightning",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4577,6 +4616,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 37,
                 element: "fire-ice fire ice",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4606,6 +4646,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 38,
                 element: "fire-air fire air",
+                rarity: "common",
                 action: 
                 [
                         function() {
@@ -4645,6 +4686,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 39,
                 element: "fire-water fire water",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4674,6 +4716,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 40,
                 element: "fire-earth fire earth",
+                rarity: "common",
                 action: 
                 [
                         function() {
@@ -4700,6 +4743,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 41,
                 element: "lightning-ice lightning ice",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4732,6 +4776,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 42,
                 element: "lightning-air lightning air",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4781,6 +4826,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 43,
                 element: "lightning-water lightning water",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4808,6 +4854,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 44,
                 element: "lightning-earth lightning earth",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4832,6 +4879,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 45,
                 element: "ice-air ice air",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4865,6 +4913,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 46,
                 element: "ice-water ice water",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4913,6 +4962,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 47,
                 element: "ice-earth ice earth",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4964,6 +5014,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 48,
                 element: "air-water air water",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4992,6 +5043,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 49,
                 element: "air-earth air earth",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -5022,6 +5074,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 50,
                 element: "water-earth water earth",
+                rarity: "deific",
                 action:
                 [
                         function() {
@@ -5044,6 +5097,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 51,
                 element: "avarice",
+                rarity: "unique",
                 action:
                 [
                         function() {
@@ -5067,6 +5121,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 52,
                 element: "celestial",
+                rarity: "unique",
                 action:
                 [
                         function() {
@@ -5196,7 +5251,7 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
 }
 arena.classList.remove("darken");
 // LOOP TO CREATE OPENING 12 CARDS
-for (let i = 0; i < 33; i++) {
+for (let i = 0; i < 12; i++) {
         createCard(i, handContainer, "card", "card-text", 0);
 }
 // SET CARDS TO ACTIVATE WHEN CLICKED RATHER THAN WHEN ENEMY IS CLICKED
@@ -5394,33 +5449,54 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
         arena.classList.add("dim");
+        let commonCards = [];
+        let rareCards = [];
+        let deificCards = [];
+        cardsInformation.forEach(j => {
+                if (j.rarity === "common") {
+                        commonCards.push(j.index);
+                } else if (j.rarity === "rare") {
+                        rareCards.push(j.index);
+                } else if (j.rarity === "deific") {
+                        deificCards.push(j.index);
+                }
+        });
         // GET FOUR NEW RANDOM CARDS FROM ALL REFERENCE CARDS
-        let newRandomCard0 = createRandomNumber(12, cardsInformation.length - 3);
-        let newRandomCard1 = createRandomNumber(12, cardsInformation.length - 3);
-        let newRandomCard2 = createRandomNumber(12, cardsInformation.length - 3);
-        let newRandomCard3 = createRandomNumber(12, cardsInformation.length - 3);
-        console.log("BEFORE 0", newRandomCard0, "1", newRandomCard1, "2", newRandomCard2, "3", newRandomCard3);
-        // CHANGE CARDS IF THEY ARE THE SAME
-        while (newRandomCard0 == newRandomCard1 || newRandomCard0 == newRandomCard2 || newRandomCard0 == newRandomCard3 || 
-                newRandomCard1 == newRandomCard2 || newRandomCard1 == newRandomCard3 || newRandomCard2 == newRandomCard3) {
-                newRandomCard0 = createRandomNumber(12, cardsInformation.length - 2);
-                newRandomCard1 = createRandomNumber(12, cardsInformation.length - 2);
-                newRandomCard2 = createRandomNumber(12, cardsInformation.length - 2);
-                newRandomCard3 = createRandomNumber(12, cardsInformation.length - 2);
+        let newRandomCards = [];
+        for (let i = 0; i < 4; i++) {
+                let getCardRarity = createRandomNumber(0, 100);
+                if (getCardRarity <= 45) {
+                        let newCommonCard = commonCards[Math.floor(Math.random() * commonCards.length)];
+                        while (newRandomCards.includes(newCommonCard)) {
+                                newCommonCard = commonCards[Math.floor(Math.random() * commonCards.length)];
+                        }
+                        newRandomCards[i] = newCommonCard;
+                } else if (getCardRarity <= 80) {
+                        let newRareCard = rareCards[Math.floor(Math.random() * rareCards.length)];
+                        while (newRandomCards.includes(newRareCard)) {
+                                newRareCard = rareCards[Math.floor(Math.random() * rareCards.length)];
+                        }
+                        newRandomCards[i] = newRareCard;
+                } else {
+                        let newDeificCard = deificCards[Math.floor(Math.random() * deificCards.length)];
+                        while (newRandomCards.includes(newDeificCard)) {
+                                newDeificCard = deificCards[Math.floor(Math.random() * deificCards.length)];
+                        }
+                        newRandomCards[i] = newDeificCard;
+                }
         }
-        console.log("REPEAT 0", newRandomCard0, "1", newRandomCard1, "2", newRandomCard2, "3", newRandomCard3);
         // ADD REFERENCE CARDS TO CHOOSE NEW CARD DIV
-        createCard(newRandomCard0, chooseNewCardDiv, "card-reference", "card-text", 0);
-        createCard(newRandomCard1, chooseNewCardDiv, "card-reference", "card-text", 0);
-        createCard(newRandomCard2, chooseNewCardDiv, "card-reference", "card-text", 0);
-        createCard(newRandomCard3, chooseNewCardDiv, "card-reference", "card-text", 0);
+        createCard(newRandomCards[0], chooseNewCardDiv, "card-reference", "card-text", 0);
+        createCard(newRandomCards[1], chooseNewCardDiv, "card-reference", "card-text", 0);
+        createCard(newRandomCards[2], chooseNewCardDiv, "card-reference", "card-text", 0);
+        createCard(newRandomCards[3], chooseNewCardDiv, "card-reference", "card-text", 0);
         let newCardChoices = document.querySelectorAll(".card-reference");
         console.log("NEW CARD CHOICES", newCardChoices);
         displayFlex(chooseNewCardDiv, newCardChoices[0], newCardChoices[1], newCardChoices[2], newCardChoices[3]);
-        newCardChoices[0].addEventListener("click", () => {addCardToDeck(newRandomCard0, 0, true)});
-        newCardChoices[1].addEventListener("click", () => {addCardToDeck(newRandomCard1, 0, true)});
-        newCardChoices[2].addEventListener("click", () => {addCardToDeck(newRandomCard2, 0, true)});
-        newCardChoices[3].addEventListener("click", () => {addCardToDeck(newRandomCard3, 0, true)});
+        newCardChoices[0].addEventListener("click", () => {addCardToDeck(newRandomCards[0], 0, true)});
+        newCardChoices[1].addEventListener("click", () => {addCardToDeck(newRandomCards[1], 0, true)});
+        newCardChoices[2].addEventListener("click", () => {addCardToDeck(newRandomCards[2], 0, true)});
+        newCardChoices[3].addEventListener("click", () => {addCardToDeck(newRandomCards[3], 0, true)});
         return;
 }
 function displayCardPiles(container, pile) {
@@ -6134,7 +6210,7 @@ function updateCardText() {
                 [`Deal ${cardsInformation[7].damage[0]} damage to an enemy and inflict windswept`, `Deal ${cardsInformation[7].damage[1]} damage to an enemy and inflict windswept. Increase Winds of Wind damage by 3`],
                 [`Gain ${cardsInformation[8].blood[0]} Blood Siphon`, `Gain ${cardsInformation[8].blood[1]} Blood Siphon`],
                 [`Deal ${cardsInformation[9].damage[0]} damage and ${Math.floor(cardsInformation[9].damage[0] / 2)} damage to adjacent targets<br>Gain ${cardsInformation[9].regen[0]} regen for each target hit`, `Deal ${cardsInformation[9].damage[1]} damage and ${Math.floor(cardsInformation[9].damage[1] / 2)} damage to adjacent targets<br>Gain ${cardsInformation[9].regen[1]} regen and blood siphon for each target hit`],
-                [`Gain ${cardsInformation[10].block[0]} block`, `Gain ${cardsInformation[10].block[1]} block`],
+                [`Deal ${cardsInformation[10].damage[0]} damage and gain block equal to the damage dealt`, `Deal ${cardsInformation[10].damage[1]} damage and gain block equal to the damage dealt`],
                 [`Gain ${cardsInformation[11].block[0]} block and ${cardsInformation[11].thorns[0]} thorns`, `Gain ${cardsInformation[11].block[1]} block and ${cardsInformation[11].thorns[1]} thorns`],
                 [`Inflict ${cardsInformation[12].burn[0]} burn on all enemies and 3 on yourself`, `Inflict ${cardsInformation[12].burn[1]} burn on all enemies and 4 on yourself`],
                 [`Gain ${cardsInformation[13].burn[0]} burn and transfer your burn onto the enemy`, `Gain ${cardsInformation[13].burn[1]} burn and transfer your burn onto all enemies`],
