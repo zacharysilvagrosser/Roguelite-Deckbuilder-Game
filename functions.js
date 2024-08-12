@@ -1,32 +1,27 @@
-/* IDEAS
-Second Map Hell Third Heaven diablo
-Terra searching for two other gods destroying Terra. Search through hell then heaven after they ascend.
-Talent tree after each fight
-Implement animations
+/* IDEAS.
 when viewing inventory have a sorter based on element type
-! DIV
-Personality type quiz that grants buff based on answer of what you value most
-POTIONS: RED POTION: Increase burn by 1
-         BLUE POTION
-         COPY CARD
-
-Create point system for balancing value eg. 1 mana = 13 damage, frostbite = .5 mana etc.
-4 and 2 enemy encounters
 Light and Dark based class has a light and dark meter based on your actions throughout the game
 
 TO DO
 Settings gear when hitting escape for music and sound volume
 Probably change ice spear so you dont have to change card text
-crop orbs in paint. Hover over orb to see what your gift does; add soundfx
+crop orbs in paint. Hover over orb to see what your gift does
 ghost elite becomes opacity: .5 and unable to be attacked
-King Spookly becomes hallowwood encounter, replace starting hand becomes heaven encounter
+make elite relic screen after defeat
+rarity added on cards
 
 BUGS
 death screen brings you to fae forest arena??
-you can just define music when it's played then set its volume to the slider each time instead of an array trigger system
-chain lightning energized 4
-work on shop display
-Create skip card button
+all enemy divs that arent standard placement
+clicking card brings enemy margins back down
+blacksmitch x overflow
+storm form with windswept damage incorrect (storm form windswept static charge did 22 card said 20, text is adding storm form then doing windswept, damage is doing windswept then adding storm form
+spendmana cant be settimeout; tidal trident did .5 damage
+endturn set mana to 4 on a timeout
+make rock smash work with icy imbuement
+makeiceGift leech buffs from enemies that are frostbitten
+get rid of empowered sanguine spring when healing glacia
+ambience never changes between stages)
 
 */
 /*
@@ -39,7 +34,6 @@ const tutorial = document.querySelector("#tutorial");
 const options = document.querySelector("#options");
 const optionsContainer = document.querySelector("#options-container");
 const quitGame = document.querySelector("#quit-game");
-const bottomAnchor = document.querySelector("#bottom-anchor");
 const arrows = document.querySelectorAll(".arrow");
 const boardHeader = document.querySelector("#board-header");
 const musicSlider = document.querySelector("#music-slider");
@@ -76,10 +70,6 @@ function switchMusic() {
                 }
                 if (arguments[i] !== allMusic[mapMusicIndex]) {
                         arguments[i].currentTime = 0;
-                } else {
-                        if ((faeForest && (!waterGift || !earthGift)) || (hallowwood && (!iceGift || !airGift)) || (!faeForest && !hallowwood && (!fireGift || !lightningGift))) {
-                                location.href = "#bottom-anchor";
-                        }
                 }
                 arguments[i].play();
                 arguments[i].loop = true;
@@ -253,6 +243,14 @@ function switchArea(block, none) {
         displayNone(arena);
         displayBlock(block);
         displayNone(none);
+        if (block === map) {
+                switchMusic(allMusic[mapMusicIndex]);
+                console.log("mapswitch");
+                if ((faeForest && (!waterGift && !earthGift)) || (hallowwood && (!iceGift && !airGift)) || (!faeForest && !hallowwood && (!fireGift && !lightningGift))) {
+                        location.href = "#bottom-anchor";
+                        console.log("BOTTOM");
+                }
+        }
 }
 function removeELL1() {
                 location1Tiles1.removeEventListener("click", L1T1);
@@ -480,7 +478,7 @@ function resetArena() {
         }
         playerWindswept = false;
         playerFrostbite = false;
-        displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber, playerRegenImg, playerRegenNumber, playerThornsImg, playerThornsNumber,
+        displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber, playerEnergizeImg, playerEnergizeNumber, playerRegenImg, playerRegenNumber, playerThornsImg, playerThornsNumber,
                 playerBloodImg, playerBloodNumber, playerBlockImg, playerBlockNumber);
                 if (playerEmberNumber > 0) {
                         displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
@@ -496,6 +494,7 @@ function resetArena() {
         if (thunderTalisman) {
                 currentMana.innerText = parseFloat(currentMana.innerText) + 2;
         }
+        playerEnergizeNumber.innerText = 0;
         playerThornsNumber.innerText = 0;
         playerBlockNumber.innerText = 0;
         playerRegenNumber.innerText = 0;
@@ -504,7 +503,6 @@ function resetArena() {
         let potionLength = potionCards.length;
         for (let i = 0; i < potionLength; i++) {
                 let spliceCard = potionCards.pop();
-                console.log(spliceCard);
                 displayFlex(spliceCard);
                 drawPileArray.push(spliceCard);
                 handContainer.appendChild(spliceCard);
@@ -718,6 +716,11 @@ function goldEncounter() {
                 randomGoldEncounterNumber = createRandomNumber(4, 6);
                 while (dontRepeatGoldEncounter.includes(randomGoldEncounterNumber)) {
                         randomGoldEncounterNumber = createRandomNumber(4, 6);
+                }
+        } else {
+                randomGoldEncounterNumber = createRandomNumber(7, 9);
+                while (dontRepeatGoldEncounter.includes(randomGoldEncounterNumber)) {
+                        randomGoldEncounterNumber = createRandomNumber(7, 9);
                 }
         }
         switchArea(arena, map);
@@ -992,7 +995,7 @@ function eliteEncounter() {
                 case 1:
                         createEliteEnemy("Fae Fox", 9 , 1);
                         document.querySelector(".enemy-img").style = "width: 500px";
-                        document.querySelector(".enemy-div").style = "position: absolute; left: 1rem; bottom: 9rem";
+                        //document.querySelector(".enemy-div").style = "position: absolute; left: 1rem; bottom: 9rem";
                         break;
                 case 2:
                         createEliteEnemy("Dryad", 10, 2);
@@ -1009,32 +1012,32 @@ function eliteEncounter() {
                 case 4:
                         createEliteEnemy("Reaper", 23, 4);
                         document.querySelector(".enemy-img").style = "width: 550px";
-                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 7rem";
+                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 7rem";
                         break;
                 case 5:
                         createEliteEnemy("Spectre", 24, 5);
                         document.querySelector(".enemy-img").style = "width: 510px";
-                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
                 case 6:
                         createEliteEnemy("Gargoyle", 25, 6);
                         document.querySelector(".enemy-img").style = "width: 450px";
-                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
                 case 7:
                         createEliteEnemy("Zeus", 42, 7);
                         document.querySelector(".enemy-img").style = "width: 450px";
-                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
                 case 8:
                         createEliteEnemy("Odin", 43, 8);
                         document.querySelector(".enemy-img").style = "width: 450px";
-                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
                 case 9:
                         createEliteEnemy("Jesus", 44, 9);
                         document.querySelector(".enemy-img").style = "width: 450px";
-                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
         }
 }
@@ -1086,7 +1089,7 @@ function boss() {
                         fxGiantFootsteps.play();
                         fxGiantGroans.play();
                         fxGiantGroans.loop = true;
-                        document.querySelector(".enemy-img").style = "width: 600px; margin-left: -8rem";
+                        document.querySelector(".enemy-img").style = "width: 540px; margin-left: -8rem";
                         document.querySelector(".enemy-health-bar").style = "margin-top: -2.5rem";
                         document.querySelector(".enemy-div").style = "margin-bottom: -2rem";
                         document.querySelector(".enemy-action-div").style = "position: absolute; bottom: 45.5rem";
@@ -1620,7 +1623,7 @@ mysteryReturn = [false, false, false];
 let playerEmberNumber = 0;
 function mystery() {
         switchArea(exclamationContainer, map);
-        if (exclamationMusicTrigger === false) {
+        if (!exclamationMusicTrigger) {
                 if (faeForest) {
                         const exclamationMusic = new Audio("audio/exclamation-music.wav");
                         switchMusic(exclamationMusic);
@@ -1637,6 +1640,8 @@ function mystery() {
                         exclamationMusicTrigger = true;
                         exclamationMusicIndex = allMusic.indexOf(heavenMysteryMusic);
                 }
+        } else {
+                switchMusic(allMusic[exclamationMusicIndex]);
         }
         let randomExclamationNumber;
         if (faeForest) {
@@ -1729,32 +1734,26 @@ function mystery() {
                         exclamationButton1.addEventListener("click", () => {
                                 destroyCards(document.querySelectorAll(".fire"), "fire");
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton2.addEventListener("click", () => {
                                 destroyCards(document.querySelectorAll(".lightning"), "lightning");
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton3.addEventListener("click", () => {
                                 destroyCards(document.querySelectorAll(".ice"), "ice");
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton4.addEventListener("click", () => {
                                 destroyCards(document.querySelectorAll(".air"), "air");
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton5.addEventListener("click", () => {
                                 destroyCards(document.querySelectorAll(".water"), "water");
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton6.addEventListener("click", () => {
                                 destroyCards(document.querySelectorAll(".earth"), "earth");
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(1);
                         break;
@@ -1834,7 +1833,6 @@ function mystery() {
                                                                                                                 destroyedCardsArray = [];
                                                                                                                 destroyedCardsContainer.innerHTML = ``;
                                                                                                                 switchArea(map, exclamationContainer);
-                                                                                                                switchMusic(allMusic[mapMusicIndex]);
                                                                                                         }
                                                                                                 });
                                                                                         }
@@ -1866,19 +1864,16 @@ function mystery() {
                         exclamationButtonDiv = document.querySelector(".exclamation-button-div");
                         exclamationButtonDiv.innerHTML = `
                         <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: #74ccf4">Aquatas' Blessing:</span> Gain 8 regeneration next fight.</button>
-                        <button class="exclamation-button-2"><span style="color: #81b14f">Gaia's Blessing:</span> Gain 6 thorns next fight.</button>
-                        `;
+                        <button class="exclamation-button-2"><span style="color: #81b14f">Gaia's Blessing:</span> Gain 6 thorns next fight.</button>`;
                         exclamationButton1 = document.querySelector(".exclamation-button-1");
                         exclamationButton2 = document.querySelector(".exclamation-button-2");
                         exclamationButton1.addEventListener("click", () => {
                                 aquatasBlessing = true;
                                 switchArea(map, exclamationDiv);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });    
                         exclamationButton2.addEventListener("click", () => {
                                 gaiaBlessing = true;
                                 switchArea(map, exclamationDiv);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(3);
                         break;
@@ -1889,13 +1884,13 @@ function mystery() {
                         exclamationDiv = document.querySelector(".exclamation-div");
                         exclamationButtonDiv = document.querySelector(".exclamation-button-div");
                         exclamationButtonDiv.innerHTML = `
-                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: #81b14f">Let Gaia embrace you:</span> Gain a card that generates 5 block and healing each turn.</button>
-                        <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83">Refuse:</span> Lose all of your earth cards.</button>
+                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: #81b14f">Let Gaia embrace you:</span> Gain Gaia's Embrace spell</button>
+                        <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83">Refuse:</span> Lose all of your earth cards</button>
                         `;
                         exclamationButton1 = document.querySelector(".exclamation-button-1");
                         exclamationButton2 = document.querySelector(".exclamation-button-2");
                         exclamationButton1.addEventListener("click", () => {
-                                addCardToDeck(50, 1, true);
+                                addCardToDeck(35, 1, true);
                                 switchArea(map, exclamationDiv);
                         });    
                         exclamationButton2.addEventListener("click", () => {
@@ -1912,7 +1907,6 @@ function mystery() {
                                 destroyedCardsContainer.innerHTML = ``;
                                 destroyedCardsArray = [];
                                 switchArea(map, exclamationDiv);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(4);
                         break;
@@ -1923,8 +1917,8 @@ function mystery() {
                         exclamationDiv = document.querySelector(".exclamation-div");
                         exclamationButtonDiv = document.querySelector(".exclamation-button-div");
                         exclamationButtonDiv.innerHTML = `
-                        <button class="exclamation-button-1""><span style="color: rgb(123, 240, 238)">Attune with the stars:</span> Gain a celestially infused card.</button>
-                        <button class="exclamation-button-2"><span style="color: #81b14f">Stay Grounded:</span> Gain a potion card that increases block and thorns.</button>
+                        <button class="exclamation-button-1""><span style="color: rgb(123, 240, 238)">Attune with the stars:</span> Gain a celestially infused card</button>
+                        <button class="exclamation-button-2"><span style="color: #81b14f">Stay Grounded:</span> Gain Terra's Blessing spell</button>
                         `;
                         exclamationButton1 = document.querySelector(".exclamation-button-1");
                         exclamationButton2 = document.querySelector(".exclamation-button-2");
@@ -1933,9 +1927,8 @@ function mystery() {
                                 switchArea(map, exclamationDiv);
                         });    
                         exclamationButton2.addEventListener("click", () => {
-                                addCardToDeck(35, 0, true);
+                                addCardToDeck(50, 0, true);
                                 switchArea(map, exclamationDiv);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(5);
                         break;
@@ -1955,14 +1948,12 @@ function mystery() {
                                 addCardToDeck(51, 0, true);
                                 playerAether.innerText = parseFloat(playerAether.innerText) + 200;
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         exclamationButton2.addEventListener("click", () => {
                                 playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 10;
                                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 10;
                                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(6);
                         break;
@@ -1999,17 +1990,14 @@ function mystery() {
                                 document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                         addCardToDeck(41, 1, true);
                                         switchArea(map, exclamationContainer);
-                                        switchMusic(allMusic[mapMusicIndex]);
                                 });
                                 document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                         switchArea(map, exclamationContainer);
-                                        switchMusic(allMusic[mapMusicIndex]);
                                 });
                         });
                         exclamationButton2.addEventListener("click", () => {
                                 addCardToDeck(25, 0, true);
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(7);
                         break;
@@ -2039,7 +2027,6 @@ function mystery() {
                                                                         if (i.classList.contains(j)) {
                                                                                 addCardToDeck(j, 1, true);
                                                                                 switchArea(map, exclamationContainer);
-                                                                                switchMusic(allMusic[mapMusicIndex]);
                                                                         }
                                                                 }
                                                                 for (let k = 0; k < cardReference.length; k++) {
@@ -2058,13 +2045,11 @@ function mystery() {
                                         if (allCurrentCards[i].classList.contains(28) && allCurrentCards[i].classList.contains("upgraded")) {
                                         addCardToDeck(24, 1, true);
                                         switchArea(map, exclamationContainer);
-                                        switchMusic(allMusic[mapMusicIndex]);
                                         }
                                 }
                         });
                         document.querySelector(".exclamation-button-3").addEventListener("click", () => {
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(8);
                         break;
@@ -2082,7 +2067,6 @@ function mystery() {
                                 playerCurrentHealth.innerText -= 20;
                                 topBarHealthNumber.innerText -= 20;
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 slainVampire = true;
@@ -2103,12 +2087,9 @@ function mystery() {
                                         }
                                 });
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         document.querySelector(".exclamation-button-3").addEventListener("click", () => {
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
-                                location.href = "#bottom-anchor";
                                 function hunter() {
                                         switchArea(exclamationContainer, map);
                                         exclamationContainer.innerHTML = `
@@ -2132,13 +2113,11 @@ function mystery() {
                                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                                 playerAether.innerText -= 50;
                                                 switchArea(map, exclamationContainer);
-                                                switchMusic(allMusic[mapMusicIndex]);
                                         });
                                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                                 playerCurrentHealth.innerText -= 10;
                                                 topBarHealthNumber.innerText -= 10;
                                                 switchArea(map, exclamationContainer);
-                                                switchMusic(allMusic[mapMusicIndex]);
                                         });
                                 }
                                 setTimeout(hunter, 700);
@@ -2155,12 +2134,10 @@ function mystery() {
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 addCardToDeck(28, 1, true);
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 addCardToDeck(28, 0, true);
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(10);
                         break;
@@ -2250,7 +2227,6 @@ function mystery() {
                                                                 playerEmberNumber = 10;
                                                                 displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
                                                                 switchArea(map, exclamationContainer);
-                                                                switchMusic(allMusic[mapMusicIndex]);
                                                         });
                                                 }
                                         });
@@ -2310,7 +2286,6 @@ function mystery() {
                                                                                                         destroyedCardsArray = [];
                                                                                                         destroyedCardsContainer.innerHTML = ``;
                                                                                                         switchArea(map, exclamationContainer);
-                                                                                                        switchMusic(allMusic[mapMusicIndex]);
                                                                                                 }
                                                                                         });
                                                                                 }
@@ -2350,7 +2325,6 @@ function mystery() {
                                                 playerEmberNumber = 7;
                                                 displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
                                                 switchArea(map, exclamationContainer);
-                                                switchMusic(allMusic[mapMusicIndex]);
                                         });
                                 }
                         });
@@ -2380,7 +2354,6 @@ function mystery() {
                                         playerEmberNumber = 7;
                                         displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
                                         switchArea(map, exclamationContainer);
-                                        switchMusic(allMusic[mapMusicIndex]);
                                 });
                         });
                         dontRepeatExclamation.push(11);
@@ -2421,7 +2394,6 @@ function mystery() {
                                                                                         destroyedCardsArray = [];
                                                                                         destroyedCardsContainer.innerHTML = ``;
                                                                                         switchArea(map, exclamationContainer);
-                                                                                        switchMusic(allMusic[mapMusicIndex]);
                                                                                 }
                                                                         });
                                                                 }
@@ -2470,7 +2442,6 @@ function mystery() {
                                                         if (i.classList.contains(j)) {
                                                                 addCardToDeck(j, 1, true);
                                                                 switchArea(map, exclamationContainer);
-                                                                switchMusic(allMusic[mapMusicIndex]);
                                                         }
                                                 }
                                                 for (let k = 0; k < cardReference.length; k++) {
@@ -2639,7 +2610,6 @@ function mystery() {
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 10;
                                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(13);
                         break;
@@ -2870,7 +2840,6 @@ function mystery() {
                                         newOpeningHand.push(newCard);
                                 }
                                 switchArea(map, exclamationContainer);
-                                switchMusic(allMusic[mapMusicIndex]);
                         });
                         dontRepeatExclamation.push(15);
                         break;
@@ -2896,8 +2865,9 @@ function shop() {
                         shopMusicTrigger = true;
                         shopMusicIndex = allMusic.indexOf(heavenShopMusic);
                 }
+        } else {
+                switchMusic(allMusic[shopMusicIndex]);
         }
-        switchMusic(allMusic[shopMusicIndex]);
         const shopContainer = document.querySelector("#shop-container");
         displayNone(map);
         displayFlex(shopContainer);
@@ -2923,7 +2893,6 @@ function shop() {
         // LEAVE SHOP BUTTON
         document.querySelector("#leave-shop-button").addEventListener("click", () => {
                 switchArea(map, shopContainer);
-                switchMusic(allMusic[mapMusicIndex]);
                 let shopCardsReference = document.querySelectorAll(".card-reference");
                 for (let k = 0; k < shopCardsReference.length; k++) {
                         destroyedCardsArray.push(shopCardsReference[k]);
@@ -2978,7 +2947,7 @@ function shop() {
                                 if (shopCardsReference[i].classList.contains(j) && playerAether.innerText >= cardCost[i]) {
                                         addCardToDeck(j, 0, false);
                                         playerAether.innerText -= cardCost[i];
-                                        displayNone(document.querySelectorAll(".shop-cards-cost-div")[i], map);
+                                        displayNone(document.querySelectorAll(".shop-cards-cost-div")[i]);
                                 }
                         }
                 });
@@ -3185,16 +3154,14 @@ let blacksmithAmbienceIndex;
 function blacksmith() {
         if (!blacksmithMusicTrigger) {
                 const blacksmithMusic = new Audio("audio/blacksmith-music.wav");
-                const blacksmithAmbience =  new Audio("audio/blacksmith-ambience.wav");
                 switchMusic(blacksmithMusic);
-                switchAmbience(blacksmithAmbience);
                 blacksmithMusicTrigger = true;
                 blacksmithMusicIndex = allMusic.indexOf(blacksmithMusic);
-                blacksmithAmbienceIndex = allAmbience.indexOf(blacksmithAmbience);
         }
-
         switchMusic(allMusic[blacksmithMusicIndex]);
-        switchAmbience(allAmbience[blacksmithAmbienceIndex]);
+        const blacksmithAmbience =  new Audio("audio/blacksmith-ambience.wav");
+        blacksmithAmbience.play();
+        blacksmithAmbience.volume = ambienceSlider.value;
         const blacksmithContainer = document.querySelector("#blacksmith-container");
         displayFlex(blacksmithContainer);
         displayNone(map);
@@ -3212,11 +3179,16 @@ function blacksmith() {
                 document.querySelector("#blacksmith-text").addEventListener("click", () => {
                         switchArea(map, blacksmithContainer);
                         if (faeForest) {
-                                switchMusic(allMusic[mapMusicIndex]);
+                                blacksmithAmbience.pause();
+                                blacksmithAmbience.currentTime = 0;
                         } else if (hallowwood) {
                                 switchMusic(allMusic[hallowoodMapMusicIndex]);
+                                blacksmithAmbience.pause();
+                                blacksmithAmbience.currentTime = 0;
                         } else {
                                 switchMusic(allMusic[heavenMapMusicIndex]);
+                                blacksmithAmbience.pause();
+                                blacksmithAmbience.currentTime = 0;
                         }
                 });
         } else {
@@ -3306,7 +3278,8 @@ function blacksmith() {
                                 clickCount++;
                                 if (clickCount === 2) {
                                         switchArea(map, blacksmithContainer);
-                                        switchMusic(allMusic[mapMusicIndex]);
+                                        blacksmithAmbience.pause();
+                                        blacksmithAmbience.currentTime = 0;
                                 }
                         });
                 });
@@ -3494,7 +3467,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(2000);
+                                damageAllEnemies(20);
                                 gainEnergize(2);
                                 fxChainLightning.play();
                         },
@@ -3725,7 +3698,7 @@ const cardsInformation = [
                                                                 gainRegen(1);
                                                         }
                                                 } else {
-                                                        if (!enemyIsDead[1]) {
+                                                        if (!enemyIsDead[1] && numberOfEnemies !== 1) {
                                                                 damageEnemy((tidalDamage) / 2, 1);
                                                                 gainRegen(1);
                                                         }
@@ -4081,8 +4054,8 @@ const cardsInformation = [
         },
         {
                 manaCost: [2, 2],
-                name: "Ice Nova",
-                cardImg: "imgs/frost-nova.jpeg",
+                name: "Snow Nova",
+                cardImg: "imgs/snow-nova2.jpeg",
                 cardText: ["Deal 14 damage to all enemies and inflict frostbite on everyone including yourself", "Deal 20 damage to all enemies and inflict frostbite on everyone including yourself"],
                 damage: [14, 20],
                 chooseEnemyCard: false,
@@ -4273,7 +4246,7 @@ const cardsInformation = [
                                 spendMana(2);
                                 let drawCard = false;
                                 let discardCard = false;
-                                let windCards = document.querySelectorAll(".24");
+                                let windCards = document.getElementsByClassName("24");
                                 //console.log("BEFORE\nDRAW: ", drawPileArray);
                                 //console.log("BEFORE\nHAND: ", handArray);
                                 //console.log("BEFORE\nDISCARD: ", discardPileArray);
@@ -4305,7 +4278,7 @@ const cardsInformation = [
                                 spendMana(2);
                                 let drawCard = false;
                                 let discardCard = false;
-                                let windCards = document.querySelectorAll(".24");
+                                let windCards = document.getElementsByClassName("24");
                                 //console.log("BEFORE\nDRAW: ", drawPileArray);
                                 //console.log("BEFORE\nHAND: ", handArray);
                                 //console.log("BEFORE\nDISCARD: ", discardPileArray);
@@ -5346,7 +5319,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                         addToDiscard();
                         checkHealth();
                         handContainer.style = `width: ${handArray.length- 1}9.5%`;
-                        if (airBubble.length > 0) {
+                        if (airBubble.length > 0 && !playerFrostbite) {
                                 playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
                                 displayBlock(playerRegenImg, playerRegenNumber);
                         }
@@ -5426,7 +5399,7 @@ function removeCardClicked() {
                 }
         }
 }
-function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
+function addCardToDeck(newRandomCard, upgradeIndex, switchToMap) {
         console.log("CREATING CARD NEW RANDOM CARD", newRandomCard);
         chooseNewCardDiv.innerHTML = ``;
         displayNone(chooseNewCardContainer);
@@ -5443,9 +5416,8 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
         handContainer.appendChild(currentCards[currentCards.length - 1 - potionCards.length]);
         drawPileArray.push(currentCards[currentCards.length - 1 - potionCards.length]);
         console.log("2 currentCards[currentCards.length - 1 - potionCards.length]", currentCards[currentCards.length - 1 - potionCards.length]);
-        switchArea(map, arena);
-        if (switchMapMusic) {
-                switchMusic(allMusic[mapMusicIndex]);
+        if (switchToMap) {
+                switchArea(map, arena);
         }
         windsOfChange = 8;
 }        
@@ -5455,7 +5427,6 @@ function getRandomNewCards () {
                 chooseNewCardDiv.innerHTML = ``;
                 displayNone(chooseNewCardContainer);
                 switchArea(map, arena);
-                switchMusic(allMusic[mapMusicIndex]);
         });
         arena.classList.add("dim");
         let commonCards = [];
@@ -5474,13 +5445,13 @@ function getRandomNewCards () {
         let newRandomCards = [];
         for (let i = 0; i < 4; i++) {
                 let getCardRarity = createRandomNumber(0, 100);
-                if (getCardRarity <= 45) {
+                if (getCardRarity <= 60) {
                         let newCommonCard = commonCards[Math.floor(Math.random() * commonCards.length)];
                         while (newRandomCards.includes(newCommonCard)) {
                                 newCommonCard = commonCards[Math.floor(Math.random() * commonCards.length)];
                         }
                         newRandomCards[i] = newCommonCard;
-                } else if (getCardRarity <= 80) {
+                } else if (getCardRarity <= 85) {
                         let newRareCard = rareCards[Math.floor(Math.random() * rareCards.length)];
                         while (newRandomCards.includes(newRareCard)) {
                                 newRareCard = rareCards[Math.floor(Math.random() * rareCards.length)];
@@ -7017,7 +6988,7 @@ function createEnemy(name) {
                         enemyDiv[enemyDiv.length - 1].style = "animation: 2s ease-out 0s 1 slideInTop";
                         break;
                 case "Fairy":
-                        enemyDiv[enemyDiv.length - 1].style = "animation: 2.3s ease-out 0s 1 slideInTop; margin-bottom: 2rem;";
+                        enemyDiv[enemyDiv.length - 1].style = "animation: 2.3s ease-out 0s 1 slideInTop; margin-bottom: 5rem;";
                         break;
                 case "Mushroom":
                         enemyImg[enemyDiv.length - 1].style = "animation: 3.5s ease-in-out 0s 1 grow";
@@ -7493,7 +7464,6 @@ function checkIfEnemyDead() {
                                 blacksmithMusicTrigger = false;
                                 switchArea(map, empowerContainer);
                                 randomizeLocations();
-                                location.href = "#bottom-anchor";
                         }
                         document.getElementById("eternal-flame").addEventListener("click", () => {
                                 flameWarden = true;
@@ -7636,7 +7606,7 @@ function enemyAction() {
                 aquatasBlessing = false;
                 displayBlock(playerRegenDiv, playerRegenImg, playerRegenNumber);
         } else if (gaiaBlessing) {
-                playerRegenNumber.innerText = 6;
+                playerThornsNumber.innerText = 6;
                 gaiaBlessing = false;
                 displayBlock(playerThornsDiv, playerThornsImg, playerThornsNumber);
         }
