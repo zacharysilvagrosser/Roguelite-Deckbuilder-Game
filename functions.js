@@ -1306,7 +1306,7 @@ function spaceEndTurn(e) {
 function randomizeLocations() {
         function getLocations(location) {
                 let randomLocation = createRandomNumber(1, 100);
-                if (randomLocation <= 50) {
+                if (randomLocation <= 45) {
                         location.innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`;
                 } else if (randomLocation <= 70) {
                         location.innerHTML = `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`;
@@ -2904,10 +2904,12 @@ function shop() {
         shopContainer.innerHTML = `
         <div id="cards-and-relics-container">
                 <div id="shop-cards-div"></div>
-                <div id="shop-relic-container"></div>
+                <div id="shop-button-container">
+                        <div id="shop-relic-container"></div>
+                        <button id="leave-shop-button">Leave Shop</button>
+                        <img id="shopkeeper" src="imgs/gnome-shopkeeper.png">
+                </div>
         </div>
-        <button id="leave-shop-button">Leave Shop</button>
-        <img id="shopkeeper" src="imgs/gnome-shopkeeper.png">
         `;
         if (hallowwood) {
                 document.getElementById("shop-container").style.backgroundImage = "url(imgs/hallowwood-shop2.jpeg)"
@@ -2984,12 +2986,14 @@ function shop() {
         // SHOP RELICS
         const shopRelicContainer = document.querySelector("#shop-relic-container");
         let dontRepeatShopRelic = [];
-        function shopRelic(timesToRun) {
-                for (let i = 0; i < timesToRun; i++) {
+        let relicCost = [];
+        function shopRelic() {
+                for (let i = 0; i < 4; i++) {
                         let randomRelicNumber = createRandomNumber(1, 12);
                         while (dontRepeatRelic.includes(randomRelicNumber) || dontRepeatShopRelic.includes(randomRelicNumber)) {
                                 randomRelicNumber = createRandomNumber(1, 12);
                         }
+                        relicCost.push(createRandomNumber(75, 125));
                         switch (randomRelicNumber) {
                                 case 1:
                                         shopRelicContainer.innerHTML += `
@@ -3000,7 +3004,7 @@ function shop() {
                                                         <p class="img-text-p">Single target burn duplicates half it's burn and spreads it to all enemies</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
-                                                <p class="shop-aether-cost">100</p>
+                                                <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(1);
                                         break;
@@ -3013,7 +3017,7 @@ function shop() {
                                                         <p class="img-text-p">Burning an enemy twice in one turn will increase the second burn by 50%</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
-                                                <p class="shop-aether-cost">100</p>
+                                                <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(2);
                                         break;
@@ -3026,7 +3030,7 @@ function shop() {
                                                         <p class="img-text-p">Start each encounter with +1 mana for the first turn</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
-                                                <p class="shop-aether-cost">100</p>;
+                                                <p class="shop-aether-cost">${relicCost[i]}</p>;
                                         </div>`
                                         dontRepeatShopRelic.push(3);
                                         break;
@@ -3039,7 +3043,7 @@ function shop() {
                                                         <p class="img-text-p">Your unused mana will not be lost</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
-                                                <p class="shop-aether-cost">100</p>
+                                                <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(4);
                                         break;
@@ -3052,7 +3056,7 @@ function shop() {
                                                         <p class="img-text-p">Deal 4 more damage to enemies with Frostbite</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
-                                                <p class="shop-aether-cost">100</p>
+                                                <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(5);
                                         break;
@@ -3065,7 +3069,7 @@ function shop() {
                                                         <p class="img-text-p">Gain 4 block when inflicting enemy with frostbite</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
-                                                <p class="shop-aether-cost">100</p>
+                                                <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(6);
                                         break;
@@ -3078,7 +3082,7 @@ function shop() {
                                                         <p class="img-text-p">Windswept will now reflect 25% of the damage enemies intend to attack for back to them</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
-                                                <p class="shop-aether-cost">100</p>
+                                                <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(7);
                                         break;
@@ -3091,7 +3095,7 @@ function shop() {
                                                         <p class="img-text-p">Start each encounter with one extra card for the first turn</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
-                                                <p class="shop-aether-cost">100</p>
+                                                <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(8);
                                         break;
@@ -3104,7 +3108,7 @@ function shop() {
                                                         <p class="img-text-p">Gain 1 blood siphon on your second turn</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
-                                                <p class="shop-aether-cost">100</p>
+                                                <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(9);
                                         break;
@@ -3117,7 +3121,7 @@ function shop() {
                                                         <p class="img-text-p">Gain +3 max health when you start a new encounter</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
-                                                <p class="shop-aether-cost">100</p>
+                                                <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(10);
                                         break;
@@ -3130,7 +3134,7 @@ function shop() {
                                                         <p class="img-text-p">Start each encounter with 2 thorns</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
-                                                <p class="shop-aether-cost">100</p>
+                                                <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(11);
                                         break;
@@ -3143,27 +3147,25 @@ function shop() {
                                                         <p class="img-text-p">When you lose all of your block gain 10 block</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether.png">
-                                                <p class="shop-aether-cost">100</p>
+                                                <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(12);
                                         break;
                         }
                 }
         }
-        shopRelic(4);
+        shopRelic();
         const shopRelicImg = document.querySelectorAll(".shop-relic-img");
         const shopAetherImg = document.querySelectorAll(".shop-aether");
         const shopAetherCost = document.querySelectorAll(".shop-aether-cost");
         const shopRelicImgText = document.querySelectorAll(".shop-relic-img-text");
         for (let i = 0; i < shopRelicImg.length; i++) {
-                console.log(shopRelicImg[i]);
-                console.log(shopRelicImgText[i]);
                 shopRelicImg[i].addEventListener("click", () => {
                         for (let k = 0; k <= 12; k++) {
-                                if (shopRelicImg[i].classList.contains(k) && playerAether.innerText >= 100) {
+                                if (shopRelicImg[i].classList.contains(k) && playerAether.innerText >= relicCost[i]) {
                                         getRelic(k, k);
                                         displayNone(shopAetherImg[i + 10], shopAetherCost[i + 10], shopRelicImg[i], map);
-                                        playerAether.innerText -= 100;
+                                        playerAether.innerText -= relicCost[i];
                                 }
                         }
                 });
@@ -3321,6 +3323,7 @@ const discardPileContainer = document.querySelector("#discard-pile-container");
 const discardPileShowCards = document.querySelector("#discard-pile-show-cards");
 const exitDiscardPileShowCards = document.querySelector("#exit-discard-pile-show-cards");
 const handContainer = document.querySelector("#hand-container");
+const chooseNewCardContainer = document.querySelector("#choose-new-card-container");
 const chooseNewCardDiv = document.querySelector("#choose-new-card-div");
 
 let essenceOfEmber = [];
@@ -5426,7 +5429,7 @@ function removeCardClicked() {
 function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
         console.log("CREATING CARD NEW RANDOM CARD", newRandomCard);
         chooseNewCardDiv.innerHTML = ``;
-        displayNone(chooseNewCardDiv);
+        displayNone(chooseNewCardContainer);
         console.log("UPGRADE INDEX: ", upgradeIndex);
         createCard(newRandomCard, destroyedCardsContainer, "card", "card-text", upgradeIndex);
         let currentCards = document.querySelectorAll(".card");
@@ -5448,6 +5451,12 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchMapMusic) {
 }        
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
+        document.getElementById("skip-button").addEventListener("click", () => {
+                chooseNewCardDiv.innerHTML = ``;
+                displayNone(chooseNewCardContainer);
+                switchArea(map, arena);
+                switchMusic(allMusic[mapMusicIndex]);
+        });
         arena.classList.add("dim");
         let commonCards = [];
         let rareCards = [];
@@ -5492,7 +5501,7 @@ function getRandomNewCards () {
         createCard(newRandomCards[3], chooseNewCardDiv, "card-reference", "card-text", 0);
         let newCardChoices = document.querySelectorAll(".card-reference");
         console.log("NEW CARD CHOICES", newCardChoices);
-        displayFlex(chooseNewCardDiv, newCardChoices[0], newCardChoices[1], newCardChoices[2], newCardChoices[3]);
+        displayFlex(chooseNewCardContainer, newCardChoices[0], newCardChoices[1], newCardChoices[2], newCardChoices[3]);
         newCardChoices[0].addEventListener("click", () => {addCardToDeck(newRandomCards[0], 0, true)});
         newCardChoices[1].addEventListener("click", () => {addCardToDeck(newRandomCards[1], 0, true)});
         newCardChoices[2].addEventListener("click", () => {addCardToDeck(newRandomCards[2], 0, true)});
