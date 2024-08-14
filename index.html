@@ -54,12 +54,48 @@
                         </div>
                         <img id="player-img" src="imgs/player4.png">
                         <div id="player-orbs">
-                            <div id="fire-orb-div"><img id="fire-orb-img" src="imgs/fire-orb.png"></div>
-                            <img id="lightning-orb-img" src="imgs/lightning-orb.png">
-                            <img id="ice-orb-img" src="imgs/ice-orb.png">
-                            <img id="air-orb-img" src="imgs/air-orb.png">
-                            <img id="water-orb-img" src="imgs/water-orb.png">
-                            <img id="earth-orb-img" src="imgs/earth-orb-final.png">
+                            <div id="fire-orb-div">
+                                <img id="fire-orb-img" src="imgs/fire-orb-crop.png">
+                                <div class="orb-img-text">
+                                    <h4 class="img-text-h4">Ember's Gift</h4>
+                                    <p class="img-text-p">Consume all burn dealing damage equal to double enemies current burn number</p>
+                                </div>
+                            </div>
+                            <div id="lightning-orb-div">
+                                <img id="lightning-orb-img" src="imgs/lightning-orb-crop.png">
+                                <div class="orb-img-text">
+                                    <h4 class="img-text-h4">Lectra's Gift</h4>
+                                    <p class="img-text-p">Double your mana next turn</p>
+                                </div>
+                            </div>
+                            <div id="ice-orb-div">
+                                <img id="ice-orb-img" src="imgs/ice-orb-crop.png">
+                                <div class="orb-img-text">
+                                    <h4 class="img-text-h4">Glacia's Gift</h4>
+                                    <p class="img-text-p">Steal all buffs from enemies that have frostbite</p>
+                                </div>
+                            </div>
+                            <div id="air-orb-div">
+                                <img id="air-orb-img" src="imgs/air-orb-crop.png">
+                                <div class="orb-img-text">
+                                    <h4 class="img-text-h4">Tempia's Gift</h4>
+                                    <p class="img-text-p">Reduce damage to 0 for enemies that are windswept</p>
+                                </div>
+                            </div>
+                            <div id="water-orb-div">
+                                <img id="water-orb-img" src="imgs/water-orb.png">
+                                <div class="orb-img-text">
+                                    <h4 class="img-text-h4">Aquatas' Gift</h4>
+                                    <p class="img-text-p">Empower your blood siphon this turn to heal for 40% more health</p>
+                                </div>
+                            </div>
+                            <div id="earth-orb-div">
+                                <img id="earth-orb-img" src="imgs/earth-orb-crop.png">
+                                <div class="orb-img-text">
+                                    <h4 class="img-text-h4">Gaia's Gift</h4>
+                                    <p class="img-text-p">Double your block</p>
+                                </div>
+                            </div>
                         </div>
                         <div id="player-health-bar">
                             <img id="player-block-img" src="imgs/block-icon.png">
@@ -104,7 +140,7 @@
                                     <h4 class="img-text-h4">Static Charge</h4>
                                     <p class="img-text-p">Your next direct damage deals 10 more damage. Does not stack.</p>
                                 </div>  
-                                <img id="player-tidal-imbuement-img" src="imgs/charge-icon.png">
+                                <img id="player-tidal-imbuement-img" src="imgs/static-charge-icon.png">
                             </div>
                         </div>
                     </div> 
@@ -127,6 +163,7 @@
             <div id="choose-new-card-div"></div>
             <button id="skip-button">Skip</button>
         </div>
+        <div id="elite-relic-screen"></div>
         <div id="draw-pile-container"></div>
         <div id="discard-pile-container"></div>
         <div id="exclamation-container"></div>

@@ -4,24 +4,24 @@ Light and Dark based class has a light and dark meter based on your actions thro
 
 TO DO
 Settings gear when hitting escape for music and sound volume
-Probably change ice spear so you dont have to change card text
-crop orbs in paint. Hover over orb to see what your gift does
+//crop orbs in paint. //Hover over orb to see what your gift does
 ghost elite becomes opacity: .5 and unable to be attacked
-make elite relic screen after defeat
-rarity added on cards
+/make elite relic screen after defeat
+///rarity added on cards
+///card display for mystery buttons
 
 BUGS
-death screen brings you to fae forest arena??
-all enemy divs that arent standard placement
-clicking card brings enemy margins back down
-blacksmitch x overflow
-storm form with windswept damage incorrect (storm form windswept static charge did 22 card said 20, text is adding storm form then doing windswept, damage is doing windswept then adding storm form
-spendmana cant be settimeout; tidal trident did .5 damage
-endturn set mana to 4 on a timeout
-make rock smash work with icy imbuement
-makeiceGift leech buffs from enemies that are frostbitten
+?death screen brings you to fae forest arena
+/clicking card brings enemy margins back down
+//blacksmitch x overflow
+?storm form with windswept damage incorrect (storm form windswept static charge did 22 card said 20, text is adding storm form then doing windswept, damage is doing windswept then adding storm form
+//spendmana cant be settimeout
+//tidal trident did .5 damage
+//endturn set mana to 4 on a timeout
+//make rock smash work with icy imbuement
+//makeiceGift leech buffs from enemies that are frostbitten
 get rid of empowered sanguine spring when healing glacia
-ambience never changes between stages)
+//ambience never changes between stages
 
 */
 /*
@@ -542,11 +542,6 @@ function resetArena() {
                 drawCards(maxHandLength);
         }
         removeCardClicked();
-        for (let i = 0; i < drawPileArray.length; i++) {
-                if (drawPileArray[i].classList.contains("card-clicked")) {
-                        drawPileArray[i].classList.remove("card-clicked");
-                }
-        }
         if (stoneshaper) {
                 playerBlockNumber.innerText = parseFloat(playerBlockNumber.innerText) + 50;
                 displayBlock(playerBlockImg, playerBlockNumber);
@@ -1115,8 +1110,8 @@ function boss() {
                         break;
         }
 }
-let [fireGift, fireGiftTrigger, lightningGift, lightningGiftTrigger, iceGift, iceGiftTrigger, airGift, airGiftTrigger, waterGift, waterGiftTrigger, earthGift, earthGiftTrigger, empowerBloodSiphon, stealBuffs, reduceAllAttack, doubleMana] =
-[false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+let [fireGift, fireGiftTrigger, lightningGift, lightningGiftTrigger, iceGift, iceGiftTrigger, airGift, airGiftTrigger, waterGift, waterGiftTrigger, earthGift, earthGiftTrigger, empowerBloodSiphon, reduceAllAttack, doubleMana] =
+[false, false, false, false, false, false, false, false, false, false, false, false, false];
 function treasure() {
         displayNone(map);
         displayFlex(exclamationContainer);
@@ -1151,11 +1146,13 @@ function treasure() {
                         waterGift = true;
                         waterGiftTrigger = true;
                         document.getElementById("water-orb-img").classList.add("water-glow");
+                        addActionText(document.getElementById("water-orb-div"), orbImgText[4]);
                         document.getElementById("water-orb-img").addEventListener("click", () => {
                                 if (waterGift && waterGiftTrigger && playerBloodNumber.innerText > 0) {
                                         empowerBloodSiphon = true;
                                         waterGiftTrigger = false;
                                         document.getElementById("water-orb-img").classList.remove("water-glow");
+                                        fxBloodCocoon.play();
                                 }
                         });
                         switchArea(map, exclamationContainer);
@@ -1164,11 +1161,13 @@ function treasure() {
                         earthGift = true;
                         earthGiftTrigger = true;
                         document.getElementById("earth-orb-img").classList.add("earth-glow");
+                        addActionText(document.getElementById("earth-orb-div"), orbImgText[5]);
                         document.getElementById("earth-orb-img").addEventListener("click", () => {
                                 if (earthGift && earthGiftTrigger) {
                                         playerBlockNumber.innerText *= 2;
                                         document.getElementById("earth-orb-img").classList.remove("earth-glow");
                                         earthGiftTrigger = false;
+                                        fxThornShield.play();
                                 }
                         });
                         switchArea(map, exclamationContainer);
@@ -1184,7 +1183,7 @@ function treasure() {
                                 <h2 style="color: #2f989c">Glacia's Gift</h2>
                                 <div class="treasure-choice-div">
                                         <div class="treasure-choices">
-                                                <p>The next enemies you frostbite will steal all of their buffs</p>
+                                                <p>Steal all buffs from enemies that have frostbite</p>
                                                 <button id="ice-gift" style="color: #2f989c">Glacia's Gift</button>
                                         </div>
                                 </div>
@@ -1193,7 +1192,7 @@ function treasure() {
                                 <h2 style="color: #86bfdf">Tempia's Gift</h2>
                                 <div class="treasure-choice-div">
                                         <div class="treasure-choices">
-                                                <p>Windswept reduces attack to 0 this turn</p>
+                                                <p>Reduce damage to 0 for enemies that are windswept</p>
                                                 <button id="air-gift" style="color: #86bfdf">Tempia's Gift</button>
                                         </div>
                                 </div>
@@ -1207,11 +1206,17 @@ function treasure() {
                         document.getElementById("air-orb-img").style = "margin-left: 80px; z-index: 0;"
                         document.getElementById("ice-orb-img").style = "margin-left: 130px; z-index: 2;"
                         document.getElementById("ice-orb-img").classList.add("ice-glow");
+                        addActionText(document.getElementById("ice-orb-div"), orbImgText[2]);
                         document.getElementById("ice-orb-img").addEventListener("click", () => {
                                 if (iceGift && iceGiftTrigger) {
-                                        stealBuffs = true;
+                                        for (let i = 0; i < numberOfEnemies; i++) {
+                                                if (!enemyIsDead && enemyFrostbite[i]) {
+                                                        leechBuffs(i, false);
+                                                }
+                                        }
                                         iceGiftTrigger = false;
                                         document.getElementById("ice-orb-img").classList.remove("ice-glow");
+                                        fxFlurry.play();
                                 }
                         });
                         switchArea(map, exclamationContainer);
@@ -1219,19 +1224,19 @@ function treasure() {
                 document.getElementById("air-gift").addEventListener("click", () => {
                         airGift = true;
                         airGiftTrigger = true;
-                        reduceAllAttack = true;
                         document.getElementById("air-orb-img").classList.add("air-glow");
+                        addActionText(document.getElementById("air-orb-div"), orbImgText[3]);
                         document.getElementById("air-orb-img").addEventListener("click", () => {
                                 if (airGift && airGiftTrigger) {
                                         for (let i = 0; i < numberOfEnemies; i++) {
-                                                if (!enemyIsDead[i]) {
-                                                        inflictWindswept(i);
+                                                if (!enemyIsDead[i] && enemyWindswept[i]) {
                                                         enemyAttackActionNumber[i].innerText = 0;
                                                 }
                                         }
                                         document.getElementById("air-orb-img").classList.remove("air-glow");
                                         airGiftTrigger = false;
                                         reduceAllAttack = true;
+                                        fxTornado.play();
                                 }
                         });
                         switchArea(map, exclamationContainer);
@@ -1247,7 +1252,7 @@ function treasure() {
                                 <h2 style="color: #2f989c">Ember's Gift</h2>
                                 <div class="treasure-choice-div">
                                         <div class="treasure-choices">
-                                                <p>Consume all burn dealing double it's damage</p>
+                                                <p>Consume all burn dealing damage equal to double enemies current burn number</p>
                                                 <button id="fire-gift" style="color: #2f989c">Ember's Gift</button>
                                         </div>
                                 </div>
@@ -1268,6 +1273,7 @@ function treasure() {
                         fireGift = true;
                         fireGiftTrigger = true;
                         document.getElementById("fire-orb-img").classList.add("fire-glow");
+                        addActionText(document.getElementById("fire-orb-div"), orbImgText[0]);
                         document.getElementById("fire-orb-img").addEventListener("click", () => {
                                 if (fireGift && fireGiftTrigger) {
                                         for (let i = 0; i < numberOfEnemies; i++) {
@@ -1279,6 +1285,7 @@ function treasure() {
                                         }
                                         fireGiftTrigger = false;
                                         document.getElementById("fire-orb-img").classList.remove("fire-glow");
+                                        fxFirefall.play();
                                 }
                         });
                         switchArea(map, exclamationContainer);
@@ -1290,11 +1297,13 @@ function treasure() {
                         document.getElementById("lightning-orb-img").style = "margin-left: -130px; z-index: 2;"
                         document.getElementById("fire-orb-img").style = "margin-left: -85px; z-index: 1;"
                         document.getElementById("lightning-orb-img").classList.add("lightning-glow");
+                        addActionText(document.getElementById("lightning-orb-div"), orbImgText[1]);
                         document.getElementById("lightning-orb-img").addEventListener("click", () => {
                                 if (lightningGift && lightningGiftTrigger) {
                                         lightningGiftTrigger = false;
                                         doubleMana = true;
                                         document.getElementById("lightning-orb-img").classList.remove("lightning-glow");
+                                        fxStormblessed.play();
                                 }
                         });
                         switchArea(map, exclamationContainer);
@@ -1606,14 +1615,14 @@ function createExclamation(title, background, img, text0, text1, text2) {
         `
 }
 const exclamationContainer = document.querySelector("#exclamation-container");
-let exclamationDiv = document.querySelector(".exclamation-div");
+/*let exclamationDiv = document.querySelector(".exclamation-div");
 let exclamationButtonDiv = document.querySelector(".exclamation-button-div");
 let exclamationButton1 = document.querySelector(".exclamation-button-1");
 let exclamationButton2 = document.querySelector(".exclamation-button-2");
 let exclamationButton3 = document.querySelector(".exclamation-button-3");
 let exclamationButton4 = document.querySelector(".exclamation-button-4");
 let exclamationButton5 = document.querySelector(".exclamation-button-5");
-let exclamationButton6 = document.querySelector(".exclamation-button-6");
+let exclamationButton6 = document.querySelector(".exclamation-button-6");*/
 const destroyedCardsContainer = document.querySelector("#destroyed-cards-container");
 let dontRepeatExclamation = [];
 let exclamationMusicTrigger = false;
@@ -1651,15 +1660,9 @@ function mystery() {
                 if (mysteryReturn[0]) {
                         encounter();
                 } else {
-                        randomExclamationNumber = createRandomNumber(1, 5);
-                        console.log("dontRepeatExclamation.includes(randomExclamationNumber) ", dontRepeatExclamation.includes(randomExclamationNumber));
-                        console.log("dontRepeatExclamation ", dontRepeatExclamation);
-                        console.log("randomExclamationNumber ", randomExclamationNumber);
+                        randomExclamationNumber = createRandomNumber(9, 9);
                         while (dontRepeatExclamation.includes(randomExclamationNumber) && !mysteryReturn[0]) {
                                 randomExclamationNumber = createRandomNumber(1, 5);
-                                console.log("NEW NUMBER dontRepeatExclamation.includes(randomExclamationNumber) ", dontRepeatExclamation.includes(randomExclamationNumber));
-                                console.log("NEW NUMBER dontRepeatExclamation ", dontRepeatExclamation);
-                                console.log("NEW NUMBER randomExclamationNumber ", randomExclamationNumber);
                         }
                 }
         } else if (hallowwood) {
@@ -1697,21 +1700,14 @@ function mystery() {
                         createExclamation("A Necessary Sacrifice", "imgs/fae-forest-mystery.jpeg", "imgs/goddess.jpg", `<span style="color: #81b14f">Terra</span> approaches you again with a warm kind visage.`, 
                                 `"I had hoped our next meeting would be under better circumstances." she says regretfully. "But I can feel my elemental spirits weakening each day as Life and Death grow stronger."`,
                                 "I must ask that you sacrifice one of your elemental orbs of power to me so the very foundations of existence aren't torn asunder. I would not ask of this if not completely necessary.");
-                        exclamationDiv = document.querySelector(".exclamation-div");
-                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
-                        exclamationButtonDiv.innerHTML = `
+                        document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1" style="text-align: center; width: 50%; height: 50px; margin-top: 20px;">Sacrifice <span style="color: #ba760f">fire</span> cards</button>
                         <button class="exclamation-button-2" style="text-align: center; width: 50%; height: 50px; margin-top: 20px;">Sacrifice <span style="color: #fafba5">lightning</span> cards</button>
                         <button class="exclamation-button-3" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #2f989c">ice</span> cards</button>
                         <button class="exclamation-button-4" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #86bfdf">air</span> cards</button>
                         <button class="exclamation-button-5" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #74ccf4">water</span> cards</button>
-                        <button class="exclamation-button-6" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #8d624b">earth</span> cards</button>`;
-                        exclamationButton1 = document.querySelector(".exclamation-button-1");
-                        exclamationButton2 = document.querySelector(".exclamation-button-2");
-                        exclamationButton3 = document.querySelector(".exclamation-button-3");
-                        exclamationButton4 = document.querySelector(".exclamation-button-4");
-                        exclamationButton5 = document.querySelector(".exclamation-button-5");
-                        exclamationButton6 = document.querySelector(".exclamation-button-6");
+                        <button class="exclamation-button-6" style="text-align: center; width: 50%; height: 50px;">Sacrifice <span style="color: #8d624b">earth</span> cards</button>
+                        <div id="mystery-card-display-container"></div>`;
                         function destroyCards(cardType, orb) {
                                 for (let i = 0; i < cardType.length; i++) {
                                         if (drawPileArray.includes(cardType[i])) {
@@ -1728,30 +1724,112 @@ function mystery() {
                                 }
                                 destroyedCardsContainer.innerHTML = ``;
                                 destroyedCardsArray = [];
-                                const orbImg = document.querySelector(`#${orb}-orb-img`);
-                                displayNone(orbImg);
+                                displayNone(document.querySelector(`#${orb}-orb-img`));
                         }
-                        exclamationButton1.addEventListener("click", () => {
+                        function createElementCards(elementCards) {
+                                for (let i = 0; i < elementCards.length; i++) {
+                                        for (let j = 0; j < cardsInformation.length; j++) {
+                                                if (elementCards[i].classList.contains(j) && !elementCards[i].classList.contains("upgraded")) {
+                                                        createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                                                } else if (elementCards[i].classList.contains(j) && elementCards[i].classList.contains("upgraded")) {
+                                                        createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 1);
+                                                }
+                                        }
+                                }
+                        }
+                        createElementCards(document.querySelectorAll(".fire"));
+                        createElementCards(document.querySelectorAll(".lightning"));
+                        createElementCards(document.querySelectorAll(".ice"));
+                        createElementCards(document.querySelectorAll(".air"));
+                        createElementCards(document.querySelectorAll(".water"));
+                        createElementCards(document.querySelectorAll(".earth"));
+                        let fireCards = document.querySelectorAll(".fire");
+                        let lightningCards = document.querySelectorAll(".lightning");
+                        let iceCards = document.querySelectorAll(".ice");
+                        let airCards = document.querySelectorAll(".air");
+                        let waterCards = document.querySelectorAll(".water");
+                        let earthCards = document.querySelectorAll(".earth");
+                        document.querySelector(".exclamation-button-1").addEventListener("mouseover", () => {
+                                fireCards.forEach(i => {
+                                        displayFlex(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-1").addEventListener("mouseout", () => {
+                                fireCards.forEach(i => {
+                                        displayNone(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseover", () => {
+                                lightningCards.forEach(i => {
+                                        displayFlex(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseout", () => {
+                                lightningCards.forEach(i => {
+                                        displayNone(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-3").addEventListener("mouseover", () => {
+                                iceCards.forEach(i => {
+                                        displayFlex(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-3").addEventListener("mouseout", () => {
+                                iceCards.forEach(i => {
+                                        displayNone(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-4").addEventListener("mouseover", () => {
+                                airCards.forEach(i => {
+                                        displayFlex(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-4").addEventListener("mouseout", () => {
+                                airCards.forEach(i => {
+                                        displayNone(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-5").addEventListener("mouseover", () => {
+                                waterCards.forEach(i => {
+                                        displayFlex(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-5").addEventListener("mouseout", () => {
+                                waterCards.forEach(i => {
+                                        displayNone(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-6").addEventListener("mouseover", () => {
+                                earthCards.forEach(i => {
+                                        displayFlex(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-6").addEventListener("mouseout", () => {
+                                earthCards.forEach(i => {
+                                        displayNone(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 destroyCards(document.querySelectorAll(".fire"), "fire");
                                 switchArea(map, exclamationContainer);
                         });
-                        exclamationButton2.addEventListener("click", () => {
+                        document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 destroyCards(document.querySelectorAll(".lightning"), "lightning");
                                 switchArea(map, exclamationContainer);
                         });
-                        exclamationButton3.addEventListener("click", () => {
+                        document.querySelector(".exclamation-button-3").addEventListener("click", () => {
                                 destroyCards(document.querySelectorAll(".ice"), "ice");
                                 switchArea(map, exclamationContainer);
                         });
-                        exclamationButton4.addEventListener("click", () => {
+                        document.querySelector(".exclamation-button-4").addEventListener("click", () => {
                                 destroyCards(document.querySelectorAll(".air"), "air");
                                 switchArea(map, exclamationContainer);
                         });
-                        exclamationButton5.addEventListener("click", () => {
+                        document.querySelector(".exclamation-button-5").addEventListener("click", () => {
                                 destroyCards(document.querySelectorAll(".water"), "water");
                                 switchArea(map, exclamationContainer);
                         });
-                        exclamationButton6.addEventListener("click", () => {
+                        document.querySelector(".exclamation-button-6").addEventListener("click", () => {
                                 destroyCards(document.querySelectorAll(".earth"), "earth");
                                 switchArea(map, exclamationContainer);
                         });
@@ -1761,18 +1839,15 @@ function mystery() {
                         createExclamation("The Wizard's Apprentice", "imgs/fae-forest-mystery.jpeg", "imgs/clone-mage.jpg", "You see a flustered wizard over the next thicket trying and failing to cast a spell.", 
                                 `"Are you trying to burn down this entire forest?!" You demand indignantly.`,
                                 `"No you damnable fool! I've been trying for days to clone this Terra forsaken thing!" he yells emphatically. "Say...do you think I could get a little bit of practice on one of those spells of yours?"`);
-                        exclamationDiv = document.querySelector(".exclamation-div");
-                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
-                        exclamationButtonDiv.innerHTML = `
-                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: lightgreen">Agree:</span> He doesn't look like he's taking no for an answer</button>
-                        `;
+                        document.querySelector(".exclamation-button-div").innerHTML = `
+                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: lightgreen">Agree:</span> He doesn't look like he's taking no for an answer</button>`;
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 fxWizardCast.play();
                                 function wizardCast() {
                                         const randomNumber = createRandomNumber(1, 2);
                                         if (randomNumber === 1) {
                                                 fxSpellSuccess.play();
-                                                exclamationButtonDiv.innerHTML = `
+                                                document.querySelector(".exclamation-button-div").innerHTML = `
                                                 <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: lightgreen">Success:</span> His spell clones the card you choose</button>`;
                                                 document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                                         let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
@@ -1806,7 +1881,7 @@ function mystery() {
                                                 });
                                         } else {
                                                 fxSpellFail.play();
-                                                exclamationButtonDiv.innerHTML = `<button class="exclamation-button-1"><span style="color: rgb(206, 83, 83)">Failure:</span> The card you choose disappears</button>`;
+                                                document.querySelector(".exclamation-button-div").innerHTML = `<button class="exclamation-button-1"><span style="color: rgb(206, 83, 83)">Failure:</span> The card you choose disappears</button>`;
                                                 document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                                         let allCardsArray = drawPileArray.concat(handArray, discardPileArray);
                                                         exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
@@ -1860,20 +1935,16 @@ function mystery() {
                         createExclamation("Aquatas' Assistance", "imgs/fae-forest-mystery.jpeg", "imgs/aquatis.jpeg", "The physical incarnation of Terra's water spirit looms over you. You feel a sudden sense of serenity wash over you.", 
                                 `"I speak to you on behalf of Gaia and myself." his voice envelops you reverberating throughout your mind.`,
                                 `"The path forward to stop Illuminia and her sister will be demanding. We offer a choice of blessings to help in your plight. Choose wisely."`);
-                        exclamationDiv = document.querySelector(".exclamation-div");
-                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
-                        exclamationButtonDiv.innerHTML = `
+                        document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: #74ccf4">Aquatas' Blessing:</span> Gain 8 regeneration next fight.</button>
                         <button class="exclamation-button-2"><span style="color: #81b14f">Gaia's Blessing:</span> Gain 6 thorns next fight.</button>`;
-                        exclamationButton1 = document.querySelector(".exclamation-button-1");
-                        exclamationButton2 = document.querySelector(".exclamation-button-2");
-                        exclamationButton1.addEventListener("click", () => {
+                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 aquatasBlessing = true;
-                                switchArea(map, exclamationDiv);
+                                switchArea(map, exclamationContainer);
                         });    
-                        exclamationButton2.addEventListener("click", () => {
+                        document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 gaiaBlessing = true;
-                                switchArea(map, exclamationDiv);
+                                switchArea(map, exclamationContainer);
                         });
                         dontRepeatExclamation.push(3);
                         break;
@@ -1881,19 +1952,46 @@ function mystery() {
                         createExclamation(`Gaia's Embrace`, "imgs/fae-forest-mystery.jpeg", "imgs/gaia.jpeg", "You see Terra's earth spirit gleefully skipping through the forest. A sudden rush of dirt and cedar pines floods your nose.", 
                                 `"So you're the one here to save all of Terra, huh?" she giggles. "Hmm...you don't really look like someone ready to save the world."`,
                                 `"And your spell book looks <em>awfully</em> empty! Take my spell so you can at least give them a good fight. I'll tell the plants about your valiant effort!" the sound of her laughter slowly fades as she skips away.`);
-                        exclamationDiv = document.querySelector(".exclamation-div");
-                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
-                        exclamationButtonDiv.innerHTML = `
+                        document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: #81b14f">Let Gaia embrace you:</span> Gain Gaia's Embrace spell</button>
                         <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83">Refuse:</span> Lose all of your earth cards</button>
-                        `;
-                        exclamationButton1 = document.querySelector(".exclamation-button-1");
-                        exclamationButton2 = document.querySelector(".exclamation-button-2");
-                        exclamationButton1.addEventListener("click", () => {
+                        <div id="mystery-card-display-container"></div>`;
+                        createElementCards(document.querySelectorAll(".earth"));
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseover", () => {
+                                document.querySelectorAll(".earth").forEach(i => {
+                                        displayFlex(i);
+                                });
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("35")) {
+                                                displayNone(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseout", () => {
+                                document.querySelectorAll(".earth").forEach(i => {
+                                        displayNone(i);
+                                });
+                        });
+                        createCard(35, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                        document.querySelector(".exclamation-button-1").addEventListener("mouseover", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("35")) {
+                                                displayFlex(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-1").addEventListener("mouseout", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("35")) {
+                                                displayNone(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 addCardToDeck(35, 1, true);
-                                switchArea(map, exclamationDiv);
+                                switchArea(map, exclamationContainer);
                         });    
-                        exclamationButton2.addEventListener("click", () => {
+                        document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 let earth = document.querySelectorAll(".earth");
                                 for (let i = 0; i < earth.length; i++) {
                                         if (drawPileArray.includes(earth[i])) {
@@ -1906,7 +2004,7 @@ function mystery() {
                                 }
                                 destroyedCardsContainer.innerHTML = ``;
                                 destroyedCardsArray = [];
-                                switchArea(map, exclamationDiv);
+                                switchArea(map, exclamationContainer);
                         });
                         dontRepeatExclamation.push(4);
                         break;
@@ -1914,21 +2012,47 @@ function mystery() {
                         createExclamation(`Celestial Intervention`, "imgs/fae-forest-mystery.jpeg", "imgs/fae-mystery-spirit.jpeg", "You've set up camp for the night. You stare into the warm kindling of the campfire, resting your head on the frigid ground. Just before dozing off, you see the stars form into the shape of a woman.", 
                                 `"My power grows weaker each day now that the spirits of life and death left their rightful realms. I'm afraid it may be too late for me."`,
                                 `"I can use the last of my power to infuse a spell with each of the six elemental Terran spirits power." She says weakly. "Use it in your fight to restore balance to this realm...for the sake of us all."`);
-                        exclamationDiv = document.querySelector(".exclamation-div");
-                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
-                        exclamationButtonDiv.innerHTML = `
+                        document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1""><span style="color: rgb(123, 240, 238)">Attune with the stars:</span> Gain a celestially infused card</button>
                         <button class="exclamation-button-2"><span style="color: #81b14f">Stay Grounded:</span> Gain Terra's Blessing spell</button>
-                        `;
-                        exclamationButton1 = document.querySelector(".exclamation-button-1");
-                        exclamationButton2 = document.querySelector(".exclamation-button-2");
-                        exclamationButton1.addEventListener("click", () => {
+                        <div id="mystery-card-display-container"></div>`;
+                        createCard(52, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                        createCard(50, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                        document.querySelector(".exclamation-button-1").addEventListener("mouseover", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("52")) {
+                                                displayFlex(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-1").addEventListener("mouseout", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("52")) {
+                                                displayNone(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseover", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("50")) {
+                                                displayFlex(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseout", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("50")) {
+                                                displayNone(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 addCardToDeck(52, 0, true);
-                                switchArea(map, exclamationDiv);
+                                switchArea(map, exclamationContainer);
                         });    
-                        exclamationButton2.addEventListener("click", () => {
+                        document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 addCardToDeck(50, 0, true);
-                                switchArea(map, exclamationDiv);
+                                switchArea(map, exclamationContainer);
                         });
                         dontRepeatExclamation.push(5);
                         break;
@@ -1936,20 +2060,31 @@ function mystery() {
                         createExclamation("King Spookly", "imgs/hallowwood-mystery.jpeg", "imgs/king-spookly2.jpeg", "You're feeling exhausted from the long walk through the forest. You go to sit down and rest when you notive a ghost sitting on a large pile of aether.", 
                                 "He beckons you closer with his translucent appendage. You approach.",
                                 `"I was once king in this land long ago." His soft whisper echos. "I had all the aether in my possession burried with me. I realize the arrogance of my actions and would like to make amends for my past. Please share this amongst the local townsfolk."`);
-                        exclamationDiv = document.querySelector(".exclamation-div");
-                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
-                        exclamationButtonDiv.innerHTML = `
+                        document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1" style="height: 45%"><span style="color: rgb(206, 83, 83)">Take It All:</span> Gain 200 Aether and Avarice; a useless card.</button>
                         <button class="exclamation-button-2" style="height: 45%"><span style="color: lightgreen">Share It:</span> Your integrity causes you to gain 10 health and max health.</button>
-                        `;
-                        exclamationButton1 = document.querySelector(".exclamation-button-1");
-                        exclamationButton2 = document.querySelector(".exclamation-button-2");
-                        exclamationButton1.addEventListener("click", () => {
+                        <div id="mystery-card-display-container"></div>`;
+                        createCard(51, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                        document.querySelector(".exclamation-button-1").addEventListener("mouseover", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("51")) {
+                                                displayFlex(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-1").addEventListener("mouseout", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("51")) {
+                                                displayNone(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 addCardToDeck(51, 0, true);
                                 playerAether.innerText = parseFloat(playerAether.innerText) + 200;
                                 switchArea(map, exclamationContainer);
                         });
-                        exclamationButton2.addEventListener("click", () => {
+                        document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 playerMaxHealth.innerText = parseFloat(playerMaxHealth.innerText) + 10;
                                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + 10;
                                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + 10;
@@ -1961,14 +2096,26 @@ function mystery() {
                         createExclamation("Hallowwood Haunting", "imgs/hallowwood-mystery.jpeg", "imgs/haunted-house.jpeg", "You stumble upon a dark and gloomy house seemingly grown within a tree.", 
                                 "You feel a strange sense of foreboding emanating from the house. You get the distinct feeling there's something inside that doesn't want you to enter.",
                                 `There could be something of interest inside though...you ponder in the chilly night air what to do.`);
-                        exclamationDiv = document.querySelector(".exclamation-div");
-                        exclamationButtonDiv = document.querySelector(".exclamation-button-div");
-                        exclamationButtonDiv.innerHTML = `
+                        document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1"><span style="color: lightgreen">Enter anyway:</span> You didn't specialize in wisdom!</button>
-                        <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83)">Run away as fast as possible:</span> Gain windwalk</button>`;
-                        exclamationButton1 = document.querySelector(".exclamation-button-1");
-                        exclamationButton2 = document.querySelector(".exclamation-button-2");
-                        exclamationButton1.addEventListener("click", () => {
+                        <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83)">Run away as fast as possible:</span> Gain windwalk</button>
+                        <div id="mystery-card-display-container"></div>`;
+                        createCard(25, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseover", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("25")) {
+                                                displayFlex(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseout", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("25")) {
+                                                displayNone(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 exclamationContainer.innerHTML = `
                                 <div class="exclamation-div" style="background-image: url(imgs/hallowwood-mystery.jpeg)">
                                 <div class="exclamation-information-container">
@@ -1982,11 +2129,27 @@ function mystery() {
                                                 <div class="exclamation-button-div">
                                                         <button class="exclamation-button-1"><span style="color: lightblue">Freeze in fear:</span> Gain an empowered deep freeze</button>
                                                         <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83)">Run away as fast as possible:</span> You come to your senses finally and run</button>
+                                                        <div id="mystery-card-display-container"></div>
                                                 </div>
                                                 </div>
                                         </div>
                                         </div>
                                 </div>`;
+                                createCard(41, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                                document.querySelector(".exclamation-button-1").addEventListener("mouseover", () => {
+                                        document.querySelectorAll(".card-reference").forEach(i => {
+                                                if (i.classList.contains("41")) {
+                                                        displayFlex(i);
+                                                }
+                                        });
+                                });
+                        document.querySelector(".exclamation-button-1").addEventListener("mouseout", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("41")) {
+                                                displayNone(i);
+                                        }
+                                });
+                        });
                                 document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                         addCardToDeck(41, 1, true);
                                         switchArea(map, exclamationContainer);
@@ -1995,7 +2158,7 @@ function mystery() {
                                         switchArea(map, exclamationContainer);
                                 });
                         });
-                        exclamationButton2.addEventListener("click", () => {
+                        document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 addCardToDeck(25, 0, true);
                                 switchArea(map, exclamationContainer);
                         });
@@ -2008,7 +2171,23 @@ function mystery() {
                         document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1" style="height: 35%"><span style="color: lightblue">Cleanse her:</span> Glacia gives you an empowered ice card of your choice</button>
                         <button class="exclamation-button-2" style="height: 35%"><span style="color: rgb(115, 215, 215)">Change your mind:</span> Gain an empowered winds of change card</button>
-                        <button class="exclamation-button-3" style="height: 35%; color: rgb(206, 83, 83)">You never learned the healing spell</button>`
+                        <button class="exclamation-button-3" style="height: 35%; color: rgb(206, 83, 83)">You never learned the healing spell</button>
+                        <div id="mystery-card-display-container"></div>`;
+                        createCard(24, document.getElementById("mystery-card-display-container"), "card-reference upgraded", "card-text upgrade-text", 1);
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseover", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("24")) {
+                                                displayFlex(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseout", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("24")) {
+                                                displayNone(i);
+                                        }
+                                });
+                        });
                         const allCurrentCards = document.querySelectorAll(".card");
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 for (let i = 0; i < allCurrentCards.length; i++) {
@@ -2060,7 +2239,25 @@ function mystery() {
                         document.querySelector(".exclamation-button-div").innerHTML = `
                                 <button class="exclamation-button-1" style="height: 35%"> <span style="color: rgb(206, 83, 83)">Slay the Werewolf:</span> Gain 150 aether and lose 20 health</button>
                                 <button class="exclamation-button-2" style="height: 35%"> <span style="color: rgb(206, 83, 83)">Slay the Vampire:</span> Empower all of your blood siphon cards and lose 15 health</button>
-                                <button class="exclamation-button-3" style="height: 35%"> <span style="color: lightgreen">You don't trust the man:</span> Grab your drink and head for the door</button>`
+                                <button class="exclamation-button-3" style="height: 35%"> <span style="color: lightgreen">You don't trust the man:</span> Grab your drink and head for the door</button>
+                                <div id="mystery-card-display-container"></div>`;
+                        document.querySelectorAll(".card").forEach(i => {
+                                for (let j = 0; j < cardsInformation.length; j++) {
+                                        if (i.classList.contains(j) && "blood" in cardsInformation[j] && cardsInformation[j].blood[0] !== 0) {
+                                                createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                                        }
+                                }
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseover", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                                displayFlex(i);
+                                });
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseout", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                                displayNone(i);
+                                });
+                        });
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 slainWerewolf = true;
                                 playerAether.innerText = parseFloat(playerAether.innerText) + 150;
@@ -2130,13 +2327,44 @@ function mystery() {
                                 `"I've come to you because I can be of no assistance in this matter. My sibling Glacia, spirit of ice, seems to have been possesed by a vengeful spirit herself. I can give you a cleansing spell that will heal her or give you a sliver of my power. I will honor either decision."`);
                         document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1" style="height: 45%"><span style="color: lightblue">Agree to heal Glacia:</span> Gain an empowered sanguine spring</button>
-                        <button class="exclamation-button-2" style="height: 45%"><span style="color: rgb(115, 215, 215)">Fuse with Tempia:</span> Gain a zephyr infusion</button>`
+                        <button class="exclamation-button-2" style="height: 45%"><span style="color: rgb(115, 215, 215)">Fuse with Tempia:</span> Gain a zephyr infusion</button>
+                        <div id="mystery-card-display-container"></div>`;
+                        createCard(28, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                        createCard(27, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                        document.querySelector(".exclamation-button-1").addEventListener("mouseover", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("28")) {
+                                                displayFlex(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-1").addEventListener("mouseout", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("28")) {
+                                                displayNone(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseover", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("27")) {
+                                                displayFlex(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseout", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("27")) {
+                                                displayNone(i);
+                                        }
+                                });
+                        });
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 addCardToDeck(28, 1, true);
                                 switchArea(map, exclamationContainer);
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
-                                addCardToDeck(28, 0, true);
+                                addCardToDeck(27, 0, true);
                                 switchArea(map, exclamationContainer);
                         });
                         dontRepeatExclamation.push(10);
@@ -2370,7 +2598,23 @@ function mystery() {
                         }
                         document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1" style="height: 45%"><span style="color: #f0fb3e">Accept Lectra's Boon:</span> Empower a lightning card</button>
-                        <button class="exclamation-button-2" style="height: 45%"><span style="color: #ba760f">Ember is still better sorry:</span> Gain essense of ember</button>`
+                        <button class="exclamation-button-2" style="height: 45%"><span style="color: #ba760f">Ember is still better sorry:</span> Gain essence of ember</button>
+                        <div id="mystery-card-display-container"></div>`;
+                        createCard(15, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseover", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("15")) {
+                                                displayFlex(i);
+                                        }
+                                });
+                        });
+                        document.querySelector(".exclamation-button-2").addEventListener("mouseout", () => {
+                                document.querySelectorAll(".card-reference").forEach(i => {
+                                        if (i.classList.contains("15")) {
+                                                displayNone(i);
+                                        }
+                                });
+                        });
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
                                 document.querySelectorAll(".card").forEach((i) => {
@@ -2807,7 +3051,7 @@ function mystery() {
                         dontRepeatExclamation.push(14);
                         break;
                 case 15:
-                        createExclamation("Maluminia Entropy", "imgs/heaven-night.jpeg", "imgs/maluminia.jpeg", "After days of trekking with daylight constantly permeating the confines of this realm, darkness settles in. You suppose the days must be much longer here.", 
+                        createExclamation("Maluminia's Entropy", "imgs/heaven-night.jpeg", "imgs/maluminia.jpeg", "After days of trekking with daylight constantly permeating the confines of this realm, darkness settles in. You suppose the days must be much longer here.", 
                                 `An angelic woman slowly descends from the sky adorned with armor as black as night. "I know you seek to stop my sister and I. You've come far and for that I'm impressed, but you shall join me in my realm soon."`,
                                 `Fast as lightning, she reaches for your spell book. Before you have a chance to react, she engulfs your spells in a dark liquid emenating from her hands. She swiftly flies away and is gone in a blink.`);
                         document.querySelector(".exclamation-button-div").innerHTML = `<button class="exclamation-button-1">Your entire starting hand has been swapped!</button>`
@@ -2935,7 +3179,7 @@ function shop() {
         for (let i = 0; i < dontRepeatCard.length; i++) {
                 document.querySelector("#shop-cards-div").innerHTML += `<div class="shop-cards-cost-div"></div>`;
                 createCard(dontRepeatCard[i], document.querySelectorAll(".shop-cards-cost-div")[i], "card-reference", "card-text", 0);
-                document.querySelectorAll(".shop-cards-cost-div")[i].innerHTML += `<img class="shop-aether" src="imgs/aether.png"><p class="shop-aether-cost">${cardCost[i]}</p>`
+                document.querySelectorAll(".shop-cards-cost-div")[i].innerHTML += `<img class="shop-aether" src="imgs/aether-icon.png"><p class="shop-aether-cost">${cardCost[i]}</p>`
                 let shopCardsReference = document.querySelectorAll(".card-reference");
                 shopCards.push(shopCardsReference[shopCardsReference.length - 1]);
         }
@@ -2972,7 +3216,7 @@ function shop() {
                                                         <h4 class="img-text-h4">Ring of Fire</h4>
                                                         <p class="img-text-p">Single target burn duplicates half it's burn and spreads it to all enemies</p>
                                                 </div>
-                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(1);
@@ -2985,7 +3229,7 @@ function shop() {
                                                         <h4 class="img-text-h4">Concentrated Fire</h4>
                                                         <p class="img-text-p">Burning an enemy twice in one turn will increase the second burn by 50%</p>
                                                 </div>
-                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(2);
@@ -2998,7 +3242,7 @@ function shop() {
                                                         <h4 class="img-text-h4">Thunder Talisman</h4>
                                                         <p class="img-text-p">Start each encounter with +1 mana for the first turn</p>
                                                 </div>
-                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>;
                                         </div>`
                                         dontRepeatShopRelic.push(3);
@@ -3011,7 +3255,7 @@ function shop() {
                                                         <h4 class="img-text-h4">Lightning in a Bottle</h4>
                                                         <p class="img-text-p">Your unused mana will not be lost</p>
                                                 </div>
-                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(4);
@@ -3024,7 +3268,7 @@ function shop() {
                                                         <h4 class="img-text-h4">Ice Spear</h4>
                                                         <p class="img-text-p">Deal 4 more damage to enemies with Frostbite</p>
                                                 </div>
-                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(5);
@@ -3037,7 +3281,7 @@ function shop() {
                                                         <h4 class="img-text-h4">Frostheart</h4>
                                                         <p class="img-text-p">Gain 4 block when inflicting enemy with frostbite</p>
                                                 </div>
-                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(6);
@@ -3050,7 +3294,7 @@ function shop() {
                                                         <h4 class="img-text-h4">Stratus</h4>
                                                         <p class="img-text-p">Windswept will now reflect 25% of the damage enemies intend to attack for back to them</p>
                                                 </div>
-                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(7);
@@ -3063,7 +3307,7 @@ function shop() {
                                                         <h4 class="img-text-h4">Wind Disc</h4>
                                                         <p class="img-text-p">Start each encounter with one extra card for the first turn</p>
                                                 </div>
-                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(8);
@@ -3076,7 +3320,7 @@ function shop() {
                                                         <h4 class="img-text-h4">Blood Amulet</h4>
                                                         <p class="img-text-p">Gain 1 blood siphon on your second turn</p>
                                                 </div>
-                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(9);
@@ -3089,7 +3333,7 @@ function shop() {
                                                         <h4 class="img-text-h4">Caspian's Tear</h4>
                                                         <p class="img-text-p">Gain +3 max health when you start a new encounter</p>
                                                 </div>
-                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(10);
@@ -3102,7 +3346,7 @@ function shop() {
                                                         <h4 class="img-text-h4">Crown of Thorns</h4>
                                                         <p class="img-text-p">Start each encounter with 2 thorns</p>
                                                 </div>
-                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(11);
@@ -3115,7 +3359,7 @@ function shop() {
                                                         <h4 class="img-text-h4">Vine Bracelet</h4>
                                                         <p class="img-text-p">When you lose all of your block gain 10 block</p>
                                                 </div>
-                                                <img class="shop-aether" src="imgs/aether.png">
+                                                <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>
                                         </div>`;
                                         dontRepeatShopRelic.push(12);
@@ -3383,6 +3627,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 0,
                 element: "fire",
+                rarity: "starter",
                 action: 
                 [
                         function () {
@@ -3408,6 +3653,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 1,
                 element: "fire",
+                rarity: "starter",
                 action: 
                 [
                         function() {
@@ -3437,6 +3683,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 2,
                 element: "lightning",
+                rarity: "starter",
                 action:
                 [
                         function() {
@@ -3463,11 +3710,12 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 3,
                 element: "lightning",
+                rarity: "starter",
                 action:
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(20);
+                                damageAllEnemies(2000);
                                 gainEnergize(2);
                                 fxChainLightning.play();
                         },
@@ -3488,6 +3736,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 4,
                 element: "ice",
+                rarity: "starter",
                 action: 
                 [
                         function() {
@@ -3513,6 +3762,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 5,
                 element: "ice",
+                rarity: "starter",
                 action:
                 [       
                         function() {
@@ -3550,6 +3800,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 6,
                 element: "air",
+                rarity: "starter",
                 action:
                 [ 
                         function() {
@@ -3616,6 +3867,7 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 7,
                 element: "air",
+                rarity: "starter",
                 action:
                 [ 
                         function() {
@@ -3642,6 +3894,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 8,
                 element: "water",
+                rarity: "starter",
                 action:
                 [ 
                         function() {
@@ -3668,12 +3921,13 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 9,
                 element: "water",
+                rarity: "starter",
                 action:
                 [
                         function() {
                                 fxTidalImbuement.play();
+                                spendMana(2);
                                 function tidalTrident() {
-                                        spendMana(2);
                                         if (snowfallElixir) {
                                                 damageAllEnemies(18);
                                                 for (let i = 0; i < numberOfEnemies; i++) {
@@ -3690,16 +3944,16 @@ const cardsInformation = [
                                                 gainRegen(1);
                                                 if (chosenEnemy === 1) {
                                                         if (!enemyIsDead[0]) {
-                                                                damageEnemy((tidalDamage) / 2, 0);
+                                                                damageEnemy(Math.floor((tidalDamage) / 2), 0);
                                                                 gainRegen(1);
                                                         }
                                                         if (!enemyIsDead[2] && numberOfEnemies === 3) {
-                                                                damageEnemy((tidalDamage) / 2, 2);
+                                                                damageEnemy(Math.floor((tidalDamage) / 2), 2);
                                                                 gainRegen(1);
                                                         }
                                                 } else {
                                                         if (!enemyIsDead[1] && numberOfEnemies !== 1) {
-                                                                damageEnemy((tidalDamage) / 2, 1);
+                                                                damageEnemy(Math.floor((tidalDamage) / 2), 1);
                                                                 gainRegen(1);
                                                         }
                                                 }
@@ -3708,33 +3962,46 @@ const cardsInformation = [
                                 setTimeout(tidalTrident, 1000);
                         },
                         function() {
-                                spendMana(2);
-                                let tidalDamage = (damageEnemy(18, chosenEnemy));
-                                if (playerWindswept) {
-                                        tidalDamage *= 2;
-                                }
-                                console.log(tidalDamage);
-                                gainRegen(1);
-                                gainBloodSiphon(1);
-                                if (chosenEnemy === 1) {
-                                        if (!enemyIsDead[0]) {
-                                                damageEnemy((tidalDamage) / 2, 0);
-                                                gainRegen(1);
-                                                gainBloodSiphon(1);
-                                        }
-                                        if (!enemyIsDead[2] && numberOfEnemies === 3) {
-                                                damageEnemy((tidalDamage) / 2, 2);
-                                                gainRegen(1);
-                                                gainBloodSiphon(1);
-                                        }
-                                } else {
-                                        if (!enemyIsDead[1]) {
-                                                damageEnemy((tidalDamage) / 2, 1);
-                                                gainRegen(1);
-                                                gainBloodSiphon(1);
-                                        }
-                                }
                                 fxTidalImbuement.play();
+                                spendMana(2);
+                                function tidalTrident() {
+                                        if (snowfallElixir) {
+                                                damageAllEnemies(18);
+                                                for (let i = 0; i < numberOfEnemies; i++) {
+                                                        if (!enemyIsDead[i]) {
+                                                                gainRegen(1);
+                                                                gainBloodSiphon(1);
+                                                        }
+                                                }
+                                        } else {
+                                                let tidalDamage = (damageEnemy(18, chosenEnemy));
+                                                if (playerWindswept) {
+                                                        tidalDamage *= 2;
+                                                }
+                                                console.log(tidalDamage);
+                                                gainRegen(1);
+                                                gainBloodSiphon(1);
+                                                if (chosenEnemy === 1) {
+                                                        if (!enemyIsDead[0]) {
+                                                                damageEnemy(Math.floor((tidalDamage) / 2), 0);
+                                                                gainRegen(1);
+                                                                gainBloodSiphon(1);
+                                                        }
+                                                        if (!enemyIsDead[2] && numberOfEnemies === 3) {
+                                                                damageEnemy(Math.floor((tidalDamage) / 2), 2);
+                                                                gainRegen(1);
+                                                                gainBloodSiphon(1);
+                                                        }
+                                                } else {
+                                                        if (!enemyIsDead[1] && numberOfEnemies !== 1) {
+                                                                damageEnemy(Math.floor((tidalDamage) / 2), 1);
+                                                                gainRegen(1);
+                                                                gainBloodSiphon(1);
+                                                        }
+                                                }
+                                        }
+                                }
+                                setTimeout(tidalTrident, 1000);
                         },
                 ]
         },
@@ -3747,23 +4014,40 @@ const cardsInformation = [
                 chooseEnemyCard: true,
                 index: 10,
                 element: "earth",
+                rarity: "starter",
                 action:
                 [ 
                         function() {
                                 fxEarthShatter.play();
+                                spendMana(1);
                                 function rockSmash() {
-                                        spendMana(1);
                                         let damageDone = damageEnemy(8, chosenEnemy);
-                                        gainBlock(damageDone);
+                                        if (snowfallElixir) {
+                                                for (let i = 0; i < numberOfEnemies; i++) {
+                                                        if (!enemyIsDead) {
+                                                                gainBlock(damageDone);
+                                                        }
+                                                }
+                                        } else {
+                                                gainBlock(damageDone);
+                                        }
                                 }
                                 setTimeout(rockSmash, 820);
                         },
                         function() {
                                 fxEarthShatter.play();
+                                spendMana(1);
                                 function rockSmash() {
-                                        spendMana(1);
                                         let damageDone = damageEnemy(12, chosenEnemy);
-                                        gainBlock(damageDone);
+                                        if (snowfallElixir) {
+                                                for (let i = 0; i < numberOfEnemies; i++) {
+                                                        if (!enemyIsDead) {
+                                                                gainBlock(damageDone);
+                                                        }
+                                                }
+                                        } else {
+                                                gainBlock(damageDone);
+                                        }
                                 }
                                 setTimeout(rockSmash, 820);
                         },
@@ -3779,6 +4063,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 11,
                 element: "earth",
+                rarity: "starter",
                 action:
                 [
                         function() {
@@ -5206,14 +5491,14 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
                         element2 = "earth2";
                         break;
                 case 51:
-                        element = "gold";
+                        element = "aether";
                         break;
                 case 52:
                         element = "celestial";
                         break;
         }
         innerLocation.innerHTML +=
-        `<div class="${cardClass} ${cardsInformation[index].element} ${index}">
+        `<div class="${cardClass} ${cardsInformation[index].element} ${cardsInformation[index].rarity} ${index}">
                 <p class="card-mana-number">${cardsInformation[index].manaCost[upgradeIndex]}</p>
                 <img class="card-mana-img" src="imgs/block-icon.png">
                 <div class="card-name-element-div">
@@ -5325,9 +5610,9 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                         }
                         console.log("UPDATING CARD TEXT");
                         updateCardText();
-                        document.querySelectorAll(".enemy-div").forEach(i => {
+                        /*document.querySelectorAll(".enemy-div").forEach(i => {
                                 i.style = "cursor: default";
-                        });
+                        });*/
                 }
         }
         // IF CARD REQUIRES YOU TO CLICK ON AN ENEMY
@@ -5337,12 +5622,35 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                         if (!cardClicked) {
                                 cardClicked = true;
                                 chosenCard = CIindex;
-                                cardType[index].classList.add("card-clicked");
+                                if (cardType[index].classList.contains("fire")) {
+                                        cardType[index].classList.add("card-clicked-fire");
+                                } else if (cardType[index].classList.contains("lightning")) {
+                                        cardType[index].classList.add("card-clicked-lightning");
+                                } else if (cardType[index].classList.contains("ice")) {
+                                        cardType[index].classList.add("card-clicked-ice");
+                                } else if (cardType[index].classList.contains("air")) {
+                                        cardType[index].classList.add("card-clicked-air");
+                                } else if (cardType[index].classList.contains("water")) {
+                                        cardType[index].classList.add("card-clicked-water");
+                                } else if (cardType[index].classList.contains("earth")) {
+                                        cardType[index].classList.add("card-clicked-earth");
+                                }
                                 chooseEnemy();
                         } else {
-                                console.log("WEEEEEEEEEEE");
                                 removeCardClicked();
-                                cardType[index].classList.add("card-clicked");
+                                if (cardType[index].classList.contains("fire")) {
+                                        cardType[index].classList.add("card-clicked-fire");
+                                } else if (cardType[index].classList.contains("lightning")) {
+                                        cardType[index].classList.add("card-clicked-lightning");
+                                } else if (cardType[index].classList.contains("ice")) {
+                                        cardType[index].classList.add("card-clicked-ice");
+                                } else if (cardType[index].classList.contains("air")) {
+                                        cardType[index].classList.add("card-clicked-air");
+                                } else if (cardType[index].classList.contains("water")) {
+                                        cardType[index].classList.add("card-clicked-water");
+                                } else if (cardType[index].classList.contains("earth")) {
+                                        cardType[index].classList.add("card-clicked-earth");
+                                }
                                 chosenCard = CIindex;
                                 chooseEnemy();
                         }
@@ -5359,7 +5667,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         // ADD EVENTLISTENERS TO ALL ENEMIES
         function chooseEnemy() {
                 document.querySelectorAll(".enemy-div").forEach(i => {
-                        i.style = "cursor: crosshair";
+                        i.style.cursor = "crosshair";
                 });
                         
                 for (let i = 0; i < numberOfEnemies; i++) {
@@ -5388,15 +5696,28 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         }
 }
 function removeCardClicked() {
+        let elements = ["fire", "lightning", "ice", "air", "water", "earth"];
         for (let i = 0; i < handArray.length; i++) {
-                if (handArray[i].classList.contains("card-clicked")) {
-                        handArray[i].classList.remove("card-clicked");
-                }
+                elements.forEach(j => {
+                        if (handArray[i].classList.contains(`card-clicked-${j}`)) {
+                                handArray[i].classList.remove(`card-clicked-${j}`);
+                                
+                        }
+                });
+        }
+        for (let i = 0; i < drawPileArray.length; i++) {
+                elements.forEach(j => {
+                        if (drawPileArray[i].classList.contains(`card-clicked-${j}`)) {
+                                drawPileArray[i].classList.remove(`card-clicked-${j}`);
+                        }
+                });
         }
         for (let i = 0; i < discardPileArray.length; i++) {
-                if (discardPileArray[i].classList.contains("card-clicked")) {
-                        discardPileArray[i].classList.remove("card-clicked");
-                }
+                elements.forEach(j => {
+                        if (discardPileArray[i].classList.contains(`card-clicked-${j}`)) {
+                                discardPileArray[i].classList.remove(`card-clicked-${j}`);
+                        }
+                });
         }
 }
 function addCardToDeck(newRandomCard, upgradeIndex, switchToMap) {
@@ -5418,6 +5739,9 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchToMap) {
         console.log("2 currentCards[currentCards.length - 1 - potionCards.length]", currentCards[currentCards.length - 1 - potionCards.length]);
         if (switchToMap) {
                 switchArea(map, arena);
+                document.querySelectorAll(".relic-img-text").forEach(i => {
+                        displayNone(i);
+                });
         }
         windsOfChange = 8;
 }        
@@ -5547,6 +5871,7 @@ const playerThornsDiv = document.querySelector("#player-thorns-div");
 const playerTidalDiv = document.querySelector("#player-tidal-div");
 const playerManaDiv = document.querySelector("#mana-bar-div");
 const playerImgText = document.querySelectorAll(".player-img-text");
+const orbImgText = document.querySelectorAll(".orb-img-text");
 function addActionText(div, text) {                
         div.addEventListener("mouseover", () => {
                 displayFlex(text);
@@ -5762,7 +6087,6 @@ function leechBuffs(enemy, leech) {
                 checkBuffs(enemyRegenNumber, enemyRegenImg, playerRegenImg, playerRegenNumber, null);
                 checkBuffs(enemyBloodNumber, enemyBloodImg, playerBloodImg, playerBloodNumber, null);
                 checkBuffs(enemyThornsNumber, enemyThornsImg, playerThornsImg, playerThornsNumber, thornsTotal);
-                stealBuffs = false;
         }
 }
 function inflictFrostbite(enemy) {
@@ -5776,9 +6100,6 @@ function inflictFrostbite(enemy) {
                         }
                         if (cryocast) {
                                 leechBuffs(enemy, true);
-                        }
-                        if (stealBuffs) {
-                                leechBuffs(enemy, false);
                         }
                         enemyFrostbite[enemy] = true;
                         enemyBlockActionNumber[enemy].innerText = Math.floor(enemyBlockActionNumber[enemy].innerText * .50);  
@@ -5799,9 +6120,6 @@ function inflictAllFrostbite() {
                         }
                         if (cryocast) {
                                 leechBuffs(i, true);
-                        }
-                        if (stealBuffs) {
-                                leechBuffs(i, false);
                         }
                         enemyFrostbite[i] = true;
                         enemyBlockActionNumber[i].innerText = Math.floor(enemyBlockActionNumber[i].innerText * .50);  
@@ -6410,7 +6728,7 @@ const enemiesInformation = [
         {
                 name: "Fae Dragon",
                 index: 12,
-                baseHealth: 150,
+                baseHealth: 180,
                 img: "imgs/boss-fae-dragon.png",
                 attackChance: 3,
                 burnChance: 10,
@@ -7145,7 +7463,7 @@ let enemyBurnNumber = document.querySelectorAll(".enemy-burn-number");
 function damagePlayer(damage, index) {
         fxEnemyAttack.currentTime = 0;
         fxEnemyAttack.play();
-        if (airGift && !airGiftTrigger && reduceAllAttack) {
+        if (airGift && !airGiftTrigger && reduceAllAttack && enemyWindswept[index]) {
                 damage = 0;
         }
         if (enemyWindswept[index]) {
@@ -7343,6 +7661,7 @@ function checkIfEnemyDead() {
                 if (getEliteRelic) {
                         ghostIndex = 11;
                         getRelic(1, 12);
+                        displayFlex(document.querySelectorAll(".relic-img-text")[document.querySelectorAll(".relic-img-text").length - 1]);
                 }
                 enemiesKilled++
                 siphonAll = false;
@@ -7354,6 +7673,9 @@ function checkIfEnemyDead() {
                                 i.pause();
                         });
                         allMusic = [];
+                        allAmbience.forEach(i => {
+                                i.pause();
+                        });
                         allAmbience = [];
                         const hallowwoodAmbience = new Audio("audio/hallowwood-ambience.wav");
                         switchAmbience(hallowwoodAmbience);
@@ -7524,6 +7846,9 @@ function checkIfEnemyDead() {
                                         i.pause();
                                 });
                                 allMusic = [];
+                                allAmbience.forEach(i => {
+                                        i.pause();
+                                });
                                 allAmbience = [];
                                 const heavenMapMusic = new Audio("audio/heaven-map-music.wav");
                                 switchMusic(heavenMapMusic);
@@ -7732,23 +8057,6 @@ let winterWarriorTracking = [false, false, false];
 function endTurn() {
         if (!enemiesAreDead) {
                 // RESET MANA AND DEBUFFS
-                if (lightningInABottle) { 
-                        if (stormchaser) {
-                                currentMana.innerText = parseFloat(currentMana.innerText) + 5;
-                        } else {
-                                currentMana.innerText = parseFloat(currentMana.innerText) + 4;                 
-                        }
-                } else {
-                        if (stormchaser) {
-                                currentMana.innerText = 5;
-                        } else {
-                                currentMana.innerText = 4;
-                        }
-                }
-                if (doubleMana) {
-                        currentMana.innerText *= 2;
-                        doubleMana = false;
-                }
                 checkPlayerBurn();
                 if (trackEnemies[0] !== 11) {
                         playerWindswept = false;
@@ -7842,6 +8150,7 @@ function endTurn() {
                                 }
                                 concentratedFireTracking[eI] = false;
                         }
+                        checkHealth();
                         eI++;
                 }
                 enemyTurn();
@@ -7859,6 +8168,35 @@ function endTurn() {
                         checkGaiasEmbrace();
                         addCardsToHand();
                         checkIfEnemyDead();
+                        damageThisTurn = 0;
+                        airBubble = [];
+                        if (bloodAmulet) {
+                                playerBloodNumber.innerText = parseFloat(playerBloodNumber.innerText) + 1;
+                                displayBlock(playerBloodImg, playerBloodNumber);
+                                bloodAmulet = false;
+                        }
+                        turnEnded = true;
+                        if (grovertender) {
+                                playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) + 2;
+                                displayBlock(playerThornsImg, playerThornsNumber);
+                        }
+                        if (lightningInABottle) { 
+                                if (stormchaser) {
+                                        currentMana.innerText = parseFloat(currentMana.innerText) + 5;
+                                } else {
+                                        currentMana.innerText = parseFloat(currentMana.innerText) + 4;                 
+                                }
+                        } else {
+                                if (stormchaser) {
+                                        currentMana.innerText = 5;
+                                } else {
+                                        currentMana.innerText = 4;
+                                }
+                        }
+                        if (doubleMana) {
+                                currentMana.innerText *= 2;
+                                doubleMana = false;
+                        }
                         if (numberOfEnemies === 1) {
                                 enemyAction(trackEnemies[0]);
                         } else if (numberOfEnemies === 2) {
@@ -7866,21 +8204,8 @@ function endTurn() {
                         } else {
                                 enemyAction(trackEnemies[0], trackEnemies[1], trackEnemies[2]);
                         }
-                        reduceAllAttack = false;
-                }, (numberOfEnemies - 1) * 500);
-                damageThisTurn = 0;
-                airBubble = [];
-                if (bloodAmulet) {
-                        playerBloodNumber.innerText = parseFloat(playerBloodNumber.innerText) + 1;
-                        displayBlock(playerBloodImg, playerBloodNumber);
-                        bloodAmulet = false;
-                }
-                turnEnded = true;
-                if (grovertender) {
-                        playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) + 2;
-                        displayBlock(playerThornsImg, playerThornsNumber);
-                }
-                checkHealth();
+                }, (numberOfEnemies - 1) * 500);               
+                reduceAllAttack = false;
         }
 }
 for (let i = 0; i < openingCards.length; i++) {
