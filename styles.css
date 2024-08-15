@@ -492,6 +492,14 @@
         box-shadow: 0 0 10px 10px red;
     }
 }
+@keyframes common-glow {
+    from {
+        box-shadow: 0 0 5px 5px rgb(255, 255, 255);
+    }
+    to {
+        box-shadow: 0 0 5px 5px rgb(255, 255, 255);
+    }
+}
 @keyframes fire-glow {
     from {
         box-shadow: 0 0 -50px -50px rgb(255, 113, 31);
@@ -549,7 +557,7 @@
     }
 }
 .glow {
-    animation: glow 1s infinite alternate;
+    animation: glow 2s infinite alternate;
 }
 .fire-glow {
     animation: fire-glow 2s infinite alternate;
@@ -703,7 +711,7 @@
     margin: .8rem .5rem ;
     font-size: 1.2rem;
 }
-#leave-shop-button {
+#leave-shop-button, #leave-relic-button {
     width: 20rem;
     height: 5rem;
     margin-top: 1rem;
@@ -1038,20 +1046,27 @@
 #skip-button:active {
     transform: translateY(5px);
 }
-#elite-relic-screen {
+#elite-relic-container {
     position: absolute;
     display: none;
     align-items: center;
     justify-content: center;
-    width: 50%;
-    height: 30vh;
+    width: 100%;
+    height: 100vh;
     font-size: 22px;
     font-family: fantasy;
+    z-index: 6;
+}
+#elite-relic-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 30%;
     border-radius: 12px;
     box-shadow: 5px 5px 10px black;
     border: 2px solid #202221;
     background-image: linear-gradient(135deg, #bebebe 0%, #dfe2e6 100%);
-    z-index: 6;
 }
 /* ENEMY */
 #enemy-container {
@@ -1708,21 +1723,27 @@
 }
 .fire .card-text {
     background-color: #3a0000;
+    box-shadow: 0 0 1px 1px #ba760f inset;
 }
 .lightning .card-text {
     background-color: #3d3d58;
+    box-shadow: 0 0 1px 1px #221d54 inset;
 }
 .ice .card-text {
     background-color: rgb(26, 111, 150);
+    box-shadow: 0 0 1px 1px #b9e8ea inset;
 }
 .air .card-text {
     background-color: rgb(139, 165, 173);
+    box-shadow: 0 0 1px 1px #ffffff inset;
 }
 .water .card-text {
     background-color: rgb(7, 40, 58);
+    box-shadow: 0 0 1px 1px #0f5e9c inset;
 }
 .earth .card-text {
     background-color: #1f0c02;
+    box-shadow: 0 0 1px 1px #451b04 inset;
 }
 .avarice .card-text {
     background-color: rgb(35, 0, 43);
@@ -1742,7 +1763,6 @@
     display: none;
     position: relative;
     cursor: default;
-    box-shadow: 5px 5px 10px black;
     z-index: 3;
 }
 .card-reference, .upgrade-reference {
@@ -1752,13 +1772,9 @@
     border: 2px solid gold;
 }
 .card:hover {
-    transform: translateY(-100px);
+    transform: translateY(-108px);
     transition-duration: .5s;
     z-index: 6;
-}
-.card-clicked {
-    transform: translateY(-100px);
-    box-shadow: 0 0 10px 10px rgb(255, 255, 255);
 }
 .card-name {
     width: 100%;
@@ -1813,6 +1829,37 @@
     margin-left: 140px;
     width: 18px;
     height: 18px;
+}
+.common, .starter {
+    box-shadow: 0 0 6px 6px rgb(255, 255, 255);
+}
+.rare {
+    box-shadow: 0 0 6px 6px #0070dd;
+}
+.deific {
+    box-shadow: 0 0 6px 6px #ff8000;
+}
+.card-clicked-fire, .card-clicked-lightning, .card-clicked-ice, .card-clicked-air, .card-clicked-water, .card-clicked-earth {
+    transform: translateY(-100px);
+    z-index: 9;
+}
+.card-clicked-fire  {
+    box-shadow: 0 0 10px 10px #ba760f;
+}
+.card-clicked-lightning {
+    box-shadow: 0 0 10px 10px #221d54;
+}
+.card-clicked-ice {
+    box-shadow: 0 0 10px 10px #2f989c;
+}
+.card-clicked-air {
+    box-shadow: 0 0 10px 10px #86bfdf;
+}
+.card-clicked-water {
+    box-shadow: 0 0 10px 10px #0f5e9c;
+}
+.card-clicked-earth {
+    box-shadow: 0 0 10px 10px #81b14f;
 }
 img[src="imgs/undefined-icon.png"] {
     display: none;

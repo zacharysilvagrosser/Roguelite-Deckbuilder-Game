@@ -4,24 +4,19 @@ Light and Dark based class has a light and dark meter based on your actions thro
 
 TO DO
 Settings gear when hitting escape for music and sound volume
-//crop orbs in paint. //Hover over orb to see what your gift does
 ghost elite becomes opacity: .5 and unable to be attacked
-/make elite relic screen after defeat
-///rarity added on cards
-///card display for mystery buttons
+have cardupdatetext take returned numbers from damage function so it's always accurate
+change hallowwood elite encounter music lofi?
 
 BUGS
 ?death screen brings you to fae forest arena
-/clicking card brings enemy margins back down
-//blacksmitch x overflow
-?storm form with windswept damage incorrect (storm form windswept static charge did 22 card said 20, text is adding storm form then doing windswept, damage is doing windswept then adding storm form
-//spendmana cant be settimeout
-//tidal trident did .5 damage
-//endturn set mana to 4 on a timeout
-//make rock smash work with icy imbuement
-//makeiceGift leech buffs from enemies that are frostbitten
-get rid of empowered sanguine spring when healing glacia
-//ambience never changes between stages
+?card text still not updating
+?dontrepeateliteencounter jumped to encounter even tho i only did 1 elite
+goldencounter getting 10 max health but not health
+unique cards dont glow
+after using static charge cards still show upgrade buff text
+match ball lightning sound better (reduce timeout time)
+sacrifice cards mystery doubles cards when two same cards in deck and blocks button
 
 */
 /*
@@ -703,19 +698,31 @@ function goldEncounter() {
         goldEncounterGold = true;
         let randomGoldEncounterNumber;
         if (faeForest) {
-                randomGoldEncounterNumber = createRandomNumber(1, 3);
-                while (dontRepeatGoldEncounter.includes(randomGoldEncounterNumber)) {
+                if (dontRepeatGoldEncounter.includes(1) && dontRepeatGoldEncounter.includes(2) && dontRepeatGoldEncounter.includes(3)) {
+                        encounter();
+                } else {
                         randomGoldEncounterNumber = createRandomNumber(1, 3);
+                        while (dontRepeatGoldEncounter.includes(randomGoldEncounterNumber)) {
+                                randomGoldEncounterNumber = createRandomNumber(1, 3);
+                        }
                 }
         } else if (hallowwood) {
-                randomGoldEncounterNumber = createRandomNumber(4, 6);
-                while (dontRepeatGoldEncounter.includes(randomGoldEncounterNumber)) {
+                if (dontRepeatGoldEncounter.includes(4) && dontRepeatGoldEncounter.includes(5) && dontRepeatGoldEncounter.includes(6)) {
+                        encounter();
+                } else {
                         randomGoldEncounterNumber = createRandomNumber(4, 6);
+                        while (dontRepeatGoldEncounter.includes(randomGoldEncounterNumber)) {
+                                randomGoldEncounterNumber = createRandomNumber(4, 6);
+                        }
                 }
         } else {
-                randomGoldEncounterNumber = createRandomNumber(7, 9);
-                while (dontRepeatGoldEncounter.includes(randomGoldEncounterNumber)) {
+                if (dontRepeatGoldEncounter.includes(7) && dontRepeatGoldEncounter.includes(8) && dontRepeatGoldEncounter.includes(9)) {
+                        encounter();
+                } else {
                         randomGoldEncounterNumber = createRandomNumber(7, 9);
+                        while (dontRepeatGoldEncounter.includes(randomGoldEncounterNumber)) {
+                                randomGoldEncounterNumber = createRandomNumber(7, 9);
+                        }
                 }
         }
         switchArea(arena, map);
@@ -727,6 +734,10 @@ function goldEncounter() {
                 initializeEnemyVariables();
                 enemyLevelUp();
                 enemyAction(action, action, action);
+                enemyMaxHealth.forEach(i => {
+                        i.innerText = parseFloat(i.innerText) + 10;
+                        enemyCurrentHealth.innerText = parseFloat(enemyCurrentHealth.innerText) + 10;
+                });
                 dontRepeatEncounter.push(repeat);
         }
         switch (randomGoldEncounterNumber) {
@@ -954,26 +965,29 @@ function eliteEncounter() {
         if (faeForest) {
                 if (dontRepeatEliteEncounter.includes(1) && dontRepeatEliteEncounter.includes(2) && dontRepeatEliteEncounter.includes(3)) {
                         encounter();
-                }
-                randomEliteNumber = createRandomNumber(1, 3);
-                while (dontRepeatEncounter.includes(randomEliteNumber)) {
-                        randomEliteNumber = createRandomNumber(1, 3);        
+                } else {
+                        randomEliteNumber = createRandomNumber(1, 3);
+                        while (dontRepeatEncounter.includes(randomEliteNumber)) {
+                                randomEliteNumber = createRandomNumber(1, 3);        
+                        }
                 }
         } else if (hallowwood) {
                 if (dontRepeatEliteEncounter.includes(4) && dontRepeatEliteEncounter.includes(5) && dontRepeatEliteEncounter.includes(6)) {
                         encounter();
-                }
-                randomEliteNumber = createRandomNumber(4, 6);
-                while (dontRepeatEncounter.includes(randomEliteNumber)) {
-                        randomEliteNumber = createRandomNumber(4, 6);        
+                } else {
+                        randomEliteNumber = createRandomNumber(4, 6);
+                        while (dontRepeatEncounter.includes(randomEliteNumber)) {
+                                randomEliteNumber = createRandomNumber(4, 6);        
+                        }
                 }
         } else {
                 if (dontRepeatEliteEncounter.includes(7) && dontRepeatEliteEncounter.includes(8) && dontRepeatEliteEncounter.includes(9)) {
                         encounter();
-                }
-                randomEliteNumber = createRandomNumber(7, 9);
-                while (dontRepeatEncounter.includes(randomEliteNumber)) {
-                        randomEliteNumber = createRandomNumber(7, 9);        
+                } else {
+                        randomEliteNumber = createRandomNumber(7, 9);
+                        while (dontRepeatEncounter.includes(randomEliteNumber)) {
+                                randomEliteNumber = createRandomNumber(7, 9);        
+                        }
                 }
         }
         getEliteRelic = true;
@@ -990,49 +1004,49 @@ function eliteEncounter() {
                 case 1:
                         createEliteEnemy("Fae Fox", 9 , 1);
                         document.querySelector(".enemy-img").style = "width: 500px";
-                        //document.querySelector(".enemy-div").style = "position: absolute; left: 1rem; bottom: 9rem";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: 1rem; bottom: 9rem";
                         break;
                 case 2:
                         createEliteEnemy("Dryad", 10, 2);
                         document.querySelector(".enemy-img").style = "width: 500px";
-                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         document.querySelector(".enemy-action-div").style = "margin-bottom: -3rem";
                         document.querySelector(".enemy-debuffs").style = "margin-bottom: -1rem";
                         break;
                 case 3:
                         createEliteEnemy("Frost Sprite", 11, 3);
                         document.querySelector(".enemy-img").style = "width: 450px";
-                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
                 case 4:
                         createEliteEnemy("Reaper", 23, 4);
-                        document.querySelector(".enemy-img").style = "width: 550px";
-                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 7rem";
+                        document.querySelector(".enemy-img").style = "width: 500px";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 7rem";
                         break;
                 case 5:
                         createEliteEnemy("Spectre", 24, 5);
                         document.querySelector(".enemy-img").style = "width: 510px";
-                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
                 case 6:
                         createEliteEnemy("Gargoyle", 25, 6);
                         document.querySelector(".enemy-img").style = "width: 450px";
-                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
                 case 7:
                         createEliteEnemy("Zeus", 42, 7);
                         document.querySelector(".enemy-img").style = "width: 450px";
-                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
                 case 8:
                         createEliteEnemy("Odin", 43, 8);
                         document.querySelector(".enemy-img").style = "width: 450px";
-                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
                 case 9:
                         createEliteEnemy("Jesus", 44, 9);
                         document.querySelector(".enemy-img").style = "width: 450px";
-                        //document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         break;
         }
 }
@@ -1660,7 +1674,7 @@ function mystery() {
                 if (mysteryReturn[0]) {
                         encounter();
                 } else {
-                        randomExclamationNumber = createRandomNumber(9, 9);
+                        randomExclamationNumber = createRandomNumber(1, 5);
                         while (dontRepeatExclamation.includes(randomExclamationNumber) && !mysteryReturn[0]) {
                                 randomExclamationNumber = createRandomNumber(1, 5);
                         }
@@ -1855,7 +1869,7 @@ function mystery() {
                                                         const allCardsList = document.querySelector("#all-cards-list");
                                                         allCardsArray.forEach((i) => {
                                                                 for (let j = 0; j < cardsInformation.length; j++) {
-                                                                        if (i.classList.contains(j)) {
+                                                                        if (i.classList.contains(j) && !i.classList.contains("upgraded")) {
                                                                                 createCard(j, allCardsList, "card-reference", "card-text", 0);
                                                                         }
                                                                 }
@@ -1888,7 +1902,7 @@ function mystery() {
                                                         const allCardsList = document.querySelector("#all-cards-list");
                                                         allCardsArray.forEach((i) => {
                                                                 for (let j = 0; j < cardsInformation.length; j++) {
-                                                                        if (i.classList.contains(j)) {
+                                                                        if (i.classList.contains(j) && !i.classList.contains("upgraded")) {
                                                                                 createCard(j, allCardsList, "card-reference", "card-text", 0);
                                                                         }
                                                                 }
@@ -1937,7 +1951,7 @@ function mystery() {
                                 `"The path forward to stop Illuminia and her sister will be demanding. We offer a choice of blessings to help in your plight. Choose wisely."`);
                         document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: #74ccf4">Aquatas' Blessing:</span> Gain 8 regeneration next fight.</button>
-                        <button class="exclamation-button-2"><span style="color: #81b14f">Gaia's Blessing:</span> Gain 6 thorns next fight.</button>`;
+                        <button class="exclamation-button-2"><span style="color: #81b14f">Gaia's Blessing:</span> Gain 10 thorns next fight.</button>`;
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 aquatasBlessing = true;
                                 switchArea(map, exclamationContainer);
@@ -1953,7 +1967,7 @@ function mystery() {
                                 `"So you're the one here to save all of Terra, huh?" she giggles. "Hmm...you don't really look like someone ready to save the world."`,
                                 `"And your spell book looks <em>awfully</em> empty! Take my spell so you can at least give them a good fight. I'll tell the plants about your valiant effort!" the sound of her laughter slowly fades as she skips away.`);
                         document.querySelector(".exclamation-button-div").innerHTML = `
-                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: #81b14f">Let Gaia embrace you:</span> Gain Gaia's Embrace spell</button>
+                        <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: #81b14f">Let Gaia embrace you:</span> Gain a Gaia's Embrace spell</button>
                         <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83">Refuse:</span> Lose all of your earth cards</button>
                         <div id="mystery-card-display-container"></div>`;
                         createElementCards(document.querySelectorAll(".earth"));
@@ -1988,7 +2002,7 @@ function mystery() {
                                 });
                         });
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
-                                addCardToDeck(35, 1, true);
+                                addCardToDeck(35, 0, true);
                                 switchArea(map, exclamationContainer);
                         });    
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
@@ -2244,7 +2258,7 @@ function mystery() {
                         document.querySelectorAll(".card").forEach(i => {
                                 for (let j = 0; j < cardsInformation.length; j++) {
                                         if (i.classList.contains(j) && "blood" in cardsInformation[j] && cardsInformation[j].blood[0] !== 0) {
-                                                createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                                                createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 1);
                                         }
                                 }
                         });
@@ -2283,6 +2297,8 @@ function mystery() {
                                                 }
                                         }
                                 });
+                                destroyedCardsArray = [];
+                                destroyedCardsContainer.innerHTML = ``;
                                 switchArea(map, exclamationContainer);
                         });
                         document.querySelector(".exclamation-button-3").addEventListener("click", () => {
@@ -3169,11 +3185,11 @@ function shop() {
         }
         for (let i = 0; i < dontRepeatCard.length; i++) {
                 if (cardsInformation[dontRepeatCard[i]].rarity === "common") {
-                        cardCost[i] = createRandomNumber(40, 50);
+                        cardCost[i] = createRandomNumber(50, 70);
                 } else if (cardsInformation[dontRepeatCard[i]].rarity === "rare") {
-                        cardCost[i] = createRandomNumber(60, 70);
+                        cardCost[i] = createRandomNumber(80, 100);
                 } else {
-                        cardCost[i] = createRandomNumber(80, 90);
+                        cardCost[i] = createRandomNumber(110, 130);
                 }
         }
         for (let i = 0; i < dontRepeatCard.length; i++) {
@@ -3206,7 +3222,7 @@ function shop() {
                         while (dontRepeatRelic.includes(randomRelicNumber) || dontRepeatShopRelic.includes(randomRelicNumber)) {
                                 randomRelicNumber = createRandomNumber(1, 12);
                         }
-                        relicCost.push(createRandomNumber(75, 125));
+                        relicCost.push(createRandomNumber(100, 150));
                         switch (randomRelicNumber) {
                                 case 1:
                                         shopRelicContainer.innerHTML += `
@@ -3412,14 +3428,14 @@ function blacksmith() {
         blacksmithContainer.innerHTML = `
         <div id="blacksmith-dwarf-div">
                 <div id="blacksmith-text">
-                        <p>I can infuse your cards with aether to make them stronger if you've got the materials.<br><br>75 aether should do.</p>
+                        <p>I can infuse your cards with aether to make them stronger if you've got the materials.<br><br>100 aether should do.</p>
                         <div class="dialogue"></div>
                 </div>
                 <img id="blacksmith-dwarf" src="imgs/blacksmith-dwarf.png">
         </div>`
         let clickCount = 0;
-        if (playerAether.innerText < 75) {
-                document.querySelector("#blacksmith-text").innerHTML = `<p>I can infuse your cards with aether to make them stronger if you've got the materials.<br><br>Come back when you have 75 aether for me.</p>`;
+        if (playerAether.innerText < 100) {
+                document.querySelector("#blacksmith-text").innerHTML = `<p>I can infuse your cards with aether to make them stronger if you've got the materials.<br><br>Come back when you have 100 aether for me.</p>`;
                 document.querySelector("#blacksmith-text").addEventListener("click", () => {
                         switchArea(map, blacksmithContainer);
                         if (faeForest) {
@@ -3489,9 +3505,9 @@ function blacksmith() {
                                 cardReference[i].addEventListener("click", () => {
                                         clickCount--;
                                         for (let j = 0; j < cardsInformation.length; j++) {
-                                                if (cardReference[i].classList.contains(j) && playerAether.innerText >= 75) {
+                                                if (cardReference[i].classList.contains(j) && playerAether.innerText >= 100) {
                                                         upgradeCard(j);
-                                                        playerAether.innerText -= 75;
+                                                        playerAether.innerText -= 100;
                                                         displayNone(cardReference[i], map);
                                                         cardReferenceUpgraded[i].style = "visibility: collapse";
                                                         break;
@@ -3715,7 +3731,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(2000);
+                                damageAllEnemies(20);
                                 gainEnergize(2);
                                 fxChainLightning.play();
                         },
@@ -4143,7 +4159,7 @@ const cardsInformation = [
                 name: "Phoenix Fire",
                 cardImg: "imgs/phoenix-fire.jpeg",
                 cardText: [`Deal damage equal to 2x the amount of burn on the enemy`, `Deal damage equal to 4x the amount of burn on the enemy`],
-                damage: [2, 3],
+                damageSecond: [2, 4],
                 chooseEnemyCard: true,
                 index: 14,
                 element: "fire",
@@ -4998,9 +5014,9 @@ const cardsInformation = [
                 manaCost: [1, 1],
                 name: "Deep Freeze",
                 cardImg: "imgs/deep-freeze.jpeg",
-                cardText: ["Electrucute enemies with frostbite dealing damage equal to 6 times your mana", "Electrucute enemies with frostbite dealing damage equal to 10 times your mana"],
+                cardText: ["Electrucute enemies with frostbite dealing damage equal to 10 times your current mana", "Electrucute enemies with frostbite dealing damage equal to 15 times your current mana"],
                 damage: [0, 0],
-                damageSecond: [6, 10],
+                damageSecond: [10, 15],
                 chooseEnemyCard: false,
                 index: 41,
                 element: "lightning-ice lightning ice",
@@ -5010,7 +5026,7 @@ const cardsInformation = [
                         function() {
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false && enemyFrostbite[i]) {
-                                                damageEnemy(parseFloat(currentMana.innerText * 6), i);
+                                                damageEnemy(parseFloat(currentMana.innerText * 10), i);
                                         }
                                 }
                                 spendMana(1);
@@ -5019,7 +5035,7 @@ const cardsInformation = [
                         function() {
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false && enemyFrostbite[i]) {
-                                                damageEnemy(parseFloat(currentMana.innerText * 10), i);
+                                                damageEnemy(parseFloat(currentMana.innerText * 15), i);
                                         }
                                 }
                                 spendMana(1);
@@ -6346,147 +6362,115 @@ function checkGaiasEmbrace() {
                 }
         }
 }
+let cardsInformationDefaultValues = JSON.parse(JSON.stringify(cardsInformation));
 function updateCardText() {
         let currentCardText = document.querySelectorAll(".card-text");
-        let [oddDamage, oddDamageSecond, oddBurn, oddEnergize, oddRegen, oddBlood, oddBlock, oddThorns] = [[], [], [], [], [], [], [], []];
-        for (let i = 0; i < handArray.length; i++) {
-                oddDamage[i] = false;
-                oddDamageSecond[i] = false;
-                oddBurn[i] = false;
-                oddEnergize[i] = false;
-                oddRegen[i] = false;
-                oddBlood[i] = false;
-                oddBlock[i] = false;
-                oddThorns[i] = false;
-        }
-        function updateText(debuff, energized, frostbit, tidal, ember, emberUpgrade, liquid, liquidUpgrade, terraBlock, terraThorns) {
+        function updateText() {
                 for (let i = 0; i < handArray.length; i++) {
                         for (let j = 0; j < cardsInformation.length; j++) {
                                 if (handArray[i].classList.contains(j)) {
                                         for (let k = 0; k < currentCardText.length; k++) {
                                                 if (currentCardText[k].classList.contains(j)) {
-                                                        if (debuff === .5) {
-                                                                if (cardsInformation[j].name === "Stormblessed") {
-                                                                        cardsInformation[j].damage[0] = Math.floor(damageThisTurn * .5);
-                                                                        cardsInformation[j].damage[1] = Math.floor(damageThisTurn * .75);
-                                                                }
-                                                                if (cardsInformation[j].name === "Winds of Change") {
-                                                                        cardsInformation[j].damage[0] = windsOfChange;
-                                                                        cardsInformation[j].damage[1] = windsOfChange;
-                                                                }
-                                                                if (cardsInformation[j].name === "Tsunami") {
-                                                                        cardsInformation[j].damage[0] = healthGainedThisFight;
-                                                                        cardsInformation[j].damage[1] = healthGainedThisFight;
-                                                                }
-                                                                if (cardsInformation[j].name === "Deep Freeze") {
-                                                                        cardsInformation[j].damage[0] = Math.floor((parseFloat(currentMana.innerText) * 6));
-                                                                        cardsInformation[j].damage[1] = Math.floor((parseFloat(currentMana.innerText) * 10));
-                                                                }
-                                                                if (cardsInformation[j].name === "Electric Current") {
-                                                                        cardsInformation[j].damage[0] = Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5));
-                                                                        cardsInformation[j].damage[1] = Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5));
-                                                                }
+                                                        if (cardsInformation[j].name === "Stormblessed") {
+                                                                cardsInformation[j].damage[0] = Math.floor(damageThisTurn * .5);
+                                                                cardsInformation[j].damage[1] = Math.floor(damageThisTurn * .75);
                                                         }
-                                                        function update(type, oddType) {
+                                                        if (cardsInformation[j].name === "Winds of Change") {
+                                                                cardsInformation[j].damage[0] = windsOfChange;
+                                                                cardsInformation[j].damage[1] = windsOfChange;
+                                                        }
+                                                        if (cardsInformation[j].name === "Tsunami") {
+                                                                cardsInformation[j].damage[0] = healthGainedThisFight;
+                                                                cardsInformation[j].damage[1] = healthGainedThisFight;
+                                                        }
+                                                        if (cardsInformation[j].name === "Deep Freeze") {
+                                                                cardsInformation[j].damage[0] = Math.floor((parseFloat(currentMana.innerText) * 6));
+                                                                cardsInformation[j].damage[1] = Math.floor((parseFloat(currentMana.innerText) * 10));
+                                                        }
+                                                        if (cardsInformation[j].name === "Electric Current") {
+                                                                cardsInformation[j].damage[0] = Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5));
+                                                                cardsInformation[j].damage[1] = Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5));
+                                                        }
+                                                        function update(type) {
                                                                 let upgradeIndex = 0;
                                                                 if (currentCardText[k].classList.contains("upgraded-text")) {
                                                                         upgradeIndex = 1;
                                                                 }
-                                                                if (debuff === 2) {
-                                                                        if (playerFrostbite && frostbitten && type === cardsInformation[j].block) {
-                                                                                type[upgradeIndex] *= frostbit;
+                                                                if (type === cardsInformation[j].damage) {
+                                                                        type[upgradeIndex] = cardsInformationDefaultValues[j].damage[upgradeIndex];
+                                                                }
+                                                                if (type === cardsInformation[j].burn) {
+                                                                        type[upgradeIndex] = cardsInformationDefaultValues[j].burn[upgradeIndex];
+                                                                }
+                                                                if (type === cardsInformation[j].energize) {
+                                                                        type[upgradeIndex] = cardsInformationDefaultValues[j].energize[upgradeIndex];
+                                                                }
+                                                                if (type === cardsInformation[j].regen) {
+                                                                        type[upgradeIndex] = cardsInformationDefaultValues[j].regen[upgradeIndex];
+                                                                }
+                                                                if (type === cardsInformation[j].blood) {
+                                                                        type[upgradeIndex] = cardsInformationDefaultValues[j].blood[upgradeIndex];
+                                                                }
+                                                                if (type === cardsInformation[j].block) {
+                                                                        type[upgradeIndex] = cardsInformationDefaultValues[j].block[upgradeIndex];
+                                                                }
+                                                                if (type === cardsInformation[j].thorns) {
+                                                                        type[upgradeIndex] = cardsInformationDefaultValues[j].thorns[upgradeIndex];
+                                                                }
+                                                                        if (type === cardsInformation[j].burn && (essenceOfEmber.length > 0 || essenceOfEmberUpgrade.length > 0)) {
+                                                                                type[upgradeIndex] += (essenceOfEmber.length * 2) + (essenceOfEmberUpgrade * 4);
                                                                         }
-                                                                        if (tidalImbuement && type === cardsInformation[j].damage) {
-                                                                                type[upgradeIndex] += tidal;
+                                                                        if (type === cardsInformation[j].damage && (liquidLightning.length > 0 || liquidLightningUpgrade.length > 0)) {
+                                                                                type[upgradeIndex] += (liquidLightning.length * 5) + (liquidLightningUpgrade * 7);
                                                                         }
-                                                                        if (playerFrostbite && (type === cardsInformation[j].block || type === cardsInformation[j].regen || type === cardsInformation[j].blood || type === cardsInformation[j].thorns)) {
-                                                                                if (frostbitten && type === cardsInformation[j].block) {
-                                                                                        type[upgradeIndex] *= frostbit
-                                                                                } else {
-                                                                                        type[upgradeIndex] = Math.floor(type[upgradeIndex] * debuff);
+                                                                        if (type === cardsInformation[j].energize && surgebinder) {
+                                                                                type[upgradeIndex] *= 2;
+                                                                        }
+                                                                        if (terrasBlessing.length > 0) {
+                                                                                if (type === cardsInformation[j].block) {
+                                                                                        type[upgradeIndex] += terrasBlessing.length * 5;
                                                                                 }
-                                                                                if (oddType[i]) {
-                                                                                        type[upgradeIndex]++;
+                                                                                if (type === cardsInformation[j].thorns) {
+                                                                                        type[upgradeIndex] += terrasBlessing.length;
+                                                                                }
+                                                                        }
+                                                                        if (playerFrostbite && (type === cardsInformation[j].energize || type === cardsInformation[j].block || type === cardsInformation[j].regen || type === cardsInformation[j].blood || type === cardsInformation[j].thorns)) {
+                                                                                if (frostbitten && type === cardsInformation[j].block) {
+                                                                                        type[upgradeIndex] *= 4;
+                                                                                } else {
+                                                                                        type[upgradeIndex] = Math.floor(type[upgradeIndex] * .5);
                                                                                 }
                                                                         }
                                                                         if (playerWindswept && (type === cardsInformation[j].damage || type === cardsInformation[j].burn)) {
-                                                                                type[upgradeIndex] = Math.floor(type[upgradeIndex] * debuff);
-                                                                                if (oddType[i]) {
-                                                                                        type[upgradeIndex]++;
-                                                                                }
+                                                                                type[upgradeIndex] = Math.floor(type[upgradeIndex] * .5);
                                                                                 if ("damageSecond" in cardsInformation[j]) {
-                                                                                        cardsInformation[j].damageSecond[upgradeIndex] = Math.floor(cardsInformation[j].damageSecond[upgradeIndex] * debuff);
-                                                                                        if (oddDamageSecond[i] && debuff === 2) {
-                                                                                                cardsInformation[j].damageSecond[upgradeIndex]++;
-                                                                                        }
-                                                                                }
-                                                                                
-                                                                        }
-                                                                }
-                                                                if (type === cardsInformation[j].burn && (essenceOfEmber.length > 0 || essenceOfEmberUpgrade.length > 0)) {
-                                                                        type[upgradeIndex] += (essenceOfEmber.length * ember) + (essenceOfEmberUpgrade * emberUpgrade);
-                                                                        console.log("ESSENCE OF EMBER LENGTH", essenceOfEmber.length);
-                                                                }
-                                                                if (type === cardsInformation[j].damage && (liquidLightning.length > 0 || liquidLightningUpgrade.length > 0)) {
-                                                                        type[upgradeIndex] += (liquidLightning.length * liquid) + (liquidLightningUpgrade * liquidUpgrade);
-                                                                        console.log("LIQUID LGIHTNING LENGTH", liquidLightning.length.length);
-                                                                }
-                                                                if (type === cardsInformation[j].energize && surgebinder) {
-                                                                        type[upgradeIndex] *= energized;
-                                                                }
-                                                                if (terrasBlessing.length > 0) {
-                                                                        if (type === cardsInformation[j].block) {
-                                                                                type[upgradeIndex] += terrasBlessing.length * terraBlock;
-                                                                        }
-                                                                        if (type === cardsInformation[j].thorns) {
-                                                                                type[upgradeIndex] += terrasBlessing.length * terraThorns;
-                                                                        }
-                                                                }
-                                                                if (debuff === .5) {
-                                                                        if (type[upgradeIndex] % 2 === 1) {
-                                                                                oddType[i] = true;
-                                                                        }
-                                                                        if (playerFrostbite && (type === cardsInformation[j].block || type === cardsInformation[j].regen || type === cardsInformation[j].blood || type === cardsInformation[j].thorns)) {
-                                                                                if (frostbitten && type === cardsInformation[j].block) {
-                                                                                        type[upgradeIndex] *= frostbit
-                                                                                } else {
-                                                                                        type[upgradeIndex] = Math.floor(type[upgradeIndex] * debuff);
-                                                                                }
-                                                                        }
-                                                                        if (playerWindswept && (type === cardsInformation[j].damage || type === cardsInformation[j].burn)) {
-                                                                                type[upgradeIndex] = Math.floor(type[upgradeIndex] * debuff);
-                                                                                if ("damageSecond" in cardsInformation[j]) {
-                                                                                        cardsInformation[j].damageSecond[upgradeIndex] = Math.floor(cardsInformation[j].damageSecond[upgradeIndex] * debuff);
-                                                                                        if (oddDamageSecond[i] && debuff === 2) {
-                                                                                                cardsInformation[j].damageSecond[upgradeIndex]++;
-                                                                                        }
+                                                                                        cardsInformation[j].damageSecond[upgradeIndex] = Math.floor(cardsInformation[j].damageSecond[upgradeIndex] * .5);
                                                                                 }
                                                                         }
                                                                         if (tidalImbuement && type === cardsInformation[j].damage) {
-                                                                                type[upgradeIndex] += tidal;
+                                                                                type[upgradeIndex] += 10;
                                                                         }
-                                                                }
                                                         }
                                                         if ("damage" in cardsInformation[j]) {
-                                                                update(cardsInformation[j].damage, oddDamage);
+                                                                update(cardsInformation[j].damage);
                                                         }
                                                         if ("burn" in cardsInformation[j]) {
-                                                                update(cardsInformation[j].burn, oddBurn);
+                                                                update(cardsInformation[j].burn);
                                                         }
                                                         if ("energize" in cardsInformation[j]) {
-                                                                update(cardsInformation[j].energize, oddEnergize);
+                                                                update(cardsInformation[j].energize);
                                                         }
                                                         if ("regen" in cardsInformation[j]) {
-                                                                update(cardsInformation[j].regen, oddRegen);
+                                                                update(cardsInformation[j].regen);
                                                         }
                                                         if ("blood" in cardsInformation[j]) {
-                                                                update(cardsInformation[j].blood, oddBlood);
+                                                                update(cardsInformation[j].blood);
                                                         }
                                                         if ("block" in cardsInformation[j]) {
-                                                                update(cardsInformation[j].block, oddBlock);
+                                                                update(cardsInformation[j].block);
                                                         }
                                                         if ("thorns" in cardsInformation[j]) {
-                                                                update(cardsInformation[j].thorns, oddThorns);
+                                                                update(cardsInformation[j].thorns);
                                                         }
                                                 }
                                         }
@@ -6495,7 +6479,7 @@ function updateCardText() {
                 }
         }
         console.log("UPDATE TEXT");
-        updateText(.5, 2, 2, 10, 2, 4, 5, 7, 5, 1);
+        updateText();
         // UPDATE ARRAY WITH NEW CHANGED STATS
         let updateCardTextStats = [
                 [`Deal ${cardsInformation[0].damage[0]} damage and inflict ${cardsInformation[0].burn[0]} burn`, `Inflict ${cardsInformation[0].burn[1]} burn`],
@@ -6512,7 +6496,7 @@ function updateCardText() {
                 [`Gain ${cardsInformation[11].block[0]} block and ${cardsInformation[11].thorns[0]} thorns`, `Gain ${cardsInformation[11].block[1]} block and ${cardsInformation[11].thorns[1]} thorns`],
                 [`Inflict ${cardsInformation[12].burn[0]} burn on all enemies and 3 on yourself`, `Inflict ${cardsInformation[12].burn[1]} burn on all enemies and 4 on yourself`],
                 [`Gain ${cardsInformation[13].burn[0]} burn and transfer your burn onto the enemy`, `Gain ${cardsInformation[13].burn[1]} burn and transfer your burn onto all enemies`],
-                [`Deal damage equal to ${cardsInformation[14].damage[0]}x the amount of burn on the enemy`, `Deal damage equal to ${cardsInformation[14].damage[1]}x the amount of burn on the enemy`],
+                [`Deal damage equal to ${cardsInformation[14].damageSecond[0]}x the amount of burn on the enemy`, `Deal damage equal to ${cardsInformation[14].damageSecond[1]}x the amount of burn on the enemy`],
                 ["[Ethereal]<br>You apply +2 burn damage", "[Ethereal]<br>You apply +4 burn damage"],
                 [`Deal 50% of the damage you've dealt this turn to an enemy<br>Damage: ${cardsInformation[16].damage[0]}`, `Deal 50% of the damage you've dealt this turn to an enemy<br>Damage: ${cardsInformation[16].damage[1]}`],
                 [`Deal ${cardsInformation[17].damage[0]} damage to a random enemy three times and Energize ${cardsInformation[17].energize[0]} for each enemy damaged`, `Deal ${cardsInformation[17].damage[0]} damage to a random enemy four times and Energize ${cardsInformation[17].energize[1]} for each enemy damaged`],
@@ -6539,7 +6523,7 @@ function updateCardText() {
                 [`Inflict windswept on all enemies and increase burn count by ${cardsInformation[38].burn[0]} if they're already burning`, `Inflict windswept on all enemies and increase burn count by ${cardsInformation[38].burn[1]} if they're already burning`],
                 [`Gain ${cardsInformation[39].burn[0]} burn, ${cardsInformation[39].regen[0]} regen, and ${cardsInformation[39].blood[0]} blood siphon`, `Gain ${cardsInformation[39].burn[1]} burn, ${cardsInformation[39].regen[1]} regen, and ${cardsInformation[39].blood[1]} blood siphon`],
                 [`Inflict ${cardsInformation[40].burn[0]} burn on an enemy and gain block equal to 100% of their burn`, `Inflict ${cardsInformation[40].burn[1]} burn on an enemy and gain block equal to 100% of their burn`],
-                [`Electrucute enemies with frostbite dealing damage equal to ${cardsInformation[41].damageSecond[0]} times your mana<br>Damage: ${cardsInformation[41].damage[0]}`, `Electrucute enemies with frostbite dealing damage equal to ${cardsInformation[41].damageSecond[1]} times your mana</br>Damage: ${cardsInformation[41].damage[0]}`],
+                [`Electrucute enemies with frostbite dealing damage equal to ${cardsInformation[41].damageSecond[0]} times your current mana<br>Damage: ${cardsInformation[41].damage[0]}`, `Electrucute enemies with frostbite dealing damage equal to ${cardsInformation[41].damageSecond[1]} times your current mana</br>Damage: ${cardsInformation[41].damage[0]}`],
                 [`Inflict windswept and deal ${cardsInformation[42].damage[0]} damage to all enemies<br>Draw a card, energize ${cardsInformation[42].energize[0]}, and gain 2 mana.`, `Inflict windswept and deal ${cardsInformation[42].damage[1]} damage to all enemies. Draw a card, energize ${cardsInformation[42].energize[1]}, and gain 3 mana.`],
                 [`Deal damage based on your current health. Energize ${cardsInformation[43].energize[0]} and gain ${cardsInformation[43].regen[0]} regeneration<br>Damage: ${cardsInformation[43].damage[0]}`, `Deal damage based on your current health. Energize ${cardsInformation[43].energize[1]} and gain ${cardsInformation[43].energize[1]} regeneration and 2 max health<br>Damage: ${cardsInformation[43].damage[1]}`],
                 [`Energize ${cardsInformation[44].energize[0]}<br>Gain ${cardsInformation[44].block[0]} block for each energize you have`, `Energize ${cardsInformation[44].energize[1]}<br>Gain ${cardsInformation[44].block[1]} block for each energize you have`],
@@ -6569,7 +6553,7 @@ function updateCardText() {
                 }
         }
         // CHANGE CARD BACK TO ORIGINAL STATS
-        updateText(2, .5, .5, -10, -2, -4, -5, -7, -5, -1);
+        updateText(2, .5, -2, -4, -5, -7, -5, -1);
 }
 /*
 ENEMY SECTION
@@ -7784,6 +7768,9 @@ function checkIfEnemyDead() {
                                 exclamationMusicTrigger = false;
                                 shopMusicTrigger = false;
                                 blacksmithMusicTrigger = false;
+                                location1Tiles1.classList.add("glow");
+                                location1Tiles2.classList.add("glow");
+                                location1Tiles3.classList.add("glow");
                                 switchArea(map, empowerContainer);
                                 randomizeLocations();
                         }
@@ -7931,7 +7918,7 @@ function enemyAction() {
                 aquatasBlessing = false;
                 displayBlock(playerRegenDiv, playerRegenImg, playerRegenNumber);
         } else if (gaiaBlessing) {
-                playerThornsNumber.innerText = 6;
+                playerThornsNumber.innerText = 10;
                 gaiaBlessing = false;
                 displayBlock(playerThornsDiv, playerThornsImg, playerThornsNumber);
         }
@@ -8162,7 +8149,6 @@ function endTurn() {
                 }
                 setTimeout(function() {
                         removeCardClicked();
-                        checkPlayerEnergize();
                         checkRegenHeal();
                         checkBloodSiphon();
                         checkGaiasEmbrace();
@@ -8193,6 +8179,7 @@ function endTurn() {
                                         currentMana.innerText = 4;
                                 }
                         }
+                        checkPlayerEnergize();
                         if (doubleMana) {
                                 currentMana.innerText *= 2;
                                 doubleMana = false;
