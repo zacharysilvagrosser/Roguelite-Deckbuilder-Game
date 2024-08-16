@@ -492,60 +492,52 @@
         box-shadow: 0 0 10px 10px red;
     }
 }
-@keyframes common-glow {
-    from {
-        box-shadow: 0 0 5px 5px rgb(255, 255, 255);
-    }
-    to {
-        box-shadow: 0 0 5px 5px rgb(255, 255, 255);
-    }
-}
 @keyframes fire-glow {
     from {
-        box-shadow: 0 0 -50px -50px rgb(255, 113, 31);
+        box-shadow: 0 0 -25px -25px rgb(255, 113, 31);
     }
     to {
-        box-shadow: 0 0 50px 50px rgb(255, 51, 0);
+        box-shadow: 0 0 25px 25px rgb(255, 51, 0);
     }
 }
 @keyframes lightning-glow {
     from {
-        box-shadow: 0 0 -50px -50px #cbd442;
+        box-shadow: 0 0 -25px -25px #221d54;
     }
     to {
-        box-shadow: 0 0 50px 50px #cbd442;
+        box-shadow: 0 0 25px 25px #221d54;
     }
 }
 @keyframes ice-glow {
     from {
-        box-shadow: 0 0 -50px -50px rgb(26, 111, 150);
+        box-shadow: 0 0 -25px -25px rgb(26, 111, 150);
     }
     to {
-        box-shadow: 0 0 50px 50px rgb(26, 111, 150);
+        box-shadow: 0 0 25px 25px rgb(26, 111, 150);
     }
 }
 @keyframes air-glow {
     from {
-        box-shadow: 0 0 -50px -50px rgb(178, 246, 248);
+        box-shadow: 0 0 -25px -25px rgb(178, 246, 248);
     }
     to {
-        box-shadow: 0 0 50px 50px rgb(178, 246, 248);
+        box-shadow: 0 0 25px 25px rgb(178, 246, 248);
     }
 }
 @keyframes water-glow {
     from {
-        box-shadow: 0 0 -50px -50px #0f5e9c;
+        box-shadow: 0 0 -25px -25px #0f5e9c;
     }
     to {
-        box-shadow: 0 0 50px 50px #0f5e9c;
+        box-shadow: 0 0 25px 25px #0f5e9c;
     }
 }
 @keyframes earth-glow {
     from {
-        box-shadow: 0 0 -50px -50px #451b04;
+        box-shadow: 0 0 -25px -25px #81b14f;
     }
     to {
-        box-shadow: 0 0 50px 50px #451b04;
+        box-shadow: 0 0 25px 25px #81b14f;
     }
 }
 @keyframes upgraded {
@@ -853,6 +845,9 @@
 .dim {
     filter: brightness(20%);
 }
+.dim2 {
+    filter: brightness(20%);
+}
 .darken {
     filter: brightness(80%);
 }
@@ -1010,8 +1005,9 @@
 }
 #choose-new-card-container {
     position: absolute;
+    margin-top: 8rem;
     width: 100%;
-    height: 100vh;
+    height: 80vh;
     display: none;
     align-items: center;
     justify-content: center;
@@ -1839,7 +1835,10 @@
 .deific {
     box-shadow: 0 0 6px 6px #ff8000;
 }
-.card-clicked-fire, .card-clicked-lightning, .card-clicked-ice, .card-clicked-air, .card-clicked-water, .card-clicked-earth {
+.unique {
+    box-shadow: 0 0 6px 6px #292929;
+}
+.card-clicked-fire, .card-clicked-lightning, .card-clicked-ice, .card-clicked-air, .card-clicked-water, .card-clicked-earth, .card-clicked-unique {
     transform: translateY(-100px);
     z-index: 9;
 }
@@ -1860,6 +1859,9 @@
 }
 .card-clicked-earth {
     box-shadow: 0 0 10px 10px #81b14f;
+}
+.card-clicked-unique {
+    box-shadow: 0 0 10px 10px #1b1b1b;
 }
 img[src="imgs/undefined-icon.png"] {
     display: none;

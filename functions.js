@@ -1,23 +1,15 @@
 /* IDEAS.
-when viewing inventory have a sorter based on element type
 Light and Dark based class has a light and dark meter based on your actions throughout the game
 
 TO DO
 Settings gear when hitting escape for music and sound volume
 ghost elite becomes opacity: .5 and unable to be attacked
-have cardupdatetext take returned numbers from damage function so it's always accurate
-change hallowwood elite encounter music lofi?
+make score screen
+no heaven gift background
+make story elements between bosses and at start of game
 
 BUGS
 ?death screen brings you to fae forest arena
-?card text still not updating
-?dontrepeateliteencounter jumped to encounter even tho i only did 1 elite
-goldencounter getting 10 max health but not health
-unique cards dont glow
-after using static charge cards still show upgrade buff text
-match ball lightning sound better (reduce timeout time)
-sacrifice cards mystery doubles cards when two same cards in deck and blocks button
-
 */
 /*
 GENERAL FUNCTIONS
@@ -239,12 +231,13 @@ function switchArea(block, none) {
         displayBlock(block);
         displayNone(none);
         if (block === map) {
+                destroyReferenceCards();
                 switchMusic(allMusic[mapMusicIndex]);
-                console.log("mapswitch");
                 if ((faeForest && (!waterGift && !earthGift)) || (hallowwood && (!iceGift && !airGift)) || (!faeForest && !hallowwood && (!fireGift && !lightningGift))) {
                         location.href = "#bottom-anchor";
                         console.log("BOTTOM");
                 }
+                exclamationContainer.innerHTML = ``;
         }
 }
 function removeELL1() {
@@ -475,12 +468,6 @@ function resetArena() {
         playerFrostbite = false;
         displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber, playerEnergizeImg, playerEnergizeNumber, playerRegenImg, playerRegenNumber, playerThornsImg, playerThornsNumber,
                 playerBloodImg, playerBloodNumber, playerBlockImg, playerBlockNumber);
-                if (playerEmberNumber > 0) {
-                        displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
-                        playerEmberNumber = 0;
-                        emberBurned = true;
-                }
-                playerBurnNumber.innerText = 0 + playerEmberNumber;
         if (stormchaser) {
                 currentMana.innerText = 5;
         } else {
@@ -734,10 +721,10 @@ function goldEncounter() {
                 initializeEnemyVariables();
                 enemyLevelUp();
                 enemyAction(action, action, action);
-                enemyMaxHealth.forEach(i => {
-                        i.innerText = parseFloat(i.innerText) + 10;
-                        enemyCurrentHealth.innerText = parseFloat(enemyCurrentHealth.innerText) + 10;
-                });
+                for (let i = 0; i < enemyMaxHealth.length; i++) {
+                        enemyMaxHealth[i].innerText = parseFloat(enemyMaxHealth[i].innerText) + enemyLevel;
+                        enemyCurrentHealth[i].innerText = parseFloat(enemyCurrentHealth[i].innerText) + enemyLevel;
+                }
                 dontRepeatEncounter.push(repeat);
         }
         switch (randomGoldEncounterNumber) {
@@ -967,7 +954,7 @@ function eliteEncounter() {
                         encounter();
                 } else {
                         randomEliteNumber = createRandomNumber(1, 3);
-                        while (dontRepeatEncounter.includes(randomEliteNumber)) {
+                        while (dontRepeatEliteEncounter.includes(randomEliteNumber)) {
                                 randomEliteNumber = createRandomNumber(1, 3);        
                         }
                 }
@@ -976,7 +963,7 @@ function eliteEncounter() {
                         encounter();
                 } else {
                         randomEliteNumber = createRandomNumber(4, 6);
-                        while (dontRepeatEncounter.includes(randomEliteNumber)) {
+                        while (dontRepeatEliteEncounter.includes(randomEliteNumber)) {
                                 randomEliteNumber = createRandomNumber(4, 6);        
                         }
                 }
@@ -985,7 +972,7 @@ function eliteEncounter() {
                         encounter();
                 } else {
                         randomEliteNumber = createRandomNumber(7, 9);
-                        while (dontRepeatEncounter.includes(randomEliteNumber)) {
+                        while (dontRepeatEliteEncounter.includes(randomEliteNumber)) {
                                 randomEliteNumber = createRandomNumber(7, 9);        
                         }
                 }
@@ -998,7 +985,7 @@ function eliteEncounter() {
                 initializeEnemyVariables();
                 enemyLevelUp();
                 enemyAction(action);
-                dontRepeatEncounter.push(repeat);
+                dontRepeatEliteEncounter.push(repeat);
         }
         switch (randomEliteNumber) {
                 case 1:
@@ -1332,9 +1319,9 @@ function spaceEndTurn(e) {
 function randomizeLocations() {
         function getLocations(location) {
                 let randomLocation = createRandomNumber(1, 100);
-                if (randomLocation <= 45) {
+                if (randomLocation <= 0) {
                         location.innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`;
-                } else if (randomLocation <= 70) {
+                } else if (randomLocation <= 0) {
                         location.innerHTML = `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`;
                 } else if (randomLocation <= 80) {
                         location.innerHTML = `<img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt="Hard Monster">`;
@@ -1628,15 +1615,15 @@ function createExclamation(title, background, img, text0, text1, text2) {
         </div>
         `
 }
+function destroyReferenceCards() {
+        document.querySelectorAll(".card-reference").forEach(i => {
+                destroyedCardsArray.push(i);
+                destroyedCardsContainer.appendChild(i);
+        });
+        destroyedCardsContainer.innerHTML = ``;
+        destroyedCardsArray = [];
+}
 const exclamationContainer = document.querySelector("#exclamation-container");
-/*let exclamationDiv = document.querySelector(".exclamation-div");
-let exclamationButtonDiv = document.querySelector(".exclamation-button-div");
-let exclamationButton1 = document.querySelector(".exclamation-button-1");
-let exclamationButton2 = document.querySelector(".exclamation-button-2");
-let exclamationButton3 = document.querySelector(".exclamation-button-3");
-let exclamationButton4 = document.querySelector(".exclamation-button-4");
-let exclamationButton5 = document.querySelector(".exclamation-button-5");
-let exclamationButton6 = document.querySelector(".exclamation-button-6");*/
 const destroyedCardsContainer = document.querySelector("#destroyed-cards-container");
 let dontRepeatExclamation = [];
 let exclamationMusicTrigger = false;
@@ -1726,28 +1713,30 @@ function mystery() {
                                 for (let i = 0; i < cardType.length; i++) {
                                         if (drawPileArray.includes(cardType[i])) {
                                                 let drawIndex = drawPileArray.indexOf(cardType[i]);
-                                                let getFireCard = drawPileArray.splice(drawIndex, 1);
-                                                destroyedCardsArray.push(getFireCard);
+                                                let getCard = drawPileArray.splice(drawIndex, 1);
+                                                destroyedCardsArray.push(getCard);
                                         }
                                         if (handArray.includes(cardType[i])) {
                                                 let drawIndex = handArray.indexOf(cardType[i]);
-                                                let getFireCard = handArray.splice(drawIndex, 1);
-                                                destroyedCardsArray.push(getFireCard);
+                                                let getCard = handArray.splice(drawIndex, 1);
+                                                destroyedCardsArray.push(getCard);
                                         }
                                         destroyedCardsContainer.appendChild(cardType[i]);
                                 }
-                                destroyedCardsContainer.innerHTML = ``;
-                                destroyedCardsArray = [];
                                 displayNone(document.querySelector(`#${orb}-orb-img`));
                         }
                         function createElementCards(elementCards) {
                                 for (let i = 0; i < elementCards.length; i++) {
                                         for (let j = 0; j < cardsInformation.length; j++) {
-                                                if (elementCards[i].classList.contains(j) && !elementCards[i].classList.contains("upgraded")) {
-                                                        createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
-                                                } else if (elementCards[i].classList.contains(j) && elementCards[i].classList.contains("upgraded")) {
-                                                        createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 1);
-                                                }
+                                                document.querySelectorAll(".reference-card").forEach(i => {
+                                                        if (!i.classList.contains(j)) {
+                                                                if (elementCards[i].classList.contains(j) && !elementCards[i].classList.contains("upgraded")) {
+                                                                        createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                                                                } else if (elementCards[i].classList.contains(j) && elementCards[i].classList.contains("upgraded")) {
+                                                                        createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 1);
+                                                                }
+                                                        }
+                                                });
                                         }
                                 }
                         }
@@ -1884,12 +1873,6 @@ function mystery() {
                                                                                         switchArea(map, exclamationContainer);
                                                                                 }
                                                                         }
-                                                                        for (let k = 0; k < cardReference.length; k++) {
-                                                                                destroyedCardsArray.push(cardReference[k]);
-                                                                                destroyedCardsContainer.appendChild(cardReference[k]);
-                                                                                destroyedCardsArray = [];
-                                                                                destroyedCardsContainer.innerHTML = ``;
-                                                                        }
                                                                 });
                                                         });
                                                 });
@@ -1929,12 +1912,6 @@ function mystery() {
                                                                                         removeCard(handArray);
                                                                                 }
                                                                         }
-                                                                        for (let k = 0; k < cardReference.length; k++) {
-                                                                                destroyedCardsArray.push(cardReference[k]);
-                                                                                destroyedCardsContainer.appendChild(cardReference[k]);
-                                                                                destroyedCardsArray = [];
-                                                                                destroyedCardsContainer.innerHTML = ``;
-                                                                        }
                                                                 });
                                                                 
                                                         });
@@ -1968,7 +1945,7 @@ function mystery() {
                                 `"And your spell book looks <em>awfully</em> empty! Take my spell so you can at least give them a good fight. I'll tell the plants about your valiant effort!" the sound of her laughter slowly fades as she skips away.`);
                         document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1" style="margin-top: 20px;"><span style="color: #81b14f">Let Gaia embrace you:</span> Gain a Gaia's Embrace spell</button>
-                        <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83">Refuse:</span> Lose all of your earth cards</button>
+                        <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83)">Forsake Gaia:</span> Lose all of your earth cards</button>
                         <div id="mystery-card-display-container"></div>`;
                         createElementCards(document.querySelectorAll(".earth"));
                         document.querySelector(".exclamation-button-2").addEventListener("mouseover", () => {
@@ -2016,8 +1993,6 @@ function mystery() {
                                         }
                                         destroyedCardsContainer.appendChild(earth[i]);
                                 }
-                                destroyedCardsContainer.innerHTML = ``;
-                                destroyedCardsArray = [];
                                 switchArea(map, exclamationContainer);
                         });
                         dontRepeatExclamation.push(4);
@@ -2028,10 +2003,11 @@ function mystery() {
                                 `"I can use the last of my power to infuse a spell with each of the six elemental Terran spirits power." She says weakly. "Use it in your fight to restore balance to this realm...for the sake of us all."`);
                         document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1""><span style="color: rgb(123, 240, 238)">Attune with the stars:</span> Gain a celestially infused card</button>
-                        <button class="exclamation-button-2"><span style="color: #81b14f">Stay Grounded:</span> Gain Terra's Blessing spell</button>
+                        <button class="exclamation-button-2"><span style="color: #81b14f">Stay Grounded:</span> Gain a Weave of Thorns spell</button>
+                        <button class="exclamation-button-3"><span style="color: rgb(206, 83, 83)">Refuse:</span> Leave the area</button>
                         <div id="mystery-card-display-container"></div>`;
                         createCard(52, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
-                        createCard(50, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                        createCard(33, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
                         document.querySelector(".exclamation-button-1").addEventListener("mouseover", () => {
                                 document.querySelectorAll(".card-reference").forEach(i => {
                                         if (i.classList.contains("52")) {
@@ -2048,14 +2024,14 @@ function mystery() {
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("mouseover", () => {
                                 document.querySelectorAll(".card-reference").forEach(i => {
-                                        if (i.classList.contains("50")) {
+                                        if (i.classList.contains("33")) {
                                                 displayFlex(i);
                                         }
                                 });
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("mouseout", () => {
                                 document.querySelectorAll(".card-reference").forEach(i => {
-                                        if (i.classList.contains("50")) {
+                                        if (i.classList.contains("33")) {
                                                 displayNone(i);
                                         }
                                 });
@@ -2065,7 +2041,10 @@ function mystery() {
                                 switchArea(map, exclamationContainer);
                         });    
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
-                                addCardToDeck(50, 0, true);
+                                addCardToDeck(33, 0, true);
+                                switchArea(map, exclamationContainer);
+                        });
+                        document.querySelector(".exclamation-button-3").addEventListener("click", () => {
                                 switchArea(map, exclamationContainer);
                         });
                         dontRepeatExclamation.push(5);
@@ -2386,9 +2365,9 @@ function mystery() {
                         dontRepeatExclamation.push(10);
                         break;
                 case 11:
-                        createExclamation("Ember's Vexation", "imgs/heaven-mystery.jpeg", "imgs/ember3.jpeg", "As you're walking through the forest you feel the air suddenly shift. You look up towards the sky to see the shape of a dragon form from the winds. You stare in awe.", 
-                                `"Lectra thinks she's stronger than I am?"`,
-                                `"I've come to you because I can be of no assistance in this matter. My sibling Glacia, spirit of ice, seems to have been possesed by a vengeful spirit herself. I can give you a cleansing spell that will heal her or give you a sliver of my power. I will honor either decision."`);
+                        createExclamation("Ember's Vexation", "imgs/heaven-mystery.jpeg", "imgs/ember3.jpeg", "You feel yourself get more and more dehydrated as you continue on your journey. Unfortunately you ran out of water a while ago. The heat is becoming unbearable and you feel like you're going to faint. You see a woman in the distance and approach her to ask for some water.", 
+                                `"Can you believe Lectra thinks she's stronger than I am?!" the fiery woman yells furiously. "She has none of the passion or desire for true power and that makes her weak. Pitiful thing doesn't even realize that lightning could never stand against fire in a battle."`,
+                                `"<em>Surely</em> you know that I am more powerful than my sister, yes?!"`);
                         document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1" style="height: 45%"><span style="color: #ba760f">Agree that Ember is stronger:</span> Empower a fire card</button>
                         <button class="exclamation-button-2" style="height: 45%"><span style="color: #f0fb3e">Disagree; Lectra is stronger:</span> She seems well adjusted. You'll be fine probably.</button>`
@@ -2419,7 +2398,7 @@ function mystery() {
                                                                         <div class="exclamation-text-button-div">
                                                                                 <div class="exclamation-text-div">
                                                                                         <p class="exclamation-text">Her eyes suddenly lose their intensity and her stern face is replaced by a soft angelic glow.<br><br>
-                                                                                        "Sorry I can get a little heated sometimes when it comes to my sister...we share a long history."<br><br>
+                                                                                        "Sorry I can get a little heated sometimes when it comes to my sister...we share a long history. I see you're using more of my spells than hers. If you had lied I would've been quite angry with you."<br><br>
                                                                                         "Good luck on your journey mortal...our fate depends on it."</p>
                                                                                 </div>
                                                                                 <div class="exclamation-button-div">
@@ -3559,72 +3538,9 @@ const handContainer = document.querySelector("#hand-container");
 const chooseNewCardContainer = document.querySelector("#choose-new-card-container");
 const chooseNewCardDiv = document.querySelector("#choose-new-card-div");
 
-let essenceOfEmber = [];
-let essenceOfEmberUpgrade = [];
-let liquidLightning = [];
-let liquidLightningUpgrade = [];
+let [essenceOfEmber, essenceOfEmberUpgrade, liquidLightning, liquidLightningUpgrade, terrasBlessing, gaiasEmbrace, gaiasEmbraceUpgrade, airBubble] = [[], [], [], [], [], [], [], [], []];
 let snowfallElixir = false;
 let tidalImbuement = false;
-let terrasBlessing = [];
-let gaiasEmbrace = [];
-let gaiasEmbraceUpgrade = [];
-let airBubble = [];
-function getWindsweptDamage() {
-        // STORMBLESSED WILL LIKELY UPDATE BACK TO 100% DAMAGE WHEN WINDSWEPT BECAUSE OF ORDER OF UPDATECARDTEXT()
-        let currentCardText = document.querySelectorAll(".card-text");
-        if (playerWindswept && playerFrostbite) {
-                
-        } else if (playerWindswept) {
-                for (let i = 0; i < handArray.length; i++) {
-                        for (let j = 0; j < cardsInformation.length; j++) {
-                                if (handArray[i].classList.contains(j)) {
-                                        for (let k = 0; k < currentCardText.length; k++) {
-                                                if (currentCardText[k].classList.contains(j)) {
-                                                        if (currentCardText[k].classList.contains("upgraded")) {
-                                                                currentCardText[k].innerHTML = windsweptDamage[j][1];
-                                                        } else {
-                                                                
-                                                                currentCardText[k].innerHTML = updateCardTextStats[j][0];
-                                                        }
-                                                }
-                                        }
-                                }
-                        }
-                }
-        } else if (playerFrostbite) {
-                for (let i = 0; i < handArray.length; i++) {
-                        for (let j = 0; j < cardsInformation.length; j++) {
-                                if (handArray[i].classList.contains(j)) {
-                                        for (let k = 0; k < currentCardText.length; k++) {
-                                                if (currentCardText[k].classList.contains(j)) {
-                                                        if (currentCardText[k].classList.contains("upgraded")) {
-                                                                currentCardText[k].innerHTML = frostbiteBuffs[j][1];
-                                                        } else {
-                                                                currentCardText[k].innerHTML = frostbiteBuffs[j][0];
-                                                        }
-                                                }
-                                        }
-                                }
-                        }
-                }
-        } else {
-                for (let i = 0; i < handArray.length; i++) {
-                        for (let j = 0; j < cardsInformation.length; j++) {
-                                if (handArray[i].classList.contains(j)) {
-                                        for (let k = 0; k < currentCardText.length; k++) {
-                                                if (currentCardText[k].classList.contains(j)) {
-                                                        if (currentCardText[k].classList.contains("upgraded")) {
-                                                                currentCardText[k].innerHTML = cardsInformation[j].cardText[1];
-                                                        } else {
-                                                                currentCardText[k].innerHTML = cardsInformation[j].cardText[0];
-                                                        }
-                                                }
-                                        }
-                                }
-                        }
-                }
-        }
-}
 let damageThisTurn = 0;
 let healthGainedThisFight = 0;
 let windsOfChange = 8;
@@ -3731,7 +3647,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(20);
+                                damageAllEnemies(2000);
                                 gainEnergize(2);
                                 fxChainLightning.play();
                         },
@@ -4266,8 +4182,8 @@ const cardsInformation = [
                                         }
                                 }
                                 ballAttack();
-                                setTimeout(ballAttack, 200);
-                                setTimeout(ballAttack, 400);
+                                setTimeout(ballAttack, 175);
+                                setTimeout(ballAttack, 350);
                         },
                         function() {
                                 spendMana(3);
@@ -4296,9 +4212,9 @@ const cardsInformation = [
                                         }
                                 }
                                 ballAttack();
-                                setTimeout(ballAttack, 200);
-                                setTimeout(ballAttack, 400);
-                                setTimeout(ballAttack, 600);
+                                setTimeout(ballAttack, 175);
+                                setTimeout(ballAttack, 350);
+                                setTimeout(ballAttack, 525);
                         }
                 ]
         },
@@ -4306,7 +4222,7 @@ const cardsInformation = [
                 manaCost: [4, 4],
                 name: "Thunder Crash",
                 cardImg: "imgs/thundercrash.jpeg",
-                cardText: ["Deal 40 damage plus 20 for each mana you have after playing Thunder Crash. Energize 1", "Deal 40 damage plus 30 for each mana you have after playing Thunder Crash. Energize 1"],
+                cardText: ["Deal 40 damage plus 20 for each mana you have after playing Thunder Crash.<br>Energize 1", "Deal 40 damage plus 30 for each mana you have after playing Thunder Crash.<br>Energize 1"],
                 damage: [40, 40],
                 damageSecond: [15, 20],
                 energize: [1, 1],
@@ -4468,7 +4384,7 @@ const cardsInformation = [
                 manaCost: [0, 0],
                 name: "Winds of Change",
                 cardImg: "imgs/winds-of-change.jpeg",
-                cardText: ["Deal 8 damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept", "Deal 5 damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept"],
+                cardText: ["Deal 8 damage.<br>All Winds of Change gain +3 damage or +6 damage if enemy is windswept", "Deal 8 damage.<br>All Winds of Change gain +4 damage or +8 damage if enemy is windswept"],
                 damage: [5, 5],
                 chooseEnemyCard: true,
                 index: 24,
@@ -5541,6 +5457,9 @@ let destroyedCardsArray = [];
 let maxHandLength = 5;
 
 function drawCards(numberOfCards) {
+        if (handArray.length + numberOfCards > 10) {
+                drawCards(10 - handArray.length);
+        }
         // IF DRAW PILE CANT FILL HAND
         if (drawPileArray.length < numberOfCards) {
                 // RESHUFFLE CARDS IN DISCARD PILE
@@ -5616,8 +5535,8 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                                 gainRegen(1);
                                 playerMaxHealth.innerText++;
                         }
-                        cardsInformation[CIindex].action[upgradeIndex]();
                         addToDiscard();
+                        cardsInformation[CIindex].action[upgradeIndex]();
                         checkHealth();
                         handContainer.style = `width: ${handArray.length- 1}9.5%`;
                         if (airBubble.length > 0 && !playerFrostbite) {
@@ -5626,9 +5545,9 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                         }
                         console.log("UPDATING CARD TEXT");
                         updateCardText();
-                        /*document.querySelectorAll(".enemy-div").forEach(i => {
-                                i.style = "cursor: default";
-                        });*/
+                        document.querySelectorAll(".enemy-div").forEach(i => {
+                                i.style.cursor = "default";
+                        });
                 }
         }
         // IF CARD REQUIRES YOU TO CLICK ON AN ENEMY
@@ -5650,6 +5569,8 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                                         cardType[index].classList.add("card-clicked-water");
                                 } else if (cardType[index].classList.contains("earth")) {
                                         cardType[index].classList.add("card-clicked-earth");
+                                } else if (cardType[index].classList.contains("unique")) {
+                                        cardType[index].classList.add("card-clicked-unique");
                                 }
                                 chooseEnemy();
                         } else {
@@ -5666,6 +5587,8 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                                         cardType[index].classList.add("card-clicked-water");
                                 } else if (cardType[index].classList.contains("earth")) {
                                         cardType[index].classList.add("card-clicked-earth");
+                                } else if (cardType[index].classList.contains("unique")) {
+                                        cardType[index].classList.add("card-clicked-unique");
                                 }
                                 chosenCard = CIindex;
                                 chooseEnemy();
@@ -5766,6 +5689,9 @@ function getRandomNewCards () {
         document.getElementById("skip-button").addEventListener("click", () => {
                 chooseNewCardDiv.innerHTML = ``;
                 displayNone(chooseNewCardContainer);
+                document.querySelectorAll(".relic-img-text").forEach(i => {
+                        displayNone(i);
+                });
                 switchArea(map, arena);
         });
         arena.classList.add("dim");
@@ -5821,7 +5747,7 @@ function getRandomNewCards () {
 }
 function displayCardPiles(container, pile) {
         displayFlex(container);
-        arena.classList.add("dim");
+        arena.classList.add("dim2");
         pile.forEach((i) => {
                 for (let j = 0; j < cardsInformation.length; j++) {
                         if (i.classList.contains(j)) {
@@ -5829,15 +5755,20 @@ function displayCardPiles(container, pile) {
                         }
                 }
         });
-        let cardReference = document.querySelectorAll(".card-reference");
-        cardReference.forEach(i => {
+        document.querySelectorAll(".card-reference").forEach(i => {
                 displayFlex(i);
         });
+        displayNone(chooseNewCardContainer);
 }
 function removeCardPiles(pile) {
         pile.innerHTML = ``;
         displayNone(pile);
-        arena.classList.remove("dim");
+        if (enemiesAlive === 0) {
+                displayFlex(chooseNewCardContainer);
+        } else {
+                destroyReferenceCards();
+        }
+        arena.classList.remove("dim2");
 }
 const drawPileImg = document.querySelector("#draw-pile-img");
 const discardPileImg = document.querySelector("#discard-pile-img");
@@ -5854,7 +5785,6 @@ drawPileImg.addEventListener("mouseout", () => {
 discardPileImg.addEventListener("mouseout", () => {
         removeCardPiles(discardPileContainer);
 });
-
 /*
 PLAYER SECTION
 */
@@ -6396,6 +6326,8 @@ function updateCardText() {
                                                                 if (currentCardText[k].classList.contains("upgraded-text")) {
                                                                         upgradeIndex = 1;
                                                                 }
+                                                                console.log(cardsInformation[j].name, " ", type[upgradeIndex]);
+                                                                // RESET VALUES TO DEFAULT
                                                                 if (type === cardsInformation[j].damage) {
                                                                         type[upgradeIndex] = cardsInformationDefaultValues[j].damage[upgradeIndex];
                                                                 }
@@ -6414,42 +6346,45 @@ function updateCardText() {
                                                                 if (type === cardsInformation[j].block) {
                                                                         type[upgradeIndex] = cardsInformationDefaultValues[j].block[upgradeIndex];
                                                                 }
+                                                                console.log(cardsInformation[j].name, " ", type[upgradeIndex]);
                                                                 if (type === cardsInformation[j].thorns) {
                                                                         type[upgradeIndex] = cardsInformationDefaultValues[j].thorns[upgradeIndex];
                                                                 }
-                                                                        if (type === cardsInformation[j].burn && (essenceOfEmber.length > 0 || essenceOfEmberUpgrade.length > 0)) {
-                                                                                type[upgradeIndex] += (essenceOfEmber.length * 2) + (essenceOfEmberUpgrade * 4);
+                                                                // UPDATE NEW VALUES
+                                                                if (type === cardsInformation[j].burn && (essenceOfEmber.length > 0 || essenceOfEmberUpgrade.length > 0)) {
+                                                                        type[upgradeIndex] += (essenceOfEmber.length * 2) + (essenceOfEmberUpgrade * 4);
+                                                                }
+                                                                if (type === cardsInformation[j].damage && (liquidLightning.length > 0 || liquidLightningUpgrade.length > 0)) {
+                                                                        type[upgradeIndex] += (liquidLightning.length * 5) + (liquidLightningUpgrade * 7);
+                                                                }
+                                                                if (type === cardsInformation[j].energize && surgebinder) {
+                                                                        type[upgradeIndex] *= 2;
+                                                                }
+                                                                if (terrasBlessing.length > 0) {
+                                                                        if (type === cardsInformation[j].block) {
+                                                                                type[upgradeIndex] += terrasBlessing.length * 5;
                                                                         }
-                                                                        if (type === cardsInformation[j].damage && (liquidLightning.length > 0 || liquidLightningUpgrade.length > 0)) {
-                                                                                type[upgradeIndex] += (liquidLightning.length * 5) + (liquidLightningUpgrade * 7);
+                                                                        if (type === cardsInformation[j].thorns) {
+                                                                                type[upgradeIndex] += terrasBlessing.length;
                                                                         }
-                                                                        if (type === cardsInformation[j].energize && surgebinder) {
-                                                                                type[upgradeIndex] *= 2;
-                                                                        }
-                                                                        if (terrasBlessing.length > 0) {
-                                                                                if (type === cardsInformation[j].block) {
-                                                                                        type[upgradeIndex] += terrasBlessing.length * 5;
-                                                                                }
-                                                                                if (type === cardsInformation[j].thorns) {
-                                                                                        type[upgradeIndex] += terrasBlessing.length;
-                                                                                }
-                                                                        }
-                                                                        if (playerFrostbite && (type === cardsInformation[j].energize || type === cardsInformation[j].block || type === cardsInformation[j].regen || type === cardsInformation[j].blood || type === cardsInformation[j].thorns)) {
-                                                                                if (frostbitten && type === cardsInformation[j].block) {
-                                                                                        type[upgradeIndex] *= 4;
-                                                                                } else {
-                                                                                        type[upgradeIndex] = Math.floor(type[upgradeIndex] * .5);
-                                                                                }
-                                                                        }
-                                                                        if (playerWindswept && (type === cardsInformation[j].damage || type === cardsInformation[j].burn)) {
+                                                                }
+                                                                if (playerFrostbite && (type === cardsInformation[j].energize || type === cardsInformation[j].block || type === cardsInformation[j].regen || type === cardsInformation[j].blood || type === cardsInformation[j].thorns)) {
+                                                                        if (frostbitten && type === cardsInformation[j].block) {
+                                                                                type[upgradeIndex] *= 4;
+                                                                        } else {
                                                                                 type[upgradeIndex] = Math.floor(type[upgradeIndex] * .5);
-                                                                                if ("damageSecond" in cardsInformation[j]) {
-                                                                                        cardsInformation[j].damageSecond[upgradeIndex] = Math.floor(cardsInformation[j].damageSecond[upgradeIndex] * .5);
-                                                                                }
                                                                         }
-                                                                        if (tidalImbuement && type === cardsInformation[j].damage) {
-                                                                                type[upgradeIndex] += 10;
+                                                                }
+                                                                if (playerWindswept && (type === cardsInformation[j].damage || type === cardsInformation[j].burn)) {
+                                                                        type[upgradeIndex] = Math.floor(type[upgradeIndex] * .5);
+                                                                        if ("damageSecond" in cardsInformation[j]) {
+                                                                                cardsInformation[j].damageSecond[upgradeIndex] = Math.floor(cardsInformation[j].damageSecond[upgradeIndex] * .5);
                                                                         }
+                                                                }
+                                                                if (tidalImbuement && type === cardsInformation[j].damage) {
+                                                                        type[upgradeIndex] += 10;
+                                                                }
+                                                                console.log(cardsInformation[j].name, " ", type[upgradeIndex]);
                                                         }
                                                         if ("damage" in cardsInformation[j]) {
                                                                 update(cardsInformation[j].damage);
@@ -6506,7 +6441,7 @@ function updateCardText() {
                 ["For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself", "For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself"],
                 [`Inflict frostbite and deal damage equal to your block amount`, `Gain ${cardsInformation[22].block[1]} block, inflict frostbite, and deal damage equal to your block amount`],
                 ["[Ethereal]<br>Damage and Frostbite now hits every enemy", "[Ethereal]<br>Damage and Frostbite now hits every enemy"],
-                [`Deal ${windsOfChange} damage. All Winds of Change gain +3 damage or +6 damage if enemy is windswept`, `Deal ${windsOfChange} damage. All Winds of Change gain +4 damage or +8 damage if enemy is windswept`],
+                [`Deal ${windsOfChange} damage.<br>All Winds of Change gain +3 damage or +6 damage if enemy is windswept`, `Deal ${windsOfChange} damage.<br>All Winds of Change gain +4 damage or +8 damage if enemy is windswept`],
                 ["Draw two cards", "Draw two cards and inflict windswept on a random enemy"],
                 ["Draw a Winds of Change from your draw pile and discard pile", "Draw a Winds of Change from your draw pile and discard pile. Winds of Change gains +2 damage for each drawn."],
                 ["[Ethereal]<br>Draw one more card at the end of each turn", "[Ethereal]<br>Draw one more card at the end of each turn"],
@@ -6552,8 +6487,6 @@ function updateCardText() {
                         }
                 }
         }
-        // CHANGE CARD BACK TO ORIGINAL STATS
-        updateText(2, .5, -2, -4, -5, -7, -5, -1);
 }
 /*
 ENEMY SECTION
@@ -7921,6 +7854,12 @@ function enemyAction() {
                 playerThornsNumber.innerText = 10;
                 gaiaBlessing = false;
                 displayBlock(playerThornsDiv, playerThornsImg, playerThornsNumber);
+        }
+        if (playerEmberNumber > 0) {
+                displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
+                playerBurnNumber.innerText = playerEmberNumber;
+                playerEmberNumber = 0;
+                emberBurned = true;
         }
         enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
         trackEnemies.forEach((i) => {
