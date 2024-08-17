@@ -131,6 +131,7 @@
     border: 3px solid rgb(62, 71, 61);
     box-shadow: 10px 10px 15px rgb(0, 0, 0);
     background-image: linear-gradient(135deg, #ecf4ff 0%, #c3cfe2 100%);
+    overflow-y:auto;
 }
 #difficulty-screen div {
     width: 80%;
@@ -477,7 +478,11 @@
     margin: auto;
 }
 #location7 {
-    width: 60%;
+    width: 45%;
+    margin: auto;
+}
+#location8 {
+    width: 76%;
     margin: auto;
 }
 #location11 {
@@ -622,6 +627,8 @@
     background-image: url("imgs/fae-shop.jpeg");
     background-size: cover;
     display: flex;
+    position: fixed;
+    overflow-y: scroll;
     align-items: center;
     flex-wrap: wrap;
     display: none;
@@ -638,6 +645,8 @@
     display: flex;
     flex-wrap: wrap;
     background-image: linear-gradient(to bottom right,#4c5a80,#7883a1);
+    border: 3px solid rgb(62, 71, 61);
+    box-shadow: 10px 10px 15px rgb(0, 0, 0);
 }
 #shop-button-container {
     display: flex;
@@ -655,6 +664,8 @@
     width: 40rem;
     height: 18rem;
     background-image: linear-gradient(to bottom right,#4c5a80,#7883a1);
+    border: 3px solid rgb(62, 71, 61);
+    box-shadow: 10px 10px 15px rgb(0, 0, 0);
 }
 .shop-relic-div {
     display: flex;
@@ -1378,12 +1389,10 @@
 #mystery-card-display-container {
     position: absolute;
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-wrap: wrap;
-    width: 50%;
-    height: 30%;
-    margin-top: -20rem;
+    width: 90%;
+    top: 5rem;
+    left: 5rem;
     z-index: 5;
 }
 #all-cards-list {
@@ -1775,7 +1784,7 @@
 .card-name {
     width: 100%;
     color: white;
-    font-size: 13px;
+    font-size: .7vw;
     margin: 5px auto;
     padding-left: 17px;
     font-family: fantasy;

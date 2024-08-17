@@ -1,5 +1,7 @@
 /* IDEAS.
 Light and Dark based class has a light and dark meter based on your actions throughout the game
+idea face corrupted elemental spirits as boss battle
+Have hallowwood monsters (witches) either rez as ghost or zombie/skeleton
 
 TO DO
 Settings gear when hitting escape for music and sound volume
@@ -7,9 +9,11 @@ ghost elite becomes opacity: .5 and unable to be attacked
 make score screen
 no heaven gift background
 make story elements between bosses and at start of game
+fix jesus
 
 BUGS
-?death screen brings you to fae forest arena
+
+electric current damage 40 always 
 */
 /*
 GENERAL FUNCTIONS
@@ -29,23 +33,23 @@ const soundFXSlider = document.querySelector("#soundfx-slider");
 let allMusic = [];
 let allAmbience = [];
 const [fxPotion, fxFireball, fxCascadingFlames, fxStaticCharge, fxChainLightning, fxFrostbolt, fxFrostFingers, fxTornado, fxGaleForce, fxBloodCocoon, fxTidalImbuement, fxEarthBarrier, fxThornShield,
-        fxFirefall, fxKindredSpirits, fxPhoenixFire, fxStormblessed, fxBallLightning, fxConduit, fxIceNova, fxFrostbitten, fxRayOfIce, fxWindsOfChange, fxWindwalk, fxGust, fxSanguineSpring, fxMistborn, fxTsunami,
-        fxEarthShatter, fxWeaveOfThorns, fxVineWhip, fxForestFire, fxFrostfireFusion, fxFanTheFlames, fxCauterize, fxMagma, fxDeepFreeze, fxHurricane, fxElectricCurrent, fxQuakingJolt, fxFlurry, fxLiquify,
+        fxFirefall, fxKindredSpirits, fxPhoenixFire, fxStormblessed, fxBallLightning, fxConduit, fxIceNova, fxFrostbitten, fxRayOfIce, fxWindsOfChange, fxWindwalk, fxGust, fxSanguineSpring, fxDownpour, fxTsunami,
+        fxEarthShatter, fxVineSheath, fxWeaveOfThorns, fxVineWhip, fxForestFire, fxFrostfireFusion, fxFanTheFlames, fxCauterize, fxMagma, fxDeepFreeze, fxHurricane, fxElectricCurrent, fxQuakingJolt, fxFlurry, fxLiquify,
         fxFrozenTundra, fxAirBubbles, fxRockOrbit, fxCelestialAttunement, fxEnemyAttack, fxEnemyBlock, fxDragonRoar, fxDragonGrowls, fxGiantFootsteps, fxGiantGroans, fxWizardCast, fxSpellSuccess, fxSpellFail] =
         [new Audio("audio/potion.wav"), new Audio("audio/fireball.wav"), new Audio("audio/cascadingFlames.wav"), new Audio("audio/staticCharge.wav"), new Audio("audio/conduit.wav"),
         new Audio("audio/frostbolt.wav"), new Audio("audio/frostFingers.wav"), new Audio("audio/tornado.wav"), new Audio("audio/galeForce.wav"), new Audio("audio/bloodCocoon.wav"),
         new Audio("audio/tidalImbuement.wav"), new Audio("audio/earthBarrier.wav"), new Audio("audio/thornShield.wav"), new Audio("audio/firefall.wav"), new Audio("audio/kindredSpirits.wav"),
         new Audio("audio/phoenixFire.wav"),new Audio("audio/stormblessed.wav"), new Audio("audio/ballLightning.wav"), new Audio("audio/chainLightning.wav"), new Audio("audio/iceNova.wav"),
         new Audio("audio/frostbitten.wav"), new Audio("audio/rayOfIce.wav"), new Audio("audio/windsOfChange.wav"), new Audio("audio/windwalk.wav"), new Audio("audio/gust.wav"), new Audio("audio/sanguineSpring.wav"),
-        new Audio("audio/mistborn.wav"), new Audio("audio/tsunami.wav"), new Audio("audio/earthShatter.wav"), new Audio("audio/weaveOfThorns.wav"), new Audio("audio/vineWhip.wav"),
+        new Audio("audio/downpour.wav"), new Audio("audio/tsunami.wav"), new Audio("audio/earthShatter.wav"), new Audio("audio/vine-sheath.wav"), new Audio("audio/weaveOfThorns.wav"), new Audio("audio/vineWhip.wav"),
         new Audio("audio/forestFire.wav"), new Audio("audio/frostfireFusion.wav"), new Audio("audio/fanTheFlames.wav"), new Audio("audio/cauterize.wav"), new Audio("audio/magma.wav"),
         new Audio("audio/deepFreeze.wav"), new Audio("audio/hurricane.wav"), new Audio("audio/electricCurrent.wav"), new Audio("audio/quakingJolt.wav"), new Audio("audio/flurry.wav"),
         new Audio("audio/liquify.wav"), new Audio("audio/frozenTundra.wav"), new Audio("audio/airBubbles.wav"), new Audio("audio/rockOrbit.wav"), new Audio("audio/celestial-attunement.wav"),
         new Audio("audio/enemyAttack.wav"), new Audio("audio/enemyBlock.wav"), new Audio("audio/dragonRoar.wav"), new Audio("audio/dragonGrowls.wav"), new Audio("audio/giantFootsteps.wav"),
         new Audio("audio/giantGroans.wav"), new Audio("audio/wizard-cast.wav"), new Audio("audio/spell-success.wav"), new Audio("audio/spell-fail.wav")];
 const allSoundFX = [fxPotion, fxFireball, fxCascadingFlames, fxStaticCharge, fxChainLightning, fxFrostbolt, fxFrostFingers, fxTornado, fxGaleForce, fxBloodCocoon, fxTidalImbuement, fxEarthBarrier, fxThornShield,
-        fxFirefall, fxKindredSpirits, fxPhoenixFire, fxStormblessed, fxBallLightning, fxConduit, fxIceNova, fxFrostbitten, fxRayOfIce,fxWindsOfChange, fxWindwalk, fxGust, fxSanguineSpring, fxMistborn, fxTsunami,
-        fxEarthShatter, fxWeaveOfThorns, fxVineWhip, fxForestFire, fxFrostfireFusion, fxFanTheFlames, fxCauterize, fxMagma, fxDeepFreeze, fxHurricane, fxElectricCurrent, fxQuakingJolt, fxFlurry, fxLiquify,
+        fxFirefall, fxKindredSpirits, fxPhoenixFire, fxStormblessed, fxBallLightning, fxConduit, fxIceNova, fxFrostbitten, fxRayOfIce,fxWindsOfChange, fxWindwalk, fxGust, fxSanguineSpring, fxDownpour, fxTsunami,
+        fxEarthShatter, fxVineSheath, fxWeaveOfThorns, fxVineWhip, fxForestFire, fxFrostfireFusion, fxFanTheFlames, fxCauterize, fxMagma, fxDeepFreeze, fxHurricane, fxElectricCurrent, fxQuakingJolt, fxFlurry, fxLiquify,
         fxFrozenTundra, fxAirBubbles, fxRockOrbit, fxCelestialAttunement, fxEnemyAttack, fxEnemyBlock, fxDragonRoar, fxDragonGrowls, fxGiantFootsteps, fxGiantGroans, fxWizardCast, fxSpellSuccess, fxSpellFail];
 function switchMusic() {
         allMusic.forEach(i => {
@@ -103,28 +107,52 @@ let mapMusicIndex;
 startGame.addEventListener("click", () => {
         function start() {
                 displayBlock(map);
-                displayFlex(boardHeader);
-                displayNone(startScreen, document.querySelector("#difficulty-container"));
+                displayNone(startScreen, document.querySelector("#difficulty-container"), exclamationContainer);
+                location.href = "#bottom-anchor";
+        }
+        function storyStart() {
+                displayFlex(boardHeader, exclamationContainer);
+                exclamationContainer.innerHTML = `
+                <div class="exclamation-div" style="background-image: url(imgs/fae-forest-mystery.jpeg)">
+                        <div class="exclamation-information-container">
+                                <div style="width: 100%"><h1 class="exclamation-title">Fae Forest</h1></div>
+                                <div class="exclamation-event-img">
+                                        <img src="imgs/goddess.jpg">
+                                </div>
+                                <div class="exclamation-text-button-div">
+                                        <div class="exclamation-text-div">
+                                        <p class="exclamation-text">Welcome to Terra Nova. <br><br>
+                                                I have need of your help<br><br>
+                                                Go forth
+                                        </p>
+                                        </div>
+                                        <div class="exclamation-button-div">
+                                                <button class="exclamation-button-1">Venture through Fae Forest</button>
+                                        </div>
+                                </div>
+                        </div>
+                </div>`;
+                document.querySelector(".exclamation-button-1").addEventListener("click", start);
                 const mapMusic = new Audio("audio/map-music.wav");
                 switchMusic(mapMusic);
                 mapMusicIndex = allMusic.indexOf(mapMusic);
                 const forestAmbience = new Audio("audio/forest-ambience.wav");
                 switchAmbience(forestAmbience);
-                location.href = "#bottom-anchor";
+                displayNone(startScreen, document.querySelector("#difficulty-container"), map);
         }
         displayFlex(document.querySelector("#difficulty-container"));
         document.querySelector("#easy").addEventListener("click", () => {
-                start();
+                storyStart();
                 easyDifficulty = true;
                 playerAether.innerText = 200;
         });
         document.querySelector("#normal").addEventListener("click", () => {
-                start();
+                storyStart();
                 normalDifficulty = true;
                 playerAether.innerText = 100;
         });
         document.querySelector("#hard").addEventListener("click", () => {
-                start();
+                storyStart();
                 hardDifficulty = true;
         });
 });
@@ -417,7 +445,7 @@ const L9T3 = () => {
         chooseLocationPath("L9T3");
 };
 const L9T4 = () => {
-        chooseLocationPath("L9T3");
+        chooseLocationPath("L9T4");
 };
 const L10T1 = () => {
         chooseLocationPath("L10T1");
@@ -428,7 +456,7 @@ const L10T2 = () => {
 const L11T1 = () => {
         chooseLocationPath("L11T1");
 };
-location11Tiles1.addEventListener("click", L11T1);
+//location11Tiles1.addEventListener("click", L11T1);
 let numberOfEnemies;
 let enemyIsDead = [false, false, false];
 function resetArena() {
@@ -928,6 +956,7 @@ let getEliteRelic = false;
 let dontRepeatEliteEncounter = [];
 let eliteEncounterMusicTrigger = false;
 let eliteEncounterMusicIndex;
+let jesusHasRisen = false;
 function eliteEncounter() {
         if (!eliteEncounterMusicTrigger) {
                 if (faeForest) {
@@ -971,9 +1000,9 @@ function eliteEncounter() {
                 if (dontRepeatEliteEncounter.includes(7) && dontRepeatEliteEncounter.includes(8) && dontRepeatEliteEncounter.includes(9)) {
                         encounter();
                 } else {
-                        randomEliteNumber = createRandomNumber(7, 9);
+                        randomEliteNumber = createRandomNumber(7, 8);
                         while (dontRepeatEliteEncounter.includes(randomEliteNumber)) {
-                                randomEliteNumber = createRandomNumber(7, 9);        
+                                randomEliteNumber = createRandomNumber(7, 8);        
                         }
                 }
         }
@@ -1013,7 +1042,7 @@ function eliteEncounter() {
                 case 5:
                         createEliteEnemy("Spectre", 24, 5);
                         document.querySelector(".enemy-img").style = "width: 510px";
-                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 6rem";
                         break;
                 case 6:
                         createEliteEnemy("Gargoyle", 25, 6);
@@ -1034,6 +1063,7 @@ function eliteEncounter() {
                         createEliteEnemy("Jesus", 44, 9);
                         document.querySelector(".enemy-img").style = "width: 450px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
+                        jesusHasRisen = true;
                         break;
         }
 }
@@ -1102,11 +1132,11 @@ function boss() {
                         document.querySelector(".enemy-debuffs").style = "position: absolute; bottom: 51.1rem";
                         break;
                 case 5:
-                        createBossEnemy("Life", 45, 1);
+                        createBossEnemy("Life", 46, 1);
                         document.querySelector(".enemy-img").style = "width: 500px";
                         break;
                 case 6:
-                        createBossEnemy("Death", 46, 1);
+                        createBossEnemy("Death", 47, 1);
                         document.querySelector(".enemy-img").style = "width: 500px";
                         break;
         }
@@ -1211,13 +1241,13 @@ function treasure() {
                         document.getElementById("ice-orb-img").addEventListener("click", () => {
                                 if (iceGift && iceGiftTrigger) {
                                         for (let i = 0; i < numberOfEnemies; i++) {
-                                                if (!enemyIsDead && enemyFrostbite[i]) {
+                                                if (!enemyIsDead[i] && enemyFrostbite[i]) {
                                                         leechBuffs(i, false);
                                                 }
                                         }
                                         iceGiftTrigger = false;
                                         document.getElementById("ice-orb-img").classList.remove("ice-glow");
-                                        fxFlurry.play();
+                                        fxIceNova.play();
                                 }
                         });
                         switchArea(map, exclamationContainer);
@@ -1285,6 +1315,7 @@ function treasure() {
                                                 }
                                         }
                                         fireGiftTrigger = false;
+                                        checkIfEnemyDead();
                                         document.getElementById("fire-orb-img").classList.remove("fire-glow");
                                         fxFirefall.play();
                                 }
@@ -1319,9 +1350,9 @@ function spaceEndTurn(e) {
 function randomizeLocations() {
         function getLocations(location) {
                 let randomLocation = createRandomNumber(1, 100);
-                if (randomLocation <= 0) {
+                if (randomLocation <= 45) {
                         location.innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`;
-                } else if (randomLocation <= 0) {
+                } else if (randomLocation <= 70) {
                         location.innerHTML = `<img class="exclamation-img" src="imgs/icons8-exclamation-64.png" alt="Mystery Zone">`;
                 } else if (randomLocation <= 80) {
                         location.innerHTML = `<img class="hard-monster-img" src="imgs/icons8-monster-80.png" alt="Hard Monster">`;
@@ -1612,8 +1643,7 @@ function createExclamation(title, background, img, text0, text1, text2) {
                         <div class="exclamation-button-div"></div>
                 </div>
             </div>
-        </div>
-        `
+        </div>`
 }
 function destroyReferenceCards() {
         document.querySelectorAll(".card-reference").forEach(i => {
@@ -1629,7 +1659,6 @@ let dontRepeatExclamation = [];
 let exclamationMusicTrigger = false;
 let exclamationMusicIndex;
 let [aquatasBlessing, gaiaBlessing, slainWerewolf, slainVampire, emberBurned] = [false, false, false, false, false];
-mysteryReturn = [false, false, false];
 let playerEmberNumber = 0;
 function mystery() {
         switchArea(exclamationContainer, map);
@@ -1656,25 +1685,19 @@ function mystery() {
         let randomExclamationNumber;
         if (faeForest) {
                 if (dontRepeatExclamation.includes(1) && dontRepeatExclamation.includes(2) && dontRepeatExclamation.includes(3) && dontRepeatExclamation.includes(4) && dontRepeatExclamation.includes(5)) {
-                        mysteryReturn[0] = true;
-                }
-                if (mysteryReturn[0]) {
                         encounter();
                 } else {
                         randomExclamationNumber = createRandomNumber(1, 5);
-                        while (dontRepeatExclamation.includes(randomExclamationNumber) && !mysteryReturn[0]) {
+                        while (dontRepeatExclamation.includes(randomExclamationNumber)) {
                                 randomExclamationNumber = createRandomNumber(1, 5);
                         }
                 }
         } else if (hallowwood) {
                 if (dontRepeatExclamation.includes(6) && dontRepeatExclamation.includes(7) && dontRepeatExclamation.includes(8) && dontRepeatExclamation.includes(9) && dontRepeatExclamation.includes(10)) {
-                        mysteryReturn[1] = true;
-                }
-                if (mysteryReturn[1]) {
                         encounter();
                 } else {
                         randomExclamationNumber = createRandomNumber(6, 10);
-                        while (dontRepeatExclamation.includes(randomExclamationNumber) && !mysteryReturn[1]) {
+                        while (dontRepeatExclamation.includes(randomExclamationNumber)) {
                                 randomExclamationNumber = createRandomNumber(6, 10);
                         }
                         if (randomExclamationNumber === 8 && !dontRepeatExclamation.includes(10)) {
@@ -1685,17 +1708,20 @@ function mystery() {
                 } 
         } else {
                 if (dontRepeatExclamation.includes(11) && dontRepeatExclamation.includes(12) && dontRepeatExclamation.includes(13) && dontRepeatExclamation.includes(14) && dontRepeatExclamation.includes(15)) {
-                        mysteryReturn[2] = true;
-                }
-                if (mysteryReturn[2]) {
                         encounter();
                 } else {
                         randomExclamationNumber = createRandomNumber(11, 15);
-                        while (dontRepeatExclamation.includes(randomExclamationNumber) && !mysteryReturn[2]) {
+                        while (dontRepeatExclamation.includes(randomExclamationNumber)) {
                                 randomExclamationNumber = createRandomNumber(11, 15);
+                        }
+                        if (randomExclamationNumber === 12 && !dontRepeatExclamation.includes(11)) {
+                                randomExclamationNumber = 11;
+                        } else if (dontRepeatExclamation.includes(11) && !dontRepeatExclamation.includes(12)) {
+                                randomExclamationNumber = 12;
                         }
                 }
         }
+        let noDuplicates = [];
         switch (randomExclamationNumber) {
                 case 1:
                         createExclamation("A Necessary Sacrifice", "imgs/fae-forest-mystery.jpeg", "imgs/goddess.jpg", `<span style="color: #81b14f">Terra</span> approaches you again with a warm kind visage.`, 
@@ -1728,15 +1754,15 @@ function mystery() {
                         function createElementCards(elementCards) {
                                 for (let i = 0; i < elementCards.length; i++) {
                                         for (let j = 0; j < cardsInformation.length; j++) {
-                                                document.querySelectorAll(".reference-card").forEach(i => {
-                                                        if (!i.classList.contains(j)) {
-                                                                if (elementCards[i].classList.contains(j) && !elementCards[i].classList.contains("upgraded")) {
-                                                                        createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
-                                                                } else if (elementCards[i].classList.contains(j) && elementCards[i].classList.contains("upgraded")) {
-                                                                        createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 1);
-                                                                }
+                                                if (!noDuplicates.includes(j)) {
+                                                        if (elementCards[i].classList.contains(j) && !elementCards[i].classList.contains("upgraded")) {
+                                                                createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                                                                noDuplicates.push(j);
+                                                        } else if (elementCards[i].classList.contains(j) && elementCards[i].classList.contains("upgraded")) {
+                                                                createCard(j, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 1);
+                                                                noDuplicates.push(j);
                                                         }
-                                                });
+                                                }
                                         }
                                 }
                         }
@@ -2317,14 +2343,14 @@ function mystery() {
                         dontRepeatExclamation.push(9);
                         break;
                 case 10:
-                        createExclamation("Tempia", "imgs/hallowwood-mystery.jpeg", "imgs/tempia2.jpeg", "As you're walking through the forest you feel the air suddenly shift. You look up towards the sky to see the shape of a dragon form from the winds. You stare in awe.", 
+                        createExclamation("Tempia's Reverie", "imgs/hallowwood-mystery.jpeg", "imgs/tempia2.jpeg", "As you're walking through the forest you feel the air suddenly shift. You look up towards the sky to see the shape of a dragon form from the winds. You stare in awe.", 
                                 `"What, were you expecting me to be in human form like the other spirits?" his words gently touch your ears as if floating on a breeze. "Know that I go where the winds take me and I don't change for anyone human."`,
                                 `"I've come to you because I can be of no assistance in this matter. My sibling Glacia, spirit of ice, seems to have been possesed by a vengeful spirit herself. I can give you a cleansing spell that will heal her or give you a sliver of my power. I will honor either decision."`);
                         document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1" style="height: 45%"><span style="color: lightblue">Agree to heal Glacia:</span> Gain an empowered sanguine spring</button>
                         <button class="exclamation-button-2" style="height: 45%"><span style="color: rgb(115, 215, 215)">Fuse with Tempia:</span> Gain a zephyr infusion</button>
                         <div id="mystery-card-display-container"></div>`;
-                        createCard(28, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
+                        createCard(28, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 1);
                         createCard(27, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
                         document.querySelector(".exclamation-button-1").addEventListener("mouseover", () => {
                                 document.querySelectorAll(".card-reference").forEach(i => {
@@ -3151,7 +3177,6 @@ function shop() {
                 }
         });*/
         // SHOP CARDS
-        let shopCards = [];
         let dontRepeatCard = [];
         let cardCost = [];
         while (dontRepeatCard.length < 10) {
@@ -3175,8 +3200,6 @@ function shop() {
                 document.querySelector("#shop-cards-div").innerHTML += `<div class="shop-cards-cost-div"></div>`;
                 createCard(dontRepeatCard[i], document.querySelectorAll(".shop-cards-cost-div")[i], "card-reference", "card-text", 0);
                 document.querySelectorAll(".shop-cards-cost-div")[i].innerHTML += `<img class="shop-aether" src="imgs/aether-icon.png"><p class="shop-aether-cost">${cardCost[i]}</p>`
-                let shopCardsReference = document.querySelectorAll(".card-reference");
-                shopCards.push(shopCardsReference[shopCardsReference.length - 1]);
         }
         let shopCardsReference = document.querySelectorAll(".card-reference");
         for (let i = 0; i < shopCardsReference.length; i++) {
@@ -3235,7 +3258,7 @@ function shop() {
                                                 <img class="shop-relic-img 3" src="imgs/thunder-talisman2.png">
                                                 <div class="shop-relic-img-text img-text">
                                                         <h4 class="img-text-h4">Thunder Talisman</h4>
-                                                        <p class="img-text-p">Start each encounter with +1 mana for the first turn</p>
+                                                        <p class="img-text-p">Start each encounter with +2 mana for the first turn</p>
                                                 </div>
                                                 <img class="shop-aether" src="imgs/aether-icon.png">
                                                 <p class="shop-aether-cost">${relicCost[i]}</p>;
@@ -3636,8 +3659,8 @@ const cardsInformation = [
                 manaCost: [3, 3],
                 name: "Chain Lightning",
                 cardImg: "imgs/chain-lightning.jpeg",
-                cardText: ["Deal 16 damage to all enemies<br>Energize 2", "Deal 20 damage to all enemies<br>Energize 3"],
-                damage: [16, 20],
+                cardText: ["Deal 20 damage to all enemies<br>Energize 2", "Deal 30 damage to all enemies<br>Energize 3"],
+                damage: [20, 30],
                 energize: [2, 3],
                 chooseEnemyCard: false,
                 index: 3,
@@ -3647,13 +3670,13 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(2000);
+                                damageAllEnemies(2000000);
                                 gainEnergize(2);
                                 fxChainLightning.play();
                         },
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(20);
+                                damageAllEnemies(30);
                                 gainEnergize(3);
                                 fxChainLightning.play();
                         },
@@ -4309,7 +4332,7 @@ const cardsInformation = [
                 chooseEnemyCard: false,
                 index: 21,
                 element: "ice",
-                rarity: "common",
+                rarity: "rare",
                 action:
                 [
                         function() {
@@ -4600,7 +4623,7 @@ const cardsInformation = [
                                 gainBloodSiphon(parseFloat(currentMana.innerText));
                                 playerHeal(parseFloat(currentMana.innerText));
                                 currentMana.innerText = 0;
-                                fxMistborn.play();
+                                fxDownpour.play();
                         },
                         function() {
                                 gainRegen(parseFloat(currentMana.innerText));
@@ -4608,7 +4631,7 @@ const cardsInformation = [
                                 gainBlock(parseFloat(currentMana.innerText));
                                 playerHeal(parseFloat(currentMana.innerText));
                                 currentMana.innerText = 0;
-                                fxMistborn.play();
+                                fxDownpour.play();
                         }
                 ]
         },
@@ -4668,23 +4691,23 @@ const cardsInformation = [
         {
                 manaCost: [2, 2],
                 name: "Vine Sheath",
-                cardImg: "imgs/vine-sheath.jpeg",
+                cardImg: "imgs/vine-sheath2.jpeg",
                 cardText: ["[Ethereal]<br>Double your thorns", "[Ethereal]<br>Triple your thorns."],
                 chooseEnemyCard: false,
                 index: 32,
                 element: "earth",
-                rarity: "common",
+                rarity: "rare",
                 action:
                 [
                         function() {
                                 spendMana(2);
                                 playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) * 2;
-                                fxEarthShatter.play();
+                                fxVineSheath.play();
                         },
                         function() {
                                 spendMana(2);
-                                playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) * 2;
-                                fxEarthShatter.play();
+                                playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) * 3;
+                                fxVineSheath.play();
                         }
                 ]
         },
@@ -4716,8 +4739,8 @@ const cardsInformation = [
                 manaCost: [2, 2],
                 name: "Vine Whip",
                 cardImg: "imgs/vine-whip.jpeg",
-                cardText: ["Deal damage equal to 3x your thorns", "Gain 2 thorns and deal damage equal to 3x your thorns"],
-                thorns: [0, 2],
+                cardText: ["Deal damage equal to 2x your thorns", "Gain 3 thorns and deal damage equal to 2x your thorns"],
+                thorns: [0, 3],
                 chooseEnemyCard: true,
                 index: 34,
                 element: "earth",
@@ -4726,19 +4749,19 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(2);
-                                damageEnemy((playerThornsNumber.innerText * 3), chosenEnemy);
+                                damageEnemy((playerThornsNumber.innerText * 2), chosenEnemy);
                                 fxVineWhip.play();
                         },
                         function() {
                                 spendMana(2);
-                                gainThorns(2);
-                                damageEnemy((playerThornsNumber.innerText * 3), chosenEnemy);
+                                gainThorns(3);
+                                damageEnemy((playerThornsNumber.innerText * 2), chosenEnemy);
                                 fxVineWhip.play();
                         }
                 ]
         },
         {
-                manaCost: [2, 2],
+                manaCost: [3, 3],
                 name: "Gaia's Embrace",
                 cardImg: "imgs/gaias-embrace.jpeg",
                 cardText: ["[Ethereal]<br>All block gained is increased by 5 and thorns by 1", "[Ethereal]<br>Gain 10 block and 2 thorns. All block gained is increased by 5 and thorns by 1"],
@@ -4751,12 +4774,12 @@ const cardsInformation = [
                 action:
                 [
                         function() {
-                                spendMana(2);
+                                spendMana(3);
                                 terrasBlessing.push(true);
                                 fxMistborn.play();
                         },
                         function() {
-                                spendMana(2);
+                                spendMana(3);
                                 gainBlock(10);
                                 gainThorns(2);
                                 terrasBlessing.push(true);
@@ -5395,7 +5418,7 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
                         element2 = "energize";
                         break;
                 case 44:
-                        element = "fire2";
+                        element = "energize";
                         element2 = "earth2";
                         break;
                 case 45:
@@ -5681,8 +5704,8 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchToMap) {
                 document.querySelectorAll(".relic-img-text").forEach(i => {
                         displayNone(i);
                 });
+                destroyReferenceCards();
         }
-        windsOfChange = 8;
 }        
 // GET A SELECTION OF 4 CARDS WHEN ENEMIES ARE DEFEATED
 function getRandomNewCards () {
@@ -5867,6 +5890,9 @@ function damageEnemy(damage, enemy) {
                         tidalImbuement = false;
                         displayNone(playerTidalImbuementImg);
                 }
+                if ((enemyCurrentHealth[enemy].innerText + enemyBlockNumber[enemy].innerText) < damage) {
+                        damage = enemyCurrentHealth[enemy].innerText + enemyBlockNumber[enemy].innerText;
+                }
                 if (playerBloodNumber.innerText > 0) {
                         let healPercentage = .2;
                         if (bloodbender) {
@@ -5930,6 +5956,9 @@ function damageAllEnemies(damage) {
         }
         for (let i = 0; i < numberOfEnemies; i++) {
                 if (enemyIsDead[i] === false) {
+                        if ((enemyCurrentHealth[i].innerText + enemyBlockNumber[i].innerText) < damage) {
+                                damage = enemyCurrentHealth[i].innerText + enemyBlockNumber[i].innerText;
+                        }
                         if (playerBloodNumber.innerText > 0) {
                                 let healPercentage = .2;
                                 if (bloodbender) {
@@ -6016,15 +6045,13 @@ function leechBuffs(enemy, leech) {
         } else {
                 function checkBuffs(buff, enemyImg, playerImg, playerNumber, total) {
                         if (buff[enemy].innerText > 0) {
-                                if (buff[enemy].innerText > 0) {
-                                        playerNumber.innerText = parseFloat(playerNumber.innerText) + parseFloat(buff[enemy].innerText);
-                                        total += buff[enemy].innerText;
-                                        buff[enemy].innerText = parseFloat(buff[enemy].innerText) - (buff[enemy].innerText);
-                                }
+                                playerNumber.innerText = parseFloat(playerNumber.innerText) + parseFloat(buff[enemy].innerText);
+                                total += buff[enemy].innerText;
+                                buff[enemy].innerText = 0;
                                 if (playerNumber.innerText > 0) {
                                         displayBlock(playerImg, playerNumber);
                                 }
-                                if (buff[enemy].innerText == 0) {
+                                if (buff[enemy].innerText === 0) {
                                         displayNone(enemyImg[enemy], buff[enemy]);
                                 }
                         }
@@ -6175,7 +6202,7 @@ function burnEnemy(burn, enemy) {
                 concentratedFireTracking[enemy] = true;
         }
         if (playerWindswept) {
-                burn *= .5;
+                burn = Math.floor(burn * .5);
         }
         if (ringOfFire) {
                 for (let i = 0; i < numberOfEnemies; i++) {
@@ -6451,7 +6478,7 @@ function updateCardText() {
                 ["[Ethereal]<br>Permanently gain 5 max health", "[Ethereal]<br>Permanently gain 6 max health and gain 6 health"],
                 ["[Ethereal]<br>Double your thorns", "[Ethereal]<br>Triple your thorns."],
                 [`Gain ${cardsInformation[33].thorns[0]} thorns`, `Gain ${cardsInformation[33].thorns[1]} thorns`],
-                [`Deal damage equal to 3x your thorns<br>Damage: ${(parseFloat(playerThornsNumber.innerText) * 3)}`, `Gain ${cardsInformation[34].thorns[1]} thorns and deal damage equal to 3x your thorns<br>Damage: ${2 + (parseFloat(playerThornsNumber.innerText) * 3)}`],
+                [`Deal damage equal to 2x your thorns<br>Damage: ${(parseFloat(playerThornsNumber.innerText) * 2)}`, `Gain ${cardsInformation[34].thorns[1]} thorns and deal damage equal to 2x your thorns<br>Damage: ${3 + (parseFloat(playerThornsNumber.innerText) * 2)}`],
                 ["[Ethereal]<br>All block gained is increased by 5 and thorns increased by 1", `[Ethereal]<br>Gain ${cardsInformation[35].block[1]} block and ${cardsInformation[35].thorns[1]} thorns. All block gained is increased by 5 and thorns increased by 1`],
                 [`Energize ${cardsInformation[36].energize[0]} for each enemy burning`, `Burn all enemies for ${cardsInformation[36].burn[1]} and Energize ${cardsInformation[36].energize[1]} for each enemy burning`],
                 [`If the enemy is either burning or inflicted with frostbite they are inflicted with ${cardsInformation[37].burn[0]} burn and frostbite`, `If the enemy is either burning or inflicted with frostbite they are inflicted with ${cardsInformation[37].burn[1]} burn and frostbite`],
@@ -6795,8 +6822,8 @@ const enemiesInformation = [
                 img: "imgs/boss-spectre.png",
                 attackChance: 1,
                 bloodChance: 10,
-                attackDamageLow: 40,
-                attackDamageHigh: 50,
+                attackDamageLow: 35,
+                attackDamageHigh: 45,
                 bloodAmountLow: 2,
                 bloodAmountHigh: 2
         },
@@ -7021,15 +7048,39 @@ const enemiesInformation = [
         {
                 name: "Jesus",//when you kill him he resurrects off the cross lol
                 index: 44,
-                baseHealth: 300,
+                baseHealth: 200,
                 img: "imgs/elite-jesus.png",
-                attackChance: 10,
-                attackDamageLow: 45,
-                attackDamageHigh: 50,
+                attackChance: 0,
+                healChance: 3,
+                regenChance: 6,
+                thornsChance: 10,
+                attackDamageLow: 0,
+                attackDamageHigh: 0,
+                healAmountLow: 50,
+                healAmountHigh: 55,
+                regenAmountLow: 20,
+                regenAmountHigh: 30,
+                thornsAmountLow: 5,
+                thornsAmountHigh: 6
+        },
+        {
+                name: "Jesus Risen",//when you kill him he resurrects off the cross lol
+                index: 45,
+                baseHealth: 300,
+                img: "imgs/elite-jesus-rezed2.png",
+                attackChance: 5,
+                healChance: 8,
+                regenChance: 10,
+                attackDamageLow: 40,
+                attackDamageHigh: 44,
+                healAmountLow: 50,
+                healAmountHigh: 55,
+                regenAmountLow: 20,
+                regenAmountHigh: 30,
         },
         {
                 name: "Life",
-                index: 45,
+                index: 46,
                 baseHealth: 500,
                 img: "imgs/boss-life.png",
                 attackChance: 4,
@@ -7044,7 +7095,7 @@ const enemiesInformation = [
         },
         {
                 name: "Death",
-                index: 46,
+                index: 47,
                 baseHealth: 500,
                 img: "imgs/boss-death2.png",
                 attackChance: 10,
@@ -7215,18 +7266,25 @@ function createEnemy(name) {
         const enemyDiv = document.querySelectorAll(".enemy-div");
         const enemyImg = document.querySelectorAll(".enemy-img");
         switch (index.name) {
-                case "Dark Elf":
+                case "Dark Elf": case "Reaper": case "Spectre":
                         enemyDiv[enemyDiv.length - 1].style = "animation: 3s ease-in-out 0s 1 stealthAppear";
                         break;
                 case "Water Wolf":
                         enemyImg[enemyDiv.length - 1].classList.add("enemy-img-flip");
                         enemyDiv[enemyDiv.length - 1].style = "animation: 2s ease-out 0s 1 slideInTop";
                         break;
-                case "Fairy":
-                        enemyDiv[enemyDiv.length - 1].style = "animation: 2.3s ease-out 0s 1 slideInTop; margin-bottom: 5rem;";
+                case "Bat": case "Vampire": case "Black Witch":
+                        enemyDiv[enemyDiv.length - 1].style = "animation: 2s ease-out 0s 1 slideInTop";
+                        break;
+                case "Fairy": case "White Witch":
+                        enemyDiv[enemyDiv.length - 1].style = "animation: 2.3s ease-out 0s 1 slideInTop; margin-bottom: 5rem";
                         break;
                 case "Mushroom":
                         enemyImg[enemyDiv.length - 1].style = "animation: 3.5s ease-in-out 0s 1 grow";
+                        break;
+                case "Jesus Risen":
+                        enemyDiv[enemyDiv.length - 1].style = "animation: 2.3s ease-out 0s 1 slideInTop; margin-bottom: 5rem";
+                        enemyImg[enemyDiv.length - 1].style.width = "450px";
                         break;
                 case "Artemis": case "Athena": case "Centaur": case "Fenrir":
                         enemyImg[enemyDiv.length - 1].classList.add("enemy-img-flip");
@@ -7242,6 +7300,10 @@ function createEnemy(name) {
         if (hallowwood) {
                 for (let i = 0; i < document.getElementsByClassName("enemy-health").length; i++) {
                         document.getElementsByClassName("enemy-health")[i].style = "color: white";
+                }
+        } else if (!faeForest && !hallowwood) {
+                for (let i = 0; i < document.getElementsByClassName("enemy-health").length; i++) {
+                        document.getElementsByClassName("enemy-health")[i].style = "color: black";
                 }
         }
         if (name === "Vampire") {
@@ -7446,8 +7508,8 @@ function enemyBurnPlayer(amount, index) {
         displayNone(enemyBurnActionDiv[index]);
 }
 function enemyGainRegeneration(amount, index) {
-        fxTidalImbuement.currentTime = 0;
-        fxTidalImbuement.play();
+        fxDownpour.currentTime = 0;
+        fxDownpour.play();
         if (enemyFrostbite[index]) {
                 amount = Math.floor(amount * .5);
         }
@@ -7565,6 +7627,17 @@ let [faeForest, hallowwood] = [true, false];
 function checkIfEnemyDead() {
         // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET AETHER
         function allEnemiesDead() {
+                if (jesusHasRisen) {
+                        jesusHasRisen = false;
+                        createEnemy("Jesus Risen");
+                        initializeEnemyVariables();
+                        numberOfEnemies = 1;
+                        enemiesAlive = 1;
+                        enemiesAreDead = false;
+                        enemyIsDead[0] = false;
+                        enemyAction(45);
+                        return;
+                }
                 if ((!bossDefeated[0] && !bossDefeated[1] && faeForest) || (bossDefeated[0] && !bossDefeated[1] && hallowwood) || (bossDefeated[0] && bossDefeated[1] && !hallowwood)) {
                         getRandomNewCards();
                 }
@@ -7582,8 +7655,53 @@ function checkIfEnemyDead() {
                 }
                 enemiesKilled++
                 siphonAll = false;
+                function nextStage() {
+                        location1Tiles1.addEventListener("click", L1T1);
+                        location1Tiles2.addEventListener("click", L1T2);
+                        location1Tiles3.addEventListener("click", L1T3);
+                        if (faeForest) {
+                                faeForest = false;
+                                hallowwood = true;
+                        } else if (hallowwood) {
+                                hallowwood = false;
+                        }
+                        document.getElementById("player-health-numbers").style = "color: white";
+                        encounterMusicTrigger = false;
+                        eliteEncounterMusicTrigger = false;
+                        exclamationMusicTrigger = false;
+                        shopMusicTrigger = false;
+                        blacksmithMusicTrigger = false;
+                        location1Tiles1.classList.add("glow");
+                        location1Tiles2.classList.add("glow");
+                        location1Tiles3.classList.add("glow");
+                        switchArea(map, empowerContainer);
+                        randomizeLocations();
+                }
                 const empowerContainer = document.getElementById("empower-container");
                 if (bossDefeated[0] && !bossDefeated[1] && !hallowwood) {
+                        displayNone(arena);
+                        displayFlex(exclamationContainer);
+                        exclamationContainer.innerHTML = `
+                        <div class="exclamation-div" style="background-image: url(imgs/hallowwood-mystery.jpeg)">
+                                <div class="exclamation-information-container">
+                                        <div style="width: 100%"><h1 class="exclamation-title">Hallowwood</h1></div>
+                                        <div class="exclamation-event-img">
+                                                <img src="imgs/goddess.jpg">
+                                        </div>
+                                        <div class="exclamation-text-button-div">
+                                                <div class="exclamation-text-div">
+                                                <p class="exclamation-text">We're in hallowwood! <br><br>
+                                                        I have need of your help<br><br>
+                                                        Go forth.
+                                                </p>
+                                                </div>
+                                                <div class="exclamation-button-div">
+                                                        <button class="exclamation-button-1">Venture through Hallowwood</button>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>`;
+                        document.querySelector(".exclamation-button-1").addEventListener("click", startHallowwood);
                         fxDragonGrowls.pause();
                         fxGiantGroans.pause();
                         allMusic.forEach(i => {
@@ -7594,182 +7712,187 @@ function checkIfEnemyDead() {
                                 i.pause();
                         });
                         allAmbience = [];
-                        const hallowwoodAmbience = new Audio("audio/hallowwood-ambience.wav");
-                        switchAmbience(hallowwoodAmbience);
-                        const hallowwoodMapMusic = new Audio("audio/hallowwood-map-music.wav");
-                        switchMusic(hallowwoodMapMusic);
-                        mapMusicIndex = allMusic.indexOf(hallowwoodMapMusic);
-                        displayFlex(empowerContainer);
-                        displayNone(arena);
-                        map.style.backgroundImage = "url(imgs/hallowwood-map3.jpeg)";
-                        arena.style.backgroundImage = "url(imgs/hallowwood-arena4.jpeg)";
-                        arena.style.backgroundImage = "url(imgs/hallowwood-arena4.jpeg)";
-                        empowerContainer.innerHTML = `
-                        <h1>Empower an Element</h1>
-                        <div class="empower-element-div">
-                                <h2 style="color: #b23d1a">Fire</h2>
-                                <div class="empower-choice-div">
-                                        <div class="empower-choices">
-                                                <button id="eternal-flame" style="color: #aa4203">Flame Warden</button>
-                                                <p>Burn increases by one each turn</p>
-                                        </div>
-                                        <div class="empower-choices">
-                                                <button id="scorched-earth" style="color: #ba760f">Pyromancer</button>
-                                                <p>Enemies burn twice per turn</p>
-                                        </div>
-                                </div>
-                        </div>
-                        <div class="empower-element-div">
-                                <h2 style="color: #f0fb3e">Lightning</h2>
-                                <div class="empower-choice-div">
-                                        <div class="empower-choices">
-                                                <button id="surgebinder" style="color: #fafba5">Surgebinder</button>
-                                                <p>Double all energize</p>
-                                        </div>
-                                        <div class="empower-choices">
-                                                <button id="lightning-jewel" style="color: #5e65c5">Stormchaser</button>
-                                                <p>Gain +1 mana</p>
+                        function startHallowwood() {
+                                displayNone(exclamationContainer);
+                                const hallowwoodAmbience = new Audio("audio/hallowwood-ambience.wav");
+                                switchAmbience(hallowwoodAmbience);
+                                const hallowwoodMapMusic = new Audio("audio/hallowwood-map-music.wav");
+                                switchMusic(hallowwoodMapMusic);
+                                mapMusicIndex = allMusic.indexOf(hallowwoodMapMusic);
+                                displayFlex(empowerContainer);
+                                displayNone(arena);
+                                map.style.backgroundImage = "url(imgs/hallowwood-map3.jpeg)";
+                                arena.style.backgroundImage = "url(imgs/hallowwood-arena4.jpeg)";
+                                arena.style.backgroundImage = "url(imgs/hallowwood-arena4.jpeg)";
+                                empowerContainer.innerHTML = `
+                                <h1>Empower an Element</h1>
+                                <div class="empower-element-div">
+                                        <h2 style="color: #b23d1a">Fire</h2>
+                                        <div class="empower-choice-div">
+                                                <div class="empower-choices">
+                                                        <button id="eternal-flame" style="color: #aa4203">Flame Warden</button>
+                                                        <p>Burn increases by one each turn</p>
+                                                </div>
+                                                <div class="empower-choices">
+                                                        <button id="scorched-earth" style="color: #ba760f">Pyromancer</button>
+                                                        <p>Enemies burn twice per turn</p>
+                                                </div>
                                         </div>
                                 </div>
-                        </div>
-                        <div class="empower-element-div">
-                                <h2 style="color: #2f989c">Ice</h2>
-                                <div class="empower-choice-div">
-                                        <div class="empower-choices">
-                                                <button id="leeching-cold" style="color: #51a9ac">Cryocast</button>
-                                                <p>Inflicting frostbite will steal two of each buff</p>
-                                        </div>
-                                        <div class="empower-choices">
-                                                <button id="everlasting-winter" style="color: #b9e8ea">Winter Warrior</button>
-                                                <p>Frostbite lasts for two turns</p>
-                                        </div>
-                                </div>
-                        </div>
-                        <div class="empower-element-div">
-                                <h2 style="color: #86bfdf">Air</h2>
-                                <div class="empower-choice-div">
-                                        <div class="empower-choices">
-                                                <button id="shifting-winds" style="color: #9edafd">Aeroshift</button>
-                                                <p>Your cards that draw cards draw one more card</p>
-                                        </div>
-                                        <div class="empower-choices">
-                                                <button id="windrunner" style="color: white">Windrunner</button>
-                                                <p>Draw one more card each turn</p>
+                                <div class="empower-element-div">
+                                        <h2 style="color: #f0fb3e">Lightning</h2>
+                                        <div class="empower-choice-div">
+                                                <div class="empower-choices">
+                                                        <button id="surgebinder" style="color: #fafba5">Surgebinder</button>
+                                                        <p>Double all energize</p>
+                                                </div>
+                                                <div class="empower-choices">
+                                                        <button id="lightning-jewel" style="color: #5e65c5">Stormchaser</button>
+                                                        <p>Gain +1 mana</p>
+                                                </div>
                                         </div>
                                 </div>
-                        </div>
-                        <div class="empower-element-div">
-                                <h2 style="color: #0f5e9c">Water</h2>
-                                <div class="empower-choice-div">
-                                        <div class="empower-choices">
-                                                <button id="blood-transfusion" style="color: #be291e">Bloodbender</button>
-                                                <p>Blood siphon now heals for 30% of damage dealt</p>
-                                        </div>
-                                        <div class="empower-choices">
-                                                <button id="cleansing-currents" style="color: #74ccf4">Waterweaver</button>
-                                                <p>Heal to full health and gain +1 max health and regen when you play water cards</p>
-                                        </div>
-                                </div>
-                        </div>
-                        <div class="empower-element-div">
-                                <h2 style="color: #7a4b31">Earth</h2>
-                                <div class="empower-choice-div">
-                                        <div class="empower-choices">
-                                                <button id="venomous-vines" style="color: #81b14f">Grovetender</button>
-                                                <p>Gain 2 thorns at the end of every turn</p>
-                                        </div>
-                                        <div class="empower-choices">
-                                                <button id="stonewall" style="color: #757575">Stoneshaper</button>
-                                                <p>Start each encounter with 50 block</p>
+                                <div class="empower-element-div">
+                                        <h2 style="color: #2f989c">Ice</h2>
+                                        <div class="empower-choice-div">
+                                                <div class="empower-choices">
+                                                        <button id="leeching-cold" style="color: #51a9ac">Cryocast</button>
+                                                        <p>Inflicting frostbite will steal two of each buff</p>
+                                                </div>
+                                                <div class="empower-choices">
+                                                        <button id="everlasting-winter" style="color: #b9e8ea">Winter Warrior</button>
+                                                        <p>Frostbite lasts for two turns</p>
+                                                </div>
                                         </div>
                                 </div>
-                        </div>
-                        `
-                        function nextStage() {
-                                location1Tiles1.addEventListener("click", L1T1);
-                                location1Tiles2.addEventListener("click", L1T2);
-                                location1Tiles3.addEventListener("click", L1T3);
-                                if (faeForest) {
-                                        faeForest = false;
-                                        hallowwood = true;
-                                } else if (hallowwood) {
-                                        hallowwood = false;
-                                }
-                                document.getElementById("player-health-numbers").style = "color: white";
-                                encounterMusicTrigger = false;
-                                eliteEncounterMusicTrigger = false;
-                                exclamationMusicTrigger = false;
-                                shopMusicTrigger = false;
-                                blacksmithMusicTrigger = false;
-                                location1Tiles1.classList.add("glow");
-                                location1Tiles2.classList.add("glow");
-                                location1Tiles3.classList.add("glow");
-                                switchArea(map, empowerContainer);
-                                randomizeLocations();
-                        }
-                        document.getElementById("eternal-flame").addEventListener("click", () => {
-                                flameWarden = true;
-                                nextStage();
-                        });
-                        document.getElementById("scorched-earth").addEventListener("click", () => {
-                                pyromancer = true;
-                                nextStage();
-                        });
-                        document.getElementById("surgebinder").addEventListener("click", () => {
-                                surgebinder = true;
-                                nextStage();
-                        });
-                        document.getElementById("lightning-jewel").addEventListener("click", () => {
-                                stormchaser = true;
-                                nextStage();
-                        });
-                        document.getElementById("leeching-cold").addEventListener("click", () => {
-                                cryocast = true;
-                                nextStage();
-                        });
-                        document.getElementById("everlasting-winter").addEventListener("click", () => {
-                                winterWarrior = true;
-                                nextStage();
-                        });
-                        document.getElementById("shifting-winds").addEventListener("click", () => {
-                                aeroshift = true;
-                                nextStage();
-                        });
-                        document.getElementById("windrunner").addEventListener("click", () => {
-                                windrunner = true;
-                                nextStage();
-                        });
-                        document.getElementById("blood-transfusion").addEventListener("click", () => {
-                                bloodbender = true;
-                                playerImgText[5].innerHTML = `
-                                        <h4 class="img-text-h4">Blood Siphon</h4>
-                                        <p class="img-text-p">Heal for 40% of damage done. Decreases by one at the end of each turn.</p>
+                                <div class="empower-element-div">
+                                        <h2 style="color: #86bfdf">Air</h2>
+                                        <div class="empower-choice-div">
+                                                <div class="empower-choices">
+                                                        <button id="shifting-winds" style="color: #9edafd">Aeroshift</button>
+                                                        <p>Your cards that draw cards draw one more card</p>
+                                                </div>
+                                                <div class="empower-choices">
+                                                        <button id="windrunner" style="color: white">Windrunner</button>
+                                                        <p>Draw one more card each turn</p>
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="empower-element-div">
+                                        <h2 style="color: #0f5e9c">Water</h2>
+                                        <div class="empower-choice-div">
+                                                <div class="empower-choices">
+                                                        <button id="blood-transfusion" style="color: #be291e">Bloodbender</button>
+                                                        <p>Blood siphon now heals for 40% of damage dealt</p>
+                                                </div>
+                                                <div class="empower-choices">
+                                                        <button id="cleansing-currents" style="color: #74ccf4">Waterweaver</button>
+                                                        <p>Heal to full health and gain +1 max health and regen when you play water cards</p>
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="empower-element-div">
+                                        <h2 style="color: #7a4b31">Earth</h2>
+                                        <div class="empower-choice-div">
+                                                <div class="empower-choices">
+                                                        <button id="venomous-vines" style="color: #81b14f">Grovetender</button>
+                                                        <p>Gain 2 thorns at the end of every turn</p>
+                                                </div>
+                                                <div class="empower-choices">
+                                                        <button id="stonewall" style="color: #757575">Stoneshaper</button>
+                                                        <p>Start each encounter with 50 block</p>
+                                                </div>
+                                        </div>
+                                </div>
                                 `
-                                nextStage();
-                        });
-                        document.getElementById("cleansing-currents").addEventListener("click", () => {
-                                waterweaver = true;
-                                playerCurrentHealth.innerText = playerMaxHealth.innerText;
-                                topBarHealthNumber.innerText = playerMaxHealth.innerText;
-                                nextStage();
-                        });
-                        document.getElementById("venomous-vines").addEventListener("click", () => {
-                                grovertender = true;
-                                nextStage();
-                        });
-                        document.getElementById("stonewall").addEventListener("click", () => {
-                                stoneshaper = true;
-                                nextStage();
-                        });
+                                document.getElementById("eternal-flame").addEventListener("click", () => {
+                                        flameWarden = true;
+                                        nextStage();
+                                });
+                                document.getElementById("scorched-earth").addEventListener("click", () => {
+                                        pyromancer = true;
+                                        nextStage();
+                                });
+                                document.getElementById("surgebinder").addEventListener("click", () => {
+                                        surgebinder = true;
+                                        nextStage();
+                                });
+                                document.getElementById("lightning-jewel").addEventListener("click", () => {
+                                        stormchaser = true;
+                                        nextStage();
+                                });
+                                document.getElementById("leeching-cold").addEventListener("click", () => {
+                                        cryocast = true;
+                                        nextStage();
+                                });
+                                document.getElementById("everlasting-winter").addEventListener("click", () => {
+                                        winterWarrior = true;
+                                        nextStage();
+                                });
+                                document.getElementById("shifting-winds").addEventListener("click", () => {
+                                        aeroshift = true;
+                                        nextStage();
+                                });
+                                document.getElementById("windrunner").addEventListener("click", () => {
+                                        windrunner = true;
+                                        nextStage();
+                                });
+                                document.getElementById("blood-transfusion").addEventListener("click", () => {
+                                        bloodbender = true;
+                                        playerImgText[5].innerHTML = `
+                                                <h4 class="img-text-h4">Blood Siphon</h4>
+                                                <p class="img-text-p">Heal for 40% of damage done. Decreases by one at the end of each turn.</p>
+                                        `
+                                        nextStage();
+                                });
+                                document.getElementById("cleansing-currents").addEventListener("click", () => {
+                                        waterweaver = true;
+                                        playerCurrentHealth.innerText = playerMaxHealth.innerText;
+                                        topBarHealthNumber.innerText = playerMaxHealth.innerText;
+                                        nextStage();
+                                });
+                                document.getElementById("venomous-vines").addEventListener("click", () => {
+                                        grovertender = true;
+                                        nextStage();
+                                });
+                                document.getElementById("stonewall").addEventListener("click", () => {
+                                        stoneshaper = true;
+                                        nextStage();
+                                });
+                        }
                 } else if (bossDefeated[0] && bossDefeated[1] && hallowwood) {
-                                allMusic.forEach(i => {
-                                        i.pause();
-                                });
-                                allMusic = [];
-                                allAmbience.forEach(i => {
-                                        i.pause();
-                                });
-                                allAmbience = [];
+                        displayNone(arena);
+                        displayFlex(exclamationContainer);
+                        exclamationContainer.innerHTML = `
+                        <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
+                                <div class="exclamation-information-container">
+                                        <div style="width: 100%"><h1 class="exclamation-title">Lumaisha</h1></div>
+                                        <div class="exclamation-event-img">
+                                                <img src="imgs/goddess.jpg">
+                                        </div>
+                                        <div class="exclamation-text-button-div">
+                                                <div class="exclamation-text-div">
+                                                <p class="exclamation-text">We're in Lumaisha! <br><br>
+                                                        I have need of your help<br><br>
+                                                        Go forth.
+                                                </p>
+                                                </div>
+                                                <div class="exclamation-button-div">
+                                                        <button class="exclamation-button-1">Venture through Lumaisha</button>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>`;
+                        document.querySelector(".exclamation-button-1").addEventListener("click", startHeaven);
+                        allMusic.forEach(i => {
+                                i.pause();
+                        });
+                        allMusic = [];
+                        allAmbience.forEach(i => {
+                                i.pause();
+                        });
+                        allAmbience = [];
+                        function startHeaven() {
                                 const heavenMapMusic = new Audio("audio/heaven-map-music.wav");
                                 switchMusic(heavenMapMusic);
                                 mapMusicIndex = allMusic.indexOf(heavenMapMusic);
@@ -7777,6 +7900,7 @@ function checkIfEnemyDead() {
                                 switchAmbience(heavenAmbience);
                                 displayFlex(empowerContainer);
                                 displayNone(arena);
+                                document.getElementById("player-health-numbers").style.color = "black";
                                 empowerContainer.style.backgroundImage = "url(imgs/heaven-portal2.jpeg)";
                                 arena.style.backgroundImage = "url(imgs/heaven-arena.jpeg)";
                                 map.style.backgroundImage = "url(imgs/heaven-map.jpeg)";
@@ -7794,12 +7918,13 @@ function checkIfEnemyDead() {
                                 } else if (grovertender || stoneshaper) {
                                         empowerElementDiv[5].innerHTML = ``;
                                 }
+                        }
                 }
                 return;
         }
         // IF ENEMY  IS DEAD, DELETE THEM
         for (let i = 0; i < numberOfEnemies; i++) {
-                if (enemyIsDead[i] === false && enemyCurrentHealth[i].innerText <= 0) {
+                if (!enemyIsDead[i] && enemyCurrentHealth[i].innerText <= 0) {
                         enemy[i].classList.add("fade-out");
                         enemyIsDead[i] = true;
                         enemiesKilled++;
