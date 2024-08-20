@@ -8,16 +8,17 @@ TO DO
 Settings gear when hitting escape for music and sound volume
 ghost elite becomes opacity: .5 and unable to be attacked
 make score screen
-no heaven gift background; no wine card art
-make story elements between bosses and at start of game
+no heaven gift background
+no wine card art
+///make story elements between bosses and at start of game
 fix jesus
 Find a way to add winds of change easily with 66 cards now it will be hard to start that build
-Update card element icons for new card cases
+///Update card element icons for new card cases
 Surgebinder (gain mana this turn for each energize you generate)
 New lightning card should capatalize on large amounts of mana as well maybe AoE thundercrash?
 
 BUGS
-updatecardtext based on Damage: isn't updating at all
+///moved card text update values for cards that dynamically update each turn down so they don't get reset to default like the other cards
 */
 /*
 START SCREEN SECTION
@@ -4077,10 +4078,10 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [0, 0],
-                name: "Lightning",
+                manaCost: [4, 4],
+                name: "Electrocute",
                 cardImg: "imgs/thundercrash.jpeg",
-                cardText: ["Gain 1 mana for each energize you have", "Gain 1 mana for each energize you have"],
+                cardText: ["Execute enemies under 20 health?", ""],
                 chooseEnemyCard: false,
                 index: 19,
                 element: "lightning",
@@ -4253,7 +4254,7 @@ const cardsInformation = [
                 manaCost: [1, 1],
                 name: "Winter Siphon",
                 cardImg: "imgs/snow-nova.jpeg",
-                cardText: ["Inflict frostbite and steal half of any buffs reduced", "Inflict frostbite and steal half of any buffs reduced"],
+                cardText: ["Inflict frostbite and steal any buffs reduced", "Inflict frostbite and steal half of any buffs reduced"],
                 chooseEnemyCard: false,
                 index: 24,
                 element: "ice",
@@ -4282,9 +4283,9 @@ const cardsInformation = [
         },
         {
                 manaCost: [1, 1],
-                name: "Ice",
+                name: "Cold Steel",
                 cardImg: "imgs/snow-nova.jpeg",
-                cardText: ["Inflict frostbite and steal half of any buffs reduced", "Inflict frostbite and steal half of any buffs reduced"],
+                cardText: ["Gain 6 block for everyone with frostbite", "Inflict yourself with frostbite. Gain 6 block for everyone with frostbite"],
                 chooseEnemyCard: false,
                 index: 25,
                 element: "ice",
@@ -4292,21 +4293,23 @@ const cardsInformation = [
                 action:
                 [
                         function() {
-                                spendMana(2);
-                                damageAllEnemies(14);
-                                inflictAllFrostbite();
-                                displayBlock(playerFrostbiteImg);
-                                playerFrostbite = true;
-                                frostbiteTotal++;
+                                spendMana(1);
+                                for (let i = 0; i < numberOfEnemies; i++) {
+                                        if (!enemyIsDead[i] && enemyFrostbite[i]) {
+                                                gainBlock(6);
+                                        }
+                                }
                                 fxIceNova.play();
                         },
                         function() {
-                                spendMana(2);
-                                damageAllEnemies(20);
-                                inflictAllFrostbite();
+                                spendMana(1);
                                 displayBlock(playerFrostbiteImg);
                                 playerFrostbite = true;
-                                frostbiteTotal++;
+                                for (let i = 0; i < numberOfEnemies; i++) {
+                                        if (!enemyIsDead[i] && enemyFrostbite[i]) {
+                                                gainBlock(6);
+                                        }
+                                }
                                 fxIceNova.play();
                         }
                 ]
@@ -4426,7 +4429,7 @@ const cardsInformation = [
                 manaCost: [0, 0],
                 name: "Winds of Change",
                 cardImg: "imgs/winds-of-change.jpeg",
-                cardText: ["Deal 8 damage.<br>All Winds of Change gain +3 damage or +6 damage if enemy is windswept", "Deal 8 damage.<br>All Winds of Change gain +4 damage or +8 damage if enemy is windswept"],
+                cardText: ["[Shifting]<br>Deal 8 damage.<br>All Winds of Change gain +3 damage or +6 damage if enemy is windswept", "Deal 8 damage.<br>All Winds of Change gain +4 damage or +8 damage if enemy is windswept"],
                 damage: [5, 5],
                 chooseEnemyCard: true,
                 index: 30,
@@ -4494,7 +4497,7 @@ const cardsInformation = [
                 manaCost: [1, 1],
                 name: "Air",
                 cardImg: "imgs/windwalk.jpeg",
-                cardText: ["Draw two cards", "Draw two cards and inflict windswept on a random enemy"],
+                cardText: ["Deal 3 damage to all enemies. ", ""],
                 chooseEnemyCard: false,
                 index: 32,
                 element: "air",
@@ -4609,7 +4612,7 @@ const cardsInformation = [
                 manaCost: [3, 2],
                 name: "Windwall",
                 cardImg: "imgs/zephyr-infusion.jpeg",
-                cardText: ["[Ethereal]<br>Draw one more card at the end of each turn", "[Ethereal]<br>Draw one more card at the end of each turn"],
+                cardText: ["Draw a card and discard it from your hand until the next fight", "Draw a card and discard it from your hand until the next fight"],
                 chooseEnemyCard: false,
                 index: 34,
                 element: "air",
@@ -5577,89 +5580,92 @@ const cardsInformation = [
 function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
         let element, element2;
         switch (index) {
-                case 0: case 1: case 12: case 13: case 14: case 15:
+                case 0: case 1: case 12: case 13: case 14: case 15: case 16: case 17:
                         element = "fire";
                         break;
-                case 2: case 3: case 16: case 17: case 18: case 19:
+                case 2: case 3: case 18: case 19: case 20: case 21: case 22: case 23:
                         element = "energize";
                         break;
-                case 4: case 5: case 20: case 21: case 22: case 23:
+                case 4: case 5: case 24: case 25: case 26: case 27: case 28: case 29:
                         element = "ice";
                         break;
-                case 6: case 7: case 24: case 25: case 26: case 27:
+                case 6: case 7: case 30: case 31: case 32: case 33: case 34: case 35:
                         element = "windswept";
                         break;
-                case 8: case 9: case 28: case 29: case 30: case 31:
+                case 8: case 9: case 36: case 37: case 38: case 39: case 40: case 41:
                         element = "regen";
                         break;
-                case 10: case 11: case 32: case 33: case 34: case 35:
+                case 10: case 11: case 42: case 43: case 44: case 45: case 46: case 47:
                         element = "earth";
                         break;
-                case 36:
+                case 48:
                         element = "fire";
                         element2 = "energize";
                         break;
-                case 37:
+                case 49:
                         element = "fire";
                         element2 = "ice";
                         break;
-                case 38:
+                case 50:
                         element = "windswept";
                         element2 = "fire";
                         break;
-                case 39:
+                case 51:
                         element = "fire";
                         element2 = "regen";
                         break;
-                case 40:
+                case 52:
                         element = "fire";
                         element2 = "earth";
                         break;
-                case 41:
+                case 53:
                         element = "ice";
                         element2 = "energize";
                         break;
-                case 42:
+                case 54:
                         element = "windswept";
                         element2 = "energize";
                         break;
-                case 43:
+                case 55:
                         element = "regen";
                         element2 = "energize";
                         break;
-                case 44:
+                case 56:
                         element = "energize";
                         element2 = "earth";
                         break;
-                case 45:
+                case 57:
                         element = "windswept";
                         element2 = "ice";
                         break;
-                case 46:
+                case 58:
                         element = "ice";
                         element2 = "regen";
                         break;
-                case 47:
+                case 59:
                         element = "ice";
                         element2 = "earth";
                         break;
-                case 48:
+                case 60:
                         element = "windswept";
                         element2 = "regen";
                         break;
-                case 49:
+                case 61:
                         element = "windswept";
                         element2 = "earth";
                         break;
-                case 50:
+                case 62:
                         element = "regen";
                         element2 = "earth";
                         break;
-                case 51:
+                case 63:
                         element = "aether";
                         break;
-                case 52:
+                case 64:
                         element = "celestial";
+                        break;
+                case 65:
+                        element = "aether";
                         break;
         }
         innerLocation.innerHTML +=
@@ -6533,33 +6539,13 @@ function checkGaiasEmbrace() {
 }
 let cardsInformationDefaultValues = JSON.parse(JSON.stringify(cardsInformation));
 function updateCardText() {
-        let currentCardText = document.querySelectorAll(".card-text");
+        const currentCardText = document.querySelectorAll(".card-text");
         function updateText() {
                 for (let i = 0; i < handArray.length; i++) {
                         for (let j = 0; j < cardsInformation.length; j++) {
                                 if (handArray[i].classList.contains(j)) {
                                         for (let k = 0; k < currentCardText.length; k++) {
                                                 if (currentCardText[k].classList.contains(j)) {
-                                                        if (cardsInformation[j].name === "Stormblessed") {
-                                                                cardsInformation[j].damage[0] = Math.floor(damageThisTurn * .5);
-                                                                cardsInformation[j].damage[1] = Math.floor(damageThisTurn * .75);
-                                                        }
-                                                        if (cardsInformation[j].name === "Winds of Change") {
-                                                                cardsInformation[j].damage[0] = windsOfChange;
-                                                                cardsInformation[j].damage[1] = windsOfChange;
-                                                        }
-                                                        if (cardsInformation[j].name === "Tsunami") {
-                                                                cardsInformation[j].damage[0] = healthGainedThisFight;
-                                                                cardsInformation[j].damage[1] = healthGainedThisFight;
-                                                        }
-                                                        if (cardsInformation[j].name === "Deep Freeze") {
-                                                                cardsInformation[j].damage[0] = Math.floor((parseFloat(currentMana.innerText) * 6));
-                                                                cardsInformation[j].damage[1] = Math.floor((parseFloat(currentMana.innerText) * 10));
-                                                        }
-                                                        if (cardsInformation[j].name === "Electric Current") {
-                                                                cardsInformation[j].damage[0] = Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5));
-                                                                cardsInformation[j].damage[1] = Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5));
-                                                        }
                                                         function update(type) {
                                                                 let upgradeIndex = 0;
                                                                 if (currentCardText[k].classList.contains("upgraded-text")) {
@@ -6590,6 +6576,26 @@ function updateCardText() {
                                                                         type[upgradeIndex] = cardsInformationDefaultValues[j].thorns[upgradeIndex];
                                                                 }
                                                                 // UPDATE NEW VALUES
+                                                                if (cardsInformation[j].name === "Stormblessed") {
+                                                                        cardsInformation[j].damage[0] = Math.floor(damageThisTurn * .5);
+                                                                        cardsInformation[j].damage[1] = Math.floor(damageThisTurn * .75);
+                                                                }
+                                                                if (cardsInformation[j].name === "Winds of Change") {
+                                                                        cardsInformation[j].damage[0] = windsOfChange;
+                                                                        cardsInformation[j].damage[1] = windsOfChange;
+                                                                }
+                                                                if (cardsInformation[j].name === "Tsunami") {
+                                                                        cardsInformation[j].damage[0] = healthGainedThisFight;
+                                                                        cardsInformation[j].damage[1] = healthGainedThisFight;
+                                                                }
+                                                                if (cardsInformation[j].name === "Deep Freeze") {
+                                                                        cardsInformation[j].damage[0] = Math.floor((parseFloat(currentMana.innerText) * 6));
+                                                                        cardsInformation[j].damage[1] = Math.floor((parseFloat(currentMana.innerText) * 10));
+                                                                }
+                                                                if (cardsInformation[j].name === "Electric Current") {
+                                                                        cardsInformation[j].damage[0] = Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5));
+                                                                        cardsInformation[j].damage[1] = Math.floor((2 * parseFloat(playerCurrentHealth.innerText) / 5));
+                                                                }
                                                                 if (type === cardsInformation[j].burn && (essenceOfEmber.length > 0 || essenceOfEmberEmpowered.length > 0)) {
                                                                         type[upgradeIndex] += (essenceOfEmber.length * 2) + (essenceOfEmberEmpowered * 4);
                                                                 }
