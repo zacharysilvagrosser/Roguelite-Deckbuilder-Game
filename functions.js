@@ -3899,9 +3899,9 @@ const cardsInformation = [
         },
         {
                 manaCost: [2, 2],
-                name: "Fire",
+                name: "Summer Solstice",
                 cardImg: "imgs/firefall.jpeg",
-                cardText: ["Inflict 6 burn on all enemies and 3 on yourself", "Inflict 8 burn on all enemies and 4 on yourself"],
+                cardText: ["Inflict burn in some way or another", "Transfer all burn on enemies and the player to the target"],
                 chooseEnemyCard: false,
                 index: 12,
                 element: "fire",
@@ -4274,10 +4274,11 @@ const cardsInformation = [
         },
         {
                 manaCost: [1, 1],
-                name: "Winter Solstice",
-                cardImg: "imgs/snow-nova.jpeg",
-                cardText: ["Gain 6 block for everyone with frostbite", "Inflict yourself with frostbite. Gain 6 block for everyone with frostbite"],
-                chooseEnemyCard: false,
+                name: "Winter's Breath",
+                cardImg: "imgs/winters-breath.jpeg",
+                cardText: ["If you have frostbite, transfer it to the enemy and deal 30 damage", "If you have frostbite, transfer it to the enemy and deal 45 damage"],
+                damage: [30, 45],
+                chooseEnemyCard: true,
                 index: 25,
                 element: "ice",
                 rarity: "common",
@@ -4285,21 +4286,21 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(1);
-                                for (let i = 0; i < numberOfEnemies; i++) {
-                                        if (!enemyIsDead[i] && enemyFrostbite[i]) {
-                                                gainBlock(6);
-                                        }
+                                if (playerFrostbite) {
+                                        damageEnemy(30, chosenEnemy);
+                                        inflictFrostbite(chosenEnemy)
+                                        playerFrostbite = false;
+                                        displayNone(playerFrostbiteImg);                 
                                 }
                                 fxIceNova.play();
                         },
                         function() {
                                 spendMana(1);
-                                displayBlock(playerFrostbiteImg);
-                                playerFrostbite = true;
-                                for (let i = 0; i < numberOfEnemies; i++) {
-                                        if (!enemyIsDead[i] && enemyFrostbite[i]) {
-                                                gainBlock(6);
-                                        }
+                                if (playerFrostbite) {
+                                        damageEnemy(45, chosenEnemy);
+                                        inflictFrostbite(chosenEnemy)
+                                        playerFrostbite = false;
+                                        displayNone(playerFrostbiteImg);                 
                                 }
                                 fxIceNova.play();
                         }
@@ -4397,7 +4398,7 @@ const cardsInformation = [
                 manaCost: [3, 2],
                 name: "Icy Imbuement",
                 cardImg: "imgs/icy-imbuement.jpeg",
-                cardText: ["[Ethereal]<br>Damage and Frostbite now hits every enemy", "[Ethereal]<br>Damage and Frostbite now hits every enemy"],
+                cardText: ["[Ethereal]<br>Damage and Frostbite now hits every enemy", "[Ethereal]<br>Damage and Frostbite now hits every enemy"],//maybe make everyone get frostbite including player
                 chooseEnemyCard: false,
                 index: 29,
                 element: "ice",
@@ -5054,9 +5055,9 @@ const cardsInformation = [
                 manaCost: [1, 1],
                 name: "Cauterize",
                 cardImg: "imgs/cauterize.jpeg",
-                cardText: ["Gain 4 burn, 4 regen, and 1 blood siphon", "Gain 5 burn, 5 regen, and 2 blood siphon"],
-                burn: [4, 5],
-                regen: [4, 5],
+                cardText: ["Gain 5 burn, 5 regen, and 1 blood siphon", "Gain 7 burn, 7 regen, and 2 blood siphon"],
+                burn: [5, 7],
+                regen: [5, 7],
                 blood: [1, 2],
                 chooseEnemyCard: false,
                 index: 51,
@@ -5066,18 +5067,18 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(1);
-                                playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 4 + (essenceOfEmber.length * 2) + (essenceOfEmberEmpowered.length * 4);
+                                playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 5 + (essenceOfEmber.length * 2) + (essenceOfEmberEmpowered.length * 4);
                                 displayBlock(playerBurnImg, playerBurnNumber);
                                 gainBloodSiphon(1);
-                                gainRegen(4);
+                                gainRegen(5);
                                 fxCauterize.play();
                         },
                         function() {
                                 spendMana(1);
-                                playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 4 + (essenceOfEmber.length * 2) + (essenceOfEmberEmpowered.length * 4);
+                                playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 7 + (essenceOfEmber.length * 2) + (essenceOfEmberEmpowered.length * 4);
                                 displayBlock(playerBurnImg, playerBurnNumber);
                                 gainBloodSiphon(2);
-                                gainRegen(5);
+                                gainRegen(7);
                                 fxCauterize.play();
                         }
                 ]
@@ -6603,7 +6604,7 @@ function updateCardText() {
                 [`Deal ${cardsInformation[22].damage[0]} damage plus ${cardsInformation[22].damageSecond[0]} for each mana you have after playing Thunder Crash.<br>Energize ${cardsInformation[22].energize[0]}`, `Deal ${cardsInformation[22].damage[1]} damage plus ${cardsInformation[22].damageSecond[1]} for each mana you have after playing Thunder Crash.<br>Energize ${cardsInformation[22].energize[1]}`],
                 ["[Ethereal]<br>All damage is increased by 5", "[Ethereal]<br>All damage is increased by 7"],
                 ["Inflict frostbite and steal any buffs that were reduced", "Inflict frostbite and steal any buffs that were reduced"],
-                ["Inflict frostbite and steal half of any buffs reduced", "Inflict frostbite and steal half of any buffs reduced"],
+                [`If you have frostbite, transfer it to the enemy and deal ${cardsInformation[25].damage[0]} damage`, `If you have frostbite, transfer it to the enemy and deal ${cardsInformation[25].damage[1]} damage`],
                 [`Deal ${cardsInformation[26].damage[0]} damage to all enemies and inflict frostbite on everyone including yourself`, `Deal ${cardsInformation[26].damage[1]} damage to all enemies and inflict frostbite on everyone including yourself`],
                 ["For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself", "For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself"],
                 [`Inflict frostbite and deal damage equal to your block amount`, `Gain ${cardsInformation[28].block[1]} block, inflict frostbite, and deal damage equal to your block amount`],
