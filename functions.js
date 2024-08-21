@@ -10,15 +10,12 @@ ghost elite becomes opacity: .5 and unable to be attacked
 make score screen
 no heaven gift background
 no wine card art
-///make story elements between bosses and at start of game
 fix jesus
-Find a way to add winds of change easily with 66 cards now it will be hard to start that build
-///Update card element icons for new card cases
 Surgebinder (gain mana this turn for each energize you generate)
+Aeroshift: Maybe gain a winds of change and shifting cards ramp up quicker 
 New lightning card should capatalize on large amounts of mana as well maybe AoE thundercrash?
 
 BUGS
-///moved card text update values for cards that dynamically update each turn down so they don't get reset to default like the other cards
 */
 /*
 START SCREEN SECTION
@@ -71,6 +68,9 @@ function switchMusic() {
         allMusic.forEach(i => {
                 i.volume = musicSlider.value;
         });
+        allSoundFX.forEach(i => {
+                i.volume = soundFXSlider.value;
+        });
 }
 function switchAmbience(ambience) {
         if (!allAmbience.includes(ambience)) {
@@ -97,7 +97,7 @@ startGame.addEventListener("click", () => {
                 location1Tiles2.addEventListener("click", L1T2);
                 location1Tiles3.addEventListener("click", L1T3);
                 // LOOP TO CREATE OPENING 12 CARDS
-                for (let i = 0; i < 22; i++) {
+                for (let i = 24; i < 30; i++) {
                         addCardToDeck(i, 0, false);
                 }
         }
@@ -563,7 +563,7 @@ function encounter() {
         switchMusic(allMusic[encounterMusicIndex]);
         let randomEncounterNumber;
         if (faeForest) {
-                randomEncounterNumber = createRandomNumber(1, 9);
+                randomEncounterNumber = createRandomNumber(1, 1);
                 while (dontRepeatEncounter.includes(randomEncounterNumber)) {
                         randomEncounterNumber = createRandomNumber(1, 9);        
                 }
@@ -3429,9 +3429,12 @@ let [essenceOfEmber, essenceOfEmberEmpowered, stormForm, stormFormEmpowered, gai
 let icyEmbuement = false;
 let staticCharge = false;
 let pyromania = false;
+let waterOrb = false;
+let siphonHeat = false;
 let damageThisTurn = 0;
 let healthGainedThisFight = 0;
 let windsOfChange = 8;
+let windwall = 3;
 const playerThornsNumber = document.querySelector("#player-thorns-number");
 const playerCurrentHealth = document.querySelector("#player-current-health");
 const playerBlockNumber = document.querySelector("#player-block-number");
@@ -3647,11 +3650,7 @@ const cardsInformation = [
                         },
                         function() {
                                 spendMana(1);
-                                if (!aeroshift) {
-                                        drawCards(1);
-                                } else {
-                                        drawCards(2);
-                                }
+                                drawCards(1);
                                 let enemyIsWindswept = [];
                                 for (let i = 0; i < numberOfEnemies; i++) {
                                         if (enemyIsDead[i] === false) {
@@ -4059,7 +4058,7 @@ const cardsInformation = [
         {
                 manaCost: [0, 0],
                 name: "Surge",
-                cardImg: "imgs/thundercrash.jpeg",
+                cardImg: "imgs/surge.jpeg",
                 cardText: ["Gain 1 mana for each energize you have", "Gain 1 mana for each energize you have"],
                 chooseEnemyCard: false,
                 index: 18,
@@ -4251,39 +4250,31 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [1, 1],
-                name: "Winter Siphon",
-                cardImg: "imgs/snow-nova.jpeg",
-                cardText: ["Inflict frostbite and steal any buffs reduced", "Inflict frostbite and steal half of any buffs reduced"],
-                chooseEnemyCard: false,
+                manaCost: [0, 0],
+                name: "Siphon Heat",
+                cardImg: "imgs/siphon-heat.jpeg",
+                cardText: ["Inflict frostbite and steal any buffs that were reduced", "Inflict frostbite and steal any buffs that were reduced"],
+                chooseEnemyCard: true,
                 index: 24,
                 element: "ice",
                 rarity: "common",
                 action:
                 [
                         function() {
-                                spendMana(2);
-                                damageAllEnemies(14);
-                                inflictAllFrostbite();
-                                displayBlock(playerFrostbiteImg);
-                                playerFrostbite = true;
-                                frostbiteTotal++;
+                                siphonHeat = true;
+                                inflictFrostbite(chosenEnemy);
                                 fxIceNova.play();
                         },
                         function() {
-                                spendMana(2);
-                                damageAllEnemies(20);
-                                inflictAllFrostbite();
-                                displayBlock(playerFrostbiteImg);
-                                playerFrostbite = true;
-                                frostbiteTotal++;
+                                siphonHeat = true;
+                                inflictFrostbite(chosenEnemy);
                                 fxIceNova.play();
                         }
                 ]
         },
         {
                 manaCost: [1, 1],
-                name: "Cold Steel",
+                name: "Winter Solstice",
                 cardImg: "imgs/snow-nova.jpeg",
                 cardText: ["Gain 6 block for everyone with frostbite", "Inflict yourself with frostbite. Gain 6 block for everyone with frostbite"],
                 chooseEnemyCard: false,
@@ -4429,7 +4420,7 @@ const cardsInformation = [
                 manaCost: [0, 0],
                 name: "Winds of Change",
                 cardImg: "imgs/winds-of-change.jpeg",
-                cardText: ["[Shifting]<br>Deal 8 damage.<br>All Winds of Change gain +3 damage or +6 damage if enemy is windswept", "Deal 8 damage.<br>All Winds of Change gain +4 damage or +8 damage if enemy is windswept"],
+                cardText: ["[Shifting]<br>Deal 8 damage.<br>All Shifting cards gain +3 damage or +6 if target is windswept", "[Shifting]<br>Deal 8 damage.<br>All Shifting cards gain +4 damage or +8 if target is windswept"],
                 damage: [5, 5],
                 chooseEnemyCard: true,
                 index: 30,
@@ -4441,8 +4432,10 @@ const cardsInformation = [
                                 damageEnemy(windsOfChange, chosenEnemy);
                                 if (enemyWindswept[chosenEnemy]) {
                                         windsOfChange += 6;
+                                        windwall += 6;
                                 } else {
                                         windsOfChange += 3;
+                                        windwall += 3;
                                 }
                                 fxWindsOfChange.play();
                         },
@@ -4450,8 +4443,10 @@ const cardsInformation = [
                                 damageEnemy(windsOfChange, chosenEnemy);
                                 if (enemyWindswept[chosenEnemy]) {
                                         windsOfChange += 8;
+                                        windwall += 8;
                                 } else {
                                         windsOfChange += 4;
+                                        windwall += 4;
                                 }
                                 fxWindsOfChange.play();
                         }
@@ -4470,20 +4465,12 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(1);
-                                if (!aeroshift) {
-                                        drawCards(2);
-                                } else {
-                                        drawCards(3);
-                                }
+                                drawCards(2);
                                 fxWindwalk.play();
                         },
                         function() {
                                 spendMana(1);
-                                if (!aeroshift) {
-                                        drawCards(2);
-                                } else {
-                                        drawCards(3);
-                                }
+                                drawCards(2);
                                 randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
                                 while (enemyIsDead[randomEnemy]) {
                                         randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
@@ -4494,10 +4481,10 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [1, 1],
-                name: "Air",
+                manaCost: [0, 0],
+                name: "Windwall",
                 cardImg: "imgs/windwalk.jpeg",
-                cardText: ["Deal 3 damage to all enemies. ", ""],
+                cardText: ["[Shifting]<br>Deal 3 damage to all enemies.<br>All Shifting cards gain +3 damage for each windswept enemy", "[Shifting]<br>Deal 3 damage to all enemies.<br>All Shifting cards gain +4 damage for each windswept enemy"],
                 chooseEnemyCard: false,
                 index: 32,
                 element: "air",
@@ -4505,26 +4492,23 @@ const cardsInformation = [
                 action:
                 [
                         function() {
-                                spendMana(1);
-                                if (!aeroshift) {
-                                        drawCards(2);
-                                } else {
-                                        drawCards(3);
+                                damageAllEnemies(windwall);
+                                for (let i = 0; i < numberOfEnemies.length; i++) {
+                                        if (!enemyIsDead && enemyWindswept[i]) {
+                                                windsOfChange += 3;
+                                                windwall += 3;
+                                        }
                                 }
                                 fxWindwalk.play();
                         },
                         function() {
-                                spendMana(1);
-                                if (!aeroshift) {
-                                        drawCards(2);
-                                } else {
-                                        drawCards(3);
+                                damageAllEnemies(windwall);
+                                for (let i = 0; i < numberOfEnemies.length; i++) {
+                                        if (!enemyIsDead && enemyWindswept[i]) {
+                                                windsOfChange += 4;
+                                                windwall += 4;
+                                        }
                                 }
-                                randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
-                                while (enemyIsDead[randomEnemy]) {
-                                        randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
-                                }
-                                inflictWindswept(randomEnemy);
                                 fxWindwalk.play();
                         }
                 ]
@@ -4533,7 +4517,7 @@ const cardsInformation = [
                 manaCost: [2, 2],
                 name: "Gusts",
                 cardImg: "imgs/gusts.jpeg",
-                cardText: ["Draw a Winds of Change from your draw pile and discard pile", "Draw a Winds of Change from your draw pile and discard pile. They gain +2 damage for each drawn."],
+                cardText: ["Draw a Shifting card from your draw pile and discard pile", "Draw a Shifting card from your draw pile and discard pile. They gain +2 damage for each drawn."],
                 chooseEnemyCard: false,
                 index: 33,
                 element: "air",
@@ -4550,8 +4534,7 @@ const cardsInformation = [
                                 //console.log("BEFORE\nDISCARD: ", discardPileArray);
                                 for (let i = 0; i < windCards.length; i++) {
                                         if (drawPileArray.includes(windCards[i]) && drawCard === false) {
-                                                let spliceCard = drawPileArray.splice(drawPileArray.indexOf(windCards[i]), 1).pop();
-                                                handArray.push(spliceCard);
+                                                handArray.push(drawPileArray.splice(drawPileArray.indexOf(windCards[i]), 1).pop());
                                                 displayFlex(windCards[i]);
                                                 drawCard = true;
                                                 //console.log("DRAW\nDRAW: ", drawPileArray);
@@ -4559,10 +4542,7 @@ const cardsInformation = [
                                                 //console.log("DRAW\nDISCARD: ", discardPileArray);
                                         }
                                         if (discardPileArray.includes(windCards[i]) && discardCard === false) {
-                                                let drawIndex = discardPileArray.indexOf(windCards[i]);
-                                                let newDraw = discardPileArray.splice(drawIndex, 1);
-                                                let newNewDraw = newDraw.pop();
-                                                handArray.push(newNewDraw);
+                                                handArray.push(discardPileArray.splice(discardPileArray.indexOf(windCards[i]), 1).pop());
                                                 displayFlex(windCards[i]);
                                                 discardCard = true;
                                                 //console.log("DISCARD\nDRAW: ", drawPileArray);
@@ -4583,8 +4563,8 @@ const cardsInformation = [
                                 for (let i = 0; i < windCards.length; i++) {
                                         if (drawPileArray.includes(windCards[i]) && drawCard === false) {
                                                 windsOfChange += 2;
-                                                let spliceCard = drawPileArray.splice(drawPileArray.indexOf(windCards[i]), 1).pop();
-                                                handArray.push(spliceCard);
+                                                windwall += 2;
+                                                handArray.push(drawPileArray.splice(drawPileArray.indexOf(windCards[i]), 1).pop());
                                                 displayFlex(windCards[i]);
                                                 drawCard = true;
                                                 //console.log("DRAW\nDRAW: ", drawPileArray);
@@ -4593,10 +4573,8 @@ const cardsInformation = [
                                         }
                                         if (discardPileArray.includes(windCards[i]) && discardCard === false) {
                                                 windsOfChange += 2;
-                                                let drawIndex = discardPileArray.indexOf(windCards[i]);
-                                                let newDraw = discardPileArray.splice(drawIndex, 1);
-                                                let newNewDraw = newDraw.pop();
-                                                handArray.push(newNewDraw);
+                                                windwall += 2;
+                                                handArray.push(discardPileArray.splice(discardPileArray.indexOf(windCards[i]), 1).pop());
                                                 displayFlex(windCards[i]);
                                                 discardCard = true;
                                                 //console.log("DISCARD\nDRAW: ", drawPileArray);
@@ -4610,9 +4588,9 @@ const cardsInformation = [
         },
         {
                 manaCost: [3, 2],
-                name: "Windwall",
+                name: "Suffocate",
                 cardImg: "imgs/zephyr-infusion.jpeg",
-                cardText: ["Draw a card and discard it from your hand until the next fight", "Draw a card and discard it from your hand until the next fight"],
+                cardText: ["", ""],
                 chooseEnemyCard: false,
                 index: 34,
                 element: "air",
@@ -4655,10 +4633,10 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [2, 2],
-                name: "Water Shield",
-                cardImg: "imgs/sanguine-spring.jpeg",
-                cardText: ["At the end of your turn, heal for 50% of the damage you took", "At the end of your turn, heal for 50% of the damage you took"],
+                manaCost: [2, 1],
+                name: "Water Orb",
+                cardImg: "imgs/water-orb.jpeg",
+                cardText: ["At the end of your turn, heal for 50% of the damage you took this turn", "At the end of your turn, heal for 50% of the damage you took this turn"],
                 chooseEnemyCard: false,
                 index: 36,
                 element: "water",
@@ -4667,20 +4645,12 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(2);
-                                playerWindswept = false;
-                                playerFrostbite = false;
-                                playerBurnNumber.innerText = 0;
-                                displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber);
-                                gainBloodSiphon(2);
+                                waterOrb = true;
                                 fxSanguineSpring.play();
                         },
                         function() {
-                                spendMana(2);
-                                playerWindswept = false;
-                                playerFrostbite = false;
-                                playerBurnNumber.innerText = 0;
-                                displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber);
-                                gainBloodSiphon(3);
+                                spendMana(1);
+                                waterOrb = true;
                                 fxSanguineSpring.play();
                         }
                 ]
@@ -5193,11 +5163,7 @@ const cardsInformation = [
                                         }
                                 }
                                 gainEnergize(1);
-                                if (!aeroshift) {
-                                        drawCards(1);
-                                } else {
-                                        drawCards(2);
-                                }
+                                drawCards(1);
                                 currentMana.innerText = parseFloat(currentMana.innerText) + 2;
                                 fxHurricane.play();
                         },
@@ -5209,11 +5175,7 @@ const cardsInformation = [
                                                 inflictWindswept(i);
                                         }
                                 }
-                                if (!aeroshift) {
-                                        drawCards(1);
-                                } else {
-                                        drawCards(2);
-                                }
+                                drawCards(1);
                                 currentMana.innerText = parseFloat(currentMana.innerText) + 3;
                                 gainEnergize(2);
                                 fxHurricane.play();
@@ -5429,11 +5391,7 @@ const cardsInformation = [
                         },
                         function() {
                                 spendMana(1);
-                                if (!aeroshift) {
-                                        drawCards(1);
-                                } else {
-                                        drawCards(2);
-                                }
+                                drawCards(1);
                                 airBubble.push(true);
                                 fxAirBubbles.play();
                         }
@@ -5453,20 +5411,12 @@ const cardsInformation = [
                 [
                         function() {
                                 gainBlock(4);
-                                if (!aeroshift) {
-                                        drawCards(1);
-                                } else {
-                                        drawCards(2);
-                                }
+                                drawCards(1);
                                 fxRockOrbit.play();
                         },
                         function() {
                                 gainBlock(7);
-                                if (!aeroshift) {
-                                        drawCards(1);
-                                } else {
-                                        drawCards(2);
-                                }
+                                drawCards(1);
                                 fxRockOrbit.play();
                         }
                 ]
@@ -5692,6 +5642,9 @@ let destroyedCardsArray = [];
 let maxHandLength = 5;
 
 function drawCards(numberOfCards) {
+        if (numberOfCards !== maxHandLength && aeroshift) {
+                numberOfCards++;
+        }
         if (handArray.length + numberOfCards > 10) {
                 drawCards(10 - handArray.length);
         }
@@ -6079,10 +6032,12 @@ endTurnButton.addEventListener("click", endTurn);
 function spendMana(manaCost) {
         currentMana.innerText -= manaCost;
 }
+let icyEmbuementTrigger = false;
 function damageEnemy(damage, enemy) {
-        // DAMGE ALL ENEMIES IF SNOWFALL ELIXER HAS BEEN PLAYED
-        if (icyEmbuement) {
-                damageAllEnemies(damage);
+        // DAMAGE ALL ENEMIES IF ICY EMBUEMENT HAS BEEN PLAYED
+        if (icyEmbuement && !icyEmbuementTrigger) {
+                icyEmbuementTrigger = true;
+                damageAllEnemies(damage, i);
         } else {
                 if (stormForm) {
                         damage += stormForm.length * 5;
@@ -6132,11 +6087,13 @@ function damageEnemy(damage, enemy) {
                 }
                 // CHECK FOR ENEMY THORNS DAMAGE
                 if (playerBlockNumber.innerText <= 0) {
-                        playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[enemy].innerText)
-                        topBarHealthNumber.innerText -= parseFloat(enemyThornsNumber[enemy].innerText)
+                        playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[enemy].innerText);
+                        topBarHealthNumber.innerText -= parseFloat(enemyThornsNumber[enemy].innerText);
+                        damageTakenThisTurn += parseFloat(enemyThornsNumber[enemy].innerText);
                 } else if (playerBlockNumber.innerText <= parseFloat(enemyThornsNumber[enemy].innerText)) {
                         playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[enemy].innerText) - parseFloat(playerBlockNumber.innerText);
                         topBarHealthNumber.innerText -= parseFloat(enemyThornsNumber[enemy].innerText) - parseFloat(playerBlockNumber.innerText);
+                        damageTakenThisTurn += parseFloat(enemyThornsNumber[enemy].innerText) - parseFloat(playerBlockNumber.innerText);
                         playerBlockNumber.innerText = 0;
                 } else {
                         playerBlockNumber.innerText -= parseFloat(enemyThornsNumber[enemy].innerText);
@@ -6146,74 +6103,16 @@ function damageEnemy(damage, enemy) {
                 checkIfEnemyDead();
                 damageThisTurn += damage;
         }
+        if (icyEmbuementTrigger && enemy === (numberOfEnemies - 1)) {
+                icyEmbuementTrigger = false;
+        }
         return damage;
 }
 function damageAllEnemies(damage) {
+        icyEmbuementTrigger = true;
         for (let i = 0; i < numberOfEnemies; i++) {
-                if (enemyIsDead[i] === false && iceSpear && enemyFrostbite[i]) {
-                        damageEnemy(4, i);
-                }
+                damageEnemy(damage, i);
         }
-        if (stormForm.length > 0) {
-                damage += 5;
-        }
-        if (stormFormEmpowered.length > 0) {
-                damage += 7;
-        }
-        if (playerWindswept) {
-                damage = Math.floor(damage * .50);
-        }
-        if (staticCharge) {
-                damage += 10;
-        }
-        for (let i = 0; i < numberOfEnemies; i++) {
-                if (enemyIsDead[i] === false) {
-                        if ((enemyCurrentHealth[i].innerText + enemyBlockNumber[i].innerText) < damage) {
-                                damage = enemyCurrentHealth[i].innerText + enemyBlockNumber[i].innerText;
-                        }
-                        if (playerBloodNumber.innerText > 0) {
-                                let healPercentage = .2;
-                                if (bloodbender) {
-                                        healPercentage = .4;
-                                }
-                                if (empowerBloodSiphon) {
-                                        healPercentage += .4;
-                                        empowerBloodSiphon = false;
-                                }
-                                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + Math.floor((damage * healPercentage));
-                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + Math.floor((damage * healPercentage));
-                                healthGainedThisFight += Math.floor((damage * healPercentage));
-                                healthRestoredTotal += Math.floor((damage * healPercentage));
-                        }
-                        // CHECK block
-                        if (enemyBlockNumber[i].innerText === 0) {
-                                enemyCurrentHealth[i].innerText -= damage;
-                                displayNone(enemyBlockNumber[i], enemyBlockImg[i]);    
-                        } else if (enemyBlockNumber[i].innerText < damage) {
-                                enemyCurrentHealth[i].innerText -= damage - parseFloat(enemyBlockNumber[i].innerText);
-                                enemyBlockNumber[i].innerText = 0;
-                                displayNone(enemyBlockNumber[i], enemyBlockImg[i]);
-                        } else {
-                                enemyBlockNumber[i].innerText -= damage;
-                        }
-                        // CHECK THORNS 
-                        if (playerBlockNumber.innerText <= 0) {
-                                playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) - parseFloat(enemyThornsNumber[i].innerText);
-                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) - parseFloat(enemyThornsNumber[i].innerText);                
-                        } else if (playerBlockNumber.innerText <= parseFloat(enemyThornsNumber[i].innerText)) {
-                                playerCurrentHealth.innerText =  parseFloat(playerCurrentHealth.innerText) - (parseFloat(enemyThornsNumber[i].innerText) - parseFloat(playerBlockNumber.innerText));
-                                topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) - (parseFloat(enemyThornsNumber[i].innerText) - parseFloat(playerBlockNumber.innerText));
-                                playerBlockNumber.innerText = 0;
-                        } else {
-                                playerBlockNumber.innerText = parseFloat(playerBlockNumber.innerText) - parseFloat(enemyThornsNumber[i].innerText);
-                        }          
-                }
-                checkHealth();
-                checkIfEnemyDead();
-                damageThisTurn += damage;
-        }
-        staticCharge = false;
-        displayNone(playerTidalImbuementImg);
 }
 function inflictWindswept(enemy) {
         if (enemyWindswept[enemy] === false) {
@@ -6275,16 +6174,43 @@ function leechBuffs(enemy, leech) {
         }
 }
 function inflictFrostbite(enemy) {
-        if (icyEmbuement) {
+        if (icyEmbuement && !icyEmbuementTrigger) {
+                icyEmbuementTrigger = true;
                 inflictAllFrostbite();
         } else {
-                if (enemyFrostbite[enemy] === false) {
+                if (!enemyIsDead[enemy] && !enemyFrostbite[enemy]) {
                         if (frostHeart) {
                                 gainBlock(4);
                                 blockTotal += 4;
                         }
                         if (cryocast) {
                                 leechBuffs(enemy, true);
+                        }
+                        if (siphonHeat) {
+                                console.log("ENEMY: ", enemy, "Block: ", Math.ceil(enemyBlockActionNumber[enemy].innerText * .50), "parseFloat(playerBlockNumber.innerText): ", parseFloat(playerBlockNumber.innerText));
+                                if (enemyBlockActionNumber[enemy].innerText > 0) {
+                                        console.log("ENEMY: ", enemy, "Block: ", Math.ceil(enemyBlockActionNumber[enemy].innerText * .50));
+                                        playerBlockNumber.innerText = parseFloat(playerBlockNumber.innerText) + Math.ceil(enemyBlockActionNumber[enemy].innerText * .50);
+                                        displayBlock(playerBlockImg, playerBlockNumber);
+                                } else if (enemyRegenActionDiv[enemy].style.display === "block") {
+                                        console.log("ENEMY: ", enemy, "Regen: ", Math.ceil(enemyRegenActionNumber[enemy].innerText * .50));
+
+                                        playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + Math.ceil(enemyRegenActionNumber[enemy].innerText * .50);
+                                        displayBlock(playerRegenImg, playerRegenNumber);
+                                } else if (enemyBloodActionDiv[enemy].style.display === "block") {
+                                        console.log("ENEMY: ", enemy, "Blood: ", Math.ceil(enemyBloodActionNumber[enemy].innerText * .50));
+
+                                        playerBloodNumber.innerText = parseFloat(playerBloodNumber.innerText) + Math.ceil(enemyBloodActionNumber[enemy].innerText * .50);
+                                        displayBlock(playerBloodImg, playerBloodNumber);
+                                } else if (enemyThornsActionDiv[enemy].style.display === "block") {
+                                        console.log("ENEMY: ", enemy, "Thorns: ", Math.ceil(enemyThornsActionNumber[enemy].innerText * .50));
+
+                                        playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) + Math.ceil(enemyThornsActionNumber[enemy].innerText * .50);
+                                        displayBlock(playerThornsImg, playerThornsNumber);
+                                }
+                                if (!icyEmbuement) {
+                                        siphonHeat = false;
+                                }
                         }
                         enemyFrostbite[enemy] = true;
                         enemyBlockActionNumber[enemy].innerText = Math.floor(enemyBlockActionNumber[enemy].innerText * .50);  
@@ -6295,25 +6221,14 @@ function inflictFrostbite(enemy) {
                         frostbiteTotal++;
                 }
         }
+        if (icyEmbuementTrigger && enemy === (numberOfEnemies - 1)) {
+                icyEmbuementTrigger = false;
+                siphonHeat = false;
+        }
 }
 function inflictAllFrostbite() {
         for (let i = 0; i < numberOfEnemies; i++) {
-                if (enemyIsDead[i] === false && enemyFrostbite[i] === false) {
-                        if (frostHeart) {
-                                gainBlock(4);
-                                blockTotal += 4;
-                        }
-                        if (cryocast) {
-                                leechBuffs(i, true);
-                        }
-                        enemyFrostbite[i] = true;
-                        enemyBlockActionNumber[i].innerText = Math.floor(enemyBlockActionNumber[i].innerText * .50);  
-                        enemyRegenActionNumber[i].innerText = Math.floor(enemyRegenActionNumber[i].innerText * .50);  
-                        enemyBloodActionNumber[i].innerText = Math.floor(enemyBloodActionNumber[i].innerText * .50);  
-                        enemyThornsActionNumber[i].innerText = Math.floor(enemyThornsActionNumber[i].innerText * .50);  
-                        displayBlock(enemyFrostbiteImg[i]);  
-                        frostbiteTotal++;
-                }
+                inflictFrostbite(i);
         }
 }
 let [enemiesKilled, elitesKilled, bossesKilled, burnTotal, manaEnergized, frostbiteTotal, windsweptTotal, healthRestoredTotal, blockTotal, thornsTotal] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -6485,6 +6400,7 @@ function checkPlayerBurn() {
                                 playerBlockNumber.innerText -= parseFloat(playerBurnNumber.innerText); 
                         }
                 }
+                damageTakenThisTurn += playerBurnNumber.innerText;
                 playerBurnNumber.innerText--;
         }       
         if (playerBurnNumber.innerText == 0) {
@@ -6686,7 +6602,7 @@ function updateCardText() {
                 [`Deal 50% of the damage you've dealt this turn to an enemy<br>Damage: ${cardsInformation[21].damage[0]}`, `Deal 50% of the damage you've dealt this turn to an enemy<br>Damage: ${cardsInformation[21].damage[1]}`],
                 [`Deal ${cardsInformation[22].damage[0]} damage plus ${cardsInformation[22].damageSecond[0]} for each mana you have after playing Thunder Crash.<br>Energize ${cardsInformation[22].energize[0]}`, `Deal ${cardsInformation[22].damage[1]} damage plus ${cardsInformation[22].damageSecond[1]} for each mana you have after playing Thunder Crash.<br>Energize ${cardsInformation[22].energize[1]}`],
                 ["[Ethereal]<br>All damage is increased by 5", "[Ethereal]<br>All damage is increased by 7"],
-                ["Inflict frostbite and steal half of any buffs reduced", "Inflict frostbite and steal half of any buffs reduced"],
+                ["Inflict frostbite and steal any buffs that were reduced", "Inflict frostbite and steal any buffs that were reduced"],
                 ["Inflict frostbite and steal half of any buffs reduced", "Inflict frostbite and steal half of any buffs reduced"],
                 [`Deal ${cardsInformation[26].damage[0]} damage to all enemies and inflict frostbite on everyone including yourself`, `Deal ${cardsInformation[26].damage[1]} damage to all enemies and inflict frostbite on everyone including yourself`],
                 ["For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself", "For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself"],
@@ -6698,7 +6614,7 @@ function updateCardText() {
                 ["Draw a Winds of Change from your draw pile and discard pile", "Draw a Winds of Change from your draw pile and discard pile. Winds of Change gains +2 damage for each drawn."],
                 ["Windwall", "Windwall"],
                 ["[Ethereal]<br>Draw one more card at the end of each turn", "[Ethereal]<br>Draw one more card at the end of each turn"],
-                ["At the end of your turn, heal for 50% of the damage you took", "At the end of your turn, heal for 50% of the damage you took"],
+                ["At the end of your turn, heal for 50% of the damage you took this turn", "At the end of your turn, heal for 50% of the damage you took this turn"],
                 [`Cleanse all debuffs and gain ${cardsInformation[37].blood[0]} blood siphon`, `Cleanse all debuffs and gain ${cardsInformation[37].blood[1]} blood siphon`],
                 [`Water`, `Water`],
                 [`Use all mana to gain ${cardsInformation[39].regen[0]} regeneration and blood siphon per mana spent`, `Use all mana to gain ${cardsInformation[39].regen[1]} regeneration and ${cardsInformation[39].blood[1]} blood siphon per mana spent`],
@@ -7681,7 +7597,7 @@ function damagePlayer(damage, index) {
                 damage = Math.floor(damage *= .50);
         }
         if (enemyBloodNumber[index].innerText > 0) {
-                let siphonAmount = .2;
+                let siphonAmount = .5;
                 if (siphonAll) {
                         siphonAmount = 1;
                 }
@@ -7690,12 +7606,15 @@ function damagePlayer(damage, index) {
         if (playerBlockNumber.innerText <= 0) {
                 topBarHealthNumber.innerText -= damage;
                 playerCurrentHealth.innerText -= damage;
+                damageTakenThisTurn += damage;
         } else if (playerBlockNumber.innerText <= damage) {
                 topBarHealthNumber.innerText -= damage - parseFloat(playerBlockNumber.innerText);
                 playerCurrentHealth.innerText -= damage - parseFloat(playerBlockNumber.innerText);
+                damageTakenThisTurn += damage - parseFloat(playerBlockNumber.innerText);
+                playerBlockNumber.innerText = 0;
                 displayNone(playerBlockNumber, playerBlockImg);
                 if (vineBracelet) {
-                        playerBlockNumber.innerText = 10
+                        playerBlockNumber.innerText = 10;
                 }
         } else {
                 playerBlockNumber.innerText -= damage; 
@@ -8316,6 +8235,7 @@ function enemyAction() {
         eI = 0;
 }
 let winterWarriorTracking = [false, false, false];
+let damageTakenThisTurn = 0;
 function endTurn() {
         if (!enemiesAreDead) {
                 // RESET MANA AND DEBUFFS
@@ -8429,6 +8349,12 @@ function endTurn() {
                         checkGaiasEmbrace();
                         addCardsToHand();
                         checkIfEnemyDead();
+                        if (waterOrb) {
+                                playerHeal(Math.floor(damageTakenThisTurn * .5));
+                                waterOrb = false;
+                                fxSanguineSpring.play();
+                        }
+                        damageTakenThisTurn = 0;
                         damageThisTurn = 0;
                         airBubble = [];
                         if (bloodAmulet) {
