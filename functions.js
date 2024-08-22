@@ -97,7 +97,7 @@ startGame.addEventListener("click", () => {
                 location1Tiles2.addEventListener("click", L1T2);
                 location1Tiles3.addEventListener("click", L1T3);
                 // LOOP TO CREATE OPENING 12 CARDS
-                for (let i = 24; i < 30; i++) {
+                for (let i = 39; i < 44; i++) {
                         addCardToDeck(i, 0, false);
                 }
         }
@@ -3425,12 +3425,8 @@ const discardPileContainer = document.querySelector("#discard-pile-container");
 const handContainer = document.querySelector("#hand-container");
 const chooseNewCardContainer = document.querySelector("#choose-new-card-container");
 const chooseNewCardDiv = document.querySelector("#choose-new-card-div");
-let [essenceOfEmber, essenceOfEmberEmpowered, stormForm, stormFormEmpowered, gaiasEmbrace, terrasBlessing, terrasBlessingEmpowered, airBubble] = [[], [], [], [], [], [], [], [], []];
-let icyEmbuement = false;
-let staticCharge = false;
-let pyromania = false;
-let waterOrb = false;
-let siphonHeat = false;
+let [essenceOfEmber, essenceOfEmberEmpowered, stormForm, stormFormEmpowered, gaiasEmbrace, terrasBlessing, terrasBlessingEmpowered, airBubble, skippingRocks, skippingRocksTurn3] = [[], [], [], [], [], [], [], [], [], []];
+let [icyEmbuement, staticCharge, pyromania, waterOrb, siphonHeat] = [false, false, false, false, false];
 let damageThisTurn = 0;
 let healthGainedThisFight = 0;
 let windsOfChange = 8;
@@ -4803,10 +4799,10 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [2, 2],
-                name: "Boulder Toss",
+                manaCost: [3, 3],
+                name: "Skipping Rocks",
                 cardImg: "imgs/weave-of-thorns.jpeg",
-                cardText: ["Gain 4 thorns", "Gain 6 thorns"],
+                cardText: ["Turn 1: Gain 4 block and 1 thorn<br>Turn 2: Gain 8 block and 2 thorns<br>Turn 3: Gain 16 block and 4 thorns", "Gain 6 thorns"],
                 chooseEnemyCard: false,
                 index: 42,
                 element: "earth",
@@ -4814,8 +4810,10 @@ const cardsInformation = [
                 action:
                 [
                         function() {
-                                spendMana(2);
-                                gainThorns(4);
+                                spendMana(3);
+                                gainBlock(4);
+                                gainThorns(1);
+                                skippingRocks.push(true);
                                 fxWeaveOfThorns.play();
                         },
                         function() {
@@ -4827,9 +4825,9 @@ const cardsInformation = [
         },
         {
                 manaCost: [2, 2],
-                name: "Earth",
+                name: "Stone Wall",
                 cardImg: "imgs/weave-of-thorns.jpeg",
-                cardText: ["Gain 4 thorns", "Gain 6 thorns"],
+                cardText: ["If you have no block, gain 26 block", "If you have no block, gain 40 block"],
                 chooseEnemyCard: false,
                 index: 43,
                 element: "earth",
@@ -4838,22 +4836,26 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(2);
-                                gainThorns(4);
+                                if (playerBlockNumber.innerText == 0) {
+                                        gainBlock(26);
+                                }
                                 fxWeaveOfThorns.play();
                         },
                         function() {
                                 spendMana(2);
-                                gainThorns(6);
+                                if (playerBlockNumber.innerText == 0) {
+                                        gainBlock(40);
+                                }
                                 fxWeaveOfThorns.play();
                         }
                 ]
         },
         {
-                manaCost: [2, 2],
+                manaCost: [1, 1],
                 name: "Weave of Thorns",
                 cardImg: "imgs/weave-of-thorns.jpeg",
-                cardText: ["Gain 4 thorns", "Gain 6 thorns"],
-                thorns: [4, 6],
+                cardText: ["Gain 3 thorns", "Gain 5 thorns"],
+                thorns: [3, 5],
                 chooseEnemyCard: false,
                 index: 44,
                 element: "earth",
@@ -4861,13 +4863,13 @@ const cardsInformation = [
                 action:
                 [
                         function() {
-                                spendMana(2);
-                                gainThorns(4);
+                                spendMana(1);
+                                gainThorns(3);
                                 fxWeaveOfThorns.play();
                         },
                         function() {
-                                spendMana(2);
-                                gainThorns(6);
+                                spendMana(1);
+                                gainThorns(5);
                                 fxWeaveOfThorns.play();
                         }
                 ]
@@ -7752,7 +7754,7 @@ function checkEnemyBloodSiphon(index) {
 }
 let enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
 let enemiesAreDead = false;
-let [flameWarden, pyromancer, surgebinder, stormchaser, cryocast, winterWarrior, aeroshift, windrunner, bloodbender, waterweaver, grovertender, stoneshaper] =
+let [flameWarden, pyromancer, surgebinder, stormchaser, cryocast, winterWarrior, aeroshift, windrunner, bloodbender, waterweaver, grovetender, stoneshaper] =
 [false, false, false, false, false, false, false, false, false, false, false, false];
 let [faeForest, hallowwood] = [true, false];
 function checkIfEnemyDead() {
@@ -7983,7 +7985,7 @@ function checkIfEnemyDead() {
                                         nextStage();
                                 });
                                 document.getElementById("venomous-vines").addEventListener("click", () => {
-                                        grovertender = true;
+                                        grovetender = true;
                                         nextStage();
                                 });
                                 document.getElementById("stonewall").addEventListener("click", () => {
@@ -8046,7 +8048,7 @@ function checkIfEnemyDead() {
                                         empowerElementDiv[3].innerHTML = ``;
                                 } else if (bloodbender || waterweaver) {
                                         empowerElementDiv[4].innerHTML = ``;
-                                } else if (grovertender || stoneshaper) {
+                                } else if (grovetender || stoneshaper) {
                                         empowerElementDiv[5].innerHTML = ``;
                                 }
                         }
@@ -8364,7 +8366,7 @@ function endTurn() {
                                 bloodAmulet = false;
                         }
                         turnEnded = true;
-                        if (grovertender) {
+                        if (grovetender) {
                                 playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) + 2;
                                 displayBlock(playerThornsImg, playerThornsNumber);
                         }
@@ -8386,6 +8388,21 @@ function endTurn() {
                                 currentMana.innerText *= 2;
                                 doubleMana = false;
                         }
+                        if (skippingRocksTurn3.length > 0) {
+                                skippingRocksTurn3.forEach(r => {
+                                        gainBlock(16);
+                                        gainThorns(4);
+                                });
+                        }
+                        skippingRocksTurn3 = [];
+                        if (skippingRocks.length > 0) {
+                                skippingRocks.forEach(r => {
+                                        gainBlock(8);
+                                        gainThorns(2);
+                                        skippingRocksTurn3.push(true);
+                                });
+                        }
+                        skippingRocks = [];
                         if (numberOfEnemies === 1) {
                                 enemyAction(trackEnemies[0]);
                         } else if (numberOfEnemies === 2) {
