@@ -14,6 +14,8 @@ fix jesus
 Surgebinder (gain mana this turn for each energize you generate)
 Aeroshift: Maybe gain a winds of change and shifting cards ramp up quicker 
 New lightning card should capatalize on large amounts of mana as well maybe AoE thundercrash?
+ice ray becomes: Leech the frostbite off of everyone and gain 10 block for each
+Vine Whip becomes: Old Ice Ray
 
 BUGS
 */
@@ -97,7 +99,7 @@ startGame.addEventListener("click", () => {
                 location1Tiles2.addEventListener("click", L1T2);
                 location1Tiles3.addEventListener("click", L1T3);
                 // LOOP TO CREATE OPENING 12 CARDS
-                for (let i = 39; i < 44; i++) {
+                for (let i = 18; i < 24; i++) {
                         addCardToDeck(i, 0, false);
                 }
         }
@@ -3895,39 +3897,12 @@ const cardsInformation = [
         },
         {
                 manaCost: [2, 2],
-                name: "Summer Solstice",
-                cardImg: "imgs/firefall.jpeg",
-                cardText: ["Inflict burn in some way or another", "Transfer all burn on enemies and the player to the target"],
-                chooseEnemyCard: false,
-                index: 12,
-                element: "fire",
-                rarity: "common",
-                action:
-                [
-                        function() {
-                                spendMana(2);
-                                burnAllEnemies(6);
-                                playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 3;
-                                displayBlock(playerBurnImg, playerBurnNumber);
-                                fxFirefall.play();
-                        },
-                        function() {
-                                spendMana(2);
-                                burnAllEnemies(8);
-                                playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 4;
-                                displayBlock(playerBurnImg, playerBurnNumber);
-                                fxFirefall.play();
-                        }
-                ]
-        },
-        {
-                manaCost: [2, 2],
                 name: "Firefall",
                 cardImg: "imgs/firefall.jpeg",
                 cardText: ["Inflict 6 burn on all enemies and 3 on yourself", "Inflict 8 burn on all enemies and 4 on yourself"],
                 burn: [6, 8],
                 chooseEnemyCard: false,
-                index: 13,
+                index: 12,
                 element: "fire",
                 rarity: "common",
                 action:
@@ -3955,7 +3930,7 @@ const cardsInformation = [
                 cardText: ["Gain 3 burn and transfer your burn onto the enemy", "Gain 3 burn and transfer your burn onto all enemies"],
                 burn: [3, 3],
                 chooseEnemyCard: true,
-                index: 14,
+                index: 13,
                 element: "fire",
                 rarity: "common",
                 action:
@@ -3979,14 +3954,14 @@ const cardsInformation = [
                 ]        
         },
         {
-                manaCost: [1, 0],
+                manaCost: [1, 1],
                 name: "Pyromania",
                 cardImg: "imgs/pyromania.jpeg",
-                cardText: ["Gain 5 burn<br>Burn heals you this turn", "Gain 5 burn<br>Burn heals you this turn"],//maybe extinguish your flames next turn
+                cardText: ["Gain 5 burn<br>Burn heals you this turn", "Gain 8 burn<br>Burn heals you this turn"],//maybe extinguish your flames next turn
                 chooseEnemyCard: false,
-                index: 15,
+                index: 14,
                 element: "fire",
-                rarity: "rare",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -3997,12 +3972,49 @@ const cardsInformation = [
                                 fxKindredSpirits.play();
                         },
                         function() {
-                                playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 5;
+                                playerBurnNumber.innerText = parseFloat(playerBurnNumber.innerText) + 8;
                                 pyromania = true;
                                 displayBlock(playerBurnImg, playerBurnNumber);
                                 fxKindredSpirits.play();
                         }
                 ]        
+        },
+        {
+                manaCost: [1, 1],
+                name: "Summer Solstice",
+                cardImg: "imgs/firefall.jpeg",
+                cardText: ["[Ethereal] Increase everyone's burn by 50%", "[Ethereal] Increase everyone's burn by 75%"],
+                chooseEnemyCard: false,
+                index: 15,
+                element: "fire",
+                rarity: "rare",
+                action:
+                [
+                        function() {
+                                spendMana(1);
+                                if (playerBurnNumber.innerText > 0) {
+                                        playerBurnNumber.innerText = parseFloat(Math.floor(playerBurnNumber.innerText * 1.5));
+                                }
+                                for (let i = 0; i < numberOfEnemies; i++) {
+                                        if (!enemyIsDead[i] && enemyBurnNumber[i].innerText > 0) {
+                                                enemyBurnNumber[i].innerText = parseFloat(Math.floor(enemyBurnNumber[i].innerText * 1.5));
+                                        }
+                                }
+                                fxFirefall.play();
+                        },
+                        function() {
+                                spendMana(1);
+                                if (playerBurnNumber.innerText > 0) {
+                                        playerBurnNumber.innerText = parseFloat(Math.floor(playerBurnNumber.innerText * 1.75));
+                                }
+                                for (let i = 0; i < numberOfEnemies; i++) {
+                                        if (!enemyIsDead[i] && enemyBurnNumber[i].innerText > 0) {
+                                                enemyBurnNumber[i].innerText = parseFloat(Math.floor(enemyBurnNumber[i].innerText * 1.75));
+                                        }
+                                }
+                                fxFirefall.play();
+                        }
+                ]
         },
         {
                 manaCost: [2, 3],
@@ -4073,22 +4085,27 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [4, 4],
-                name: "Electrocute",
-                cardImg: "imgs/thundercrash.jpeg",
-                cardText: ["Execute enemies under 20 health?", ""],
-                chooseEnemyCard: false,
+                manaCost: [1, 1],
+                name: "Lectra's Touch",
+                cardImg: "imgs/lectra's-touch.jpeg",
+                cardText: ["Deal 10 damage<br>Gain 1 energize for every 5 damage this deals", "Deal 15 damage<br>Gain 1 energize for every 5 damage this deals"],
+                damage: [10, 15],
+                chooseEnemyCard: true,
                 index: 19,
                 element: "lightning",
                 rarity: "common",
                 action:
                 [
                         function() {
-                                currentMana.innerText = parseFloat(currentMana.innerText) + parseFloat(playerEnergizeNumber.innerText);
+                                spendMana(1);
+                                let electrocuteDamage = damageEnemy(10, chosenEnemy);
+                                gainEnergize(Math.floor(electrocuteDamage / 5));
                                 fxConduit.play();
                         },
                         function() {
-                                currentMana.innerText = parseFloat(currentMana.innerText) + parseFloat(playerEnergizeNumber.innerText);
+                                spendMana(1);
+                                let electrocuteDamage = damageEnemy(15, chosenEnemy);
+                                gainEnergize(Math.floor(electrocuteDamage / 5));
                                 fxConduit.play();
                         }
                 ]
@@ -4198,10 +4215,9 @@ const cardsInformation = [
                 manaCost: [4, 4],
                 name: "Thunder Crash",
                 cardImg: "imgs/thundercrash.jpeg",
-                cardText: ["Deal 40 damage plus 20 for each mana you have after playing Thunder Crash.<br>Energize 1", "Deal 40 damage plus 30 for each mana you have after playing Thunder Crash.<br>Energize 1"],
+                cardText: ["Deal 40 damage plus 20 for each mana you have after playing Thunder Crash", "Deal 40 damage plus 30 for each mana you have after playing Thunder Crash"],
                 damage: [40, 40],
-                damageSecond: [15, 20],
-                energize: [1, 1],
+                damageSecond: [20, 30],
                 chooseEnemyCard: true,
                 index: 22,
                 element: "lightning",
@@ -4211,13 +4227,11 @@ const cardsInformation = [
                         function() {
                                 spendMana(4);  
                                 damageEnemy(40 + (currentMana.innerText * 20), chosenEnemy);
-                                gainEnergize(1);
                                 fxConduit.play();
                         },
                         function() {
                                 spendMana(4);  
                                 damageEnemy(40 + (currentMana.innerText * 30), chosenEnemy);
-                                gainEnergize(1);
                                 fxConduit.play();
                         }
                 ]
@@ -4799,10 +4813,12 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [3, 3],
-                name: "Skipping Rocks",
-                cardImg: "imgs/weave-of-thorns.jpeg",
-                cardText: ["Turn 1: Gain 4 block and 1 thorn<br>Turn 2: Gain 8 block and 2 thorns<br>Turn 3: Gain 16 block and 4 thorns", "Gain 6 thorns"],
+                manaCost: [3, 2],
+                name: "Skipping Stones",
+                cardImg: "imgs/skipping-stones.jpeg",
+                cardText: ["Turn 1: Gain 4 block and 1 thorn<br>Turn 2: Gain 8 block and 2 thorns<br>Turn 3: Gain 16 block and 4 thorns", "Turn 1: Gain 4 block and 1 thorn<br>Turn 2: Gain 8 block and 2 thorns<br>Turn 3: Gain 16 block and 4 thorns"],
+                block: [4, 4],
+                thorns: [1, 1],
                 chooseEnemyCard: false,
                 index: 42,
                 element: "earth",
@@ -4818,7 +4834,9 @@ const cardsInformation = [
                         },
                         function() {
                                 spendMana(2);
-                                gainThorns(6);
+                                gainBlock(4);
+                                gainThorns(1);
+                                skippingRocks.push(true);
                                 fxWeaveOfThorns.play();
                         }
                 ]
@@ -4826,8 +4844,9 @@ const cardsInformation = [
         {
                 manaCost: [2, 2],
                 name: "Stone Wall",
-                cardImg: "imgs/weave-of-thorns.jpeg",
-                cardText: ["If you have no block, gain 26 block", "If you have no block, gain 40 block"],
+                cardImg: "imgs/stone-wall.jpeg",
+                cardText: ["Gain 26 block if you have no block", "Gain 40 block if you have no block"],
+                block: [26, 40],
                 chooseEnemyCard: false,
                 index: 43,
                 element: "earth",
@@ -5712,7 +5731,7 @@ let turnEnded = false;
 function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         function addToDiscard() {
                 let spliceCard = handArray.splice(handArray.indexOf(cardType[index]), 1).pop();
-                if (CIindex === 17 || CIindex === 23 || CIindex === 29 || CIindex === 35 || CIindex === 41 || CIindex === 45 || CIindex === 47 || CIindex === 62) {
+                if (CIindex === 15 || CIindex === 17 || CIindex === 23 || CIindex === 29 || CIindex === 35 || CIindex === 41 || CIindex === 45 || CIindex === 47 || CIindex === 62) {
                         etherealCards.push(cardType[index]);
                         etherealCardsContainer.appendChild(cardType[index]);
                 } else {
@@ -6593,17 +6612,17 @@ function updateCardText() {
                 [`Deal ${cardsInformation[9].damage[0]} damage and ${Math.floor(cardsInformation[9].damage[0] / 2)} damage to adjacent targets<br>Gain ${cardsInformation[9].regen[0]} regen for each target hit`, `Deal ${cardsInformation[9].damage[1]} damage and ${Math.floor(cardsInformation[9].damage[1] / 2)} damage to adjacent targets<br>Gain ${cardsInformation[9].regen[1]} regen and blood siphon for each target hit`],
                 [`Deal ${cardsInformation[10].damage[0]} damage and gain block equal to the damage dealt`, `Deal ${cardsInformation[10].damage[1]} damage and gain block equal to the damage dealt`],
                 [`Gain ${cardsInformation[11].block[0]} block and ${cardsInformation[11].thorns[0]} thorns`, `Gain ${cardsInformation[11].block[1]} block and ${cardsInformation[11].thorns[1]} thorns`],
-                [`Fire`, `Fire`],
-                [`Inflict ${cardsInformation[13].burn[0]} burn on all enemies and 3 on yourself`, `Inflict ${cardsInformation[13].burn[1]} burn on all enemies and 4 on yourself`],
-                [`Gain ${cardsInformation[14].burn[0]} burn and transfer your burn onto the enemy`, `Gain ${cardsInformation[14].burn[1]} burn and transfer your burn onto all enemies`],
-                [`Gain 5 burn<br>Burn heals you this turn`, `Gain 5 burn<br>Burn heals you this turn`],
+                [`Inflict ${cardsInformation[12].burn[0]} burn on all enemies and 3 on yourself`, `Inflict ${cardsInformation[12].burn[1]} burn on all enemies and 4 on yourself`],
+                [`Gain ${cardsInformation[13].burn[0]} burn and transfer your burn onto the enemy`, `Gain ${cardsInformation[13].burn[1]} burn and transfer your burn onto all enemies`],
+                [`Gain 5 burn<br>Burn heals you this turn`, `Gain 8 burn<br>Burn heals you this turn`],
+                ["[Ethereal] Increase everyone's burn by 50%", "[Ethereal] Increase everyone's burn by 75%"],
                 [`Deal damage equal to ${cardsInformation[16].damageSecond[0]}x the amount of burn on the enemy`, `Deal damage equal to ${cardsInformation[16].damageSecond[1]}x the amount of burn on the enemy`],
                 ["[Ethereal]<br>You apply +2 burn damage", "[Ethereal]<br>You apply +4 burn damage"],
                 ["Gain 1 mana for each energize you have", "Gain 1 mana for each energize you have"],
-                ["Gain 1 mana for each energize you have", "Gain 1 mana for each energize you have"],
+                [`Deal ${cardsInformation[19].damage[0]} damage<br>Gain 1 energize for every 5 damage this deals`, `Deal ${cardsInformation[19].damage[1]} damage<br>Gain 1 energize for every 5 damage this deals`],
                 [`Deal ${cardsInformation[20].damage[0]} damage to a random enemy three times and Energize ${cardsInformation[20].energize[0]} for each enemy damaged`, `Deal ${cardsInformation[20].damage[0]} damage to a random enemy four times and Energize ${cardsInformation[20].energize[1]} for each enemy damaged`],
                 [`Deal 50% of the damage you've dealt this turn to an enemy<br>Damage: ${cardsInformation[21].damage[0]}`, `Deal 50% of the damage you've dealt this turn to an enemy<br>Damage: ${cardsInformation[21].damage[1]}`],
-                [`Deal ${cardsInformation[22].damage[0]} damage plus ${cardsInformation[22].damageSecond[0]} for each mana you have after playing Thunder Crash.<br>Energize ${cardsInformation[22].energize[0]}`, `Deal ${cardsInformation[22].damage[1]} damage plus ${cardsInformation[22].damageSecond[1]} for each mana you have after playing Thunder Crash.<br>Energize ${cardsInformation[22].energize[1]}`],
+                [`Deal ${cardsInformation[22].damage[0]} damage plus ${cardsInformation[22].damage[0] * .5} for each mana you have after playing Thunder Crash.<br>Damage: ${cardsInformation[22].damage[0] + ((currentMana.innerText - 4) * 20)}`, `Deal ${cardsInformation[22].damage[1]} damage plus ${cardsInformation[22].damageSecond[1]} for each mana you have after playing Thunder Crash.<br>`],
                 ["[Ethereal]<br>All damage is increased by 5", "[Ethereal]<br>All damage is increased by 7"],
                 ["Inflict frostbite and steal any buffs that were reduced", "Inflict frostbite and steal any buffs that were reduced"],
                 [`If you have frostbite, transfer it to the enemy and deal ${cardsInformation[25].damage[0]} damage`, `If you have frostbite, transfer it to the enemy and deal ${cardsInformation[25].damage[1]} damage`],
@@ -8403,6 +8422,7 @@ function endTurn() {
                                 });
                         }
                         skippingRocks = [];
+                        updateCardText();
                         if (numberOfEnemies === 1) {
                                 enemyAction(trackEnemies[0]);
                         } else if (numberOfEnemies === 2) {

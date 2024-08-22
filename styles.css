@@ -43,7 +43,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url("imgs/start-screen2.jpeg");
+    background-image: url("imgs/start-screen.jpeg");
     opacity: .7;
     color: white;
     font-weight: bolder;
@@ -130,7 +130,7 @@
     flex-direction: column;
     border: 3px solid rgb(62, 71, 61);
     box-shadow: 10px 10px 15px rgb(0, 0, 0);
-    background-image: linear-gradient(135deg, #ecf4ff 0%, #c3cfe2 100%);
+    background-image: linear-gradient(135deg, rgb(30, 33, 34) 0%, rgb(49, 53, 55) 100%);
     overflow-y:auto;
 }
 #difficulty-screen div {
@@ -142,19 +142,21 @@
     justify-content: center;
     flex-direction: column;
     box-shadow: 5px 5px 10px rgb(0, 0, 0);
-    background-image: linear-gradient(135deg, #cecfcf 0%, #90a1bb 100%);
+    background-image: linear-gradient(135deg, rgb(51, 56, 59) 0%, rgb(49, 53, 55) 100%);
 }
 #difficulty-screen p {
     font-size: 1.5rem;
     margin-top: .9rem;
-    text-shadow: 2px 2px 6px rgb(180, 180, 180);
+    text-shadow: 1px 1px 6px rgb(180, 180, 180);
+    color: white;
     font-family: monospace;
 }
 #difficulty-screen h1 {
     font-size: 3rem;
     margin-top: 1.5rem;
     font-family: fantasy;
-    text-shadow: 2px 2px 5px rgb(100, 100, 100);
+    color: white;
+    text-shadow: 1px 1px 5px rgb(100, 100, 100);
 }
 #difficulty-screen button {
     width: 400px;
@@ -279,7 +281,7 @@
 }
 .tutorial-icon-div {
     width: 90%;
-    background-image: linear-gradient(#b0d1b1, #748a74);
+    background-image: linear-gradient(#b5b0d1, #74778a);
     display: flex;
     align-items: center;
     margin: .5rem;
@@ -305,7 +307,7 @@
     justify-content: center;
     flex-direction: column;
     box-shadow: 5px 5px 10px rgb(0, 0, 0);
-    background-image: linear-gradient(135deg, #729191 0%, #90a1bb 100%);
+    background-image: linear-gradient(#b5b0d1, #74778a);
 }
 .tutorial-card-div div {
     width: 90%;
@@ -767,7 +769,7 @@
 #blacksmith-container {
     width: 100%;
     height: 100vh;
-    background-image: url("imgs/blacksmith-background2.jpg");
+    background-image: url("imgs/blacksmith-background.jpg");
     background-size: cover;
     background-position: 90%;
     position: fixed;
@@ -845,7 +847,7 @@
 #arena {
     width: 100%;
     height: 100vh;
-    background-image: url(imgs/fae-forest-arena2.jpeg);
+    background-image: url(imgs/fae-forest-arena.jpeg);
     background-size: cover;
     background-position: 100%;
     background-repeat: no-repeat;
@@ -1403,7 +1405,7 @@
     flex-wrap: wrap;
     position: fixed;
     overflow-y: scroll;
-    background-image: url("imgs/backpack3.jpg");
+    background-image: url("imgs/backpack.jpg");
     background-size: cover;
 }
 
@@ -1416,7 +1418,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-around;
-    background-image: url("imgs/water-earth-treasure2.jpeg");
+    background-image: url("imgs/fae-gift.jpeg");
     background-size: cover;
     color: white;
     font-family: fantasy;
@@ -1615,7 +1617,7 @@
     background-image: linear-gradient(#b23d1a, #ba760f);
 }
 .lightning {
-    background-image: linear-gradient(#221d54,#fafba5, #f0fb3e);
+    background-image: linear-gradient(#221d54, rgb(201, 188, 252));
 }
 .ice {
     background-image: linear-gradient(#2f989c, #b9e8ea);
