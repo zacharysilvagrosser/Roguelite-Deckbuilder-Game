@@ -11,13 +11,15 @@ make score screen
 no heaven gift background
 no wine card art
 fix jesus
-Surgebinder (gain mana this turn for each energize you generate)
 Aeroshift: Maybe gain a winds of change and shifting cards ramp up quicker 
-New lightning card should capatalize on large amounts of mana as well maybe AoE thundercrash?
-ice ray becomes: Leech the frostbite off of everyone and gain 10 block for each
-Vine Whip becomes: Old Ice Ray
+//ice ray becomes: Leech the frostbite off of everyone and deal damage for each for each
+??Vine Whip becomes: Old Ice Ray
+Create hover text for ethereal and aura
+frostbitten icon and text
+suffocate icon and text
 
 BUGS
+font-weight looks way to large on laptop
 */
 /*
 START SCREEN SECTION
@@ -99,7 +101,7 @@ startGame.addEventListener("click", () => {
                 location1Tiles2.addEventListener("click", L1T2);
                 location1Tiles3.addEventListener("click", L1T3);
                 // LOOP TO CREATE OPENING 12 CARDS
-                for (let i = 18; i < 24; i++) {
+                for (let i = 24; i < 29; i++) {
                         addCardToDeck(i, 0, false);
                 }
         }
@@ -3428,7 +3430,7 @@ const handContainer = document.querySelector("#hand-container");
 const chooseNewCardContainer = document.querySelector("#choose-new-card-container");
 const chooseNewCardDiv = document.querySelector("#choose-new-card-div");
 let [essenceOfEmber, essenceOfEmberEmpowered, stormForm, stormFormEmpowered, gaiasEmbrace, terrasBlessing, terrasBlessingEmpowered, airBubble, skippingRocks, skippingRocksTurn3] = [[], [], [], [], [], [], [], [], [], []];
-let [icyEmbuement, staticCharge, pyromania, waterOrb, siphonHeat] = [false, false, false, false, false];
+let [icyEmbuement, staticCharge, pyromania, waterOrb, siphonHeat, suffocate] = [false, false, false, false, false, false];
 let damageThisTurn = 0;
 let healthGainedThisFight = 0;
 let windsOfChange = 8;
@@ -4044,7 +4046,7 @@ const cardsInformation = [
                 manaCost: [1, 2],
                 name: "Essence of Ember",
                 cardImg: "imgs/essence-of-ember.jpeg",
-                cardText: ["[Ethereal]<br>You apply +2 burn damage", "[Ethereal]<br>You apply +4 burn damage"],
+                cardText: ["[Ethereal] [Aura]<br>You apply +2 burn damage", "[Ethereal] [Aura]<br>You apply +4 burn damage"],
                 chooseEnemyCard: false,
                 index: 17,
                 element: "fire",
@@ -4240,7 +4242,7 @@ const cardsInformation = [
                 manaCost: [2, 2],
                 name: "Storm Form",
                 cardImg: "imgs/storm-form.jpeg",
-                cardText: ["[Ethereal]<br>All damage is increased by 5", "[Ethereal]<br>All damage is increased by 7"],
+                cardText: ["[Ethereal] [Aura]<br>All damage is increased by 5", "[Ethereal] [Aura]<br>All damage is increased by 7"],
                 chooseEnemyCard: false,
                 index: 23,
                 element: "lightning",
@@ -4352,7 +4354,7 @@ const cardsInformation = [
                 manaCost: [1, 0],
                 name: "Frostbitten",
                 cardImg: "imgs/frostbitten.jpeg",
-                cardText: ["For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself", "For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself"],
+                cardText: ["[Aura]<br>Gain 50% increased buffs when you have frostbite<br>Inflict frostbite on yourself", "[Aura]<br>Gain 50% increased buffs when you have frostbite<br>Inflict frostbite on yourself"],
                 chooseEnemyCard: false,
                 index: 27,
                 element: "ice",
@@ -4361,28 +4363,31 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(1);
-                                playerFrostbite = true;
-                                displayBlock(playerFrostbiteImg);
+                                if (!playerFrostbite) {
+                                        playerFrostbite = true;
+                                        displayBlock(playerFrostbiteImg);
+                                        frostbiteTotal++;
+                                }
                                 frostbitten = true;
-                                frostbiteTotal++;
                                 fxFrostbitten.play();
                         },
                         function() {
-                                spendMana(0);
-                                playerFrostbite = true;
-                                displayBlock(playerFrostbiteImg);
+                                if (!playerFrostbite) {
+                                        playerFrostbite = true;
+                                        displayBlock(playerFrostbiteImg);
+                                        frostbiteTotal++;
+                                }
                                 frostbitten = true;
-                                frostbiteTotal++;
                                 fxFrostbitten.play();
                         }
                 ]
         },
         {
-                manaCost: [2, 2],
+                manaCost: [1, 1],
                 name: "Ice Ray",
                 cardImg: "imgs/ice-ray.jpeg",
-                cardText: ["Inflict frostbite and deal damage equal to your block amount", "Gain 10 block, inflict frostbite, and deal damage equal to your block amount"],
-                block: [0, 10],
+                cardText: ["Deal 10 damage for each enemy that has frostbite<br>Transfer frostbite from all enemies to you", "Deal 15 damage for each enemy that has frostbite<br>Transfer frostbite from all enemies to you"],
+                damage: [10, 15],
                 chooseEnemyCard: true,
                 index: 28,
                 element: "ice",
@@ -4390,16 +4395,35 @@ const cardsInformation = [
                 action:
                 [
                         function() {
-                                spendMana(2);
-                                inflictFrostbite(chosenEnemy);
-                                damageEnemy(parseFloat(playerBlockNumber.innerText), chosenEnemy);
+                                spendMana(1);
+                                let frostbiteEnemies = [];
+                                for (let i = 0; i < numberOfEnemies; i++) {
+                                        if (!enemyIsDead[i] && enemyFrostbite[i]) {
+                                                frostbiteEnemies.push(true);
+                                                enemyFrostbite[i] = false;
+                                                displayNone(enemyFrostbiteImg[i]);
+                                                playerFrostbite = true;
+                                                displayBlock(playerFrostbiteImg);
+                                                frostbiteTotal++;
+                                        }
+                                }
+                                damageEnemy((frostbiteEnemies.length) * 10, chosenEnemy);
                                 fxRayOfIce.play();
                         },
                         function() {
-                                spendMana(2);
-                                gainBlock(10);
-                                inflictFrostbite(chosenEnemy);
-                                damageEnemy(parseFloat(playerBlockNumber.innerText), chosenEnemy);
+                                spendMana(1);
+                                let frostbiteEnemies = [];
+                                for (let i = 0; i < numberOfEnemies; i++) {
+                                        if (!enemyIsDead[i] && enemyFrostbite[i]) {
+                                                frostbiteEnemies.push(true);
+                                                enemyFrostbite[i] = false;
+                                                displayNone(enemyFrostbiteImg[i]);
+                                                playerFrostbite = true;
+                                                displayBlock(playerFrostbiteImg);
+                                                frostbiteTotal++;
+                                        }
+                                }
+                                damageEnemy((frostbiteEnemies.length) * 15, chosenEnemy);
                                 fxRayOfIce.play();
                         }
                 ]
@@ -4408,7 +4432,7 @@ const cardsInformation = [
                 manaCost: [3, 2],
                 name: "Icy Imbuement",
                 cardImg: "imgs/icy-imbuement.jpeg",
-                cardText: ["[Ethereal]<br>Damage and Frostbite now hits every enemy", "[Ethereal]<br>Damage and Frostbite now hits every enemy"],//maybe make everyone get frostbite including player
+                cardText: ["[Ethereal] [Aura]<br>Damage and Frostbite now hits every enemy", "[Ethereal] [Aura]<br>Damage and Frostbite now hits every enemy"],//maybe make everyone get frostbite including player
                 chooseEnemyCard: false,
                 index: 29,
                 element: "ice",
@@ -4493,7 +4517,7 @@ const cardsInformation = [
         },
         {
                 manaCost: [0, 0],
-                name: "Windwall",
+                name: "Tempest",
                 cardImg: "imgs/windwalk.jpeg",
                 cardText: ["[Shifting]<br>Deal 3 damage to all enemies.<br>All Shifting cards gain +3 damage for each windswept enemy", "[Shifting]<br>Deal 3 damage to all enemies.<br>All Shifting cards gain +4 damage for each windswept enemy"],
                 chooseEnemyCard: false,
@@ -4526,7 +4550,7 @@ const cardsInformation = [
         },
         {
                 manaCost: [2, 2],
-                name: "Gusts",
+                name: "Converging Current",//draw a card from your draw pile and one from your discard pile
                 cardImg: "imgs/gusts.jpeg",
                 cardText: ["Draw a Shifting card from your draw pile and discard pile", "Draw a Shifting card from your draw pile and discard pile. They gain +2 damage for each drawn."],
                 chooseEnemyCard: false,
@@ -4582,7 +4606,7 @@ const cardsInformation = [
                                                 //console.log("DRAW\nHAND: ", handArray);
                                                 //console.log("DRAW\nDISCARD: ", discardPileArray);
                                         }
-                                        if (discardPileArray.includes(windCards[i]) && discardCard === false) {
+                                        if (discardPileArray.includes(windCards[i]) && !discardCard) {
                                                 windsOfChange += 2;
                                                 windwall += 2;
                                                 handArray.push(discardPileArray.splice(discardPileArray.indexOf(windCards[i]), 1).pop());
@@ -4598,10 +4622,10 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [3, 2],
+                manaCost: [1, 1],
                 name: "Suffocate",
                 cardImg: "imgs/zephyr-infusion.jpeg",
-                cardText: ["", ""],
+                cardText: ["[Ethereal]<br>The next card that deals damage will first inflict windswept to all enemies damaged", "The next card that deals damage will first inflict windswept to all enemies damaged"],
                 chooseEnemyCard: false,
                 index: 34,
                 element: "air",
@@ -4609,14 +4633,14 @@ const cardsInformation = [
                 action:
                 [
                         function() {
-                                spendMana(3);
-                                maxHandLength++;
-                                fxPotion.play();
+                                spendMana(1);
+                                suffocate = true;
+                                fxGust.play();
                         },
                         function() {
-                                spendMana(2);
-                                maxHandLength++;
-                                fxPotion.play();
+                                spendMana(1);
+                                suffocate = true;
+                                fxGust.play();
                         }
                 ]
         },
@@ -4624,7 +4648,7 @@ const cardsInformation = [
                 manaCost: [3, 2],
                 name: "Zephyr Infusion",
                 cardImg: "imgs/zephyr-infusion.jpeg",
-                cardText: ["[Ethereal]<br>Draw one more card at the end of each turn", "[Ethereal]<br>Draw one more card at the end of each turn"],
+                cardText: ["[Ethereal]  [Aura]<br>Draw one more card at the end of each turn", "[Ethereal]  [Aura]<br>Draw one more card at the end of each turn"],
                 chooseEnemyCard: false,
                 index: 35,
                 element: "air",
@@ -4699,37 +4723,6 @@ const cardsInformation = [
                 ]
         },
         {
-                manaCost: [2, 2],
-                name: "Water",
-                cardImg: "imgs/sanguine-spring.jpeg",
-                cardText: ["At the end of your turn, heal for 50% of the damage you took", "At the end of your turn, heal for 50% of the damage you took"],
-                chooseEnemyCard: false,
-                index: 38,
-                element: "water",
-                rarity: "common",
-                action:
-                [
-                        function() {
-                                spendMana(2);
-                                playerWindswept = false;
-                                playerFrostbite = false;
-                                playerBurnNumber.innerText = 0;
-                                displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber);
-                                gainBloodSiphon(2);
-                                fxSanguineSpring.play();
-                        },
-                        function() {
-                                spendMana(2);
-                                playerWindswept = false;
-                                playerFrostbite = false;
-                                playerBurnNumber.innerText = 0;
-                                displayNone(playerWindsweptImg, playerFrostbiteImg, playerBurnImg, playerBurnNumber);
-                                gainBloodSiphon(3);
-                                fxSanguineSpring.play();
-                        }
-                ]
-        },
-        {
                 manaCost: [0, 0],
                 name: "Downpour",
                 cardImg: "imgs/downpour.jpeg",
@@ -4737,9 +4730,9 @@ const cardsInformation = [
                 regen: [1, 2],
                 blood: [1, 1],
                 chooseEnemyCard: false,
-                index: 39,
+                index: 38,
                 element: "water",
-                rarity: "rare",
+                rarity: "common",
                 action:
                 [
                         function() {
@@ -4756,6 +4749,29 @@ const cardsInformation = [
                                 playerHeal(parseFloat(currentMana.innerText));
                                 currentMana.innerText = 0;
                                 fxDownpour.play();
+                        }
+                ]
+        },
+        {
+                manaCost: [1, 1],
+                name: "Fountain of Youth",
+                cardImg: "imgs/sanguine-spring.jpeg",
+                cardText: ["[Ethereal]<br>Heal for 20% of your missing health", "[Ethereal]<br>Heal for 30% of your missing health"],
+                chooseEnemyCard: false,
+                index: 39,
+                element: "water",
+                rarity: "rare",
+                action:
+                [
+                        function() {
+                                spendMana(1);
+                                playerHeal(Math.floor(playerCurrentHealth.innerText - playerMaxHealth.innerText) * -.2);
+                                fxSanguineSpring.play();
+                        },
+                        function() {
+                                spendMana(1);
+                                playerHeal(Math.floor(playerCurrentHealth.innerText - playerMaxHealth.innerText) * -.3);
+                                fxSanguineSpring.play();
                         }
                 ]
         },
@@ -4873,8 +4889,8 @@ const cardsInformation = [
                 manaCost: [1, 1],
                 name: "Weave of Thorns",
                 cardImg: "imgs/weave-of-thorns.jpeg",
-                cardText: ["Gain 3 thorns", "Gain 5 thorns"],
-                thorns: [3, 5],
+                cardText: ["Gain 4 thorns", "Gain 6 thorns"],
+                thorns: [4, 6],
                 chooseEnemyCard: false,
                 index: 44,
                 element: "earth",
@@ -4883,12 +4899,12 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(1);
-                                gainThorns(3);
+                                gainThorns(4);
                                 fxWeaveOfThorns.play();
                         },
                         function() {
                                 spendMana(1);
-                                gainThorns(5);
+                                gainThorns(6);
                                 fxWeaveOfThorns.play();
                         }
                 ]
@@ -4930,12 +4946,14 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(2);
+                                //damageEnemy(playerBlockNumber.innerText);
                                 damageEnemy((playerThornsNumber.innerText * 2), chosenEnemy);
                                 fxVineWhip.play();
                         },
                         function() {
                                 spendMana(2);
                                 gainThorns(3);
+                                //damageEnemy(playerBlockNumber.innerText);
                                 damageEnemy((playerThornsNumber.innerText * 2), chosenEnemy);
                                 fxVineWhip.play();
                         }
@@ -4945,7 +4963,7 @@ const cardsInformation = [
                 manaCost: [3, 3],
                 name: "Gaia's Embrace",
                 cardImg: "imgs/gaias-embrace.jpeg",
-                cardText: ["[Ethereal]<br>All block gained is increased by 5 and thorns by 1", "[Ethereal]<br>Gain 10 block and 2 thorns. All block gained is increased by 5 and thorns by 1"],
+                cardText: ["[Ethereal]  [Aura]<br>All block gained is increased by 5 and thorns by 1", "[Ethereal]  [Aura]<br>Gain 10 block and 2 thorns. All block gained is increased by 5 and thorns by 1"],
                 block: [0, 10],
                 thorns: [0, 2],
                 chooseEnemyCard: false,
@@ -5731,7 +5749,7 @@ let turnEnded = false;
 function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         function addToDiscard() {
                 let spliceCard = handArray.splice(handArray.indexOf(cardType[index]), 1).pop();
-                if (CIindex === 15 || CIindex === 17 || CIindex === 23 || CIindex === 29 || CIindex === 35 || CIindex === 41 || CIindex === 45 || CIindex === 47 || CIindex === 62) {
+                if (CIindex === 15 || CIindex === 17 || CIindex === 23 || CIindex === 29 || (CIindex === 34 && upgradeIndex === 0) || CIindex === 35 || CIindex === 41 || CIindex === 45 || CIindex === 47 || CIindex === 62) {
                         etherealCards.push(cardType[index]);
                         etherealCardsContainer.appendChild(cardType[index]);
                 } else {
@@ -6096,6 +6114,9 @@ function damageEnemy(damage, enemy) {
                         healthGainedThisFight += Math.floor((damage * healPercentage));
                         healthRestoredTotal += Math.floor((damage * healPercentage));
                 }
+                if (suffocate) {
+                        inflictWindswept(enemy);
+                }
                 // TAKE DAMAGE AWAY FROM BLOCK BEFORE HEALTH
                 if (enemyBlockNumber[enemy].innerText === 0) {
                         enemyCurrentHealth[enemy].innerText -= damage;
@@ -6125,8 +6146,13 @@ function damageEnemy(damage, enemy) {
                 checkIfEnemyDead();
                 damageThisTurn += damage;
         }
-        if (icyEmbuementTrigger && enemy === (numberOfEnemies - 1)) {
-                icyEmbuementTrigger = false;
+        if (enemy === (numberOfEnemies - 1)) {
+                if (icyEmbuementTrigger) {
+                        icyEmbuementTrigger = false;
+                }
+                if (suffocate) {
+                        suffocate = false;
+                }
         }
         return damage;
 }
@@ -6306,32 +6332,36 @@ function gainEnergize (amount) {
         if (surgebinder) {
                 amount *= 2;
         }
-        if (playerFrostbite) {
-                amount = Math.floor(amount * .5);
+        if (frostbitten && playerFrostbite) {
+                amount = Math.floor(amount * 1.5);
+        } else if (playerFrostbite) {
+                amount = Math.floor(amount * .50);
         }
         playerEnergizeNumber.innerText = parseFloat(playerEnergizeNumber.innerText) + amount;
         displayBlock(playerEnergizeImg, playerEnergizeNumber);
         manaEnergized += amount;
 }
-function gainBlock(blockAmount) {
+function gainBlock(amount) {
         if (gaiasEmbrace.length > 0) {
-                blockAmount += gaiasEmbrace.length * 5;
+                amount += gaiasEmbrace.length * 5;
         }
         if (frostbitten && playerFrostbite) {
-                blockAmount = Math.floor(blockAmount * 2);
+                amount = Math.floor(amount * 1.5);
         } else if (playerFrostbite) {
-                blockAmount = Math.floor(blockAmount * .50);
+                amount = Math.floor(amount * .50);
         }
-        playerBlockNumber.innerText = parseFloat(playerBlockNumber.innerText) + blockAmount;
+        playerBlockNumber.innerText = parseFloat(playerBlockNumber.innerText) + amount;
         displayBlock(playerBlockImg, playerBlockNumber);
-        blockTotal += blockAmount;
+        blockTotal += amount;
 }
 function gainThorns(amount) {
         if (gaiasEmbrace.length > 0) {
                 amount += gaiasEmbrace.length;
         }
-        if (playerFrostbite) {
-                amount = Math.floor(amount * .5);
+        if (frostbitten && playerFrostbite) {
+                amount = Math.floor(amount * 1.5);
+        } else if (playerFrostbite) {
+                amount = Math.floor(amount * .50);
         }
         playerThornsNumber.innerText = parseFloat(playerThornsNumber.innerText) + amount;
         displayBlock(playerThornsNumber, playerThornsImg);
@@ -6388,15 +6418,19 @@ function burnAllEnemies(burn) {
         }
 }
 function gainRegen(amount) {
-        if (playerFrostbite) {
-                amount = Math.floor(amount * .5);
+        if (frostbitten && playerFrostbite) {
+                amount = Math.floor(amount * 1.5);
+        } else if (playerFrostbite) {
+                amount = Math.floor(amount * .50);
         }
         playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + amount;
         displayBlock(playerRegenNumber, playerRegenImg);
 }
 function gainBloodSiphon(amount) {
-        if (playerFrostbite) {
-                amount = Math.floor(amount * .5);
+        if (frostbitten && playerFrostbite) {
+                amount = Math.floor(amount * 1.5);
+        } else if (playerFrostbite) {
+                amount = Math.floor(amount * .50);
         }
         playerBloodNumber.innerText = parseFloat(playerBloodNumber.innerText) + amount;
         displayBlock(playerBloodImg, playerBloodNumber);
@@ -6459,19 +6493,15 @@ function checkGaiasEmbrace() {
         if (terrasBlessing.length > 0) {
                 playerHeal(terrasBlessing.length * 3);
                 gainBlock(terrasBlessing.length * 3);
-                blockTotal += terrasBlessing.length * 3;
                 if (playerFrostbite && frostbitten) {
-                        gainBlock(terrasBlessing.length * 3);
-                        blockTotal += terrasBlessing.length * 3;
+                        gainBlock(terrasBlessing.length * 1);
                 }
         }
         if (terrasBlessingEmpowered.length > 0) {
                 playerHeal(terrasBlessingEmpowered.length * 5);
                 gainBlock(terrasBlessingEmpowered.length * 5);
-                blockTotal += terrasBlessing.length * 5;
                 if (playerFrostbite && frostbitten) {
-                        gainBlock(terrasBlessingEmpowered.length * 5);
-                        blockTotal += terrasBlessing.length * 5;
+                        gainBlock(terrasBlessingEmpowered.length * 2);
                 }
         }
 }
@@ -6552,8 +6582,8 @@ function updateCardText() {
                                                                         }
                                                                 }
                                                                 if (playerFrostbite && (type === cardsInformation[j].energize || type === cardsInformation[j].block || type === cardsInformation[j].regen || type === cardsInformation[j].blood || type === cardsInformation[j].thorns)) {
-                                                                        if (frostbitten && type === cardsInformation[j].block) {
-                                                                                type[upgradeIndex] *= 4;
+                                                                        if (frostbitten) {
+                                                                                type[upgradeIndex] *= 1.5;
                                                                         } else {
                                                                                 type[upgradeIndex] = Math.floor(type[upgradeIndex] * .5);
                                                                         }
@@ -6617,37 +6647,37 @@ function updateCardText() {
                 [`Gain 5 burn<br>Burn heals you this turn`, `Gain 8 burn<br>Burn heals you this turn`],
                 ["[Ethereal] Increase everyone's burn by 50%", "[Ethereal] Increase everyone's burn by 75%"],
                 [`Deal damage equal to ${cardsInformation[16].damageSecond[0]}x the amount of burn on the enemy`, `Deal damage equal to ${cardsInformation[16].damageSecond[1]}x the amount of burn on the enemy`],
-                ["[Ethereal]<br>You apply +2 burn damage", "[Ethereal]<br>You apply +4 burn damage"],
+                ["[Ethereal] [Aura]<br>You apply +2 burn damage", "[Ethereal] [Aura]<br>You apply +4 burn damage"],
                 ["Gain 1 mana for each energize you have", "Gain 1 mana for each energize you have"],
                 [`Deal ${cardsInformation[19].damage[0]} damage<br>Gain 1 energize for every 5 damage this deals`, `Deal ${cardsInformation[19].damage[1]} damage<br>Gain 1 energize for every 5 damage this deals`],
                 [`Deal ${cardsInformation[20].damage[0]} damage to a random enemy three times and Energize ${cardsInformation[20].energize[0]} for each enemy damaged`, `Deal ${cardsInformation[20].damage[0]} damage to a random enemy four times and Energize ${cardsInformation[20].energize[1]} for each enemy damaged`],
                 [`Deal 50% of the damage you've dealt this turn to an enemy<br>Damage: ${cardsInformation[21].damage[0]}`, `Deal 50% of the damage you've dealt this turn to an enemy<br>Damage: ${cardsInformation[21].damage[1]}`],
                 [`Deal ${cardsInformation[22].damage[0]} damage plus ${cardsInformation[22].damage[0] * .5} for each mana you have after playing Thunder Crash.<br>Damage: ${cardsInformation[22].damage[0] + ((currentMana.innerText - 4) * 20)}`, `Deal ${cardsInformation[22].damage[1]} damage plus ${cardsInformation[22].damageSecond[1]} for each mana you have after playing Thunder Crash.<br>`],
-                ["[Ethereal]<br>All damage is increased by 5", "[Ethereal]<br>All damage is increased by 7"],
+                ["[Ethereal] [Aura]<br>All damage is increased by 5", "[Ethereal] [Aura]<br>All damage is increased by 7"],
                 ["Inflict frostbite and steal any buffs that were reduced", "Inflict frostbite and steal any buffs that were reduced"],
                 [`If you have frostbite, transfer it to the enemy and deal ${cardsInformation[25].damage[0]} damage`, `If you have frostbite, transfer it to the enemy and deal ${cardsInformation[25].damage[1]} damage`],
                 [`Deal ${cardsInformation[26].damage[0]} damage to all enemies and inflict frostbite on everyone including yourself`, `Deal ${cardsInformation[26].damage[1]} damage to all enemies and inflict frostbite on everyone including yourself`],
-                ["For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself", "For the rest of the fight when you have frostbite, gain double block. Inflict frostbite on yourself"],
-                [`Inflict frostbite and deal damage equal to your block amount`, `Gain ${cardsInformation[28].block[1]} block, inflict frostbite, and deal damage equal to your block amount`],
-                ["[Ethereal]<br>Damage and Frostbite now hits every enemy", "[Ethereal]<br>Damage and Frostbite now hits every enemy"],
+                ["[Aura]<br>Gain 50% increased buffs when you have frostbite<br>Inflict frostbite on yourself", "[Aura]<br>Gain 50% increased buffs when you have frostbite<br>Inflict frostbite on yourself"],
+                [`Deal ${cardsInformation[28].damage[0]} damage for each enemy that has frostbite<br>Transfer frostbite from all enemies to you`, `Deal ${cardsInformation[28].damage[1]} damage for each enemy that has frostbite<br>Transfer frostbite from all enemies to you`],
+                ["[Ethereal]  [Aura]<br>Damage and Frostbite now hits every enemy", "[Ethereal] [Aura]<br>Damage and Frostbite now hits every enemy"],
                 [`Deal ${windsOfChange} damage.<br>All Winds of Change gain +3 damage or +6 damage if enemy is windswept`, `Deal ${windsOfChange} damage.<br>All Winds of Change gain +4 damage or +8 damage if enemy is windswept`],
                 ["Draw two cards", "Draw two cards and inflict windswept on a random enemy"],
                 ["Air", "Air"],
                 ["Draw a Winds of Change from your draw pile and discard pile", "Draw a Winds of Change from your draw pile and discard pile. Winds of Change gains +2 damage for each drawn."],
                 ["Windwall", "Windwall"],
-                ["[Ethereal]<br>Draw one more card at the end of each turn", "[Ethereal]<br>Draw one more card at the end of each turn"],
+                ["[Ethereal] [Aura]<br>Draw one more card at the end of each turn", "[Ethereal] [Aura]<br>Draw one more card at the end of each turn"],
                 ["At the end of your turn, heal for 50% of the damage you took this turn", "At the end of your turn, heal for 50% of the damage you took this turn"],
                 [`Cleanse all debuffs and gain ${cardsInformation[37].blood[0]} blood siphon`, `Cleanse all debuffs and gain ${cardsInformation[37].blood[1]} blood siphon`],
-                [`Water`, `Water`],
-                [`Use all mana to gain ${cardsInformation[39].regen[0]} regeneration and blood siphon per mana spent`, `Use all mana to gain ${cardsInformation[39].regen[1]} regeneration and ${cardsInformation[39].blood[1]} blood siphon per mana spent`],
+                [`Use all mana to gain ${cardsInformation[38].regen[0]} regeneration and blood siphon per mana spent`, `Use all mana to gain ${cardsInformation[38].regen[1]} regeneration and ${cardsInformation[38].blood[1]} blood siphon per mana spent`],
+                [`[Ethereal]<br>Heal for 20% of your missing health<br>Heal: ${Math.floor(playerCurrentHealth.innerText - playerMaxHealth.innerText) * -.2}`, `[Ethereal]<br>Heal for 30% of your missing health<br>Heal: ${Math.floor(playerCurrentHealth.innerText - playerMaxHealth.innerText) * -.3}`],
                 [`Deal damage equal to how much you've healed this fight<br>Damage: ${cardsInformation[40].damage[0]}`, `Deal damage to all enemies equal to how much you've healed this fight<br>Damage: ${cardsInformation[40].damage[1]}`],
                 ["[Ethereal]<br>Permanently gain 5 max health", "[Ethereal]<br>Permanently gain 6 max health and gain 6 health"],
-                ["Boulder Toss", "Boulder Toss"],
-                ["Earth", "Earth"],
+                [`Turn 1: Gain ${cardsInformation[42].block[0]} block and ${cardsInformation[42].thorns[0]} thorn<br>Turn 2: Gain 8 block and 2 thorns<br>Turn 3: Gain 16 block and 4 thorns`, `Turn 1: Gain ${cardsInformation[42].block[1]} block and ${cardsInformation[42].thorns[1]} thorn<br>Turn 2: Gain 8 block and 2 thorns<br>Turn 3: Gain 16 block and 4 thorns`],
+                [`Gain ${cardsInformation[43].block[0]} block if you have no block`, `Gain ${cardsInformation[43].block[1]} block if you have no block`],
                 [`Gain ${cardsInformation[44].thorns[0]} thorns`, `Gain ${cardsInformation[44].thorns[1]} thorns`],
                 ["[Ethereal]<br>Double your thorns", "[Ethereal]<br>Triple your thorns."],
                 [`Deal damage equal to 2x your thorns<br>Damage: ${(parseFloat(playerThornsNumber.innerText) * 2)}`, `Gain ${cardsInformation[46].thorns[1]} thorns and deal damage equal to 2x your thorns<br>Damage: ${3 + (parseFloat(playerThornsNumber.innerText) * 2)}`],
-                ["[Ethereal]<br>All block gained is increased by 5 and thorns increased by 1", `[Ethereal]<br>Gain ${cardsInformation[47].block[1]} block and ${cardsInformation[47].thorns[1]} thorns. All block gained is increased by 5 and thorns increased by 1`],
+                ["[Ethereal] [Aura]<br>All block gained is increased by 5 and thorns increased by 1", `[Ethereal] [Aura]<br>Gain ${cardsInformation[47].block[1]} block and ${cardsInformation[47].thorns[1]} thorns. All block gained is increased by 5 and thorns increased by 1`],
                 [`Energize ${cardsInformation[48].energize[0]} for each enemy burning`, `Burn all enemies for ${cardsInformation[48].burn[1]} and Energize ${cardsInformation[48].energize[1]} for each enemy burning`],
                 [`If the enemy is either burning or inflicted with frostbite they are inflicted with ${cardsInformation[49].burn[0]} burn and frostbite`, `If the enemy is either burning or inflicted with frostbite they are inflicted with ${cardsInformation[49].burn[1]} burn and frostbite`],
                 [`Inflict windswept on all enemies and increase burn count by ${cardsInformation[50].burn[0]} if they're already burning`, `Inflict windswept on all enemies and increase burn count by ${cardsInformation[50].burn[1]} if they're already burning`],
@@ -6662,7 +6692,7 @@ function updateCardText() {
                 [`Inflict everyone including yourself with frostbite and gain ${cardsInformation[59].block[0]} block for everyone inflicted`, `Inflict everyone including yourself with frostbite and gain ${cardsInformation[59].block[1]} block for everyone inflicted`],
                 [`Gain ${cardsInformation[60].regen[0]} regen for each card played this turn`, `Gain ${cardsInformation[60].regen[1]} regen for each card played this turn and draw a card`],
                 [`Gain ${cardsInformation[61].block[0]} block and draw a card`, `Gain ${cardsInformation[61].block[1]} block and draw a card`],
-                ["[Ethereal]\nGain 3 block and healing at the end of each turn", "[Ethereal]\nGain 5 block and healing at the end of each turn"],
+                ["[Ethereal] [Aura]<br>Gain 3 block and healing at the end of each turn", "[Ethereal] [Aura]<br>Gain 5 block and healing at the end of each turn"],
                 ["[DOES NOTHING]<br>Your greed causes you to look down upon peasants", "Your greed causes you to look down upon peasants...and enslave them gaining 20 aether"],
                 [`Inflict frostbite, windswept, and ${cardsInformation[64].burn[0]} burn. Gain ${cardsInformation[64].energize[0]} energize, ${cardsInformation[64].blood[0]} blood siphon, and ${cardsInformation[64].block[0]} block`, `Inflict frostbite, windswept, and ${cardsInformation[64].burn[1]} burn. Gain ${cardsInformation[64].energize[1]} energize, ${cardsInformation[64].blood[1]} blood siphon, and ${cardsInformation[64].block[1]} block`],
                 ["Gain 2 blood siphon<br>You feel this would pair well with some bread", "Gain 2 blood siphon<br>You feel this would pair well with some bread"]
