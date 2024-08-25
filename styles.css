@@ -970,7 +970,7 @@
 }
 #player-block-number {
     position: absolute;
-    font-size: 23px;
+    font-size: 21px;
     text-align: center;
     width: 100px;
     display: none;
@@ -990,7 +990,7 @@
     display: flex;
     justify-content: center;
 }
-#player-windswept-img, #player-frostbite-img, #player-tidal-imbuement-img {
+#player-windswept-img, #player-frostbite-img, #player-tidal-imbuement-img, #player-tempias-fury-img {
     width: 60px;
     display: none;
 }
@@ -1608,6 +1608,7 @@
     margin: auto;
     left: 0;
     right: 0;
+    max-width: 82%;
     bottom: -7rem;
 }
 #opening-cards-container, #all-cards-reference-container, #potion-cards-container {
@@ -1629,7 +1630,7 @@
     background-image: linear-gradient(#0f5e9c, #74ccf4);
 }
 .earth {
-    background-image: linear-gradient(#451b04, #81b14f);
+    background-image: linear-gradient(#451b04, #62863b);
 }
 .avarice {
     background-image: linear-gradient(rgb(122, 67, 133), rgb(49, 0, 61));
