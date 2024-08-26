@@ -40,7 +40,7 @@
 #beginning-screen-container {
     width: 100%;
     height: 100vh;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     background-image: url("imgs/start-screen.jpeg");
@@ -681,7 +681,7 @@
     height: 120px;
     cursor: pointer;
 }
-.img-text, .player-img-text, .shop-relic-img-text, .relic-img-text, .orb-img-text {
+.img-text, .player-img-text, .shop-relic-img-text, .relic-img-text, .orb-img-text, .card-img-text {
     position: absolute;
     margin-top: 4.7rem;
     margin-left: -11rem;
@@ -699,6 +699,10 @@
     border-radius: 20px;
     box-shadow: 5px 5px 10px black;
     font-family: monospace;
+}
+.card-img-text {
+    margin-top: -15rem;
+    margin-left: -2rem;
 }
 .shop-relic-img-text {
     margin-top: 10rem;
@@ -1222,10 +1226,13 @@
     width: 60px;
     display: none;
 }
-.enemy-thorns-img, .enemy-burn-img, .enemy-regen-img, .enemy-blood-img {
+.enemy-thorns-img, .enemy-burn-img, .enemy-regen-img, .enemy-blood-img, .enemy-fade-img {
     width: 60px;
     text-align: center;
     display: none;
+}
+.enemy-fade-img, .enemy-fade-action-img {
+    opacity: .8;
 }
 .enemy-thorns-number, .enemy-burn-number, .enemy-regen-number, .enemy-blood-number {
     position: absolute;
@@ -1608,7 +1615,7 @@
     margin: auto;
     left: 0;
     right: 0;
-    max-width: 82%;
+    max-width: 80%;
     bottom: -7rem;
 }
 #opening-cards-container, #all-cards-reference-container, #potion-cards-container {
@@ -1786,6 +1793,10 @@
 }
 .card-name {
     width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
     color: white;
     font-size: .7vw;
     margin: 5px auto;
