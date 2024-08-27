@@ -17,7 +17,7 @@
     margin: auto;
 }
 #top-bar-health {
-    font-size: 20px;
+    font-size: 1.4vw;
     cursor: default;
 }
 #relic-container {
@@ -27,7 +27,9 @@
     justify-content: center;
 }
 #top-bar-aether {
-    font-size: 20px;
+    width: 3%;
+    height: 3%;
+    font-size: 1.4vw;
     display: flex;
     align-items: center;
     cursor: default;
@@ -50,7 +52,7 @@
     background-size: cover;
 }
 #beginning-screen-container h1 {
-    font-size: 90px;
+    font-size: 6vw;
     cursor: default;
     font-family: fantasy;
     text-shadow: 5px 5px 10px rgb(0, 0, 0);
@@ -67,12 +69,14 @@
     background-size: cover;
     color: white;
     font-weight: bolder;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: scroll;
     font-family: fantasy;
 }
 #start-screen-container h1 {
-    margin: 4rem;
-    font-size: 120px;
+    padding: 1rem;
+    margin-top: 2rem;
+    font-size: 8.5vw;
     text-decoration: dashed;
     cursor: default;
     font-family: fantasy;
@@ -81,7 +85,7 @@
 #start-screen-container h3 {
     margin: 3rem;
     cursor: pointer;
-    font-size: 60px;
+    font-size: 3.5vw;
     font-family: fantasy;
     text-shadow: 5px 5px 12px rgb(36, 36, 36);
 }
@@ -145,23 +149,23 @@
     background-image: linear-gradient(135deg, rgb(51, 56, 59) 0%, rgb(49, 53, 55) 100%);
 }
 #difficulty-screen p {
-    font-size: 1.5rem;
+    font-size: 1.4vw;
     margin-top: .9rem;
     text-shadow: 1px 1px 6px rgb(180, 180, 180);
     color: white;
     font-family: monospace;
 }
 #difficulty-screen h1 {
-    font-size: 3rem;
+    font-size: 3vw;
     margin-top: 1.5rem;
     font-family: fantasy;
     color: white;
     text-shadow: 1px 1px 5px rgb(100, 100, 100);
 }
 #difficulty-screen button {
-    width: 400px;
+    width: 50%;
     padding: 15px;
-    font-size: 1.5rem;
+    font-size: 1.4vw;
     text-shadow: 2px 2px 12px rgb(180, 180, 180);
     border-radius: 12px;
     box-shadow: 5px 5px 10px black;
@@ -430,7 +434,7 @@
     width: 100%;
     height: 200vh;
     background-image: url("imgs/fae-forest-map.jpeg");
-    background-size: 100%;
+    background-size: cover;
     display: none;
 }
 .locations {
@@ -439,9 +443,12 @@
     height: 17vh;
 }
 .location-tiles {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 3px solid black;
-    width: 3rem;
-    height: 3rem;
+    width: 2.8vw;
+    height: 2.8vw;
     margin: auto;
     background-color:antiquewhite;
 }
@@ -582,45 +589,28 @@
 
 /* IMG PLACEMENT images by icons8.com*/
 .normal-monster-img {
-    margin-left: -3px;
-    margin-top: -3px;
+    width: 2.8vw;
 }
 .hard-monster-img {
-    width: 48px;
-    margin-left: -3px;
-    margin-top: -3px;
-}
-.oasis-img {
-    width: 45px;
-    margin-left: -3px;
-    margin-top: -3px;
+    width: 3vw;
 }
 .blacksmith-img {
-    width: 43px;
-    margin-left: -1px;
-    margin-top: -1px;
+    width: 2.6vw;
 }
 .gold-img {
-    width: 40px;
-    margin-left: 1px;
-    margin-top: 1px;
+    width: 2.4vw;
 }
 .merchant-img {
-    width: 45px;
-    margin-left: -.093rem;
+    width: 2.8vw;
 }
 .treasure-img {
-    width: 42px;
+    width: 2.5vw;
 }
 .exclamation-img {
-    width: 40px;
-    margin-top: .2px;
-    margin-left: 1.2px;
+    width: 2.4vw;
 }
 .boss-monster-img {
-    width: 48px;
-    margin-left: -3px;
-    margin-top: -3px;
+    width: 3.2vw;
 }
 /*SHOP SECTION*/
 #shop-container {
@@ -1801,7 +1791,7 @@
     font-size: .7vw;
     margin: 5px auto;
     padding-left: 17px;
-    font-family: fantasy;
+    font-family: fantasy, Arial, Helvetica, sans-serif;
 }
 .card-img {
     width: 90%;
@@ -1829,10 +1819,10 @@
     width: 90%;
     height: 42%;
     font-size: .65vw;
-    font-weight: 600;
+    /*font-weight: 600;*/
     padding: 10px 8px;
     border: 1px solid black;
-    font-family: fantasy;
+    font-family: fantasy, Arial, Helvetica, sans-serif;
 }
 .card-name-element-div {
     display: flex;
