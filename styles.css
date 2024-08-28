@@ -149,7 +149,7 @@
     background-image: linear-gradient(135deg, rgb(51, 56, 59) 0%, rgb(49, 53, 55) 100%);
 }
 #difficulty-screen p {
-    font-size: 1.4vw;
+    font-size: 1.26vw;
     margin-top: .9rem;
     text-shadow: 1px 1px 6px rgb(180, 180, 180);
     color: white;
@@ -1186,7 +1186,7 @@
     width: 50px;
     text-align: center;
     display: none;
-    margin-right: 9rem;
+    margin-right: 9.5rem;
 }
 .enemy-block-number {
     position: absolute;
@@ -1195,7 +1195,7 @@
     width: 100px;
     display: none;
     color: white;
-    margin-right: 9rem;
+    margin-right: 9.5rem;
     cursor: default;
 }
 .enemy-buffs, .enemy-debuffs {
