@@ -10,7 +10,8 @@ Settings gear when hitting escape for music and sound volume
 no wine card art
 fix jesus
 Create tutorial text for ethereal and aura
-realign all sound effects
+///realign all sound effects
+///play sound effects when the spirits appear in mystery()
 
 BUGS
 font-weight looks way to large on laptop
@@ -35,10 +36,12 @@ const ambienceSlider = document.querySelector("#ambience-slider");
 const soundFXSlider = document.querySelector("#soundfx-slider");
 let allMusic = [];
 let allAmbience = [];
-const [fxFireball, fxCascadingFlames, fxStaticCharge, fxChainLightning, fxFrostbolt, fxFrostFingers, fxTornado, fxGaleForce, fxBloodCocoon, fxTidalImbuement, fxRockSmash, fxThornShield,
-        fxFirefall, fxKindredSpirits, fxPyromania, fxSummerSolstice, fxPotion, fxPhoenixFire, fxSurge, fxLectrasTouch, fxStormblessed, fxBallLightning, fxThunderCrash, fxStormForm, fxSiphonHeat, fxWintersBreath, fxSnowNova, fxGlaciasSoul, fxIceRay, fxIcyImbuement, fxWindsOfChange, fxWindwalk, fxSphereOfAir, fxConvergingCurrent, fxTempiasFury, fxWaterWall, fxSanguineSpring, fxDownpour, fxTidalBinding, fxTsunami,
-        fxEarthSpikes, fxStoneBarrier, fxVineSheath, fxWeaveOfThorns, fxVineWhip, fxGaiasEmbrace, fxEnergyAegis, fxFrostfireFusion, fxFanTheFlames, fxCauterize, fxMagma, fxDeepFreeze, fxHurricane, fxElectricCurrent, fxFlurry, fxLiquify,
-        fxFrozenTundra, fxAirBubbles, fxRockOrbit, fxCelestialAttunement, fxEnemyAttack, fxEnemyBlock, fxDragonRoar, fxDragonGrowls, fxGiantFootsteps, fxGiantGroans, fxWizardCast, fxSpellSuccess, fxSpellFail] =
+const [fxFireball, fxCascadingFlames, fxStaticCharge, fxChainLightning, fxFrostbolt, fxFrostFingers, fxTornado, fxGaleForce, fxBloodCocoon, fxAerwynasTrident, fxRockSmash, fxThornShield,
+        fxFirefall, fxKindredSpirits, fxPyromania, fxSummerSolstice, fxPotion, fxPhoenixFire, fxSurge, fxLectrasTouch, fxStormblessed, fxBallLightning, fxThunderCrash, fxStormForm, fxSiphonHeat,
+        fxWintersBreath, fxSnowNova, fxGlaciasSoul, fxIceRay, fxIcyImbuement, fxWindsOfChange, fxWindwalk, fxSphereOfAir, fxConvergingCurrent, fxTempiasFury, fxZephyrInfusion, fxWaterWall,
+        fxSanguineSpring, fxDownpour, fxTidalBinding, fxTsunami, fxEarthSpikes, fxStoneBarricade, fxVineSheath, fxWeaveOfThorns, fxVineWhip, fxGaiasEmbrace, fxEssenceLeech, fxFrostfireFusion,
+        fxFanTheFlames, fxCauterize, fxMagmaBlast, fxDeepFreeze, fxHurricane, fxElectricCurrent, fxEnergyAegis, fxFlurry, fxLiquify, fxFrozenTundra, fxAirBubbles, fxRockOrbit, fxCelestialAttunement, fxEnemyAttack,
+        fxEnemyBlock, fxDragonRoar, fxDragonGrowls, fxGiantFootsteps, fxGiantGroans, fxWizardCast, fxSpellSuccess, fxSpellFail] =
         [new Audio("audio/fireball.wav"), new Audio("audio/cascading-flames.wav"), new Audio("audio/static-charge.wav"), new Audio("audio/chain-lightning.wav"), new Audio("audio/frostbolt.wav"), new Audio("audio/frost-fingers.wav"),
         new Audio("audio/tornado.wav"), new Audio("audio/gale-force.wav"), new Audio("audio/blood-cocoon.wav"), new Audio("audio/aerwynas-trident.wav"), new Audio("audio/rock-smash.wav"), new Audio("audio/thorn-shield.wav"),
         new Audio("audio/firefall.wav"), new Audio("audio/kindred-spirits.wav"), new Audio("audio/pyromania.wav"), new Audio("audio/summer-solstice.wav"), new Audio("audio/phoenix-fire.wav"), new Audio("audio/potion.wav"), 
@@ -46,15 +49,17 @@ const [fxFireball, fxCascadingFlames, fxStaticCharge, fxChainLightning, fxFrostb
         new Audio("audio/siphon-heat.wav"), new Audio("audio/winters-breath.wav"), new Audio("audio/snow-nova.wav"), new Audio("audio/glacias-soul.wav"), new Audio("audio/ice-ray.wav"), new Audio("audio/icy-imbuement.wav"),
         new Audio("audio/winds-of-change.wav"), new Audio("audio/windwalk.wav"), new Audio("audio/sphere-of-air.wav"), new Audio("audio/converging-current.wav"), new Audio("audio/tempias-fury.wav"), new Audio("audio/zephyr-infusion.wav"),
         new Audio("audio/water-wall.wav"), new Audio("audio/sanguine-spring.wav"), new Audio("audio/downpour.wav"), new Audio("audio/tidal-binding.wav"), new Audio("audio/tsunami.wav"),
-        new Audio("audio/earth-spikes.wav"), new Audio("audio/stone-barrier.wav"), new Audio("audio/vine-sheath.wav"), new Audio("audio/weave-of-thorns.wav"), new Audio("audio/vine-whip.wav"), new Audio("audio/gaias-embrace.wav"),
-        new Audio("audio/essence-leech.wav"), new Audio("audio/frostfire-fusion.wav"), new Audio("audio/fan-the-flames.wav"), new Audio("audio/cauterize.wav"), new Audio("audio/magma.wav"), new Audio("audio/deep-freeze.wav"),
+        new Audio("audio/earth-spikes.wav"), new Audio("audio/stone-barricade.wav"), new Audio("audio/vine-sheath.wav"), new Audio("audio/weave-of-thorns.wav"), new Audio("audio/vine-whip.wav"), new Audio("audio/gaias-embrace.wav"),
+        new Audio("audio/essence-leech.wav"), new Audio("audio/frostfire-fusion.wav"), new Audio("audio/fan-the-flames.wav"), new Audio("audio/cauterize.wav"), new Audio("audio/magma-blast.wav"), new Audio("audio/deep-freeze.wav"),
         new Audio("audio/hurricane.wav"), new Audio("audio/electric-current.wav"), new Audio("audio/energy-aegis.wav"), new Audio("audio/flurry.wav"), new Audio("audio/liquify.wav"), new Audio("audio/frozen-tundra.wav"),
         new Audio("audio/air-bubbles.wav"), new Audio("audio/rock-orbit.wav"), new Audio("audio/celestial-attunement.wav"), new Audio("audio/enemy-attack.wav"), new Audio("audio/enemy-block.wav"), new Audio("audio/dragon-roar.wav"),
         new Audio("audio/dragon-growls.wav"), new Audio("audio/giant-footsteps.wav"), new Audio("audio/giant-groans.wav"), new Audio("audio/wizard-cast.wav"), new Audio("audio/spell-success.wav"), new Audio("audio/spell-fail.wav")];
-const allSoundFX = [fxFireball, fxCascadingFlames, fxStaticCharge, fxChainLightning, fxFrostbolt, fxFrostFingers, fxTornado, fxGaleForce, fxBloodCocoon, fxTidalImbuement, fxRockSmash, fxThornShield,
-        fxFirefall, fxKindredSpirits, fxPyromania, fxSummerSolstice, fxPhoenixFire, fxPotion, fxSurge, fxLectrasTouch, fxStormblessed, fxBallLightning, fxThunderCrash, fxSiphonHeat, fxWintersBreath, fxSnowNova, fxGlaciasSoul, fxIceRay, fxIcyImbuement, fxWindsOfChange, fxWindwalk, fxSphereOfAir, fxConvergingCurrent, fxTempiasFury, fxWaterWall, fxSanguineSpring, fxDownpour, fxTidalBinding, fxTsunami,
-        fxEarthSpikes, fxStoneBarrier, fxVineSheath, fxWeaveOfThorns, fxVineWhip, fxGaiasEmbrace, fxEnergyAegis, fxFrostfireFusion, fxFanTheFlames, fxCauterize, fxMagma, fxDeepFreeze, fxHurricane, fxElectricCurrent, fxFlurry, fxLiquify,
-        fxFrozenTundra, fxAirBubbles, fxRockOrbit, fxCelestialAttunement, fxEnemyAttack, fxEnemyBlock, fxDragonRoar, fxDragonGrowls, fxGiantFootsteps, fxGiantGroans, fxWizardCast, fxSpellSuccess, fxSpellFail];
+const allSoundFX = [fxFireball, fxCascadingFlames, fxStaticCharge, fxChainLightning, fxFrostbolt, fxFrostFingers, fxTornado, fxGaleForce, fxBloodCocoon, fxAerwynasTrident, fxRockSmash, fxThornShield,
+        fxFirefall, fxKindredSpirits, fxPyromania, fxSummerSolstice, fxPhoenixFire, fxPotion, fxSurge, fxLectrasTouch, fxStormblessed, fxBallLightning, fxThunderCrash, fxStormForm, fxSiphonHeat,
+        fxWintersBreath, fxSnowNova, fxGlaciasSoul, fxIceRay, fxIcyImbuement, fxWindsOfChange, fxWindwalk, fxSphereOfAir, fxConvergingCurrent, fxTempiasFury, fxZephyrInfusion, fxWaterWall,
+        fxSanguineSpring, fxDownpour, fxTidalBinding, fxTsunami, fxEarthSpikes, fxStoneBarricade, fxVineSheath, fxWeaveOfThorns, fxVineWhip, fxGaiasEmbrace, fxEssenceLeech, fxFrostfireFusion,
+        fxFanTheFlames, fxCauterize, fxMagmaBlast, fxDeepFreeze, fxHurricane, fxElectricCurrent, fxEnergyAegis, fxFlurry, fxLiquify, fxFrozenTundra, fxAirBubbles, fxRockOrbit, fxCelestialAttunement, fxEnemyAttack,
+        fxEnemyBlock, fxDragonRoar, fxDragonGrowls, fxGiantFootsteps, fxGiantGroans, fxWizardCast, fxSpellSuccess, fxSpellFail];
 function switchMusic() {
         allMusic.forEach(i => {
                 i.pause();
@@ -2058,12 +2063,15 @@ function mystery() {
                         document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1"><span style="color: #74ccf4">Aerwyna's Blessing:</span> Gain 8 regeneration next fight.</button>
                         <button class="exclamation-button-2"><span style="color: #81b14f">Gaia's Blessing:</span> Gain 10 thorns next fight.</button>`;
+                        fxSanguineSpring.play();
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 aquatasBlessing = true;
+                                fxWaterWall.play();
                                 switchArea(map, exclamationContainer);
                         });    
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 gaiaBlessing = true;
+                                fxGaiasEmbrace.play();
                                 switchArea(map, exclamationContainer);
                         });
                         dontRepeatExclamation.push(3);
@@ -2109,10 +2117,12 @@ function mystery() {
                         });
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 addCardToDeck(64, 0, true);
+                                fxCelestialAttunement.play();
                                 switchArea(map, exclamationContainer);
                         });    
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 addCardToDeck(44, 0, true);
+                                fxWeaveOfThorns.play();
                                 switchArea(map, exclamationContainer);
                         });
                         document.querySelector(".exclamation-button-3").addEventListener("click", () => {
@@ -2161,6 +2171,7 @@ function mystery() {
                         });
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 addCardToDeck(47, 0, true);
+                                fxGaiasEmbrace.play();
                                 switchArea(map, exclamationContainer);
                         });    
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
@@ -2222,6 +2233,7 @@ function mystery() {
                         <button class="exclamation-button-1"><span style="color: lightgreen">Enter anyway:</span> You didn't specialize in wisdom!</button>
                         <button class="exclamation-button-2"><span style="color: rgb(206, 83, 83)">Run away as fast as possible:</span> Gain windwalk</button>
                         <div id="mystery-card-display-container"></div>`;
+                        fxGhostAudio.play();
                         createCard(31, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
                         document.querySelector(".exclamation-button-2").addEventListener("mouseover", () => {
                                 document.querySelectorAll(".card-reference").forEach(i => {
@@ -2274,13 +2286,17 @@ function mystery() {
                         });
                                 document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                         addCardToDeck(53, 1, true);
+                                        fxGhostAudio.pause();
                                         switchArea(map, exclamationContainer);
                                 });
                                 document.querySelector(".exclamation-button-2").addEventListener("click", () => {
+                                        fxGhostAudio.pause();
                                         switchArea(map, exclamationContainer);
                                 });
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
+                                addCardToDeck(31, 0, true);
+                                fxGhostAudio.pause();
                                 switchArea(map, exclamationContainer);
                         });
                         dontRepeatExclamation.push(7);
@@ -2313,7 +2329,7 @@ function mystery() {
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 for (let i = 0; i < allCurrentCards.length; i++) {
                                         if (allCurrentCards[i].classList.contains(37) && allCurrentCards[i].classList.contains("upgraded")) {
-                                                fxSpellSuccess.play();
+                                                fxSanguineSpring.play();
                                                 exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
                                                 for (let j = 0; j < cardsInformation.length; j++) {
                                                         if (cardsInformation[j].element.includes("ice") && j !== 51) {
@@ -2343,8 +2359,9 @@ function mystery() {
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 for (let i = 0; i < allCurrentCards.length; i++) {
                                         if (allCurrentCards[i].classList.contains(37) && allCurrentCards[i].classList.contains("upgraded")) {
-                                        addCardToDeck(30, 1, true);
-                                        switchArea(map, exclamationContainer);
+                                                fxWindsOfChange.play();
+                                                addCardToDeck(30, 1, true);
+                                                switchArea(map, exclamationContainer);
                                         }
                                 }
                         });
@@ -2359,7 +2376,7 @@ function mystery() {
                                 `"I could use someone of your talents. What do you say?"`);
                         document.querySelector(".exclamation-button-div").innerHTML = `
                                 <button class="exclamation-button-1" style="height: 35%"> <span style="color: rgb(206, 83, 83)">Slay the Werewolf:</span> Gain 150 aether and lose 20 health</button>
-                                <button class="exclamation-button-2" style="height: 35%"> <span style="color: rgb(206, 83, 83)">Slay the Vampire:</span> Empower all of your blood siphon cards and lose 15 health</button>
+                                <button class="exclamation-button-2" style="height: 35%"> <span style="color: rgb(206, 83, 83)">Slay the Vampire:</span> Empower all of your blood siphon cards and lose 25 health</button>
                                 <button class="exclamation-button-3" style="height: 35%"> <span style="color: lightgreen">You don't trust the man:</span> Grab your drink and head for the door</button>
                                 <div id="mystery-card-display-container"></div>`;
                         document.querySelectorAll(".card").forEach(i => {
@@ -2384,10 +2401,15 @@ function mystery() {
                                 playerAether.innerText = parseFloat(playerAether.innerText) + 150;
                                 playerCurrentHealth.innerText -= 20;
                                 topBarHealthNumber.innerText -= 20;
+                                checkHealth();
                                 switchArea(map, exclamationContainer);
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 slainVampire = true;
+                                playerCurrentHealth.innerText -= 25;
+                                topBarHealthNumber.innerText -= 25;
+                                checkHealth();
+                                fxBloodCocoon.play();
                                 document.querySelectorAll(".card").forEach((i) => {
                                         for (let j = 0; j < cardsInformation.length; j++) {
                                                 if (i.classList.contains(j) && "blood" in cardsInformation[j] && cardsInformation[j].blood[0] !== 0) {
@@ -2484,10 +2506,12 @@ function mystery() {
                         });
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 addCardToDeck(37, 1, true);
+                                fxSanguineSpring.play();
                                 switchArea(map, exclamationContainer);
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 addCardToDeck(34, 0, true);
+                                fxTempiasFury.play();
                                 switchArea(map, exclamationContainer);
                         });
                         dontRepeatExclamation.push(10);
@@ -2576,6 +2600,7 @@ function mystery() {
                                                         </div>`;
                                                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                                                 playerEmberNumber = 10;
+                                                                fxCascadingFlames.play();
                                                                 displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
                                                                 switchArea(map, exclamationContainer);
                                                         });
@@ -2651,6 +2676,7 @@ function mystery() {
                                                 });
                                         });
                                 } else {
+                                        fxFirefall.play();
                                         exclamationContainer.innerHTML = `
                                         <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
                                                 <div class="exclamation-information-container">
@@ -2674,6 +2700,7 @@ function mystery() {
                                         });
                                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                                 playerEmberNumber = 7;
+                                                fxKindredSpirits.play();
                                                 displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
                                                 switchArea(map, exclamationContainer);
                                         });
@@ -2703,6 +2730,7 @@ function mystery() {
                                 });
                                 document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                         playerEmberNumber = 7;
+                                        fxKindredSpirits.play();
                                         displayBlock(playerBurnDiv, playerBurnImg, playerBurnNumber);
                                         switchArea(map, exclamationContainer);
                                 });
@@ -2740,6 +2768,7 @@ function mystery() {
                         });
                         if (document.querySelectorAll(".lightning").length > 0) {
                                 document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                        fxThunderCrash.play();
                                         exclamationContainer.innerHTML = `<div id="all-cards-list"></div>`;
                                         document.querySelectorAll(".card").forEach((i) => {
                                                 for (let j = 0; j < cardsInformation.length; j++) {
@@ -2784,6 +2813,7 @@ function mystery() {
                         }
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 addCardToDeck(17, 0, true);
+                                fxPotion.play();
                                 switchArea(map, exclamationContainer);
                         });
                         dontRepeatExclamation.push(12);
@@ -2905,7 +2935,7 @@ function mystery() {
                                                                 empowerCard();
                                                         });
                                                 } else if (i.classList.contains(52)) {
-                                                        fxMagma.play();
+                                                        fxMagmaBlast.play();
                                                         exclamationContainer.innerHTML = `
                                                         <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
                                                                 <div class="exclamation-information-container">
@@ -3028,21 +3058,27 @@ function mystery() {
                                 }
                                 if (firePoints > lightningPoints && firePoints > icePoints && firePoints > airPoints && firePoints > waterPoints && firePoints > earthPoints) {
                                         elementChoice = "fire";
+                                        fxFireball.play();
                                         upgradeCard(elementChoice);
                                 } else if (lightningPoints > firePoints && lightningPoints > icePoints && lightningPoints > airPoints && lightningPoints > waterPoints && lightningPoints > earthPoints) {
                                         elementChoice = "lightning";
+                                        fxLectrasTouch.play();
                                         upgradeCard(elementChoice);
                                 } else if (icePoints > firePoints && icePoints > lightningPoints && icePoints > airPoints && icePoints > waterPoints && icePoints > earthPoints) {
                                         elementChoice = "ice";
+                                        fxGlaciasSoul.play();
                                         upgradeCard(elementChoice);
                                 } else if (airPoints > firePoints && airPoints > lightningPoints && airPoints > icePoints && airPoints > waterPoints && airPoints > earthPoints) {
                                         elementChoice = "air";
+                                        fxConvergingCurrent.play();
                                         upgradeCard(elementChoice);
                                 } else if (waterPoints > firePoints && waterPoints > lightningPoints && waterPoints > icePoints && waterPoints > airPoints && waterPoints > earthPoints) {
                                         elementChoice = "water";
+                                        fxWaterWall.play();
                                         upgradeCard(elementChoice);
                                 } else if (earthPoints > firePoints && earthPoints > lightningPoints && earthPoints > icePoints && earthPoints > airPoints && earthPoints > waterPoints) {
                                         elementChoice = "earth";
+                                        fxStoneBarricade.play();
                                         upgradeCard(elementChoice);
                                 } else {
                                         elementChoice = "none";
@@ -3181,6 +3217,7 @@ function mystery() {
                                 `Fast as lightning, she reaches for your spell book. Before you have a chance to react, she engulfs your spells in a dark liquid emenating from her hands. She swiftly flies away and is gone in a blink.`);
                         document.querySelector(".exclamation-button-div").innerHTML = `<button class="exclamation-button-1">Your entire starting hand has been swapped!</button>`
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
+                                fxPyromania.play();
                                 // DESTROY OPENING HAND CARDS
                                 document.querySelectorAll(".card").forEach((i) => {
                                         for (let j = 0; j < 12; j++) {
@@ -3194,7 +3231,7 @@ function mystery() {
                                                                 destroyedCardsContainer.appendChild(i);
                                                         }
                                                 }
-                                        }   
+                                        }
                                 });
                                 destroyedCardsContainer.innerHTML = ``;
                                 destroyedCardsArray = [];
@@ -3952,7 +3989,7 @@ const cardsInformation = [
                 action:
                 [
                         function() {
-                                fxTidalImbuement.play();
+                                fxAerwynasTrident.play();
                                 spendMana(2);
                                 if (icyEmbuement) {
                                         damageAllEnemies(18);
@@ -3986,7 +4023,7 @@ const cardsInformation = [
                                 }
                         },
                         function() {
-                                fxTidalImbuement.play();
+                                fxAerwynasTrident.play();
                                 spendMana(2);
                                 if (icyEmbuement) {
                                         damageAllEnemies(18);
@@ -4039,7 +4076,7 @@ const cardsInformation = [
                 action:
                 [ 
                         function() {
-                                fxEarthShatter.play();
+                                fxRockSmash.play();
                                 spendMana(1);
                                 let damageDone = damageEnemy(8, chosenEnemy);
                                 if (icyEmbuement) {
@@ -4053,7 +4090,7 @@ const cardsInformation = [
                                 }
                         },
                         function() {
-                                fxEarthShatter.play();
+                                fxRockSmash.play();
                                 spendMana(1);
                                 let damageDone = damageEnemy(12, chosenEnemy);
                                 if (icyEmbuement) {
@@ -4167,13 +4204,13 @@ const cardsInformation = [
                                 burnSelf(5);
                                 pyromania = true;
                                 displayBlock(playerBurnImg, playerBurnNumber);
-                                fxKindredSpirits.play();
+                                fxPyromania.play();
                         },
                         function() {
                                 burnSelf(8);
                                 pyromania = true;
                                 displayBlock(playerBurnImg, playerBurnNumber);
-                                fxKindredSpirits.play();
+                                fxPyromania.play();
                         }
                 ]        
         },
@@ -4198,7 +4235,7 @@ const cardsInformation = [
                                                 enemyBurnNumber[i].innerText = parseFloat(Math.floor(enemyBurnNumber[i].innerText * 1.5));
                                         }
                                 }
-                                fxFirefall.play();
+                                fxSummerSolstice.play();
                         },
                         function() {
                                 spendMana(1);
@@ -4210,7 +4247,7 @@ const cardsInformation = [
                                                 enemyBurnNumber[i].innerText = parseFloat(Math.floor(enemyBurnNumber[i].innerText * 1.75));
                                         }
                                 }
-                                fxFirefall.play();
+                                fxSummerSolstice.play();
                         }
                 ]
         },
@@ -4274,7 +4311,7 @@ const cardsInformation = [
                 [
                         function() {
                                 currentMana.innerText = parseFloat(currentMana.innerText) + parseFloat(playerEnergizeNumber.innerText);
-                                fxConduit.play();
+                                fxSurge.play();
                         },
                         function() {
                                 currentMana.innerText = parseFloat(currentMana.innerText) + parseFloat(playerEnergizeNumber.innerText);
@@ -4283,7 +4320,7 @@ const cardsInformation = [
                                         randomEnemy = createRandomNumber(0, numberOfEnemies - 1);
                                 }
                                 damageEnemy(playerEnergizeNumber.innerText, randomEnemy);
-                                fxConduit.play();
+                                fxSurge.play();
                         }
                 ]
         },
@@ -4303,13 +4340,13 @@ const cardsInformation = [
                                 spendMana(1);
                                 let electrocuteDamage = damageEnemy(10, chosenEnemy);
                                 gainEnergize(Math.floor(electrocuteDamage / 5));
-                                fxConduit.play();
+                                fxLectrasTouch.play();
                         },
                         function() {
                                 spendMana(1);
                                 let electrocuteDamage = damageEnemy(15, chosenEnemy);
                                 gainEnergize(Math.floor(electrocuteDamage / 5));
-                                fxConduit.play();
+                                fxLectrasTouch.play();
                         }
                 ]
         },
@@ -4430,12 +4467,12 @@ const cardsInformation = [
                         function() {
                                 spendMana(4);  
                                 damageEnemy(40 + (currentMana.innerText * 20), chosenEnemy);
-                                fxConduit.play();
+                                fxThunderCrash.play();
                         },
                         function() {
                                 spendMana(4);  
                                 damageEnemy(40 + (currentMana.innerText * 30), chosenEnemy);
-                                fxConduit.play();
+                                fxThunderCrash.play();
                         }
                 ]
         },
@@ -4476,12 +4513,12 @@ const cardsInformation = [
                         function() {
                                 siphonHeat = true;
                                 inflictFrostbite(chosenEnemy);
-                                fxIceNova.play();
+                                fxSiphonHeat.play();
                         },
                         function() {
                                 siphonHeatEmpowered = true;
                                 inflictFrostbite(chosenEnemy);
-                                fxIceNova.play();
+                                fxSiphonHeat.play();
                         }
                 ]
         },
@@ -4505,7 +4542,7 @@ const cardsInformation = [
                                         playerFrostbite = false;
                                         displayNone(playerFrostbiteImg);                 
                                 }
-                                fxIceNova.play();
+                                fxWintersBreath.play();
                         },
                         function() {
                                 spendMana(1);
@@ -4515,7 +4552,7 @@ const cardsInformation = [
                                         playerFrostbite = false;
                                         displayNone(playerFrostbiteImg);                 
                                 }
-                                fxIceNova.play();
+                                fxWintersBreath.play();
                         }
                 ]
         },
@@ -4536,14 +4573,14 @@ const cardsInformation = [
                                 damageAllEnemies(14);
                                 inflictAllFrostbite();
                                 frostbiteSelf();
-                                fxIceNova.play();
+                                fxSnowNova.play();
                         },
                         function() {
                                 spendMana(2);
                                 damageAllEnemies(21);
                                 inflictAllFrostbite();
                                 frostbiteSelf();
-                                fxIceNova.play();
+                                fxSnowNova.play();
                         }
                 ]
         },
@@ -4563,13 +4600,13 @@ const cardsInformation = [
                                 frostbiteSelf();
                                 frostbitten = true;
                                 displayBlock(playerGlaciasSoulImg);
-                                fxFrostbitten.play();
+                                fxGlaciasSoul.play();
                         },
                         function() {
                                 frostbiteSelf();
                                 frostbitten = true;
                                 displayBlock(playerGlaciasSoulImg);
-                                fxFrostbitten.play();
+                                fxGlaciasSoul.play();
                         }
                 ]
         },
@@ -4597,7 +4634,7 @@ const cardsInformation = [
                                         }
                                 }
                                 damageEnemy((frostbiteEnemies.length) * 10, chosenEnemy);
-                                fxRayOfIce.play();
+                                fxIceRay.play();
                         },
                         function() {
                                 spendMana(1);
@@ -4611,7 +4648,7 @@ const cardsInformation = [
                                         }
                                 }
                                 damageEnemy((frostbiteEnemies.length) * 15, chosenEnemy);
-                                fxRayOfIce.play();
+                                fxIceRay.play();
                         }
                 ]
         },
@@ -4629,12 +4666,12 @@ const cardsInformation = [
                         function() {
                                 spendMana(3);
                                 icyEmbuement = true;
-                                fxPotion.play();
+                                fxIcyImbuement.play();
                         },
                         function() {
                                 spendMana(2);
                                 icyEmbuement = true;
-                                fxPotion.play();
+                                fxIcyImbuement.play();
                         }
                 ]
         },
@@ -4721,7 +4758,7 @@ const cardsInformation = [
                                                 sphereOfAir += 4;
                                         }
                                 }
-                                fxWindwalk.play();
+                                fxSphereOfAir.play();
                         },
                         function() {
                                 damageAllEnemies(sphereOfAir);
@@ -4731,7 +4768,7 @@ const cardsInformation = [
                                                 sphereOfAir += 6;
                                         }
                                 }
-                                fxWindwalk.play();
+                                fxSphereOfAir.play();
                         }
                 ]
         },
@@ -4778,7 +4815,7 @@ const cardsInformation = [
                                 } else if (discardPileArray.length > 0) {
                                         drawCard(discardPileContainer, discardPileArray);
                                 }
-                                fxGust.play();
+                                fxConvergingCurrent.play();
                         },
                         function() {
                                 spendMana(1);
@@ -4812,7 +4849,7 @@ const cardsInformation = [
                                 } else if (discardPileArray.length > 0) {
                                         drawCard(discardPileContainer, discardPileArray);
                                 }
-                                fxGust.play();
+                                fxConvergingCurrent.play();
                         }
                 ]
         },
@@ -4831,13 +4868,13 @@ const cardsInformation = [
                                 spendMana(1);
                                 tempiasFury = true;
                                 displayBlock(playerTempiasFuryImg);
-                                fxGust.play();
+                                fxTempiasFury.play();
                         },
                         function() {
                                 spendMana(1);
                                 tempiasFury = true;
                                 displayBlock(playerTempiasFuryImg);
-                                fxGust.play();
+                                fxTempiasFury.play();
                         }
                 ]
         },
@@ -4855,12 +4892,12 @@ const cardsInformation = [
                         function() {
                                 spendMana(3);
                                 maxHandLength++;
-                                fxPotion.play();
+                                fxZephyrInfusion.play();
                         },
                         function() {
                                 spendMana(2);
                                 maxHandLength++;
-                                fxPotion.play();
+                                fxZephyrInfusion.play();
                         }
                 ]
         },
@@ -4878,12 +4915,12 @@ const cardsInformation = [
                         function() {
                                 spendMana(2);
                                 waterOrb = true;
-                                fxSanguineSpring.play();
+                                fxWaterWall.play();
                         },
                         function() {
                                 spendMana(1);
                                 waterOrb = true;
-                                fxSanguineSpring.play();
+                                fxWaterWall.play();
                         }
                 ]
         },
@@ -4963,12 +5000,12 @@ const cardsInformation = [
                         function() {
                                 spendMana(1);
                                 playerHeal(Math.floor((playerCurrentHealth.innerText - playerMaxHealth.innerText) * -.2));
-                                fxSanguineSpring.play();
+                                fxTidalBinding.play();
                         },
                         function() {
                                 spendMana(1);
                                 playerHeal(Math.floor((playerCurrentHealth.innerText - playerMaxHealth.innerText) * -.3));
-                                fxSanguineSpring.play();
+                                fxTidalBinding.play();
                         }
                 ]
         },
@@ -5043,14 +5080,14 @@ const cardsInformation = [
                                 gainBlock(4);
                                 gainThorns(1);
                                 skippingRocks.push(true);
-                                fxEarthBarrier.play();
+                                fxEarthSpikes.play();
                         },
                         function() {
                                 spendMana(2);
                                 gainBlock(4);
                                 gainThorns(1);
                                 skippingRocks.push(true);
-                                fxEarthBarrier.play();
+                                fxEarthSpikes.play();
                         }
                 ]
         },
@@ -5071,14 +5108,14 @@ const cardsInformation = [
                                 if (playerBlockNumber.innerText == 0) {
                                         gainBlock(26);
                                 }
-                                fxQuakingJolt.play();
+                                fxStoneBarricade.play();
                         },
                         function() {
                                 spendMana(2);
                                 if (playerBlockNumber.innerText == 0) {
                                         gainBlock(40);
                                 }
-                                fxQuakingJolt.play();
+                                fxStoneBarricade.play();
                         }
                 ]
         },
@@ -5204,7 +5241,7 @@ const cardsInformation = [
                                                 }
                                         }
                                 }
-                                fxForestFire.play();
+                                fxEssenceLeech.play();
                         },
                         function() {
                                 burnAllEnemies(3);
@@ -5215,7 +5252,7 @@ const cardsInformation = [
                                                 }
                                         }
                                 }
-                                fxForestFire.play();
+                                fxEssenceLeech.play();
                         }
                 ]
         },
@@ -5335,13 +5372,13 @@ const cardsInformation = [
                                 spendMana(3);
                                 burnEnemy(6, chosenEnemy);
                                 gainBlock(parseFloat(enemyBurnNumber[chosenEnemy].innerText));
-                                fxMagma.play();
+                                fxMagmaBlast.play();
                         },
                         function() {
                                 spendMana(2);
                                 burnEnemy(6, chosenEnemy);
                                 gainBlock(parseFloat(enemyBurnNumber[chosenEnemy].innerText));
-                                fxMagma.play();
+                                fxMagmaBlast.play();
                         }
                 ]
         },
@@ -5465,13 +5502,13 @@ const cardsInformation = [
                                 spendMana(1);
                                 gainEnergize(1);
                                 gainBlock(parseFloat(playerEnergizeNumber.innerText) * 8);
-                                fxQuakingJolt.play();
+                                fxEnergyAegis.play();
                         },
                         function() {
                                 spendMana(1);
                                 gainEnergize(2);
                                 gainBlock(parseFloat(playerEnergizeNumber.innerText) * 8);
-                                fxQuakingJolt.play();
+                                fxEnergyAegis.play();
                         }
                 ]
         },
@@ -5668,12 +5705,12 @@ const cardsInformation = [
                         function() {
                                 spendMana(4);
                                 terrasBlessing.push(true);
-                                fxPotion.play();
+                                fxGaiasEmbrace.play();
                         },
                         function() {
                                 spendMana(4);
                                 terrasBlessingEmpowered.push(true);
-                                fxPotion.play();
+                                fxGaiasEmbrace.play();
                         }
                 ]
         },
@@ -5693,7 +5730,6 @@ const cardsInformation = [
                         },
                         function() {
                                 playerAether.innerText = parseFloat(playerAether.innerText) + 20;
-                                fxPotion.play();
                         }
                 ]
         },        
