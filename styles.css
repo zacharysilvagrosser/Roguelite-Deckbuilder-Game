@@ -960,7 +960,7 @@
     width: 50px;
     text-align: center;
     display: none;
-    margin-right: 10.7rem;
+    margin-right: 11rem;
 }
 #player-block-number {
     position: absolute;
@@ -969,7 +969,7 @@
     width: 100px;
     display: none;
     color: white;
-    margin-right: 10.7rem;
+    margin-right: 11rem;
     cursor: default;
 }
 #player-health-numbers { 
@@ -1186,7 +1186,7 @@
     width: 50px;
     text-align: center;
     display: none;
-    margin-right: 9.5rem;
+    margin-right: 11rem;
 }
 .enemy-block-number {
     position: absolute;
@@ -1195,7 +1195,7 @@
     width: 100px;
     display: none;
     color: white;
-    margin-right: 9.5rem;
+    margin-right: 11rem;
     cursor: default;
 }
 .enemy-buffs, .enemy-debuffs {
@@ -1880,7 +1880,7 @@ img[src="imgs/undefined-icon.png"] {
     display: none;
   }
 .upgraded-text {
-    color: rgb(186, 79, 248)
+    color: rgb(223, 167, 255);
 }
 .upgrade-reference {
     position: relative;
