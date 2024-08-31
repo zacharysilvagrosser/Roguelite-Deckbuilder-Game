@@ -16,7 +16,8 @@
             <div id="relic-container"></div>
             <div id="top-bar-aether">
                 <img style="max-width: 100%; height: auto;" src="imgs/aether-icon.png"><p id="top-bar-aether-number">0</p>
-            </div>           
+            </div>
+            <img id="settings" src="imgs/gear-icon.png">
         </div>
     </header>
     <main>        
@@ -243,7 +244,8 @@
                 <input type="range" min="0" max="1" step="0.01" id="ambience-slider" />  
                 <h3 for="soundfx-slider">Sound Effects Volume</h3>
                 <input type="range" min="0" max="1" step="0.01" id="soundfx-slider" />  
-                <button id="options-screen-exit-button">Exit</button>
+                <button id="options-tutorial-button" style="margin-top: 6rem">Tutorial</button>
+                <button id="options-screen-exit-button" style="margin-top: 1.5rem">Exit</button>
             </div>
         </div>
         <div id="tutorial-container">
@@ -271,7 +273,7 @@
                 </div>
                 <div class="tutorial-icon-div">
                     <img class="tutorial-icon" src="imgs/icons8-gold-bars-64.png" alt="Gold">
-                    <p>A stronger group of enemies await you, but you will be rewarded with more currency than a normal fight.</p>
+                    <p>A stronger group of enemies awaits you, but you will be rewarded with more currency than a normal fight.</p>
                 </div>
                 <div class="tutorial-icon-div">
                     <img class="tutorial-icon" src="imgs/icons8-treasure-chest-50.png" alt="Treasure"> 
@@ -312,7 +314,7 @@
                     <div>
                         <h4 class="tutorial-h-color" style="color: #84e8ff">Ice</h4>
                         <p>Ice cards focus on inflicting frostbite which reduces buffs gained by 50%.</p>
-                        <p>Some cards can help you gain block which helps negate damage.</p>
+                        <p>Some cards help generate more buffs for yourself or even steal buffs from enemies.</p>
                         <p>Ice cards are best against enemies that try to gain buffs rather than attacking each turn.</p>
                     </div>
                     <div>
@@ -324,15 +326,28 @@
                     <h3 class="tutorial-h-color">Support Cards</h3>
                     <div>
                         <h4 class="tutorial-h-color" style="color: #104b79">Water</h4>
-                        <p>Water cards focus on healing.</p>
-                        <p>Some cards activate blood siphon which heals you for 20% of the damage you deal.</p>
-                        <p>Some cards activate regeneration which heals you at the end of each turn.</p>
+                        <p>Water cards focus on healing through regeneration and blood siphon.</p>
+                        <p>Regeneration heals you at the end of each turn.</p>
+                        <p>Blood siphon heals you for 20% of the damage you deal.</p>
                     </div>
                     <div>
                         <h4 class="tutorial-h-color" style="color: #451b04">Earth</h4>
                         <p>Earth cards focus on blocking and gaining thorns.</p>
                         <p>Block prevents damage by shielding your health.</p>
                         <p>Thorns deals damage back to attackers when they directly damage you with an attack.</p>
+                    </div>
+                    <h3 class="tutorial-h-color">Card Types</h3>
+                    <div>
+                        <h4 class="tutorial-h-color">[Ethereal]</h4>
+                        <p>Ethereal cards can only be used once per battle.</p>
+                    </div>
+                    <div>
+                        <h4 class="tutorial-h-color">[Aura]</h4>
+                        <p>Aura cards will be in effect for the entire battle.</p>
+                    </div>
+                    <div>
+                        <h4 class="tutorial-h-color">[Shifting]</h4>
+                        <p>When you play a shifting card, all shifting cards gain damage until the end of the battle.</p>
                     </div>
                 </div>
             </div>

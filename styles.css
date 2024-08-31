@@ -10,7 +10,7 @@
     height: 5vh;
     background-color: rgb(63, 92, 100);
     display: none;
-    z-index: 10;
+    z-index: 21;
     color: white;
 }
 #board-header div {
@@ -39,6 +39,12 @@
     height: 48px;
     margin-top: -2px;
 }
+#settings {
+    max-width: 100%;
+    height: auto;
+    opacity: .6;
+    transition: .2s;
+}
 #beginning-screen-container {
     width: 100%;
     height: 100vh;
@@ -46,6 +52,7 @@
     align-items: center;
     justify-content: center;
     background-image: url("imgs/start-screen.jpeg");
+    background-size: cover;
     opacity: .7;
     color: white;
     font-weight: bolder;
@@ -75,13 +82,13 @@
 }
 #start-screen-container h1 {
     padding: 1rem;
-    margin-top: 2rem;
     font-size: 8.5vw;
     text-decoration: dashed;
     cursor: default;
     font-family: fantasy;
     text-shadow: 7px 7px 12px rgb(34, 34, 34);
 }
+
 #start-screen-container h3 {
     margin: 3rem;
     cursor: pointer;
@@ -216,7 +223,6 @@
     text-shadow: 2px 2px 5px rgb(100, 100, 100);
 }
 #options-screen button {
-    margin-top: 12rem;
     width: 400px;
     padding: 15px;
     font-size: 20px;
@@ -255,7 +261,7 @@
     align-items: center;
     justify-content: center;
     cursor: default;
-    z-index: 14;
+    z-index: 21;
 }
 #tutorial-screen {
     width: 90%;
@@ -1309,6 +1315,10 @@
     transform: translateY(0);
 }
 /* EXCLAMATION */
+#exclamation-container {
+    position: absolute;
+    z-index: 10;
+}
 .exclamation-div {
     width: 100%;
     height: 100vh;

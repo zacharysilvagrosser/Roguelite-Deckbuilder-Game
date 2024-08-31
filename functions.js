@@ -6,21 +6,16 @@ jesus turns water cards to wine cards; set sun background to night 3 times befor
 Shifting cards evolve after reaching a certain damage threshold
 
 TO DO
-Settings gear when hitting escape for music and sound volume
+///Settings gear when hitting escape for music and sound volume
 no wine card art
 fix jesus
-Create tutorial text for ethereal and aura
-///realign all sound effects
-///play sound effects when the spirits appear in mystery()
-///converted all health gains to playerheal function
+///Create tutorial text for ethereal and aura
 
 BUGS
-used cauterize then chain lightning health went NaN
 water wall is healing for full health
 ?deepfreeze update regular text
 ?keep lumaishas enemy health bars black
 ?dynamic update cards windswept isnt working
-?heaven treasure background change in treasure function
 
 */
 /*
@@ -142,6 +137,22 @@ startGame.addEventListener("click", () => {
                 const forestAmbience = new Audio("audio/forest-ambience.wav");
                 switchAmbience(forestAmbience);
                 displayNone(startScreen, document.querySelector("#difficulty-container"));
+                document.getElementById("settings").addEventListener("click", () => {
+                        if ((optionsContainer.style.display == "" || optionsContainer.style.display == "none")) {
+                                displayFlex(optionsContainer);
+                                return;
+                        }
+                        if (optionsContainer.style.display == "flex") {
+                                displayNone(optionsContainer);
+                                return;
+                        }
+                });
+                document.getElementById("settings").addEventListener("mouseover", () => {
+                        document.getElementById("settings").style.opacity = "1";
+                });
+                document.getElementById("settings").addEventListener("mouseout", () => {
+                        document.getElementById("settings").style.opacity = ".6";
+                });
         }
         displayFlex(document.querySelector("#difficulty-container"));
         document.querySelector("#easy").addEventListener("click", () => {
@@ -166,6 +177,12 @@ startGame.addEventListener("mouseout", () => {
         displayNone(arrows[0], arrows[1]);
 });
 tutorial.addEventListener("click", () => {
+        displayFlex(document.querySelector("#tutorial-container"));
+        document.querySelector("#tutorial-exit").addEventListener("click", () => {
+                displayNone(document.querySelector("#tutorial-container"));
+        }, {once: true});
+});
+document.getElementById("options-tutorial-button").addEventListener("click", () => {
         displayFlex(document.querySelector("#tutorial-container"));
         document.querySelector("#tutorial-exit").addEventListener("click", () => {
                 displayNone(document.querySelector("#tutorial-container"));
@@ -7537,7 +7554,7 @@ const enemiesInformation = [
                 name: "Zeus",
                 index: 42,
                 baseHealth: 300,
-                img: "imgs/elite-zeus.png",
+                img: "imgs/elite-zeus2.png",
                 attackChance: 10,
                 attackDamageLow: 20,
                 attackDamageHigh: 30,
