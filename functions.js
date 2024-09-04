@@ -3,20 +3,17 @@ Light and Dark/Summoner/Celestial/Temporal based class has a light and dark mete
 face corrupted elemental spirits as boss battle
 Have hallowwood monsters (witches) either rez as ghost or zombie/skeleton
 jesus turns water cards to wine cards; set sun background to night 3 times before jesus rezes
+zeus lighting cards get empowered
 Shifting cards evolve after reaching a certain damage threshold
 
 TO DO
-///Settings gear when hitting escape for music and sound volume
-no wine card art
-fix jesus
-///Create tutorial text for ethereal and aura
+Tutorial lists what are buffs and debuffs and what they do
+Add a tutorial reference guide button staight onto the top board UI
 
 BUGS
-water wall is healing for full health
-?deepfreeze update regular text
 ?keep lumaishas enemy health bars black
 ?dynamic update cards windswept isnt working
-
+clicking two winds of change uses both cards when played
 */
 /*
 START SCREEN SECTION
@@ -91,6 +88,26 @@ window.addEventListener("keydown", () => {
         displayFlex(startScreen);
         const startScreenMusic = new Audio("audio/start-screen-music.wav");
         switchMusic(startScreenMusic);
+        window.addEventListener("keydown", e => {
+            if (e.key === "t" && (document.querySelector("#tutorial-container").style.display == "" || document.querySelector("#tutorial-container").style.display == "none")) {
+                    displayFlex(document.querySelector("#tutorial-container"));
+                    return;
+            }
+            if (e.key === "t" && document.querySelector("#tutorial-container").style.display == "flex") {
+                    displayNone(document.querySelector("#tutorial-container"));
+                    return;
+            }
+        });
+        window.addEventListener("keydown", e => {
+            if (e.key === "Escape" && (optionsContainer.style.display == "" || optionsContainer.style.display == "none")) {
+                    displayFlex(optionsContainer);
+                    return;
+            }
+            if (e.key === "Escape" && optionsContainer.style.display == "flex") {
+                    displayNone(optionsContainer);
+                    return;
+            }
+        });
 }, {once: true});
 let [easyDifficulty, normalDifficulty, hardDifficulty] = [false, false, false];
 let mapMusicIndex;
@@ -196,16 +213,6 @@ tutorial.addEventListener("mouseout", () => {
 });
 document.querySelector("#options-screen-exit-button").addEventListener("click", () => {
         displayNone(optionsContainer);
-});
-window.addEventListener("keydown", e => {
-        if (e.key === "Escape" && (optionsContainer.style.display == "" || optionsContainer.style.display == "none")) {
-                displayFlex(optionsContainer);
-                return;
-        }
-        if (e.key === "Escape" && optionsContainer.style.display == "flex") {
-                displayNone(optionsContainer);
-                return;
-        }
 });
 options.addEventListener("click", () => {
         displayFlex(optionsContainer);
@@ -969,7 +976,6 @@ let dontRepeatEliteEncounter = [];
 let eliteEncounterMusicTrigger = false;
 let eliteEncounterMusicIndex;
 let jesusHasRisen = false;
-let holdWaterCards = [];
 function eliteEncounter() {
         if (!eliteEncounterMusicTrigger) {
                 if (faeForest) {
@@ -1013,7 +1019,7 @@ function eliteEncounter() {
                 if (dontRepeatEliteEncounter.includes(7) && dontRepeatEliteEncounter.includes(8)/* && dontRepeatEliteEncounter.includes(9)*/) {
                         encounter();
                 } else {
-                        randomEliteNumber = createRandomNumber(7, 8);
+                        randomEliteNumber = createRandomNumber(9, 9);
                         while (dontRepeatEliteEncounter.includes(randomEliteNumber)) {
                                 randomEliteNumber = createRandomNumber(7, 8);        
                         }
@@ -1074,28 +1080,27 @@ function eliteEncounter() {
                         break;
                 case 9:
                         createEliteEnemy("Jesus", 44, 9);
-                        document.querySelector(".enemy-img").style = "width: 450px";
+                        document.querySelector(".enemy-img").style = "width: 360px";
                         document.querySelector(".enemy-div").style = "position: absolute; left: -2rem; bottom: 9rem";
                         document.querySelectorAll(".card").forEach(i => {
                                 for (let j = 0; j < cardsInformation.length; j++) {
                                         if (i.classList.contains(j) && cardsInformation[j].element === "water") {
-                                                holdWaterCards.push(j);
-                                                function removeCard(pile) {
+                                                addCardToDeck(65, 0, false);
+                                                function holdCard(pile) {
                                                         pile.forEach((k) => {
                                                                 if (k.classList.contains(j)) {
                                                                         let spliceCard = pile.splice(pile.indexOf(k), 1).pop();
-                                                                        destroyedCardsArray.push(spliceCard);
-                                                                        destroyedCardsContainer.appendChild(spliceCard);
-                                                                        destroyedCardsArray = [];
-                                                                        destroyedCardsContainer.innerHTML = ``;
+                                                                        etherealCards.push(spliceCard);
+                                                                        etherealCardsContainer.appendChild(spliceCard);
                                                                 }
                                                         });
                                                 }
-                                                removeCard(drawPileArray);
-                                                removeCard(handArray);
-                                                addCardToDeck(53, 0, false);
+                                                holdCard(drawPileArray);
+                                                holdCard(handArray);
                                         }
                                 }
+                                reshuffleCards();
+                                drawCards(maxHandLength);
                         });
                         jesusHasRisen = true;
                         break;
@@ -1121,7 +1126,7 @@ function boss() {
                         randomBossNumber = createRandomNumber(3, 4);
                 }
         } else {
-                displayFlex(document.querySelector("#board-header"), exclamationContainer);
+                displayFlex(exclamationContainer);
                 const fire = document.querySelectorAll(".fire");
                 const lightning = document.querySelectorAll(".lightning");
                 const ice = document.querySelectorAll(".ice");
@@ -1192,7 +1197,7 @@ function boss() {
                                         </p>
                                         </div>
                                         <div class="exclamation-button-div">
-                                                <button class="exclamation-button-1">Venture through Fae Forest</button>
+                                                <button class="exclamation-button-1">Face the final challenge</button>
                                         </div>
                                 </div>
                         </div>
@@ -1200,7 +1205,7 @@ function boss() {
                 document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                         const heavenBossMusic = new Audio("audio/heaven-boss-music.wav");
                         switchMusic(heavenBossMusic);
-                        switchArea(arena, map);
+                        switchArea(arena, exclamationContainer);
                 });
                 displayNone(arena);
         }
@@ -1279,7 +1284,7 @@ function treasure() {
                 <div id="treasure-container">
                         <div style="text-align: center">
                                 <h1>Choose a Blessing</h1>
-                                <h2>Gain a gift you can use once per battle</h2>
+                                <h2>Click on your glowing elemental orb to use your blessing once per battle</h2>
                         </div>
                         <div class="treasure-element-div">
                                 <h2 style="color: #74ccf4">Aerwyna's Gift</h2>
@@ -1475,6 +1480,8 @@ function spaceEndTurn(e) {
         }
 }
 function randomizeLocations() {
+    let hasBlacksmith = false;
+    let hasShop = false;
         function getLocations(location) {
                 let randomLocation = createRandomNumber(1, 100);
                 if (randomLocation <= 45) {
@@ -1494,6 +1501,20 @@ function randomizeLocations() {
         document.querySelectorAll(".location-tiles").forEach(i => {
                 getLocations(i);
         });
+        document.querySelectorAll(".location-tiles").forEach(i => {
+                if (i.innerHTML === `<img class="blacksmith-img" src="imgs/icons8-blacksmith-50.png" alt="Blacksmith">`) {
+                    hasBlacksmith = true;
+                }
+                if (i.innerHTML === `<img class="merchant-img" src="imgs/icons8-stand-50.png" alt="Merchant">`) {
+                    hasShop = true;
+                }
+        });
+        if (!hasBlacksmith) {
+            location10Tiles1.innerHTML = `<img class="treasure-img" src="imgs/icons8-treasure-chest-50.png" alt="Treasure">`;
+        }
+        if (!hasShop) {
+            location10Tiles2.innerHTML = `<img class="treasure-img" src="imgs/icons8-treasure-chest-50.png" alt="Treasure">`;
+        }
         location1Tiles1.innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`;
         location1Tiles2.innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`;
         location1Tiles3.innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`;
@@ -1813,7 +1834,7 @@ function mystery() {
                 if (dontRepeatExclamation.includes(1) && dontRepeatExclamation.includes(2) && dontRepeatExclamation.includes(3) && dontRepeatExclamation.includes(4) && dontRepeatExclamation.includes(5)) {
                         encounter();
                 } else {
-                        randomExclamationNumber = createRandomNumber(1, 5);
+                        randomExclamationNumber = createRandomNumber(13, 13);
                         while (dontRepeatExclamation.includes(randomExclamationNumber)) {
                                 randomExclamationNumber = createRandomNumber(1, 5);
                         }
@@ -1851,7 +1872,7 @@ function mystery() {
         switch (randomExclamationNumber) {
                 case 1:
                         createExclamation("A Necessary Sacrifice", "imgs/fae-forest-mystery.jpeg", "imgs/terra2.jpeg", `<span style="color: #81b14f">Terra</span> approaches you again with a warm kind visage.`, 
-                                `"I had hoped our next meeting would be under better circumstances." she says regretfully. "But I can feel my elemental spirits weakening each day as Life and Death grow stronger."`,
+                                `"I had hoped our next meeting would be under better circumstances." she says regretfully. "But I can feel my elemental spirits weakening each day as Maluminia grows stronger."`,
                                 "I must ask that you sacrifice one of your elemental orbs of power to me so the very foundations of existence aren't torn asunder. I would not ask of this if not completely necessary.");
                         document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1" style="text-align: center; width: 50%; height: 50px; margin-top: 20px;">Sacrifice <span style="color: #ba760f">fire</span> cards</button>
@@ -2212,8 +2233,8 @@ function mystery() {
                                 "He beckons you closer with his translucent appendage. You approach.",
                                 `"I was once king in this land long ago." His soft whisper echos. "I had all the aether in my possession burried with me. I realize the arrogance of my actions and would like to make amends for my past. Please share this amongst the local townsfolk."`);
                         document.querySelector(".exclamation-button-div").innerHTML = `
-                        <button class="exclamation-button-1" style="height: 45%"><span style="color: rgb(206, 83, 83)">Take It All:</span> Gain 200 Aether and Avarice; a useless card.</button>
-                        <button class="exclamation-button-2" style="height: 45%"><span style="color: lightgreen">Share It:</span> Your integrity causes you to gain 10 health and max health.</button>
+                        <button class="exclamation-button-1" style="height: 45%"><span style="color: rgb(206, 83, 83)">Take It All:</span> Gain 300 Aether and Avarice</button>
+                        <button class="exclamation-button-2" style="height: 45%"><span style="color: lightgreen">Share It:</span> Your integrity causes you to gain 10 health and max health</button>
                         <div id="mystery-card-display-container"></div>`;
                         createCard(63, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
                         document.querySelector(".exclamation-button-1").addEventListener("mouseover", () => {
@@ -2232,7 +2253,7 @@ function mystery() {
                         });
                         document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                                 addCardToDeck(63, 0, true);
-                                playerAether.innerText = parseFloat(playerAether.innerText) + 200;
+                                playerAether.innerText = parseFloat(playerAether.innerText) + 300;
                                 switchArea(map, exclamationContainer);
                         });
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
@@ -2492,7 +2513,7 @@ function mystery() {
                         <button class="exclamation-button-1" style="height: 45%"><span style="color: lightblue">Agree to heal Glacia:</span> Gain a sanguine spring spell</button>
                         <button class="exclamation-button-2" style="height: 45%"><span style="color: rgb(115, 215, 215)">Fuse with Tempia:</span> Gain a Tempia's fury spell</button>
                         <div id="mystery-card-display-container"></div>`;
-                        createCard(37, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 1);
+                        createCard(37, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
                         createCard(34, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
                         document.querySelector(".exclamation-button-1").addEventListener("mouseover", () => {
                                 document.querySelectorAll(".card-reference").forEach(i => {
@@ -2861,13 +2882,24 @@ function mystery() {
                                         i.addEventListener("click", () => {
                                                 for (let j = 0; j < cardsInformation.length; j++) {
                                                         if (i.classList.contains(j)) {
-                                                                addCardToDeck(j, 1, true);
-                                                                switchArea(map, exclamationContainer);
+                                                            function removeCard(pile) {
+                                                                pile.forEach((k) => {
+                                                                    if (k.classList.contains(j)) {
+                                                                        let spliceCard = pile.splice(pile.indexOf(k), 1).pop();
+                                                                        destroyedCardsArray.push(spliceCard);
+                                                                        destroyedCardsContainer.appendChild(spliceCard);
+                                                                        console.log(k);
+                                                                    }
+                                                                });
+                                                            }
+                                                            removeCard(drawPileArray);
+                                                            removeCard(handArray);
+                                                            addCardToDeck(j, 1, true);
                                                         }
                                                 }
-                                                for (let k = 0; k < cardReference.length; k++) {
-                                                        destroyedCardsArray.push(cardReference[k]);
-                                                        destroyedCardsContainer.appendChild(cardReference[k]);
+                                                for (let k = 0; k < document.querySelectorAll(".card-reference").length; k++) {
+                                                        destroyedCardsArray.push(document.querySelectorAll(".card-reference")[k]);
+                                                        destroyedCardsContainer.appendChild(document.querySelectorAll(".card-reference")[k]);
                                                 }
                                                 destroyedCardsArray = [];
                                                 destroyedCardsContainer.innerHTML = ``;
@@ -2913,7 +2945,7 @@ function mystery() {
                                                                 empowerCard();
                                                         });
                                                 } else if (i.classList.contains(30) || i.classList.contains(31) || i.classList.contains(32) || i.classList.contains(33)) {
-                                                        fxGust.play();
+                                                        fxConvergingCurrent.play();
                                                         exclamationContainer.innerHTML = `
                                                         <div class="exclamation-div" style="background-image: url(imgs/heaven-mystery.jpeg)">
                                                                 <div class="exclamation-information-container">
@@ -3545,14 +3577,11 @@ function shop() {
         const shopRelicImgText = document.querySelectorAll(".shop-relic-img-text");
         for (let i = 0; i < shopRelicImg.length; i++) {
                 shopRelicImg[i].addEventListener("click", () => {
-                        console.log("YES");
                         for (let k = 0; k <= 12; k++) {
-                                console.log("YAYA");
                                 if (shopRelicImg[i].classList.contains(k) && playerAether.innerText >= relicCost[i]) {
                                         getRelic(k, k);
                                         displayNone(shopAetherImg[i + 10], shopAetherCost[i + 10], shopRelicImg[i], map);
                                         playerAether.innerText -= relicCost[i];
-                                        console.log("OH YEAH");
                                 }
                         }
                 });
@@ -3618,11 +3647,11 @@ function blacksmith() {
                         let cardReference = document.querySelectorAll(".card-reference");
                         let cardReferenceUpgraded = document.querySelectorAll(".upgrade-reference");
                         let allCurrentCards = document.querySelectorAll(".card");
-                        console.log("CARD REFERENCE: ", cardReference, "cardReferenceUpgraded: ", cardReferenceUpgraded);
+                        //console.log("CARD REFERENCE: ", cardReference, "cardReferenceUpgraded: ", cardReferenceUpgraded);
                         function upgradeCard(cardIndex) {
                                 for (let k = 0; k < allCurrentCards.length; k++) {
                                         if (allCurrentCards[k].classList.contains(cardIndex)) {
-                                                console.log(allCurrentCards[k]);
+                                                //console.log(allCurrentCards[k]);
                                                 if (drawPileArray.includes(allCurrentCards[k])) {
                                                         let spliceCard = drawPileArray.splice(drawPileArray.indexOf(allCurrentCards[k]), 1).pop();
                                                         destroyedCardsArray.push(spliceCard);
@@ -3663,7 +3692,7 @@ function blacksmith() {
                                                 if (cardReference[i].classList.contains(j)) {
                                                         if (cardReferenceUpgraded[i].classList.contains(j)) {
                                                                 cardReferenceUpgraded[i].style = "visibility: visible";
-                                                                console.log("mouseover" + i);
+                                                                //console.log("mouseover" + i);
                                                         }
                                                 }
                                         }
@@ -4027,7 +4056,7 @@ const cardsInformation = [
                                         if (playerWindswept) {
                                                 tidalDamage *= 2;
                                         }
-                                        console.log(tidalDamage);
+                                        //console.log(tidalDamage);
                                         gainRegen(1);
                                         if (chosenEnemy === 1) {
                                                 if (!enemyIsDead[0]) {
@@ -4071,7 +4100,7 @@ const cardsInformation = [
                                         if (playerWindswept) {
                                                 tidalDamage *= 2;
                                         }
-                                        console.log(tidalDamage);
+                                        //console.log(tidalDamage);
                                         gainRegen(1);
                                         gainBloodSiphon(1);
                                         if (chosenEnemy === 1) {
@@ -5794,12 +5823,12 @@ const cardsInformation = [
         {
                 manaCost: [2, 2],
                 name: "Wine",
-                cardImg: "imgs/spring-water.jpeg",
-                cardText: ["Gain 2 blood siphon<br>You feel this would pair well with some bread", "Gain 2 blood siphon<br>You feel this would pair well with some bread"],
+                cardImg: "imgs/wine.jpeg",
+                cardText: ["Gain 2 blood siphon<br>Your water cards turned into wine! You feel this would pair well with some bread...", "Gain 2 blood siphon<br>Your water cards turned into wine! You feel this would pair well with some bread..."],
                 blood: [2, 2],
                 chooseEnemyCard: false,
                 index: 65,
-                element: "celestial",
+                element: "wine",
                 rarity: "unique",
                 action:
                 [
@@ -5905,7 +5934,7 @@ function createCard(index, innerLocation, cardClass, cardText, upgradeIndex) {
                         element = "celestial";
                         break;
                 case 65:
-                        element = "aether";
+                        element = "wine";
                         break;
         }
         innerLocation.innerHTML +=
@@ -5947,7 +5976,7 @@ function drawCards(numberOfCards) {
                 for (let i = 0; i < cardsInDiscardPile; i++) {
                         drawPileArray.push(discardPileArray.shift());
                 }     
-                console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+                //console.log(`REDRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         }
         // SHIFT CARDS FROM DRAW PILE TO HAND
         for (let i = 0; i < numberOfCards; i++) {
@@ -5956,28 +5985,28 @@ function drawCards(numberOfCards) {
         }
         handContainer.style = `width: ${handArray.length - 1}9.5%`;
         updateCardText();
-        console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
-        console.log(handArray);
+        //console.log(`DRAW TO HAND\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(handArray);
 }
 // GET NEW SET OF 5 CARDS AT THE END OF EACH TURN
 let cardsInHand;
 function addCardsToHand() {
-        console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`BEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 discardPileArray.unshift(handArray.shift());
                 displayNone(discardPileArray[0]);
         }
-        console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`HAND TO DISCARD\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         drawCards(maxHandLength);      
 }
 function reshuffleCards() {
-        console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`RESHUFFLE CARDS\nBEFORE\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInHand = handArray.length;
         for (let i = 0; i < cardsInHand; i++) {
                 drawPileArray.unshift(handArray.shift());
         }
-        console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`RESHUFFLE CARDS\nHAND TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         let cardsInDiscardPile = discardPileArray.length;
         for (let i = 0; i < cardsInDiscardPile; i++) {
                 drawPileArray.unshift(discardPileArray.shift());
@@ -5985,7 +6014,7 @@ function reshuffleCards() {
         for (let i = 0; i < drawPileArray.length; i++) {
                 displayNone(drawPileArray[i]);
         }
-        console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
+        //console.log(`RESHUFFLE CARDS\nDISCARD TO DRAW\nDraw Pile: ${drawPileArray.length}\nHand Pile: ${handArray.length}\nDiscard Pile: ${discardPileArray.length}`);
         // RESHUFFLE CARDS IN DRAW PILE
         drawPileArray = drawPileArray.toSorted(() => 0.5 - Math.random());
 }
@@ -6022,7 +6051,7 @@ function addCardListeners(cardType, index, CIindex, upgradeIndex) {
                                 playerRegenNumber.innerText = parseFloat(playerRegenNumber.innerText) + airBubble.length;
                                 displayBlock(playerRegenImg, playerRegenNumber);
                         }
-                        console.log("UPDATING CARD TEXT");
+                        //console.log("UPDATING CARD TEXT");
                         document.querySelectorAll(".enemy-div").forEach(i => {
                                 i.style.cursor = "default";
                         });
@@ -6138,13 +6167,13 @@ function removeCardClicked() {
         }
 }
 function addCardToDeck(newRandomCard, upgradeIndex, switchToMap) {
-        console.log("CREATING CARD NEW RANDOM CARD", newRandomCard);
+        //console.log("CREATING CARD NEW RANDOM CARD", newRandomCard);
         chooseNewCardDiv.innerHTML = ``;
         displayNone(chooseNewCardContainer);
-        console.log("UPGRADE INDEX: ", upgradeIndex);
+        //console.log("UPGRADE INDEX: ", upgradeIndex);
         createCard(newRandomCard, destroyedCardsContainer, "card", "card-text", upgradeIndex);
         let currentCards = document.querySelectorAll(".card");
-        console.log("1 currentCards", currentCards);
+        //console.log("1 currentCards", currentCards);
         let newCardsText = document.querySelectorAll(".card-text");
         if (upgradeIndex === 1) {
                 currentCards[currentCards.length - 1 - etherealCards.length].classList.add("upgraded");
@@ -6153,7 +6182,7 @@ function addCardToDeck(newRandomCard, upgradeIndex, switchToMap) {
         addCardListeners(currentCards, [currentCards.length - 1 - etherealCards.length], newRandomCard, upgradeIndex);
         handContainer.appendChild(currentCards[currentCards.length - 1 - etherealCards.length]);
         handArray.push(currentCards[currentCards.length - 1 - etherealCards.length]);//changed drawpilearray to handarray
-        console.log("2 currentCards[currentCards.length - 1 - etherealCards.length]", currentCards[currentCards.length - 1 - etherealCards.length]);
+        //console.log("2 currentCards[currentCards.length - 1 - etherealCards.length]", currentCards[currentCards.length - 1 - etherealCards.length]);
         if (switchToMap) {
                 switchArea(map, arena);
                 document.querySelectorAll(".relic-img-text").forEach(i => {
@@ -6215,7 +6244,7 @@ function getRandomNewCards () {
         createCard(newRandomCards[2], chooseNewCardDiv, "card-reference", "card-text", 0);
         createCard(newRandomCards[3], chooseNewCardDiv, "card-reference", "card-text", 0);
         let newCardChoices = document.querySelectorAll(".card-reference");
-        console.log("NEW CARD CHOICES", newCardChoices);
+        //console.log("NEW CARD CHOICES", newCardChoices);
         displayFlex(chooseNewCardContainer, newCardChoices[0], newCardChoices[1], newCardChoices[2], newCardChoices[3]);
         newCardChoices[0].addEventListener("click", () => {addCardToDeck(newRandomCards[0], 0, true)});
         newCardChoices[1].addEventListener("click", () => {addCardToDeck(newRandomCards[1], 0, true)});
@@ -6380,9 +6409,9 @@ function damageEnemy(damage, enemy) {
                                         healPercentage += .4;
                                         empowerBloodSiphon = false;
                                 }
-                                console.log("Health before blood: ", playerCurrentHealth.innerText);
+                                //console.log("Health before blood: ", playerCurrentHealth.innerText);
                                 playerHeal(Math.floor((damage * healPercentage)));
-                                console.log("Health after blood: ", playerCurrentHealth.innerText);
+                                //console.log("Health after blood: ", playerCurrentHealth.innerText);
                         }
                         // TAKE DAMAGE AWAY FROM BLOCK BEFORE HEALTH
                         if (enemyBlockNumber[enemy].innerText == 0) {
@@ -6396,7 +6425,7 @@ function damageEnemy(damage, enemy) {
                                 enemyBlockNumber[enemy].innerText -= damage;
                         }
                         // CHECK FOR ENEMY THORNS DAMAGE
-                        console.log("Health before thorns: ", playerCurrentHealth.innerText);
+                       //console.log("Health before thorns: ", playerCurrentHealth.innerText);
                         if (playerBlockNumber.innerText <= 0) {
                                 playerCurrentHealth.innerText -= parseFloat(enemyThornsNumber[enemy].innerText);
                                 topBarHealthNumber.innerText -= parseFloat(enemyThornsNumber[enemy].innerText);
@@ -6407,7 +6436,7 @@ function damageEnemy(damage, enemy) {
                                 topBarHealthNumber.innerText -= parseFloat(enemyThornsNumber[enemy].innerText) - parseFloat(playerBlockNumber.innerText);
                                 damageTakenThisTurn += (parseFloat(enemyThornsNumber[enemy].innerText) - parseFloat(playerBlockNumber.innerText));
                                 playerBlockNumber.innerText = 0;
-                                console.log("Health after thorns: ", playerCurrentHealth.innerText);
+                                //console.log("Health after thorns: ", playerCurrentHealth.innerText);
                         } else {
                                 playerBlockNumber.innerText -= parseFloat(enemyThornsNumber[enemy].innerText);
                         }
@@ -6578,10 +6607,10 @@ function frostbiteSelf() {
 let [enemiesKilled, elitesKilled, bossesKilled, burnTotal, manaEnergized, frostbiteTotal, windsweptTotal, healthRestoredTotal, blockTotal, thornsTotal] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 function checkHealth() {
         if (parseFloat(playerCurrentHealth.innerText) > parseFloat(playerMaxHealth.innerText))  {
-                console.log("Health before overmax: ", playerCurrentHealth.innerText);
+                //console.log("Health before overmax: ", playerCurrentHealth.innerText);
                 playerCurrentHealth.innerText = playerMaxHealth.innerText;
                 topBarHealthNumber.innerText = playerMaxHealth.innerText;
-                console.log("Health after overmax: ", playerCurrentHealth.innerText);
+                //console.log("Health after overmax: ", playerCurrentHealth.innerText);
         }
         for (let i = 0; i < numberOfEnemies.length; i++) {
                 if (!enemyIsDead[i]) {
@@ -6620,12 +6649,12 @@ function checkHealth() {
         }
 }
 function playerHeal(amount) {
-        console.log("Health before healing: ", playerCurrentHealth.innerText);
+        //console.log("Health before healing: ", playerCurrentHealth.innerText);
         playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) + parseFloat(amount);
         topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) + parseFloat(amount);
         healthGainedThisFight += parseFloat(amount);
         healthRestoredTotal += parseFloat(amount);
-        console.log("Health after healing: ", playerCurrentHealth.innerText);
+        //console.log("Health after healing: ", playerCurrentHealth.innerText);
         checkHealth();
 }
 function gainEnergize (amount) {
@@ -6751,7 +6780,7 @@ function checkPlayerBurn() {
                         pyromania = false;
                 } else {
                         if (playerBlockNumber.innerText <= 0) {
-                                console.log("Health before burn: ", playerCurrentHealth.innerText);
+                                //console.log("Health before burn: ", playerCurrentHealth.innerText);
                                 playerCurrentHealth.innerText = parseFloat(playerCurrentHealth.innerText) - parseFloat(playerBurnNumber.innerText);
                                 topBarHealthNumber.innerText = parseFloat(topBarHealthNumber.innerText) - parseFloat(playerBurnNumber.innerText);
                         } else if (playerBlockNumber.innerText <= parseFloat(playerBurnNumber.innerText)) {
@@ -6764,8 +6793,6 @@ function checkPlayerBurn() {
                         } else {
                                 playerBlockNumber.innerText -= parseFloat(playerBurnNumber.innerText); 
                         }
-                        console.log("Health after burn: ", playerCurrentHealth.innerText);
-
                 }
                 damageTakenThisTurn += parseFloat(playerBurnNumber.innerText);
                 if (flameWarden) {
@@ -6773,6 +6800,7 @@ function checkPlayerBurn() {
                 } else {
                         playerBurnNumber.innerText--;
                 }
+                fxKindredSpirits.play();
         }       
         if (playerBurnNumber.innerText == 0) {
                 displayNone(playerBurnImg, playerBurnNumber);
@@ -6787,11 +6815,14 @@ function checkRegenHeal() {
         if (playerRegenNumber.innerText >= 1) {
                 playerHeal(playerRegenNumber.innerText);
                 playerRegenNumber.innerText--;
+                fxDownpour.play();
+                checkHealth();
+                return 1;
         }
         if (playerRegenNumber.innerText == 0) {
                 displayNone(playerRegenImg, playerRegenNumber);
+                return 0;
         }
-        checkHealth();
 }
 function checkBloodSiphon() {
         if (playerBloodNumber.innerText >= 1) {
@@ -6831,7 +6862,7 @@ function updateCardText() {
                                                                 if (currentCardText[k].classList.contains("upgraded-text")) {
                                                                         upgradeIndex = 1;
                                                                 }
-                                                                console.log(cardsInformation[j].name, " ", type[upgradeIndex]);
+                                                                //console.log(cardsInformation[j].name, " ", type[upgradeIndex]);
                                                                 // RESET VALUES TO DEFAULT
                                                                 if (type === cardsInformation[j].damage) {
                                                                         type[upgradeIndex] = cardsInformationDefaultValues[j].damage[upgradeIndex];
@@ -6851,7 +6882,7 @@ function updateCardText() {
                                                                 if (type === cardsInformation[j].block) {
                                                                         type[upgradeIndex] = cardsInformationDefaultValues[j].block[upgradeIndex];
                                                                 }
-                                                                console.log(cardsInformation[j].name, " ", type[upgradeIndex]);
+                                                                //console.log(cardsInformation[j].name, " ", type[upgradeIndex]);
                                                                 if (type === cardsInformation[j].thorns) {
                                                                         type[upgradeIndex] = cardsInformationDefaultValues[j].thorns[upgradeIndex];
                                                                 }
@@ -6918,7 +6949,7 @@ function updateCardText() {
                                                                 if (staticCharge && type === cardsInformation[j].damage) {
                                                                         type[upgradeIndex] += 10;
                                                                 }
-                                                                console.log(cardsInformation[j].name, " ", type[upgradeIndex]);
+                                                                //console.log(cardsInformation[j].name, " ", type[upgradeIndex]);
                                                         }
                                                         if ("damage" in cardsInformation[j]) {
                                                                 update(cardsInformation[j].damage);
@@ -6947,7 +6978,7 @@ function updateCardText() {
                         }
                 }
         }
-        console.log("UPDATE TEXT");
+        //console.log("UPDATE TEXT");
         updateText();
         // UPDATE ARRAY WITH NEW CHANGED STATS
         let updateCardTextStats = [
@@ -7016,7 +7047,7 @@ function updateCardText() {
                 ["[Ethereal] [Aura]<br>Gain 3 block and healing at the end of each turn", "[Ethereal] [Aura]<br>Gain 5 block and healing at the end of each turn"],
                 ["[DOES NOTHING]<br>Your greed causes you to look down upon peasants", "Your greed causes you to look down upon peasants...and enslave them gaining 20 aether"],
                 [`Inflict frostbite, windswept, and ${cardsInformation[64].burn[0]} burn. Gain ${cardsInformation[64].energize[0]} energize and blood siphon, and ${cardsInformation[64].block[0]} block`, `Inflict frostbite, windswept, and ${cardsInformation[64].burn[1]} burn. Gain ${cardsInformation[64].energize[1]} energize and blood siphon, and ${cardsInformation[64].block[1]} block`],
-                ["Gain 2 blood siphon<br>You feel this would pair well with some bread", "Gain 2 blood siphon<br>You feel this would pair well with some bread"]
+                ["Gain 2 blood siphon<br>Your water cards turned into wine! You feel this would pair well with some bread...", "Gain 2 blood siphon<br>Your water cards turned into wine! You feel this would pair well with some bread..."]
         ];
         // UPDATE CARD TEXT TO MATCH CORRECT STATS
         for (let i = 0; i < handArray.length; i++) {
@@ -7090,8 +7121,8 @@ const enemiesInformation = [
                 index: 3,
                 baseHealth: 40,
                 img: "imgs/enemy-will-o-the-wisp.png",
-                attackChance: 1,
-                burnChance: 7,
+                attackChance: 0,
+                burnChance: 6,
                 fadeChance: 10,
                 attackDamageLow: 5,
                 attackDamageHigh: 6,
@@ -7572,7 +7603,7 @@ const enemiesInformation = [
                 name: "Jesus",
                 index: 44,
                 baseHealth: 200,
-                img: "imgs/elite-jesus.png",
+                img: "imgs/elite-jesus2.png",
                 attackChance: 0,
                 healChance: 3,
                 regenChance: 6,
@@ -7590,12 +7621,12 @@ const enemiesInformation = [
                 name: "Jesus Risen",
                 index: 45,
                 baseHealth: 300,
-                img: "imgs/elite-jesus-rezed.png",
+                img: "imgs/elite-jesus-risen2.png",
                 attackChance: 5,
                 healChance: 8,
                 regenChance: 10,
-                attackDamageLow: 40,
-                attackDamageHigh: 44,
+                attackDamageLow: 25,
+                attackDamageHigh: 35,
                 healAmountLow: 50,
                 healAmountHigh: 55,
                 regenAmountLow: 20,
@@ -7884,8 +7915,8 @@ function createEnemy(name) {
                         enemyImg[enemyDiv.length - 1].style = "animation: 3.5s ease-in-out 0s 1 grow";
                         break;
                 case "Jesus Risen":
-                        enemyDiv[enemyDiv.length - 1].style = "animation: 2.3s ease-out 0s 1 slideInTop; margin-bottom: 5rem";
-                        enemyImg[enemyDiv.length - 1].style.width = "450px";
+                        enemyDiv[enemyDiv.length - 1].style = "animation: 2.3s ease-out 0s 1 slideInTop; margin-bottom: 3rem;";
+                        enemyImg[enemyDiv.length - 1].style.width = "365px";
                         break;
                 case "Artemis": case "Athena": case "Centaur": case "Fenrir": case "Zeus":
                         enemyImg[enemyDiv.length - 1].classList.add("enemy-img-flip");
@@ -7915,7 +7946,7 @@ function createEnemy(name) {
                 const enemyMaxHealth = document.querySelectorAll(".enemy-max-health");
                 enemyCurrentHealth[enemyCurrentHealth.length - 1].innerText = Math.floor(enemyCurrentHealth[enemyCurrentHealth.length - 1].innerText / 2);
                 enemyMaxHealth[enemyMaxHealth.length - 1].innerText = Math.floor(enemyMaxHealth[enemyMaxHealth.length - 1].innerText / 2);
-                console.log("easy: ", easyDifficulty);
+                //console.log("easy: ", easyDifficulty);
         }
 }
 function enemyLevelUp() {
@@ -8069,7 +8100,7 @@ function damagePlayer(damage, index) {
                 }
                 enemyCurrentHealth[index].innerText = parseFloat(enemyCurrentHealth[index].innerText) + Math.floor((damage * siphonAmount));                        
         }
-        console.log("Health before damageplayer: ", playerCurrentHealth.innerText);
+        //console.log("Health before damageplayer: ", playerCurrentHealth.innerText);
         if (playerBlockNumber.innerText <= 0) {
                 topBarHealthNumber.innerText -= damage;
                 playerCurrentHealth.innerText -= damage;
@@ -8086,7 +8117,7 @@ function damagePlayer(damage, index) {
         } else {
                 playerBlockNumber.innerText -= damage; 
         }
-        console.log("Health after damageplayer: ", playerCurrentHealth.innerText);
+        //console.log("Health after damageplayer: ", playerCurrentHealth.innerText);
         // CHECK FOR PLAYER THORNS DAMAGE
         if (enemyBlockNumber[index].innerText <= 0) {
                 enemyCurrentHealth[index].innerText -= parseFloat(playerThornsNumber.innerText)
@@ -8168,9 +8199,9 @@ function checkEnemyBurn(index) {
                                 healPercentage += .4;
                                 empowerBloodSiphon = false;
                         }
-                console.log("Health after burn blood heal: ", playerCurrentHealth.innerText);
+                //console.log("Health after burn blood heal: ", playerCurrentHealth.innerText);
                 playerHeal(Math.ceil(enemyBurnNumber[index].innerText * healPercentage));
-                console.log("Health after burn blood heal: ", playerCurrentHealth.innerText);
+                //console.log("Health after burn blood heal: ", playerCurrentHealth.innerText);
         }
         if (parseFloat(enemyBurnNumber[index].innerText) >= enemyCurrentHealth[index].innerText) {
                 enemy[index].classList.add("fade-out");
@@ -8210,13 +8241,11 @@ function checkEnemyRegenHeal(index) {
         if (enemyRegenNumber[index].innerText >= 1) {
                 enemyCurrentHealth[index].innerText = parseFloat(enemyCurrentHealth[index].innerText) + parseFloat(enemyRegenNumber[index].innerText);
                 enemyRegenNumber[index].innerText--;
-                
         }
         if (enemyRegenNumber[index].innerText == 0) {
                 displayNone(enemyRegenImg[index], enemyRegenNumber[index]);
         }
         if (parseFloat(enemyCurrentHealth[index].innerText) > parseFloat(enemyMaxHealth[index].innerText)) {
-
                 enemyCurrentHealth[index].innerText = enemyMaxHealth[index].innerText;
         }
 }
@@ -8230,20 +8259,39 @@ function checkEnemyBloodSiphon(index) {
 }
 let enemiesAlive = numberOfEnemies - enemyIsDead.filter(Boolean).length;
 let enemiesAreDead = false;
+let jesusSlain = false;
 let [flameWarden, pyromancer, surgebinder, stormchaser, cryocast, winterWarrior, aeroshift, windrunner, bloodbender, waterweaver, grovetender, stoneshaper] =
 [false, false, false, false, false, false, false, false, false, false, false, false];
 let [faeForest, hallowwood] = [true, false];
 function checkIfEnemyDead() {
         // IF ALL ENEMIES ARE DEAD, SWITCH BACK TO MAP AND GET AETHER
         function allEnemiesDead() {
+                if (jesusSlain) {
+                        jesusSlain = false;
+                        document.querySelectorAll(".card").forEach(i => {
+                                for (let j = 0; j < cardsInformation.length; j++) {
+                                        if (i.classList.contains(j) && cardsInformation[j].element === "wine") {
+                                                destroyedCardsArray.push(i);
+                                                destroyedCardsContainer.appendChild(i);
+                                                destroyedCardsArray = [];
+                                                destroyedCardsContainer.innerHTML = ``;
+                                        }
+                                }
+                        });
+                }
                 if (jesusHasRisen) {
+                        enemyContainer.innerHTML = "";
                         jesusHasRisen = false;
+                        jesusSlain = true
                         createEnemy("Jesus Risen");
                         initializeEnemyVariables();
-                        numberOfEnemies = 1;
-                        enemiesAlive = 1;
                         enemiesAreDead = false;
-                        enemyIsDead[0] = false;
+                        for (i = 0; i < numberOfEnemies; i++) {
+                                enemyIsDead[i] = false;
+                                enemyFrostbite[i] = false;
+                                enemyWindswept[i] = false;
+                                displayNone(enemyWindsweptImg[i], enemyFrostbiteImg[i]);
+                        }
                         enemyAction(45);
                         return;
                 }
@@ -8748,11 +8796,7 @@ let damageTakenThisTurn = 0;
 function endTurn() {
         if (!enemiesAreDead) {
                 // RESET MANA AND DEBUFFS
-                checkRegenHeal();
-                checkPlayerBurn();
-                if (pyromancer) {
-                        checkPlayerBurn();
-                }
+                let hasRegen = checkRegenHeal();
                 playerWindswept = false;
                 displayNone(playerWindsweptImg);
                 if (trackEnemies[0] !== 11 && trackEnemies[0] !== 48) {
@@ -8773,7 +8817,6 @@ function endTurn() {
                         }
                         // CHECK IF ENEMY IS DEAD
                         if (!enemyIsDead[eI]) {
-                                        checkEnemyRegenHeal([eI]);
                                         checkEnemyBloodSiphon([eI]);
                                         if (actionChoice[eI] <= enemiesInformation[trackEnemies[eI]].attackChance) {
                                                 // ATTACK
@@ -8868,18 +8911,23 @@ function endTurn() {
                                                 displayNone(enemyFadeImg[eI]);
                                         }
                                 }
+                                checkEnemyRegenHeal([eI]);
                         }
-                        checkHealth();
                         eI++;
                 }
-                enemyTurn();
+                setTimeout(enemyTurn, 0 + (hasRegen * 400));
                 if (numberOfEnemies > 1) {
-                        setTimeout(enemyTurn, 400);
+                    setTimeout(enemyTurn, 400 + (hasRegen * 400));
                 }
                 if (numberOfEnemies === 3) {
-                        setTimeout(enemyTurn, 800);
+                        setTimeout(enemyTurn, 800 + (hasRegen * 400));
                 }
                 setTimeout(function() {
+                        checkPlayerBurn();
+                        if (pyromancer) {
+                                checkPlayerBurn();
+                        }
+                        checkHealth();
                         removeCardClicked();
                         checkBloodSiphon();
                         checkTerrasBlessing();
@@ -8936,9 +8984,9 @@ function endTurn() {
                                 waterOrb = false;
                                 fxSanguineSpring.play();
                         }
-                        console.log("WATER WALL HEAL: ", damageTakenThisTurn);
+                        //console.log("WATER WALL HEAL: ", damageTakenThisTurn);
                         damageTakenThisTurn = 0;
-                        console.log("WATER WALL HEAL: ", damageTakenThisTurn);
+                        //console.log("WATER WALL HEAL: ", damageTakenThisTurn);
                         updateCardText();
                         if (numberOfEnemies === 1) {
                                 enemyAction(trackEnemies[0]);
@@ -8947,12 +8995,6 @@ function endTurn() {
                         } else {
                                 enemyAction(trackEnemies[0], trackEnemies[1], trackEnemies[2]);
                         }
-                }, (numberOfEnemies - 1) * 500);               
+                }, (numberOfEnemies - 1 + hasRegen) * 500);
         }
 }
-/*faeForest = false;
-hallowwood = false;
-bossDefeated[0] = true;
-bossDefeated[1] = true;
-arena.style.backgroundImage = "url(imgs/heaven-arena.jpeg)";
-map.style.backgroundImage = "url(imgs/heaven-map.jpeg)";*/
