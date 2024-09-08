@@ -6742,7 +6742,7 @@ function burnEnemy(burn, enemy) {
                                 displayBlock(enemyBurnImg[i], enemyBurnNumber[i]);
                         }
                 }
-                enemyBurnNumber[enemy].innerText = parseFloat(enemyBurnNumber[i].innerText) - Math.floor(burn / 2);
+                enemyBurnNumber[enemy].innerText = parseFloat(enemyBurnNumber[enemy].innerText) - Math.floor(burn / 2);
         }
         enemyBurnNumber[enemy].innerText = parseFloat(enemyBurnNumber[enemy].innerText) + burn;
         displayBlock(enemyBurnImg[enemy], enemyBurnNumber[enemy]);
