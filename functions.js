@@ -2122,7 +2122,6 @@ function mystery() {
                         document.querySelector(".exclamation-button-div").innerHTML = `
                         <button class="exclamation-button-1""><span style="color: rgb(123, 240, 238)">Attune with the stars:</span> Gain a celestially infused card</button>
                         <button class="exclamation-button-2"><span style="color: #81b14f">Stay Grounded:</span> Gain an Earth Spikes spell</button>
-                        <button class="exclamation-button-3"><span style="color: rgb(206, 83, 83)">Refuse:</span> Leave the area</button>
                         <div id="mystery-card-display-container"></div>`;
                         createCard(64, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
                         createCard(42, document.getElementById("mystery-card-display-container"), "card-reference", "card-text", 0);
@@ -2162,9 +2161,6 @@ function mystery() {
                         document.querySelector(".exclamation-button-2").addEventListener("click", () => {
                                 addCardToDeck(42, 0, true);
                                 fxWeaveOfThorns.play();
-                                switchArea(map, exclamationContainer);
-                        });
-                        document.querySelector(".exclamation-button-3").addEventListener("click", () => {
                                 switchArea(map, exclamationContainer);
                         });
                         dontRepeatExclamation.push(4);
@@ -5787,7 +5783,7 @@ const cardsInformation = [
                 manaCost: [2, 1],
                 name: "Celestial Attunement",
                 cardImg: "imgs/celestial-attunement.jpeg",
-                cardText: ["Inflict frostbite, windswept, and 4 burn. Gain 1 energize and blood siphon, and 8 block", "Inflict frostbite, windswept, and 4 burn. Gain 1 energize and blood siphon, and 8 block"],
+                cardText: ["[Ethereal]<br>Inflict frostbite, windswept, and 4 burn. Gain 1 energize and blood siphon, and 8 block", "[Ethereal]<br>Inflict frostbite, windswept, and 4 burn. Gain 1 energize and blood siphon, and 8 block"],
                 burn: [4, 4],
                 energize: [1, 1],
                 blood: [1, 1],
@@ -6028,7 +6024,8 @@ let turnEnded = false;
 function addCardListeners(cardType, index, CIindex, upgradeIndex) {
         function addToDiscard() {
                 let spliceCard = handArray.splice(handArray.indexOf(cardType[index]), 1).pop();
-                if (CIindex === 15 || CIindex === 17 || CIindex === 23 || CIindex === 29 || (CIindex === 34 && upgradeIndex === 0) || CIindex === 35 || CIindex === 39 || CIindex === 41 || CIindex === 45 || CIindex === 47 || CIindex === 62) {
+                if (CIindex === 15 || CIindex === 17 || CIindex === 23 || CIindex === 29 || (CIindex === 34 && upgradeIndex === 0) || CIindex === 35 || CIindex === 39 || CIindex === 41 || CIindex === 45 || CIindex === 47
+                || CIindex === 62 || CIindex === 64) {
                         etherealCards.push(cardType[index]);
                         etherealCardsContainer.appendChild(cardType[index]);
                 } else {
@@ -7046,7 +7043,7 @@ function updateCardText() {
                 [`Gain ${cardsInformation[61].block[0]} block and draw a card`, `Gain ${cardsInformation[61].block[1]} block and draw a card`],
                 ["[Ethereal] [Aura]<br>Gain 3 block and healing at the end of each turn", "[Ethereal] [Aura]<br>Gain 5 block and healing at the end of each turn"],
                 ["[DOES NOTHING]<br>Your greed causes you to look down upon peasants", "Your greed causes you to look down upon peasants...and enslave them gaining 20 aether"],
-                [`Inflict frostbite, windswept, and ${cardsInformation[64].burn[0]} burn. Gain ${cardsInformation[64].energize[0]} energize and blood siphon, and ${cardsInformation[64].block[0]} block`, `Inflict frostbite, windswept, and ${cardsInformation[64].burn[1]} burn. Gain ${cardsInformation[64].energize[1]} energize and blood siphon, and ${cardsInformation[64].block[1]} block`],
+                [`[Ethereal]<br>Inflict frostbite, windswept, and ${cardsInformation[64].burn[0]} burn. Gain ${cardsInformation[64].energize[0]} energize and blood siphon, and ${cardsInformation[64].block[0]} block`, `[Ethereal]<br>Inflict frostbite, windswept, and ${cardsInformation[64].burn[1]} burn. Gain ${cardsInformation[64].energize[1]} energize and blood siphon, and ${cardsInformation[64].block[1]} block`],
                 ["Gain 2 blood siphon<br>Your water cards turned into wine! You feel this would pair well with some bread...", "Gain 2 blood siphon<br>Your water cards turned into wine! You feel this would pair well with some bread..."]
         ];
         // UPDATE CARD TEXT TO MATCH CORRECT STATS
