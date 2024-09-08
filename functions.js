@@ -87,7 +87,7 @@ window.addEventListener("keydown", () => {
         displayNone(document.querySelector("#beginning-screen-container"));
         displayFlex(startScreen);
         const startScreenMusic = new Audio("audio/start-screen-music.wav");
-        switchMusic(startScreenMusic);
+        //switchMusic(startScreenMusic);
         window.addEventListener("keydown", e => {
             if (e.key === "t" && (document.querySelector("#tutorial-container").style.display == "" || document.querySelector("#tutorial-container").style.display == "none")) {
                     displayFlex(document.querySelector("#tutorial-container"));
@@ -149,7 +149,7 @@ startGame.addEventListener("click", () => {
                 </div>`;
                 document.querySelector(".exclamation-button-1").addEventListener("click", start);
                 const mapMusic = new Audio("audio/map-music.wav");
-                switchMusic(mapMusic);
+                //switchMusic(mapMusic);
                 mapMusicIndex = allMusic.indexOf(mapMusic);
                 const forestAmbience = new Audio("audio/forest-ambience.wav");
                 switchAmbience(forestAmbience);
@@ -318,7 +318,7 @@ function switchArea(block, none) {
         displayNone(none);
         if (block === map) {
                 destroyReferenceCards();
-                switchMusic(allMusic[mapMusicIndex]);
+                //switchMusic(allMusic[mapMusicIndex]);
                 if ((faeForest && (!waterGift && !earthGift)) || (hallowwood && (!iceGift && !airGift)) || (!faeForest && !hallowwood && (!fireGift && !lightningGift))) {
                         location.href = "#bottom-anchor";
                 }
@@ -583,22 +583,22 @@ function encounter() {
         if (!encounterMusicTrigger) {
                 if (faeForest) {
                         const encounterMusic = new Audio("audio/forest-encounter-music.wav");
-                        switchMusic(encounterMusic);
+                        //switchMusic(encounterMusic);
                         encounterMusicTrigger = true;
                         encounterMusicIndex = allMusic.indexOf(encounterMusic);
                 } else if (hallowwood) {
                         const hallowwoodEncounterMusic = new Audio("audio/hallowwood-encounter-music.wav");
-                        switchMusic(hallowwoodEncounterMusic);
+                        //switchMusic(hallowwoodEncounterMusic);
                         encounterMusicTrigger = true;
                         encounterMusicIndex = allMusic.indexOf(hallowwoodEncounterMusic);
                 } else {
                         const heavenEncounterMusic = new Audio("audio/heaven-encounter-music.wav");
-                        switchMusic(heavenEncounterMusic);
+                        //switchMusic(heavenEncounterMusic);
                         encounterMusicTrigger = true;
                         encounterMusicIndex = allMusic.indexOf(heavenEncounterMusic);
                 }
         }
-        switchMusic(allMusic[encounterMusicIndex]);
+        //switchMusic(allMusic[encounterMusicIndex]);
         let randomEncounterNumber;
         if (faeForest) {
                 randomEncounterNumber = createRandomNumber(1, 9);
@@ -726,7 +726,7 @@ function encounter() {
 let dontRepeatGoldEncounter = [];
 let goldEncounterGold = false;
 function goldEncounter() {
-        switchMusic(allMusic[encounterMusicIndex]);
+        //switchMusic(allMusic[encounterMusicIndex]);
         goldEncounterGold = true;
         let randomGoldEncounterNumber;
         if (faeForest) {
@@ -980,22 +980,22 @@ function eliteEncounter() {
         if (!eliteEncounterMusicTrigger) {
                 if (faeForest) {
                         const eliteEncounterMusic = new Audio("audio/elite-encounter-music.wav");
-                        switchMusic(eliteEncounterMusic);
+                        //switchMusic(eliteEncounterMusic);
                         eliteEncounterMusicTrigger = true;
                         eliteEncounterMusicIndex = allMusic.indexOf(eliteEncounterMusic);
                 } else if (hallowwood) {
                         const hallowwoodEliteMusic = new Audio("audio/hallowwood-elite-music.wav");
-                        switchMusic(hallowwoodEliteMusic);
+                        //switchMusic(hallowwoodEliteMusic);
                         eliteEncounterMusicTrigger = true;
                         eliteEncounterMusicIndex = allMusic.indexOf(hallowwoodEliteMusic);
                 } else {
                         const heavenEliteMusic = new Audio("audio/heaven-elite-music.wav");
-                        switchMusic(heavenEliteMusic);
+                        //switchMusic(heavenEliteMusic);
                         eliteEncounterMusicTrigger = true;
                         eliteEncounterMusicIndex = allMusic.indexOf(heavenEliteMusic);
                 }
         }
-        switchMusic(allMusic[eliteEncounterMusicIndex]);
+        //switchMusic(allMusic[eliteEncounterMusicIndex]);
         let randomEliteNumber;
         if (faeForest) {
                 if (dontRepeatEliteEncounter.includes(1) && dontRepeatEliteEncounter.includes(2) && dontRepeatEliteEncounter.includes(3)) {
@@ -1085,7 +1085,6 @@ function eliteEncounter() {
                         document.querySelectorAll(".card").forEach(i => {
                                 for (let j = 0; j < cardsInformation.length; j++) {
                                         if (i.classList.contains(j) && cardsInformation[j].element === "water") {
-                                                addCardToDeck(65, 0, false);
                                                 function holdCard(pile) {
                                                         pile.forEach((k) => {
                                                                 if (k.classList.contains(j)) {
@@ -1097,6 +1096,7 @@ function eliteEncounter() {
                                                 }
                                                 holdCard(drawPileArray);
                                                 holdCard(handArray);
+                                                addCardToDeck(65, 0, false);
                                         }
                                 }
                                 reshuffleCards();
@@ -1113,11 +1113,11 @@ function boss() {
         switchArea(arena, map);
         if (faeForest) {
                 const bossMusic = new Audio("audio/forest-boss-music.wav");
-                switchMusic(bossMusic);
+                //switchMusic(bossMusic);
                 randomBossNumber = createRandomNumber(1, 2);
         } else if (hallowwood) {
                 const hallowwoodBossMusic = new Audio("audio/hallowwood-boss-music.wav");
-                switchMusic(hallowwoodBossMusic);
+                //switchMusic(hallowwoodBossMusic);
                 if (slainWerewolf) {
                         randomBossNumber = 3;
                 } else if (slainVampire) {
@@ -1204,7 +1204,7 @@ function boss() {
                 </div>`;
                 document.querySelector(".exclamation-button-1").addEventListener("click", () => {
                         const heavenBossMusic = new Audio("audio/heaven-boss-music.wav");
-                        switchMusic(heavenBossMusic);
+                        //switchMusic(heavenBossMusic);
                         switchArea(arena, exclamationContainer);
                 });
                 displayNone(arena);
@@ -1510,10 +1510,10 @@ function randomizeLocations() {
                 }
         });
         if (!hasBlacksmith) {
-            location10Tiles1.innerHTML = `<img class="treasure-img" src="imgs/icons8-treasure-chest-50.png" alt="Treasure">`;
+            location10Tiles1.innerHTML = `<img class="blacksmith-img" src="imgs/icons8-blacksmith-50.png" alt="Blacksmith">`;
         }
         if (!hasShop) {
-            location10Tiles2.innerHTML = `<img class="treasure-img" src="imgs/icons8-treasure-chest-50.png" alt="Treasure">`;
+            location10Tiles2.innerHTML = `<img class="merchant-img" src="imgs/icons8-stand-50.png" alt="Merchant">`;
         }
         location1Tiles1.innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`;
         location1Tiles2.innerHTML = `<img class="normal-monster-img" src="imgs/icons8-monster-face-48.png" alt="Normal Monster">`;
@@ -1812,29 +1812,29 @@ function mystery() {
         if (!exclamationMusicTrigger) {
                 if (faeForest) {
                         const exclamationMusic = new Audio("audio/exclamation-music.wav");
-                        switchMusic(exclamationMusic);
+                        //switchMusic(exclamationMusic);
                         exclamationMusicTrigger = true;
                         exclamationMusicIndex = allMusic.indexOf(exclamationMusic);
                 } else if (hallowwood) {
                         const hallowwoodMysteryMusic = new Audio("audio/hallowwood-mystery-music.wav");
-                        switchMusic(hallowwoodMysteryMusic);
+                        //switchMusic(hallowwoodMysteryMusic);
                         exclamationMusicTrigger = true;
                         exclamationMusicIndex = allMusic.indexOf(hallowwoodMysteryMusic);
                 } else {
                         const heavenMysteryMusic = new Audio("audio/heaven-mystery-music.wav");
-                        switchMusic(heavenMysteryMusic);
+                        //switchMusic(heavenMysteryMusic);
                         exclamationMusicTrigger = true;
                         exclamationMusicIndex = allMusic.indexOf(heavenMysteryMusic);
                 }
         } else {
-                switchMusic(allMusic[exclamationMusicIndex]);
+                //switchMusic(allMusic[exclamationMusicIndex]);
         }
         let randomExclamationNumber;
         if (faeForest) {
                 if (dontRepeatExclamation.includes(1) && dontRepeatExclamation.includes(2) && dontRepeatExclamation.includes(3) && dontRepeatExclamation.includes(4) && dontRepeatExclamation.includes(5)) {
                         encounter();
                 } else {
-                        randomExclamationNumber = createRandomNumber(13, 13);
+                        randomExclamationNumber = createRandomNumber(1, 5);
                         while (dontRepeatExclamation.includes(randomExclamationNumber)) {
                                 randomExclamationNumber = createRandomNumber(1, 5);
                         }
@@ -3309,22 +3309,22 @@ function shop() {
         if (!shopMusicTrigger) {
                 if (faeForest) {
                         const shopMusic = new Audio("audio/shop-music.wav");
-                        switchMusic(shopMusic);
+                        //switchMusic(shopMusic);
                         shopMusicTrigger = true;
                         shopMusicIndex = allMusic.indexOf(shopMusic);
                 } else if (hallowwood) {
                         const hallowwoodShopMusic = new Audio("audio/hallowwood-shop-music.wav");
-                        switchMusic(hallowwoodShopMusic);
+                        //switchMusic(hallowwoodShopMusic);
                         shopMusicTrigger = true;
                         shopMusicIndex = allMusic.indexOf(hallowwoodShopMusic);
                 } else {
                         const heavenShopMusic = new Audio("audio/heaven-shop-music.wav");
-                        switchMusic(heavenShopMusic);
+                        //switchMusic(heavenShopMusic);
                         shopMusicTrigger = true;
                         shopMusicIndex = allMusic.indexOf(heavenShopMusic);
                 }
         } else {
-                switchMusic(allMusic[shopMusicIndex]);
+                //switchMusic(allMusic[shopMusicIndex]);
         }
         const shopContainer = document.querySelector("#shop-container");
         displayNone(map);
@@ -3598,11 +3598,11 @@ let blacksmithMusicIndex;
 function blacksmith() {
         if (!blacksmithMusicTrigger) {
                 const blacksmithMusic = new Audio("audio/blacksmith-music.wav");
-                switchMusic(blacksmithMusic);
+                //switchMusic(blacksmithMusic);
                 blacksmithMusicTrigger = true;
                 blacksmithMusicIndex = allMusic.indexOf(blacksmithMusic);
         }
-        switchMusic(allMusic[blacksmithMusicIndex]);
+        //switchMusic(allMusic[blacksmithMusicIndex]);
         const blacksmithAmbience =  new Audio("audio/blacksmith-ambience.wav");
         switchAmbience(blacksmithAmbience);
         const blacksmithContainer = document.querySelector("#blacksmith-container");
@@ -6622,7 +6622,7 @@ function checkHealth() {
         if (parseFloat(playerCurrentHealth.innerText) <= 0)  {
                 const deathScreenContainer = document.querySelector("#death-screen-container");
                 const deathMusic = new Audio("audio/death-music.wav");
-                switchMusic(deathMusic);
+                //switchMusic(deathMusic);
                 arena.classList.add("dim");
                 //arena.style = "position: absolute";
                 displayFlex(deathScreenContainer);
@@ -8271,13 +8271,22 @@ function checkIfEnemyDead() {
                         document.querySelectorAll(".card").forEach(i => {
                                 for (let j = 0; j < cardsInformation.length; j++) {
                                         if (i.classList.contains(j) && cardsInformation[j].element === "wine") {
-                                                destroyedCardsArray.push(i);
-                                                destroyedCardsContainer.appendChild(i);
-                                                destroyedCardsArray = [];
-                                                destroyedCardsContainer.innerHTML = ``;
+                                                function destoryCard(pile) {
+                                                        if (pile.includes(i)) {
+                                                                let spliceCard = pile.splice(pile.indexOf(i), 1).pop();
+                                                                destroyedCardsArray.push(spliceCard);
+                                                                destroyedCardsContainer.appendChild(spliceCard);
+                                                        }
+                                                }
+                                                destoryCard(drawPileArray);
+                                                destoryCard(handArray);
+                                                destoryCard(discardPileArray);
                                         }
                                 }
                         });
+                        console.log(drawPileArray, handArray, discardPileArray);
+                        destroyedCardsArray = [];
+                        destroyedCardsContainer.innerHTML = ``;
                 }
                 if (jesusHasRisen) {
                         enemyContainer.innerHTML = "";
@@ -8378,7 +8387,7 @@ function checkIfEnemyDead() {
                                         const hallowwoodAmbience = new Audio("audio/hallowwood-ambience.wav");
                                         switchAmbience(hallowwoodAmbience);
                                         const hallowwoodMapMusic = new Audio("audio/hallowwood-map-music.wav");
-                                        switchMusic(hallowwoodMapMusic);
+                                        //switchMusic(hallowwoodMapMusic);
                                         mapMusicIndex = allMusic.indexOf(hallowwoodMapMusic);
                                         displayFlex(empowerContainer);
                                         displayNone(arena);
@@ -8555,7 +8564,7 @@ function checkIfEnemyDead() {
                                 allAmbience = [];
                                 function startHeaven() {
                                         const heavenMapMusic = new Audio("audio/heaven-map-music.wav");
-                                        switchMusic(heavenMapMusic);
+                                        //switchMusic(heavenMapMusic);
                                         mapMusicIndex = allMusic.indexOf(heavenMapMusic);
                                         const heavenAmbience = new Audio("audio/heaven-ambience.wav");
                                         switchAmbience(heavenAmbience);
@@ -8586,7 +8595,7 @@ function checkIfEnemyDead() {
                         const deathScreenContainer = document.querySelector("#death-screen-container");
                         const victoryMusic = new Audio("audio/victory-music.wav");
                         deathScreenContainer.style.position = "absolute";
-                        switchMusic(victoryMusic);
+                        //switchMusic(victoryMusic);
                         arena.classList.add("dim");
                         displayFlex(deathScreenContainer);
                         displayNone(handContainer);
