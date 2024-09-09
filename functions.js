@@ -3844,7 +3844,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(20000);
+                                damageAllEnemies(20);
                                 gainEnergize(2);
                                 fxChainLightning.play();
                         },
