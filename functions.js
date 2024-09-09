@@ -14,18 +14,7 @@ BUGS
 ?dynamic update cards windswept isnt working
 clicking two winds of change uses both cards when played
 windswept not updating enemyactionnumber
-///added eventlistener on game start for tutorial exit button
-///updated deep freeze text to be more understandable
-///added restart button on options menu
-///nerfed gold encounter in lumaisha
-///changed hurricane background text color to show purple text better
-///empowered storm form was returning NaN (added .length to array)
-///updated ghost mystery to damage player if entering house
-///added different img and number color for empowered water gift blood siphon to make it more apparent when it's active
-///updated text of empowered blood siphon water gift to show the exact % of health healed
 
-Changes
-///Buffed end bosses
 */
 /*
 START SCREEN SECTION
