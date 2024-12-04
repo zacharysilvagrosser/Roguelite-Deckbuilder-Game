@@ -14,6 +14,50 @@ windswept not updating enemyactionnumber
 /*
 START SCREEN SECTION
 */
+// display message on mobile devices notifying them that it can only be played on desktop
+function checkMediaQuery(x) {
+    if (x.matches) { 
+        // If media query matches (max-width: 700px)
+        document.getElementById('beginning-screen-container').innerHTML = `<p style='font-size: 36px; padding: 1.5rem'>This game is only available on desktop</p>`; 
+    } else {
+        window.addEventListener("keydown", () => {
+            displayNone(document.querySelector("#beginning-screen-container"));
+            displayFlex(startScreen);
+            const startScreenMusic = new Audio("audio/start-screen-music.wav");
+            switchMusic(startScreenMusic);
+            document.querySelector("#tutorial-exit").addEventListener("click", () => {
+                    displayNone(document.querySelector("#tutorial-container"));
+            }, {once: true});
+            document.querySelector("#restart-button").addEventListener("click", () => {
+                    location.reload();
+            });
+            window.addEventListener("keydown", e => {
+                if (e.key === "t" && (document.querySelector("#tutorial-container").style.display == "" || document.querySelector("#tutorial-container").style.display == "none")) {
+                        displayFlex(document.querySelector("#tutorial-container"));
+                        return;
+                }
+                if (e.key === "t" && document.querySelector("#tutorial-container").style.display == "flex") {
+                        displayNone(document.querySelector("#tutorial-container"));
+                        return;
+                }
+            });
+            window.addEventListener("keydown", e => {
+                if (e.key === "Escape" && (optionsContainer.style.display == "" || optionsContainer.style.display == "none")) {
+                        displayFlex(optionsContainer);
+                        return;
+                }
+                if (e.key === "Escape" && optionsContainer.style.display == "flex") {
+                        displayNone(optionsContainer);
+                        return;
+                }
+            });
+        }, {once: true});
+    }
+}
+const mediaQuery = window.matchMedia("(max-width: 1500px)");
+checkMediaQuery(mediaQuery);
+mediaQuery.addEventListener("change", checkMediaQuery); 
+
 const startScreen = document.querySelector("#start-screen-container");
 const startGame = document.querySelector("#start-game");
 const tutorial = document.querySelector("#tutorial");
@@ -79,38 +123,6 @@ function switchAmbience(ambience) {
         ambience.loop = true;
         ambience.volume = ambienceSlider.value;
 }
-window.addEventListener("keydown", () => {
-        displayNone(document.querySelector("#beginning-screen-container"));
-        displayFlex(startScreen);
-        const startScreenMusic = new Audio("audio/start-screen-music.wav");
-        switchMusic(startScreenMusic);
-        document.querySelector("#tutorial-exit").addEventListener("click", () => {
-                displayNone(document.querySelector("#tutorial-container"));
-        }, {once: true});
-        document.querySelector("#restart-button").addEventListener("click", () => {
-                location.reload();
-        });
-        window.addEventListener("keydown", e => {
-            if (e.key === "t" && (document.querySelector("#tutorial-container").style.display == "" || document.querySelector("#tutorial-container").style.display == "none")) {
-                    displayFlex(document.querySelector("#tutorial-container"));
-                    return;
-            }
-            if (e.key === "t" && document.querySelector("#tutorial-container").style.display == "flex") {
-                    displayNone(document.querySelector("#tutorial-container"));
-                    return;
-            }
-        });
-        window.addEventListener("keydown", e => {
-            if (e.key === "Escape" && (optionsContainer.style.display == "" || optionsContainer.style.display == "none")) {
-                    displayFlex(optionsContainer);
-                    return;
-            }
-            if (e.key === "Escape" && optionsContainer.style.display == "flex") {
-                    displayNone(optionsContainer);
-                    return;
-            }
-        });
-}, {once: true});
 let [easyDifficulty, normalDifficulty, hardDifficulty] = [false, false, false];
 let mapMusicIndex;
 startGame.addEventListener("click", () => {
