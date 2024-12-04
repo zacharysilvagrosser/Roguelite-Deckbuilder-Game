@@ -3829,7 +3829,7 @@ const cardsInformation = [
                 name: "Chain Lightning",
                 cardImg: "imgs/chain-lightning.jpeg",
                 cardText: ["Deal 20 damage to all enemies<br>Energize 2", "Deal 30 damage to all enemies<br>Energize 3"],
-                damage: [1000, 30],
+                damage: [20, 30],
                 energize: [2, 3],
                 chooseEnemyCard: false,
                 index: 3,
@@ -3839,7 +3839,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(10000);
+                                damageAllEnemies(20);
                                 gainEnergize(2);
                                 fxChainLightning.play();
                         },
