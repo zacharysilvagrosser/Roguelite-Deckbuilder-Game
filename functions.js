@@ -1,20 +1,15 @@
 /* IDEAS.
 Light and Dark/Summoner/Celestial/Temporal based class has a light and dark meter based on your actions throughout the game
-face corrupted elemental spirits as boss battle
 Have hallowwood monsters (witches) either rez as ghost or zombie/skeleton
-jesus turns water cards to wine cards; set sun background to night 3 times before jesus rezes
-zeus lighting cards get empowered
+zeus: your lighting cards get empowered
 Shifting cards evolve after reaching a certain damage threshold
-
-TO DO
-Tutorial lists what are buffs and debuffs and what they do
-Add a tutorial reference guide button staight onto the top board UI
 
 BUGS
 ?dynamic update cards windswept isnt working
 clicking two winds of change uses both cards when played
 windswept not updating enemyactionnumber
-
+//bosses killed and elites killes = 0
+//lumashia enemies groups are spawning multiple times instead of having unique fights each round
 */
 /*
 START SCREEN SECTION
@@ -607,17 +602,17 @@ function encounter() {
         if (faeForest) {
                 randomEncounterNumber = createRandomNumber(1, 9);
                 while (dontRepeatEncounter.includes(randomEncounterNumber)) {
-                        randomEncounterNumber = createRandomNumber(1, 9);        
+                    randomEncounterNumber = createRandomNumber(1, 9);        
                 }
         } else if (hallowwood) {
                 randomEncounterNumber = createRandomNumber(10, 18);
                 while (dontRepeatEncounter.includes(randomEncounterNumber)) {
-                        randomEncounterNumber = createRandomNumber(10, 18);        
+                    randomEncounterNumber = createRandomNumber(10, 18);        
                 }
         } else {
                 randomEncounterNumber = createRandomNumber(19, 27);
                 while (dontRepeatEncounter.includes(randomEncounterNumber)) {
-                        randomEncounterNumber = createRandomNumber(19, 27);        
+                    randomEncounterNumber = createRandomNumber(19, 27);        
                 }
         }
         switchArea(arena, map);
@@ -702,28 +697,28 @@ function encounter() {
                         createEncounterEnemies("Athena", "Artemis", "", 36, 37, 0, 19);
                         break;
                 case 20:
-                        createEncounterEnemies("Poseidon", "Artemis", "", 35, 37, 0, 22);
+                        createEncounterEnemies("Poseidon", "Artemis", "", 35, 37, 0, 20);
                         break;
                 case 21:
-                        createEncounterEnemies("Athena", "Demeter", "", 36, 34, 0, 19);
+                        createEncounterEnemies("Athena", "Demeter", "", 36, 34, 0, 21);
                         break;
                 case 22:
-                        createEncounterEnemies("Thor", "Loki", "", 31, 32, 0, 20);
+                        createEncounterEnemies("Thor", "Loki", "", 31, 32, 0, 22);
                         break;
                 case 23:
-                        createEncounterEnemies("Thor", "Fenrir", "", 31, 33, 0, 20);
+                        createEncounterEnemies("Thor", "Fenrir", "", 31, 33, 0, 23);
                         break;
                 case 24:
-                        createEncounterEnemies("Anubis", "Ra", "", 28, 30, 0, 21);
+                        createEncounterEnemies("Anubis", "Ra", "", 28, 30, 0, 24);
                         break;
                 case 25:
-                        createEncounterEnemies("Bastet", "Ra", "", 29, 30, 0, 21);
+                        createEncounterEnemies("Bastet", "Ra", "", 29, 30, 0, 25);
                         break;
                 case 26:
-                        createEncounterEnemies("Ganesha", "Brahma", "", 38, 39, 0, 23);
+                        createEncounterEnemies("Ganesha", "Brahma", "", 38, 39, 0, 26);
                         break;
                 case 27:
-                        createEncounterEnemies("Sun Wukong", "Hebo", "", 40, 41, 0, 24);
+                        createEncounterEnemies("Sun Wukong", "Hebo", "", 40, 41, 0, 27);
                         break;
         }
 }
@@ -1112,7 +1107,7 @@ function eliteEncounter() {
                         break;
         }
 }
-let bossDefeated = [false, false];
+let bossDefeated = [false, false, false];
 function boss() {
         numberOfEnemies = 1;
         let randomBossNumber;
@@ -3834,7 +3829,7 @@ const cardsInformation = [
                 name: "Chain Lightning",
                 cardImg: "imgs/chain-lightning.jpeg",
                 cardText: ["Deal 20 damage to all enemies<br>Energize 2", "Deal 30 damage to all enemies<br>Energize 3"],
-                damage: [20, 30],
+                damage: [1000, 30],
                 energize: [2, 3],
                 chooseEnemyCard: false,
                 index: 3,
@@ -3844,7 +3839,7 @@ const cardsInformation = [
                 [
                         function() {
                                 spendMana(3);
-                                damageAllEnemies(20);
+                                damageAllEnemies(10000);
                                 gainEnergize(2);
                                 fxChainLightning.play();
                         },
@@ -6644,6 +6639,15 @@ function checkHealth() {
                         }
                 }
         }
+        if (bossDefeated[0] && bossDefeated[1] && bossDefeated[2]) {
+            bossesKilled = 3
+        } else if (bossDefeated[0] && bossDefeated[1]) {
+            bossesKilled = 2;
+        } else if (bossDefeated[0]) {
+            bossesKilled = 1
+        } else {
+            bossesKilled = 0;
+        }
         if (parseFloat(playerCurrentHealth.innerText) <= 0)  {
                 const deathScreenContainer = document.querySelector("#death-screen-container");
                 const deathMusic = new Audio("audio/death-music.wav");
@@ -8344,6 +8348,7 @@ function checkIfEnemyDead() {
                 }
                 if (getEliteRelic) {
                         ghostIndex = 11;
+                        elitesKilled++;
                         getRelic(1, 12);
                         displayFlex(document.querySelectorAll(".relic-img-text")[document.querySelectorAll(".relic-img-text").length - 1]);
                 }
